@@ -123,9 +123,9 @@ const MUSIC_QUESTIONS = [
   { mode: 'pulse', type: 'Titulo exacto', text: 'Que palabra aparece en el titulo?', options: ['Noche', 'Corazon', 'Dedicalo', 'Perreo'], correct: 2 },
   { mode: 'pulse', type: 'Colaboracion', text: 'Que papel tiene la voz invitada en este corte?', options: ['Coro principal', 'Verso invitado', 'Intro hablada', 'No hay invitado'], correct: 1 },
   { mode: 'pulse', type: 'Cultura pop', text: 'Donde sonaria mejor este corte?', options: ['Final de fiesta', 'Escena triste', 'Entrenamiento', 'Creditos finales'], correct: 0 },
-  { mode: 'timeline', type: 'Linea del Ritmo', text: 'Coloca esta cancion en la linea de anos.', options: ['1998', '2006', '2014', '2022'], correct: 2 },
-  { mode: 'timeline', type: 'Linea del Ritmo', text: 'Si este hit fuera una carta, donde encajaria?', options: ['Antes de 2000', 'Entre 2000 y 2009', 'Entre 2010 y 2019', 'Desde 2020'], correct: 2 },
-  { mode: 'timeline', type: 'Linea del Ritmo', text: 'Que ano suena mas probable para este estilo?', options: ['1995', '2004', '2016', '2024'], correct: 2 },
+  { mode: 'timeline', answerType: 'timeline-placement', type: 'Línea del Ritmo', text: '¿Dónde encaja esta canción en la línea?', timelineYears: [2000], songYear: 2014, options: ['0', '1'], correct: 1 },
+  { mode: 'timeline', answerType: 'timeline-placement', type: 'Línea del Ritmo', text: '¿Dónde pondrías este corte?', timelineYears: [1995, 2005], songYear: 2001, options: ['0', '1', '2'], correct: 1 },
+  { mode: 'timeline', answerType: 'timeline-placement', type: 'Línea del Ritmo', text: 'Escucha y colócala por año.', timelineYears: [1990, 2000, 2010], songYear: 2020, options: ['0', '1', '2', '3'], correct: 3 },
   { mode: 'chaos', type: 'Remix Salvaje', text: 'Que jugada conviene ahora?', options: ['Guardar puntos', 'Activar sabotaje', 'Cambiar de avatar', 'Salir de la sala'], correct: 1 },
   { mode: 'chaos', type: 'Colaboracion', text: 'Si aparece un dueto, que conviene escuchar primero?', options: ['Quien entra despues', 'El volumen del movil', 'El color del boton', 'La posicion del ranking'], correct: 0 },
   { mode: 'chaos', type: 'Remix Salvaje', text: 'Que color anuncia sabotaje?', options: ['Verde', 'Rojo', 'Lila', 'Azul'], correct: 2 }
@@ -310,10 +310,7 @@ export const useGameStore = create((setStore, getStore) => ({
     setTimeout(() => {
       const state = getStore();
       if (state.pin === pin && state.phase === 'countdown') {
-        Promise.all([
-          patchData(`rooms/${pin}`, { phase: 'listen' }),
-          patchData(`rooms/${pin}/audio`, { isPlaying: true })
-        ]).catch((error) => console.error('Error al iniciar audio:', error));
+        patchData(`rooms/${pin}`, { phase: 'listen' }).catch((error) => console.error('Error al iniciar ronda:', error));
       }
     }, 3000);
   },
@@ -601,6 +598,15 @@ export const useGameStore = create((setStore, getStore) => ({
 
     if (role === 'host' && pin) {
       patchData(`rooms/${pin}/audio`, { isMuted: muted }).catch((error) => console.error('Error al cambiar mute:', error));
+    }
+  },
+
+  setAudioPlaying: (playing) => {
+    const { pin, role } = getStore();
+    setStore({ isAudioPlaying: Boolean(playing) });
+
+    if (role === 'host' && pin) {
+      patchData(`rooms/${pin}/audio`, { isPlaying: Boolean(playing) }).catch((error) => console.error('Error al sincronizar audio:', error));
     }
   },
 

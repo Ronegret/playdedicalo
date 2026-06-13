@@ -6,6 +6,51 @@ import { createQuestionFromTrack, getCurrentHiddenTrack, pauseSpotifyPlayback, s
 
 const EQUALIZER_BARS = [0.35, 0.58, 0.42, 0.71, 0.49, 0.64, 0.39];
 
+function getTimelineSlotLabel(years, index) {
+  if (index === 0) return `Antes de ${years[0]}`;
+  if (index === years.length) return `Después de ${years[years.length - 1]}`;
+  return `Entre ${years[index - 1]} y ${years[index]}`;
+}
+
+function TimelinePlacementQuestion({ question, disabled, onPick }) {
+  const years = question.timelineYears?.length ? question.timelineYears : [2000];
+  const slots = Array.from({ length: years.length + 1 }, (_, index) => index);
+
+  return (
+    <div className="mt-5">
+      <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+        <p className="font-label-caps text-[10px] text-neon-green tracking-widest">ELIGE EL HUECO</p>
+        <div className="mt-4 overflow-x-auto pb-2">
+          <div className="min-w-max flex items-center gap-2 px-1">
+            {slots.map((slot, index) => (
+              <div key={slot} className="flex items-center gap-2">
+                <button
+                  type="button"
+                  disabled={disabled}
+                  onClick={() => onPick(slot === question.correct)}
+                  className="w-24 h-20 rounded-2xl border border-dashed border-neon-green/50 bg-neon-green/10 text-neon-green active:scale-95 transition-transform flex flex-col items-center justify-center gap-1"
+                >
+                  <span className="material-symbols-outlined text-xl">add</span>
+                  <span className="text-[10px] font-label-caps leading-tight px-1">{getTimelineSlotLabel(years, slot)}</span>
+                </button>
+                {index < years.length && (
+                  <div className="w-20 h-24 rounded-2xl border border-white/15 bg-black/30 flex flex-col items-center justify-center shadow-[0_0_18px_rgba(0,0,0,0.22)]">
+                    <span className="text-[10px] font-label-caps text-on-surface-variant">Carta</span>
+                    <span className="mt-1 text-3xl font-black text-white">{years[index]}</span>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+        <p className="mt-3 text-xs text-on-surface-variant">
+          No necesitas saber el día: solo ubica si la canción va antes, después o entre esos años.
+        </p>
+      </div>
+    </div>
+  );
+}
+
 export default function GameScreen() {
   const navigate = useNavigate();
   const {
@@ -16,7 +61,8 @@ export default function GameScreen() {
     currentQuestion,
     spotifyPlaylistUrl,
     hostTriggerBlackout,
-    guestAnswer
+    guestAnswer,
+    setAudioPlaying
   } = useGameStore();
   const [answeredQuestionKey, setAnsweredQuestionKey] = useState(null);
   const [countdownValue, setCountdownValue] = useState(3);
@@ -63,18 +109,24 @@ export default function GameScreen() {
 
     startRandomPlaylistTrack(spotifyPlaylistUrl)
       .then(() => {
-        if (!cancelled) setSpotifyMessage('Sonando en Spotify. No mires el titulo.');
+        if (!cancelled) {
+          setSpotifyMessage('Sonando en Spotify. No mires el titulo.');
+          setAudioPlaying(true);
+        }
       })
       .catch((error) => {
         console.error(error);
-        if (!cancelled) setSpotifyMessage('Conecta Spotify Premium para reproducir aqui.');
+        if (!cancelled) {
+          setSpotifyMessage('Spotify no pudo sonar. Revisa Premium, permisos y volumen.');
+          setAudioPlaying(false);
+        }
       });
 
     return () => {
       cancelled = true;
       window.clearTimeout(preparingTimeout);
     };
-  }, [role, phase, round, spotifyPlaylistUrl]);
+  }, [role, phase, round, spotifyPlaylistUrl, setAudioPlaying]);
 
   const questionKey = useMemo(() => {
     if (!currentQuestion) return '';
@@ -110,8 +162,9 @@ export default function GameScreen() {
 
   const handleHostBlackout = async () => {
     const hiddenTrack = getCurrentHiddenTrack();
-    const spotifyQuestion = hiddenTrack ? createQuestionFromTrack(hiddenTrack, gameMode) : null;
+    const spotifyQuestion = hiddenTrack ? createQuestionFromTrack(hiddenTrack, gameMode, round) : null;
     await pauseSpotifyPlayback().catch((error) => console.warn('No se pudo pausar Spotify:', error));
+    setAudioPlaying(false);
     await hostTriggerBlackout(spotifyQuestion);
   };
 
@@ -221,6 +274,12 @@ export default function GameScreen() {
                 <span className="material-symbols-outlined text-neon-green text-4xl">check_circle</span>
                 <p className="mt-3 text-on-surface-variant font-label-caps text-sm animate-pulse">RESPUESTA ENVIADA</p>
               </div>
+            ) : currentQuestion.answerType === 'timeline-placement' ? (
+              <TimelinePlacementQuestion
+                question={currentQuestion}
+                disabled={hasAnswered}
+                onPick={handleAnswer}
+              />
             ) : (
               <motion.div
                 variants={containerVariants}

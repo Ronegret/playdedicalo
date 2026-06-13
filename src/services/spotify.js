@@ -210,6 +210,15 @@ async function getSpotifyPlayer() {
   return spotifyPlayerPromise;
 }
 
+export async function prepareSpotifyPlayback() {
+  const player = await getSpotifyPlayer();
+  if (typeof player.activateElement === 'function') {
+    await player.activateElement();
+  }
+  await ensureSpotifyDevice();
+  return true;
+}
+
 async function ensureSpotifyDevice() {
   await getSpotifyPlayer();
 
@@ -261,21 +270,34 @@ export async function getPlaylistTracks(playlistUrl) {
   return tracks;
 }
 
-export function createQuestionFromTrack(track, gameMode) {
+function buildTimelineYears(songYear, round = 1) {
+  const anchorSets = [
+    [2000],
+    [1995, 2005],
+    [1990, 2000, 2010],
+    [1985, 1995, 2005, 2015],
+    [1980, 1990, 2000, 2010, 2020]
+  ];
+  const years = anchorSets[Math.min(anchorSets.length - 1, Math.max(0, Number(round || 1) - 1))];
+  return [...new Set(years.filter((year) => year !== songYear))].sort((a, b) => a - b);
+}
+
+export function createQuestionFromTrack(track, gameMode, round = 1) {
   const year = track.releaseYear || 2016;
 
   if (gameMode === 'timeline') {
-    const years = [year - 8, year - 2, year, year + 5]
-      .map((value) => Math.max(1950, value))
-      .sort((a, b) => a - b);
-    const correct = years.indexOf(year);
+    const timelineYears = buildTimelineYears(year, round);
+    const correct = timelineYears.filter((timelineYear) => timelineYear < year).length;
 
     return {
       mode: 'timeline',
-      type: 'Linea del Ritmo',
-      text: 'Coloca esta cancion en la linea de anos.',
-      options: years.map(String),
-      correct: correct >= 0 ? correct : 2
+      answerType: 'timeline-placement',
+      type: 'Línea del Ritmo',
+      text: '¿Dónde encaja esta canción en la línea?',
+      timelineYears,
+      songYear: year,
+      options: Array.from({ length: timelineYears.length + 1 }, (_, index) => String(index)),
+      correct
     };
   }
 

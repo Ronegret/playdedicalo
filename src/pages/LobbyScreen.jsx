@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ChaosEconomyBubbles from '../components/ChaosEconomyBubbles';
 import { GAME_MODES, SABOTAGE_OPTIONS, VICTORY_MODES, useGameStore } from '../store/useGameStore';
+import { prepareSpotifyPlayback } from '../services/spotify';
 
 function InfoDetails({ title, children }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -146,6 +147,7 @@ export default function LobbyScreen() {
     hostCloseRoom
   } = useGameStore();
   const [showQR, setShowQR] = useState(false);
+  const [startError, setStartError] = useState('');
 
   useEffect(() => {
     if (phase === 'countdown' || phase === 'listen' || phase === 'blackout') navigate('/game');
@@ -160,6 +162,17 @@ export default function LobbyScreen() {
 
   const handleSettingsChange = (nextSettings) => {
     setGameSettings({ gameMode, targetScore, ...nextSettings });
+  };
+
+  const handleHostStartGame = async () => {
+    setStartError('');
+    try {
+      await prepareSpotifyPlayback();
+      await hostStartGame();
+    } catch (error) {
+      console.error(error);
+      setStartError('Conecta Spotify Premium y deja esta pestaña con sonido.');
+    }
   };
 
   const canUseSabotage = role === 'guest' && round > 1;
@@ -240,12 +253,17 @@ export default function LobbyScreen() {
             </div>
 
             <button
-              onClick={hostStartGame}
+              onClick={handleHostStartGame}
               className="mt-5 w-full h-12 bg-neon-green text-black font-label-caps text-label-caps rounded-xl transition-all flex items-center justify-center gap-2 font-bold active:scale-95"
             >
               <span className="material-symbols-outlined">play_arrow</span>
               INICIAR RONDA
             </button>
+            {startError && (
+              <p className="mt-3 rounded-xl border border-intense-red/40 bg-intense-red/10 px-3 py-2 text-xs text-intense-red">
+                {startError}
+              </p>
+            )}
           </div>
         )}
 

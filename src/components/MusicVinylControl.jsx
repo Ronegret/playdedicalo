@@ -5,12 +5,12 @@ import { pauseSpotifyPlayback, startRandomPlaylistTrack } from '../services/spot
 
 export default function MusicVinylControl() {
   const [error, setError] = useState('');
-  const { role, pin, isAudioPlaying, spotifyPlaylistUrl, togglePlay } = useGameStore((state) => ({
+  const { role, pin, isAudioPlaying, spotifyPlaylistUrl, setAudioPlaying } = useGameStore((state) => ({
     role: state.role,
     pin: state.pin,
     isAudioPlaying: state.isAudioPlaying,
     spotifyPlaylistUrl: state.spotifyPlaylistUrl,
-    togglePlay: state.togglePlay
+    setAudioPlaying: state.setAudioPlaying
   }));
 
   if (!role || !pin) return null;
@@ -22,7 +22,7 @@ export default function MusicVinylControl() {
 
     if (isAudioPlaying) {
       await pauseSpotifyPlayback().catch((error) => console.warn('No se pudo pausar Spotify:', error));
-      togglePlay();
+      setAudioPlaying(false);
       return;
     }
 
@@ -33,31 +33,32 @@ export default function MusicVinylControl() {
       setError('Conecta Spotify Premium');
       return;
     }
-    togglePlay();
+    setAudioPlaying(true);
   };
 
   return (
-    <div className="fixed top-20 right-3 z-50 flex flex-col items-center gap-1">
+    <div className="fixed top-20 right-3 z-50 flex flex-col items-center gap-1 pointer-events-none">
       <button
         type="button"
         onClick={handleToggle}
         disabled={!canControl}
-        className={`relative w-14 h-14 rounded-full bg-black border border-white/15 shadow-[0_0_20px_rgba(189,0,255,0.25)] flex items-center justify-center ${canControl ? 'active:scale-95' : 'cursor-default'}`}
+        className={`relative w-16 h-16 rounded-full bg-black border border-white/15 shadow-[0_0_20px_rgba(189,0,255,0.25)] flex items-center justify-center overflow-hidden pointer-events-auto ${canControl ? 'active:scale-95' : 'cursor-default'}`}
         aria-label={isAudioPlaying ? 'Parar musica de la sala' : 'Marcar musica en play'}
       >
         <motion.div
           animate={isAudioPlaying ? { rotate: 360 } : { rotate: 0 }}
-          transition={isAudioPlaying ? { repeat: Infinity, duration: 2.2, ease: 'linear' } : { duration: 0.2 }}
-          className="absolute inset-1 rounded-full border-[6px] border-neutral-800 bg-[radial-gradient(circle,#222_0_18%,#060606_19%_100%)]"
+          transition={isAudioPlaying ? { repeat: Infinity, duration: 1.35, ease: 'linear' } : { duration: 0.2 }}
+          className="absolute inset-1 rounded-full bg-[repeating-radial-gradient(circle,#050505_0_4px,#151515_5px_6px,#050505_7px_10px)]"
         >
-          <div className="absolute inset-2 rounded-full border border-white/10" />
-          <div className="absolute inset-4 rounded-full bg-neon-green" />
+          <div className="absolute inset-0 rounded-full bg-[conic-gradient(from_20deg,transparent_0_18deg,rgba(255,255,255,0.12)_18deg_24deg,transparent_24deg_160deg,rgba(255,255,255,0.08)_160deg_166deg,transparent_166deg_360deg)]" />
+          <div className="absolute inset-[18px] rounded-full bg-neon-green border-2 border-black/60" />
+          <div className="absolute inset-[26px] rounded-full bg-black" />
         </motion.div>
-        <span className="relative z-10 material-symbols-outlined text-black text-base">
+        <span className={`relative z-10 material-symbols-outlined text-base ${isAudioPlaying ? 'text-neon-green' : 'text-black'}`}>
           {isAudioPlaying ? 'pause' : 'play_arrow'}
         </span>
       </button>
-      <span className={`rounded-full px-2 py-1 text-[9px] font-label-caps border ${isAudioPlaying ? 'border-neon-green/40 bg-neon-green/10 text-neon-green' : 'border-white/10 bg-black/40 text-on-surface-variant'}`}>
+      <span className={`rounded-full px-2 py-1 text-[9px] font-label-caps border pointer-events-none ${isAudioPlaying ? 'border-neon-green/40 bg-neon-green/10 text-neon-green' : 'border-white/10 bg-black/40 text-on-surface-variant'}`}>
         {canControl ? (isAudioPlaying ? 'STOP' : 'PLAY') : (isAudioPlaying ? 'PLAY' : 'STOP')}
       </span>
       {error && <span className="max-w-20 text-center text-[9px] text-intense-red font-label-caps">{error}</span>}
