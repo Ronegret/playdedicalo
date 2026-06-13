@@ -1,0 +1,181 @@
+import { AnimatePresence, motion } from 'framer-motion';
+import { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { GAME_MODES, useGameStore } from '../store/useGameStore';
+
+const EQUALIZER_BARS = [0.35, 0.58, 0.42, 0.71, 0.49, 0.64, 0.39];
+
+export default function GameScreen() {
+  const navigate = useNavigate();
+  const {
+    role,
+    phase,
+    round,
+    gameMode,
+    currentQuestion,
+    hostTriggerBlackout,
+    guestAnswer
+  } = useGameStore();
+  const [answeredQuestionKey, setAnsweredQuestionKey] = useState(null);
+
+  useEffect(() => {
+    if (phase === 'result' || phase === 'final') {
+      navigate('/game/result');
+    }
+    if (phase === 'lobby') {
+      navigate('/lobby');
+    }
+  }, [phase, navigate]);
+
+  const questionKey = useMemo(() => {
+    if (!currentQuestion) return '';
+    return `${currentQuestion.type}-${currentQuestion.text}-${round}`;
+  }, [currentQuestion, round]);
+
+  const hasAnswered = answeredQuestionKey === questionKey;
+  const mode = GAME_MODES[gameMode] || GAME_MODES.pulse;
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.12,
+        delayChildren: 0.2
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 18 },
+    show: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 120 } }
+  };
+
+  const handleAnswer = (isCorrect) => {
+    setAnsweredQuestionKey(questionKey);
+    guestAnswer(isCorrect);
+  };
+
+  return (
+    <div className={`relative z-10 min-h-screen w-full max-w-[430px] mx-auto flex flex-col items-center justify-center transition-colors duration-500 ${phase === 'blackout' ? 'bg-black' : 'bg-transparent'}`}>
+      {role === 'host' && phase !== 'blackout' && (
+        <header className="fixed top-0 left-0 right-0 h-16 flex items-center justify-between px-margin-mobile z-50 bg-surface/60 backdrop-blur-xl border-b border-white/10">
+          <button onClick={() => navigate('/lobby')} className="text-on-surface-variant font-label-caps text-xs flex items-center gap-1">
+            <span className="material-symbols-outlined text-sm">arrow_back</span> CANCELAR
+          </button>
+          <span className="font-label-caps text-xs text-neon-green">RONDA {round}</span>
+        </header>
+      )}
+
+      <AnimatePresence mode="wait">
+        {phase === 'countdown' && (
+          <motion.div
+            key="countdown"
+            initial={{ scale: 0.5, opacity: 0 }}
+            animate={{ scale: [0.7, 1.08, 1], opacity: 1 }}
+            exit={{ scale: 1.5, opacity: 0 }}
+            transition={{ duration: 0.75 }}
+            className="text-center"
+          >
+            <p className="font-label-caps text-electric-purple tracking-widest">PREPARA EL OIDO</p>
+            <div className="mt-3 font-stats-xl text-9xl text-neon-green drop-shadow-[0_0_24px_rgba(57,255,20,0.4)]">3</div>
+          </motion.div>
+        )}
+
+        {phase === 'listen' && (
+          <motion.div
+            key="listen"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="flex flex-col items-center gap-6 w-full px-5 text-center"
+          >
+            <div className="relative w-64 h-64 rounded-full border-4 border-neon-green flex items-center justify-center animate-pulse shadow-[0_0_30px_rgba(57,255,20,0.28)] bg-black/15">
+              <div className="absolute inset-4 rounded-full border border-white/10" />
+              <div>
+                <p className="font-label-caps text-[10px] text-electric-purple tracking-widest">{mode.name}</p>
+                <span className="block mt-2 font-headline-lg-mobile text-3xl text-neon-green font-bold tracking-widest">
+                  {role === 'host' ? 'SONANDO' : 'ESCUCHA'}
+                </span>
+                <p className="mt-2 font-label-caps text-xs text-white/70 tracking-widest">EL HOST DECIDE EL CORTE</p>
+              </div>
+            </div>
+
+            <div className="flex gap-3 items-end h-16">
+              {EQUALIZER_BARS.map((duration, index) => (
+                <motion.div
+                  key={`${duration}-${index}`}
+                  animate={{ height: ['22%', '100%', '32%'] }}
+                  transition={{ repeat: Infinity, duration, delay: index * 0.04 }}
+                  className="w-4 bg-neon-green rounded-t-sm shadow-[0_0_12px_rgba(57,255,20,0.3)]"
+                />
+              ))}
+            </div>
+
+            <p className="max-w-xs text-sm text-on-surface-variant">
+              Memoriza el ritmo, la epoca, la letra y el ambiente. El anfitrion cortara la musica cuando vea el momento perfecto.
+            </p>
+
+            {role === 'host' && (
+              <button
+                onClick={hostTriggerBlackout}
+                className="mt-3 w-full max-w-xs h-16 bg-intense-red hover:bg-red-600 text-white font-headline-lg-mobile text-2xl rounded-2xl shadow-[0_0_20px_rgba(255,0,0,0.38)] active:scale-95 transition-transform font-black border-2 border-white/20"
+              >
+                CORTE BLACKOUT
+              </button>
+            )}
+          </motion.div>
+        )}
+
+        {phase === 'blackout' && currentQuestion && (
+          <motion.div
+            key="blackout"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="w-full px-margin-mobile py-20 flex flex-col gap-4"
+          >
+            <div className="text-center">
+              <p className="font-label-caps text-intense-red text-xs tracking-widest">BLACKOUT · {currentQuestion.type}</p>
+              <motion.h2
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35 }}
+                className="mt-3 text-white font-headline-lg-mobile text-3xl leading-tight"
+              >
+                {currentQuestion.text}
+              </motion.h2>
+            </div>
+
+            {hasAnswered ? (
+              <div className="mt-8 rounded-2xl border border-neon-green/30 bg-neon-green/10 p-5 text-center">
+                <span className="material-symbols-outlined text-neon-green text-4xl">check_circle</span>
+                <p className="mt-3 text-on-surface-variant font-label-caps text-sm animate-pulse">RESPUESTA ENVIADA</p>
+              </div>
+            ) : (
+              <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                animate="show"
+                className="mt-4 flex flex-col gap-3"
+              >
+                {currentQuestion.options.map((option, index) => (
+                  <motion.button
+                    key={option}
+                    variants={itemVariants}
+                    onClick={() => handleAnswer(index === currentQuestion.correct)}
+                    className="w-full min-h-16 p-4 bg-white/10 text-white rounded-xl border border-white/20 hover:border-neon-green active:bg-white/30 text-left font-body-md text-base transition-colors flex items-center gap-3"
+                  >
+                    <span className="w-8 h-8 rounded-lg bg-black/20 text-neon-green flex items-center justify-center font-black shrink-0">
+                      {String.fromCharCode(65 + index)}
+                    </span>
+                    <span className="leading-snug">{option}</span>
+                  </motion.button>
+                ))}
+              </motion.div>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}

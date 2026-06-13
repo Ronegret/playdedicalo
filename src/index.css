@@ -1,0 +1,75 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  #root {
+    overflow-x: hidden;
+  }
+
+  body {
+    @apply bg-background text-on-background font-body-md;
+    background-color: #0e0e13;
+    overflow-x: hidden;
+  }
+}
+
+@layer utilities {
+  .glass-surface {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .vinyl-shadow {
+    box-shadow: 0 0 50px rgba(189, 0, 255, 0.2), inset 0 0 20px rgba(0, 0, 0, 0.8);
+  }
+
+  .neon-glow-purple {
+    box-shadow: 0 0 30px rgba(189, 0, 255, 0.3);
+  }
+
+  .neon-glow-green {
+    box-shadow: 0 0 25px rgba(57, 255, 20, 0.4);
+  }
+  
+  .text-animated-gradient {
+    background: linear-gradient(90deg, #BD00FF, #39FF14, #BD00FF);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: text-gradient-flow 4s linear infinite;
+  }
+}
+
+@keyframes spin-vinyl {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes mesh-gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes text-gradient-flow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animated-mesh {
+  background: radial-gradient(circle at 20% 30%, rgba(189, 0, 255, 0.15) 0%, transparent 50%),
+              radial-gradient(circle at 80% 70%, rgba(57, 255, 20, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 50% 50%, rgba(0, 71, 255, 0.05) 0%, transparent 100%);
+  background-size: 200% 200%;
+  animation: mesh-gradient 15s ease infinite;
+}
+
+.vinyl-spin {
+  animation: spin-vinyl 8s linear infinite;
+}
