@@ -26,14 +26,9 @@ export default function SpotifyPlayer() {
             <p className="text-[10px] text-neon-green font-label-caps tracking-widest uppercase">Playlists listas</p>
             <p className="text-xs text-on-surface-variant truncate">Activa: {activePlaylist.name}</p>
           </div>
-          <a
-            href={activePlaylist.url}
-            target="_blank"
-            rel="noreferrer"
-            className="h-9 px-3 rounded-lg bg-neon-green text-black border border-neon-green text-[11px] font-label-caps flex items-center shrink-0"
-          >
-            Spotify
-          </a>
+          <span className="h-8 px-3 rounded-lg bg-neon-green/15 text-neon-green border border-neon-green/40 text-[10px] font-label-caps flex items-center shrink-0">
+            LISTA
+          </span>
         </div>
 
         <div className="mt-3 flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
