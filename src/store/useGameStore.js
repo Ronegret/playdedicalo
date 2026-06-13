@@ -318,7 +318,7 @@ export const useGameStore = create((setStore, getStore) => ({
     }, 3000);
   },
 
-  hostTriggerBlackout: async () => {
+  hostTriggerBlackout: async (questionOverride = null) => {
     const { pin, gameMode } = getStore();
     if (!pin) return;
 
@@ -328,13 +328,14 @@ export const useGameStore = create((setStore, getStore) => ({
     const pool = forceWildQuestion ? MUSIC_QUESTIONS : MUSIC_QUESTIONS.filter((question) => question.mode === gameMode);
     const questions = pool.length ? pool : MUSIC_QUESTIONS;
     const baseQuestion = questions[Math.floor(Math.random() * questions.length)];
+    const questionBase = questionOverride || baseQuestion;
     const question = pendingEffect?.id === 'reverse_lyrics'
       ? {
-        ...baseQuestion,
-        text: reverseReadableText(baseQuestion.text),
-        type: `${baseQuestion.type} al reves`
+        ...questionBase,
+        text: reverseReadableText(questionBase.text),
+        type: `${questionBase.type} al reves`
       }
-      : baseQuestion;
+      : questionBase;
 
     await Promise.all([
       patchData(`rooms/${pin}`, { phase: 'blackout', currentQuestion: question, pendingQuestionEffect: null }),

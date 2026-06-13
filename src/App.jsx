@@ -9,6 +9,7 @@ import GuestJoinScreen from './pages/GuestJoinScreen';
 import LobbyScreen from './pages/LobbyScreen';
 import GameScreen from './pages/GameScreen';
 import ResultScreen from './pages/ResultScreen';
+import SpotifyCallbackScreen from './pages/SpotifyCallbackScreen';
 import ShaderBackground from './components/ShaderBackground';
 import MusicVinylControl from './components/MusicVinylControl';
 
@@ -26,6 +27,7 @@ function App() {
           <Route path="/how-to-play" element={<HowToPlayScreen />} />
           <Route path="/role-selection" element={<RoleSelectionScreen />} />
           <Route path="/host/sync" element={<HostSyncScreen />} />
+          <Route path="/spotify/callback" element={<SpotifyCallbackScreen />} />
           <Route path="/guest/join" element={<GuestJoinScreen />} />
           <Route path="/lobby" element={<LobbyScreen />} />
           <Route path="/game" element={<GameScreen />} />

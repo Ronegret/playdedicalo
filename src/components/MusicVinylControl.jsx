@@ -1,23 +1,46 @@
 import { motion } from 'framer-motion';
+import { useState } from 'react';
 import { useGameStore } from '../store/useGameStore';
+import { pauseSpotifyPlayback, startRandomPlaylistTrack } from '../services/spotify';
 
 export default function MusicVinylControl() {
-  const { role, pin, isAudioPlaying, togglePlay } = useGameStore((state) => ({
+  const [error, setError] = useState('');
+  const { role, pin, isAudioPlaying, spotifyPlaylistUrl, togglePlay } = useGameStore((state) => ({
     role: state.role,
     pin: state.pin,
     isAudioPlaying: state.isAudioPlaying,
+    spotifyPlaylistUrl: state.spotifyPlaylistUrl,
     togglePlay: state.togglePlay
   }));
 
   if (!role || !pin) return null;
 
   const canControl = role === 'host';
+  const handleToggle = async () => {
+    if (!canControl) return;
+    setError('');
+
+    if (isAudioPlaying) {
+      await pauseSpotifyPlayback().catch((error) => console.warn('No se pudo pausar Spotify:', error));
+      togglePlay();
+      return;
+    }
+
+    try {
+      await startRandomPlaylistTrack(spotifyPlaylistUrl);
+    } catch (spotifyError) {
+      console.warn('No se pudo iniciar Spotify:', spotifyError);
+      setError('Conecta Spotify Premium');
+      return;
+    }
+    togglePlay();
+  };
 
   return (
     <div className="fixed top-20 right-3 z-50 flex flex-col items-center gap-1">
       <button
         type="button"
-        onClick={canControl ? togglePlay : undefined}
+        onClick={handleToggle}
         disabled={!canControl}
         className={`relative w-14 h-14 rounded-full bg-black border border-white/15 shadow-[0_0_20px_rgba(189,0,255,0.25)] flex items-center justify-center ${canControl ? 'active:scale-95' : 'cursor-default'}`}
         aria-label={isAudioPlaying ? 'Parar musica de la sala' : 'Marcar musica en play'}
@@ -37,6 +60,7 @@ export default function MusicVinylControl() {
       <span className={`rounded-full px-2 py-1 text-[9px] font-label-caps border ${isAudioPlaying ? 'border-neon-green/40 bg-neon-green/10 text-neon-green' : 'border-white/10 bg-black/40 text-on-surface-variant'}`}>
         {canControl ? (isAudioPlaying ? 'STOP' : 'PLAY') : (isAudioPlaying ? 'PLAY' : 'STOP')}
       </span>
+      {error && <span className="max-w-20 text-center text-[9px] text-intense-red font-label-caps">{error}</span>}
     </div>
   );
 }

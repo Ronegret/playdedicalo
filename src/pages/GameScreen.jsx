@@ -1,7 +1,8 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DEDICALO_PLAYLISTS, GAME_MODES, normalizeSpotifyPlaylistUrl, useGameStore } from '../store/useGameStore';
+import { createQuestionFromTrack, getCurrentHiddenTrack, pauseSpotifyPlayback, startRandomPlaylistTrack } from '../services/spotify';
 
 const EQUALIZER_BARS = [0.35, 0.58, 0.42, 0.71, 0.49, 0.64, 0.39];
 
@@ -19,6 +20,8 @@ export default function GameScreen() {
   } = useGameStore();
   const [answeredQuestionKey, setAnsweredQuestionKey] = useState(null);
   const [countdownValue, setCountdownValue] = useState(3);
+  const [spotifyMessage, setSpotifyMessage] = useState('');
+  const startedSpotifyRoundRef = useRef('');
 
   useEffect(() => {
     if (phase === 'result' || phase === 'final') {
@@ -45,6 +48,33 @@ export default function GameScreen() {
       window.clearInterval(interval);
     };
   }, [phase, round]);
+
+  useEffect(() => {
+    if (role !== 'host' || phase !== 'listen') return;
+
+    const playKey = `${round}-${spotifyPlaylistUrl}`;
+    if (startedSpotifyRoundRef.current === playKey) return;
+    startedSpotifyRoundRef.current = playKey;
+
+    let cancelled = false;
+    const preparingTimeout = window.setTimeout(() => {
+      if (!cancelled) setSpotifyMessage('Preparando Spotify...');
+    }, 0);
+
+    startRandomPlaylistTrack(spotifyPlaylistUrl)
+      .then(() => {
+        if (!cancelled) setSpotifyMessage('Sonando en Spotify. No mires el titulo.');
+      })
+      .catch((error) => {
+        console.error(error);
+        if (!cancelled) setSpotifyMessage('Conecta Spotify Premium para reproducir aqui.');
+      });
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(preparingTimeout);
+    };
+  }, [role, phase, round, spotifyPlaylistUrl]);
 
   const questionKey = useMemo(() => {
     if (!currentQuestion) return '';
@@ -76,6 +106,13 @@ export default function GameScreen() {
   const handleAnswer = (isCorrect) => {
     setAnsweredQuestionKey(questionKey);
     guestAnswer(isCorrect);
+  };
+
+  const handleHostBlackout = async () => {
+    const hiddenTrack = getCurrentHiddenTrack();
+    const spotifyQuestion = hiddenTrack ? createQuestionFromTrack(hiddenTrack, gameMode) : null;
+    await pauseSpotifyPlayback().catch((error) => console.warn('No se pudo pausar Spotify:', error));
+    await hostTriggerBlackout(spotifyQuestion);
   };
 
   return (
@@ -144,22 +181,13 @@ export default function GameScreen() {
             </div>
 
             <p className="max-w-xs text-sm text-on-surface-variant">
-              {activePlaylist ? `Playlist: ${activePlaylist.name}. ` : ''}Memoriza el ritmo, la epoca, la letra y el ambiente.
+              {role === 'host' && spotifyMessage ? spotifyMessage : `${activePlaylist ? `Playlist: ${activePlaylist.name}. ` : ''}Memoriza el ritmo, la epoca, la letra y el ambiente.`}
             </p>
 
             {role === 'host' && (
               <div className="w-full max-w-xs grid gap-3">
-                <a
-                  href={spotifyPlaylistUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="h-12 rounded-xl border border-neon-green/40 bg-neon-green/10 text-neon-green font-label-caps text-xs flex items-center justify-center gap-2"
-                >
-                  <span className="material-symbols-outlined text-base">open_in_new</span>
-                  ABRIR PLAYLIST
-                </a>
                 <button
-                  onClick={hostTriggerBlackout}
+                  onClick={handleHostBlackout}
                   className="w-full h-16 bg-intense-red hover:bg-red-600 text-white font-headline-lg-mobile text-2xl rounded-2xl shadow-[0_0_20px_rgba(255,0,0,0.38)] active:scale-95 transition-transform font-black border-2 border-white/20"
                 >
                   CORTE BLACKOUT

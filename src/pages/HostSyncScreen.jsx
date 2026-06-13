@@ -6,6 +6,7 @@ import { DEDICALO_PLAYLISTS, useGameStore } from '../store/useGameStore';
 import { auth, googleProvider } from '../firebase';
 import VinylVisualizer from '../components/VinylVisualizer';
 import NeonButton from '../components/NeonButton';
+import { connectSpotify, getSpotifyStatus } from '../services/spotify';
 
 const SAVED_PLAYLISTS_KEY = 'dedicalo_saved_spotify_playlists';
 
@@ -34,6 +35,7 @@ export default function HostSyncScreen() {
   const [customPlaylistUrl, setCustomPlaylistUrl] = useState(spotifyPlaylistUrl);
   const [customPlaylistName, setCustomPlaylistName] = useState('');
   const [savedPlaylists, setSavedPlaylists] = useState(() => readSavedPlaylists());
+  const [spotifyStatus, setSpotifyStatus] = useState(() => getSpotifyStatus());
   const createStartedRef = useRef(false);
 
   const allPresetPlaylists = [...DEDICALO_PLAYLISTS, ...savedPlaylists];
@@ -50,6 +52,12 @@ export default function HostSyncScreen() {
     });
 
     return unsubscribe;
+  }, []);
+
+  useEffect(() => {
+    const onFocus = () => setSpotifyStatus(getSpotifyStatus());
+    window.addEventListener('focus', onFocus);
+    return () => window.removeEventListener('focus', onFocus);
   }, []);
 
   const handleGoogleLogin = async () => {
@@ -166,6 +174,25 @@ export default function HostSyncScreen() {
             <p className={`text-xs leading-relaxed ${authStatus === 'error' ? 'text-error' : 'text-on-surface-variant'}`}>
               {authMessage}
             </p>
+          )}
+
+          {googleUser && (
+            <section className="rounded-2xl border border-white/10 bg-white/5 p-4 text-left">
+              <p className="text-xs text-neon-green font-label-caps mb-2">SPOTIFY DEL HOST</p>
+              <div className="flex items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="text-sm font-bold text-white">{spotifyStatus.connected ? 'Conectado' : 'Conectar para reproducir'}</p>
+                  <p className="mt-1 text-xs text-on-surface-variant">Solo el host necesita Spotify Premium.</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={connectSpotify}
+                  className="h-10 px-3 rounded-lg bg-neon-green text-black font-label-caps text-[10px] shrink-0"
+                >
+                  {spotifyStatus.connected ? 'RECONECTAR' : 'CONECTAR'}
+                </button>
+              </div>
+            </section>
           )}
 
           <AnimatePresence mode="wait">
