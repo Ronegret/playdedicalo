@@ -9,7 +9,6 @@ import GuestJoinScreen from './pages/GuestJoinScreen';
 import LobbyScreen from './pages/LobbyScreen';
 import GameScreen from './pages/GameScreen';
 import ResultScreen from './pages/ResultScreen';
-import AudioAtmosphere from './components/AudioAtmosphere';
 import ShaderBackground from './components/ShaderBackground';
 
 function App() {
@@ -18,7 +17,6 @@ function App() {
   return (
     <>
       <ShaderBackground />
-      <AudioAtmosphere />
       
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>

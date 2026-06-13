@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { GAME_MODES, useGameStore } from '../store/useGameStore';
+import { DEDICALO_PLAYLISTS, GAME_MODES, normalizeSpotifyPlaylistUrl, useGameStore } from '../store/useGameStore';
 
 const EQUALIZER_BARS = [0.35, 0.58, 0.42, 0.71, 0.49, 0.64, 0.39];
 
@@ -13,10 +13,12 @@ export default function GameScreen() {
     round,
     gameMode,
     currentQuestion,
+    spotifyPlaylistUrl,
     hostTriggerBlackout,
     guestAnswer
   } = useGameStore();
   const [answeredQuestionKey, setAnsweredQuestionKey] = useState(null);
+  const [countdownValue, setCountdownValue] = useState(3);
 
   useEffect(() => {
     if (phase === 'result' || phase === 'final') {
@@ -27,6 +29,23 @@ export default function GameScreen() {
     }
   }, [phase, navigate]);
 
+  useEffect(() => {
+    if (phase !== 'countdown') return undefined;
+
+    const startedAt = Date.now();
+    const updateCountdown = () => {
+      const elapsedMs = Math.max(0, Date.now() - startedAt);
+      setCountdownValue(Math.max(1, 3 - Math.floor(elapsedMs / 1000)));
+    };
+    const resetTimeout = window.setTimeout(updateCountdown, 0);
+    const interval = window.setInterval(updateCountdown, 120);
+
+    return () => {
+      window.clearTimeout(resetTimeout);
+      window.clearInterval(interval);
+    };
+  }, [phase, round]);
+
   const questionKey = useMemo(() => {
     if (!currentQuestion) return '';
     return `${currentQuestion.type}-${currentQuestion.text}-${round}`;
@@ -34,6 +53,9 @@ export default function GameScreen() {
 
   const hasAnswered = answeredQuestionKey === questionKey;
   const mode = GAME_MODES[gameMode] || GAME_MODES.pulse;
+  const activePlaylist = DEDICALO_PLAYLISTS.find((playlist) => (
+    normalizeSpotifyPlaylistUrl(playlist.url) === normalizeSpotifyPlaylistUrl(spotifyPlaylistUrl)
+  ));
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -78,7 +100,16 @@ export default function GameScreen() {
             className="w-full max-w-[430px] px-margin-mobile text-center"
           >
             <p className="font-label-caps text-electric-purple tracking-widest">PREPARA EL OIDO</p>
-            <div className="mt-3 font-stats-xl text-9xl text-neon-green drop-shadow-[0_0_24px_rgba(57,255,20,0.4)]">3</div>
+            <motion.div
+              key={countdownValue}
+              initial={{ scale: 0.45, opacity: 0 }}
+              animate={{ scale: [0.8, 1.12, 1], opacity: 1 }}
+              transition={{ duration: 0.28 }}
+              className="mt-3 font-stats-xl text-9xl text-neon-green drop-shadow-[0_0_24px_rgba(57,255,20,0.4)]"
+            >
+              {countdownValue}
+            </motion.div>
+            <p className="mt-4 text-sm text-on-surface-variant">La musica empieza al terminar la cuenta.</p>
           </motion.div>
         )}
 
@@ -113,16 +144,27 @@ export default function GameScreen() {
             </div>
 
             <p className="max-w-xs text-sm text-on-surface-variant">
-              Memoriza el ritmo, la epoca, la letra y el ambiente. El anfitrion cortara la musica cuando vea el momento perfecto.
+              {activePlaylist ? `Playlist: ${activePlaylist.name}. ` : ''}Memoriza el ritmo, la epoca, la letra y el ambiente.
             </p>
 
             {role === 'host' && (
-              <button
-                onClick={hostTriggerBlackout}
-                className="mt-3 w-full max-w-xs h-16 bg-intense-red hover:bg-red-600 text-white font-headline-lg-mobile text-2xl rounded-2xl shadow-[0_0_20px_rgba(255,0,0,0.38)] active:scale-95 transition-transform font-black border-2 border-white/20"
-              >
-                CORTE BLACKOUT
-              </button>
+              <div className="w-full max-w-xs grid gap-3">
+                <a
+                  href={spotifyPlaylistUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="h-12 rounded-xl border border-neon-green/40 bg-neon-green/10 text-neon-green font-label-caps text-xs flex items-center justify-center gap-2"
+                >
+                  <span className="material-symbols-outlined text-base">open_in_new</span>
+                  ABRIR PLAYLIST
+                </a>
+                <button
+                  onClick={hostTriggerBlackout}
+                  className="w-full h-16 bg-intense-red hover:bg-red-600 text-white font-headline-lg-mobile text-2xl rounded-2xl shadow-[0_0_20px_rgba(255,0,0,0.38)] active:scale-95 transition-transform font-black border-2 border-white/20"
+                >
+                  CORTE BLACKOUT
+                </button>
+              </div>
             )}
           </motion.div>
         )}
