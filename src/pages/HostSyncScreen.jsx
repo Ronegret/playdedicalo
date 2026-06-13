@@ -109,6 +109,8 @@ export default function HostSyncScreen() {
     setMusicMode('saved');
   };
 
+  const goBackToMusicMenu = () => setMusicMode(null);
+
   return (
     <motion.main
       initial={{ opacity: 0, x: 50 }}
@@ -198,7 +200,10 @@ export default function HostSyncScreen() {
 
             {googleUser && musicMode === 'curated' && (
               <motion.section key="curated" initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} className="rounded-2xl border border-white/10 bg-white/5 p-4 text-left">
-                <button type="button" onClick={() => setMusicMode(null)} className="text-xs text-on-surface-variant font-label-caps mb-3">Cambiar opcion</button>
+                <button type="button" onClick={goBackToMusicMenu} className="mb-4 h-10 px-3 rounded-lg border border-white/10 bg-black/15 text-white font-label-caps text-xs flex items-center gap-2">
+                  <span className="material-symbols-outlined text-sm">arrow_back</span>
+                  VOLVER
+                </button>
                 <p className="text-xs text-neon-green font-label-caps mb-3">PLAYLISTS SUGERIDAS</p>
                 <div className="space-y-2">
                   {DEDICALO_PLAYLISTS.map((playlist) => (
@@ -213,7 +218,10 @@ export default function HostSyncScreen() {
 
             {googleUser && musicMode === 'saved' && (
               <motion.section key="saved" initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} className="rounded-2xl border border-white/10 bg-white/5 p-4 text-left">
-                <button type="button" onClick={() => setMusicMode(null)} className="text-xs text-on-surface-variant font-label-caps mb-3">Cambiar opcion</button>
+                <button type="button" onClick={goBackToMusicMenu} className="mb-4 h-10 px-3 rounded-lg border border-white/10 bg-black/15 text-white font-label-caps text-xs flex items-center gap-2">
+                  <span className="material-symbols-outlined text-sm">arrow_back</span>
+                  VOLVER
+                </button>
                 <p className="text-xs text-neon-green font-label-caps mb-3">MIS PLAYLISTS</p>
                 <div className="space-y-2">
                   {savedPlaylists.map((playlist) => (
@@ -228,7 +236,10 @@ export default function HostSyncScreen() {
 
             {googleUser && musicMode === 'custom' && (
               <motion.section key="custom" initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} className="rounded-2xl border border-white/10 bg-white/5 p-4 text-left">
-                <button type="button" onClick={() => setMusicMode(null)} className="text-xs text-on-surface-variant font-label-caps mb-3">Cambiar opcion</button>
+                <button type="button" onClick={goBackToMusicMenu} className="mb-4 h-10 px-3 rounded-lg border border-white/10 bg-black/15 text-white font-label-caps text-xs flex items-center gap-2">
+                  <span className="material-symbols-outlined text-sm">arrow_back</span>
+                  VOLVER
+                </button>
                 <p className="text-xs text-neon-green font-label-caps mb-2">TU PLAYLIST</p>
                 <h3 className="text-white font-bold mb-2">Pega el link publico de Spotify.</h3>
                 <input

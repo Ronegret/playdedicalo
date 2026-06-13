@@ -79,13 +79,13 @@ export default {
         "stack-lg": "48px"
       },
       "fontFamily": {
-        "headline-xl": ["Montserrat", "sans-serif"],
-        "stats-xl": ["Montserrat", "sans-serif"],
-        "body-sm": ["Hanken Grotesk", "sans-serif"],
-        "headline-lg-mobile": ["Montserrat", "sans-serif"],
-        "body-md": ["Hanken Grotesk", "sans-serif"],
-        "headline-lg": ["Montserrat", "sans-serif"],
-        "label-caps": ["Space Mono", "monospace"]
+        "headline-xl": ["Inter", "Arial", "sans-serif"],
+        "stats-xl": ["Inter", "Arial", "sans-serif"],
+        "body-sm": ["Inter", "Arial", "sans-serif"],
+        "headline-lg-mobile": ["Inter", "Arial", "sans-serif"],
+        "body-md": ["Inter", "Arial", "sans-serif"],
+        "headline-lg": ["Inter", "Arial", "sans-serif"],
+        "label-caps": ["Inter", "Arial", "sans-serif"]
       },
       "fontSize": {
         "headline-xl": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "900"}],

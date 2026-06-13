@@ -123,9 +123,9 @@ const MUSIC_QUESTIONS = [
   { mode: 'pulse', type: 'Titulo exacto', text: 'Que palabra aparece en el titulo?', options: ['Noche', 'Corazon', 'Dedicalo', 'Perreo'], correct: 2 },
   { mode: 'pulse', type: 'Colaboracion', text: 'Que papel tiene la voz invitada en este corte?', options: ['Coro principal', 'Verso invitado', 'Intro hablada', 'No hay invitado'], correct: 1 },
   { mode: 'pulse', type: 'Cultura pop', text: 'Donde sonaria mejor este corte?', options: ['Final de fiesta', 'Escena triste', 'Entrenamiento', 'Creditos finales'], correct: 0 },
-  { mode: 'timeline', type: 'Linea del Ritmo', text: 'Donde pondrias este tema en la linea del tiempo?', options: ['Antes de 2000', '2000-2009', '2010-2019', '2020 en adelante'], correct: 2 },
-  { mode: 'timeline', type: 'Linea del Ritmo', text: 'Que momento musical encaja mejor con este sonido?', options: ['Era CD', 'Boom de YouTube', 'Playlists virales', 'TikTok global'], correct: 2 },
-  { mode: 'timeline', type: 'Colaboracion', text: 'Que tipo de colaboracion se volvio mas comun con la era de playlists?', options: ['Featuring entre generos', 'Cancion oculta', 'Solo instrumental', 'Album sin singles'], correct: 0 },
+  { mode: 'timeline', type: 'Linea del Ritmo', text: 'Coloca esta cancion en la linea de anos.', options: ['1998', '2006', '2014', '2022'], correct: 2 },
+  { mode: 'timeline', type: 'Linea del Ritmo', text: 'Si este hit fuera una carta, donde encajaria?', options: ['Antes de 2000', 'Entre 2000 y 2009', 'Entre 2010 y 2019', 'Desde 2020'], correct: 2 },
+  { mode: 'timeline', type: 'Linea del Ritmo', text: 'Que ano suena mas probable para este estilo?', options: ['1995', '2004', '2016', '2024'], correct: 2 },
   { mode: 'chaos', type: 'Remix Salvaje', text: 'Que jugada conviene ahora?', options: ['Guardar puntos', 'Activar sabotaje', 'Cambiar de avatar', 'Salir de la sala'], correct: 1 },
   { mode: 'chaos', type: 'Colaboracion', text: 'Si aparece un dueto, que conviene escuchar primero?', options: ['Quien entra despues', 'El volumen del movil', 'El color del boton', 'La posicion del ranking'], correct: 0 },
   { mode: 'chaos', type: 'Remix Salvaje', text: 'Que color anuncia sabotaje?', options: ['Verde', 'Rojo', 'Lila', 'Azul'], correct: 2 }

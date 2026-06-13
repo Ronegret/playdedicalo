@@ -4,16 +4,54 @@ import { useNavigate } from 'react-router-dom';
 import ChaosEconomyBubbles from '../components/ChaosEconomyBubbles';
 import { GAME_MODES, SABOTAGE_OPTIONS, VICTORY_MODES, useGameStore } from '../store/useGameStore';
 
-function InfoDetails({ children }) {
+function InfoDetails({ title, children }) {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <details className="group ml-auto shrink-0">
-      <summary className="list-none w-7 h-7 rounded-full border border-white/15 bg-white/5 text-on-surface-variant flex items-center justify-center cursor-pointer">
+    <>
+      <button
+        type="button"
+        onClick={() => setIsOpen(true)}
+        className="ml-auto shrink-0 w-7 h-7 rounded-full border border-white/15 bg-white/5 text-on-surface-variant flex items-center justify-center"
+        aria-label={`Ver información de ${title}`}
+      >
         <span className="material-symbols-outlined text-sm">info</span>
-      </summary>
-      <div className="mt-2 rounded-xl border border-white/10 bg-black/60 p-3 text-xs leading-relaxed text-on-surface-variant">
-        {children}
-      </div>
-    </details>
+      </button>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[120] bg-black/80 backdrop-blur-sm flex items-center justify-center px-5"
+            onClick={() => setIsOpen(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.94, y: 18 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.94, y: 18 }}
+              className="w-full max-w-sm rounded-2xl border border-white/10 bg-surface-container p-5 text-left shadow-[0_0_40px_rgba(189,0,255,0.22)]"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <div className="flex items-start justify-between gap-4">
+                <h3 className="text-xl font-black text-white leading-tight">{title}</h3>
+                <button
+                  type="button"
+                  onClick={() => setIsOpen(false)}
+                  className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-on-surface-variant"
+                  aria-label="Cerrar información"
+                >
+                  <span className="material-symbols-outlined text-lg">close</span>
+                </button>
+              </div>
+              <div className="mt-4 text-sm leading-relaxed text-on-surface-variant">
+                {children}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
 
@@ -42,7 +80,7 @@ function CheckRow({ title, subtitle, selected, onSelect, children }) {
 function ModeCard({ mode, selected, onSelect }) {
   return (
     <CheckRow title={mode.name} subtitle={mode.short} selected={selected} onSelect={onSelect}>
-      <InfoDetails>
+      <InfoDetails title={mode.name}>
         <p>{mode.description}</p>
         <p className="mt-2 text-neon-green">{mode.rhythm}</p>
       </InfoDetails>
@@ -53,7 +91,7 @@ function ModeCard({ mode, selected, onSelect }) {
 function VictoryCard({ mode, selected, onSelect }) {
   return (
     <CheckRow title={`${mode.targetScore} pts`} subtitle={mode.name} selected={selected} onSelect={onSelect}>
-      <InfoDetails>
+      <InfoDetails title={mode.name}>
         <p>{mode.description}</p>
       </InfoDetails>
     </CheckRow>
@@ -83,7 +121,7 @@ function SabotageCard({ option, canUse, onUse }) {
           <h3 className="text-sm font-bold text-white leading-tight">{option.name}</h3>
           <p className="mt-1 font-label-caps text-[10px] text-current">{option.cost} pts</p>
         </div>
-        <InfoDetails>
+        <InfoDetails title={option.name}>
           <p>{option.effect}</p>
         </InfoDetails>
       </div>

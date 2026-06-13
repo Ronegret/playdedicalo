@@ -1,49 +1,19 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import NeonButton from '../components/NeonButton';
+import VinylVisualizer from '../components/VinylVisualizer';
 
-const STEPS = [
-  {
-    number: '1',
-    title: 'El anfitrion crea la sala',
-    text: 'Inicia sesion, elige la musica y comparte el PIN o QR. El anfitrion tambien juega y aparece en el ranking.'
-  },
-  {
-    number: '2',
-    title: 'Todos escuchan el corte',
-    text: 'Suena una playlist de Dedicalo o una playlist publica de Spotify. No hay temporizador fijo: el anfitrion decide cuando cortar.'
-  },
-  {
-    number: '3',
-    title: 'Llega el blackout',
-    text: 'La musica se corta y aparece una pregunta musical: letra, artista, titulo, momento o linea del ritmo.'
-  },
-  {
-    number: '4',
-    title: 'Llega a la meta',
-    text: 'Gana quien llegue primero a 40, 70 o 100 puntos. La partida puede durar lo que el grupo quiera.'
-  }
+const FLOW = [
+  { icon: 'person_add', title: 'Crea sala', text: 'Host elige playlist y comparte PIN.' },
+  { icon: 'graphic_eq', title: 'Escuchan', text: 'Todos oyen el mismo fragmento.' },
+  { icon: 'bolt', title: 'Blackout', text: 'Se corta la música y aparece el reto.' },
+  { icon: 'emoji_events', title: 'Ranking', text: 'Suben puntos hasta la meta.' }
 ];
 
-const MODES = [
-  {
-    name: 'Pulso Dedicalo',
-    text: 'La experiencia base: todos escuchan el mismo fragmento, llega el corte y aparece una pregunta sencilla. Funciona con cualquier playlist y es la mejor para empezar.'
-  },
-  {
-    name: 'Linea del Ritmo',
-    text: 'El modo de memoria musical: hay que ubicar canciones, artistas o momentos por epoca. No busca que todos sepan fechas exactas, sino que discutan y apuesten por intuicion.'
-  },
-  {
-    name: 'Remix Salvaje',
-    text: 'El modo mas competitivo: las preguntas siguen siendo musicales, pero los sabotajes pesan mas. Es para grupos que quieren remontadas, riesgo y un final impredecible.'
-  }
-];
-
-const GOALS = [
-  { score: 40, name: 'Hit Express', text: 'Partida corta y facil de explicar.' },
-  { score: 70, name: 'Fiesta Principal', text: 'La opcion equilibrada para grupos.' },
-  { score: 100, name: 'Sesion Legendaria', text: 'Para noches largas y remontadas grandes.' }
+const EXAMPLES = [
+  { label: 'Pulso', question: '¿Qué palabra aparece?', answers: ['Noche', 'Corazón', 'Dedícalo'] },
+  { label: 'Ritmo', question: 'Colócala en la línea', answers: ['1998', '2006', '2019'] },
+  { label: 'Remix', question: '¿Usas jugada?', answers: ['Bloquear', 'Robar', 'Guardar'] }
 ];
 
 export default function HowToPlayScreen() {
@@ -62,75 +32,80 @@ export default function HowToPlayScreen() {
         </button>
       </header>
 
-      <section className="text-left">
-        <p className="font-label-caps text-neon-green text-xs tracking-widest">REGLAS RAPIDAS</p>
-        <h1 className="mt-2 font-headline-lg text-4xl text-white font-black leading-tight">Como se juega Dedicalo</h1>
-        <p className="mt-3 text-base leading-relaxed text-on-surface-variant">
-          Es una batalla social de musica para jugar con amigos: una persona crea la sala, todos entran con PIN y cada ronda mezcla memoria, reflejos y estrategia.
+      <section className="text-center">
+        <VinylVisualizer rotating={true} isHero={false} />
+        <p className="mt-3 font-label-caps text-neon-green text-xs tracking-widest">GUÍA RÁPIDA</p>
+        <h1 className="mt-2 font-headline-lg text-4xl text-white font-black leading-tight">Así se juega</h1>
+        <p className="mt-3 text-sm leading-relaxed text-on-surface-variant">
+          Música, corte sorpresa, respuesta rápida y ranking. Simple para entrar, divertido para repetir.
         </p>
       </section>
 
-      <section className="mt-7 grid gap-3">
-        {STEPS.map((step) => (
+      <section className="mt-7 grid grid-cols-2 gap-3">
+        {FLOW.map((step, index) => (
           <motion.article
-            key={step.number}
-            initial={{ opacity: 0, x: -12 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: Number(step.number) * 0.05 }}
-            className="rounded-2xl border border-white/10 bg-white/5 p-4 flex gap-4"
+            key={step.title}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.05 }}
+            className="rounded-xl border border-white/10 bg-white/5 p-4 min-h-32"
           >
-            <div className="w-11 h-11 rounded-xl bg-neon-green text-black font-stats-xl text-2xl flex items-center justify-center shrink-0">
-              {step.number}
-            </div>
-            <div>
-              <h2 className="font-headline-lg-mobile text-xl text-white leading-tight">{step.title}</h2>
-              <p className="mt-1 text-sm leading-relaxed text-on-surface-variant">{step.text}</p>
-            </div>
+            <span className="material-symbols-outlined text-neon-green text-3xl">{step.icon}</span>
+            <h2 className="mt-3 text-white font-black leading-tight">{step.title}</h2>
+            <p className="mt-1 text-xs text-on-surface-variant leading-snug">{step.text}</p>
           </motion.article>
         ))}
       </section>
 
-      <section className="mt-7 rounded-2xl border border-electric-purple/40 bg-electric-purple/10 p-5">
-        <p className="font-label-caps text-electric-purple text-xs tracking-widest">ESTILOS DE JUEGO</p>
-        <h2 className="mt-2 font-headline-lg-mobile text-2xl text-white">Elige el ambiente de la partida</h2>
-        <p className="mt-2 text-sm leading-relaxed text-on-surface-variant">
-          Todos los estilos usan musica, PIN, ranking y sabotajes. Lo que cambia es el tipo de pregunta y el nivel de estrategia.
-        </p>
+      <section className="mt-7 rounded-2xl border border-electric-purple/40 bg-electric-purple/10 p-4">
+        <p className="font-label-caps text-electric-purple text-xs">EJEMPLOS VISUALES</p>
         <div className="mt-4 grid gap-3">
-          {MODES.map((mode) => (
-            <div key={mode.name} className="rounded-xl bg-black/15 border border-white/10 p-4">
-              <h3 className="font-headline-lg-mobile text-xl text-white">{mode.name}</h3>
-              <p className="mt-1 text-sm leading-relaxed text-on-surface-variant">{mode.text}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="mt-7 rounded-2xl border border-neon-green/40 bg-neon-green/10 p-5">
-        <p className="font-label-caps text-neon-green text-xs tracking-widest">FORMAS DE GANAR</p>
-        <h2 className="mt-2 font-headline-lg-mobile text-2xl text-white">Elige una meta clara</h2>
-        <div className="mt-4 grid gap-3">
-          {GOALS.map((goal) => (
-            <div key={goal.score} className="rounded-xl bg-black/15 border border-white/10 p-4 flex items-center gap-4">
-              <span className="font-stats-xl text-4xl text-neon-green">{goal.score}</span>
-              <div>
-                <h3 className="font-bold text-white">{goal.name}</h3>
-                <p className="text-sm text-on-surface-variant">{goal.text}</p>
+          {EXAMPLES.map((example) => (
+            <article key={example.label} className="rounded-xl border border-white/10 bg-black/20 p-4">
+              <div className="flex items-center justify-between gap-3">
+                <span className="font-label-caps text-neon-green text-[10px]">{example.label}</span>
+                <span className="material-symbols-outlined text-white/50 text-base">touch_app</span>
               </div>
-            </div>
+              <h3 className="mt-2 text-white font-bold">{example.question}</h3>
+              <div className="mt-3 grid gap-2">
+                {example.answers.map((answer, index) => (
+                  <div key={answer} className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 flex items-center gap-2">
+                    <span className="w-6 h-6 rounded-md bg-neon-green/15 text-neon-green text-xs font-black flex items-center justify-center">
+                      {String.fromCharCode(65 + index)}
+                    </span>
+                    <span className="text-sm text-white">{answer}</span>
+                  </div>
+                ))}
+              </div>
+            </article>
           ))}
         </div>
       </section>
 
-      <section className="mt-7 rounded-2xl border border-white/10 bg-white/5 p-5">
-        <p className="font-label-caps text-neon-green text-xs tracking-widest">SABOTAJES</p>
-        <h2 className="mt-2 font-headline-lg-mobile text-2xl text-white">Puntos como arma</h2>
-        <div className="mt-4 grid gap-2 text-sm text-on-surface-variant">
-          <p><span className="font-bold text-intense-red">Silencio al lider:</span> el lider no suma si acierta la proxima vuelta.</p>
-          <p><span className="font-bold text-electric-purple">Letra al reves:</span> la pregunta llega invertida para subir la presion.</p>
-          <p><span className="font-bold text-neon-green">Dueto dividido:</span> si otro acierta, reparte puntos contigo.</p>
-          <p><span className="font-bold text-electric-purple">Cambio de aguja:</span> fuerza una categoria sorpresa.</p>
+      <section className="mt-7 rounded-2xl border border-neon-green/40 bg-neon-green/10 p-4">
+        <p className="font-label-caps text-neon-green text-xs">LÍNEA DEL RITMO</p>
+        <h2 className="mt-2 text-white text-xl font-black">Ordena por años</h2>
+        <div className="mt-4 flex items-center justify-between gap-2">
+          {[1985, 1999, 2008, 2021].map((year) => (
+            <div key={year} className="flex-1 rounded-xl border border-white/10 bg-black/20 py-3 text-center">
+              <span className="text-neon-green font-black">{year}</span>
+            </div>
+          ))}
         </div>
+        <p className="mt-3 text-xs text-on-surface-variant">Solo años. Sin meses. La idea viene de juegos tipo timeline musical: colocar antes, después o entre años.</p>
+      </section>
+
+      <section className="mt-7 rounded-2xl border border-white/10 bg-white/5 p-4">
+        <p className="font-label-caps text-on-surface-variant text-xs">META</p>
+        <div className="mt-3 grid grid-cols-3 gap-2">
+          {[40, 70, 100].map((score) => (
+            <div key={score} className="rounded-xl bg-black/20 border border-white/10 p-3 text-center">
+              <span className="block text-2xl text-neon-green font-black">{score}</span>
+              <span className="text-[10px] text-on-surface-variant">puntos</span>
+            </div>
+          ))}
+        </div>
+        <p className="mt-3 text-xs text-on-surface-variant">Gana quien llegue primero a la meta elegida y aparezca #1 en el ranking.</p>
       </section>
 
       <div className="mt-8">
