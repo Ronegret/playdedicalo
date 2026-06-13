@@ -4,43 +4,59 @@ import { useNavigate } from 'react-router-dom';
 import ChaosEconomyBubbles from '../components/ChaosEconomyBubbles';
 import { GAME_MODES, SABOTAGE_OPTIONS, VICTORY_MODES, useGameStore } from '../store/useGameStore';
 
+function InfoDetails({ children }) {
+  return (
+    <details className="group ml-auto shrink-0">
+      <summary className="list-none w-7 h-7 rounded-full border border-white/15 bg-white/5 text-on-surface-variant flex items-center justify-center cursor-pointer">
+        <span className="material-symbols-outlined text-sm">info</span>
+      </summary>
+      <div className="mt-2 rounded-xl border border-white/10 bg-black/60 p-3 text-xs leading-relaxed text-on-surface-variant">
+        {children}
+      </div>
+    </details>
+  );
+}
+
+function CheckRow({ title, subtitle, selected, onSelect, children }) {
+  return (
+    <div className={`rounded-xl border transition-colors ${selected ? 'border-neon-green bg-neon-green/10' : 'border-white/10 bg-black/10'}`}>
+      <div className="flex items-center gap-3 p-3">
+        <button
+          type="button"
+          onClick={onSelect}
+          className={`w-6 h-6 rounded-md border flex items-center justify-center shrink-0 ${selected ? 'border-neon-green bg-neon-green text-black' : 'border-white/20 bg-white/5 text-transparent'}`}
+          aria-pressed={selected}
+        >
+          <span className="material-symbols-outlined text-base">check</span>
+        </button>
+        <button type="button" onClick={onSelect} className="min-w-0 flex-1 text-left">
+          <span className="block text-sm font-bold text-white leading-tight">{title}</span>
+          {subtitle && <span className="mt-1 block text-[11px] text-on-surface-variant truncate">{subtitle}</span>}
+        </button>
+        {children}
+      </div>
+    </div>
+  );
+}
+
 function ModeCard({ mode, selected, onSelect }) {
   return (
-    <button
-      type="button"
-      onClick={onSelect}
-      className={`rounded-xl border p-4 text-left transition-all ${selected ? 'border-neon-green bg-neon-green/10 shadow-[0_0_18px_rgba(57,255,20,0.16)]' : 'border-white/10 bg-black/10 hover:border-white/25'}`}
-    >
-      <div className="flex items-center justify-between gap-3">
-        <span className="font-headline-lg-mobile text-lg text-white">{mode.name}</span>
-        {selected && <span className="material-symbols-outlined text-neon-green text-xl">check_circle</span>}
-      </div>
-      <p className="mt-1 font-label-caps text-[10px] text-electric-purple tracking-widest">{mode.short}</p>
-      <p className="mt-3 text-sm leading-relaxed text-on-surface-variant">{mode.description}</p>
-      <div className="mt-3 rounded-lg border border-white/10 bg-black/15 p-3">
-        <p className="font-label-caps text-[10px] text-neon-green">CUANDO USARLO</p>
-        <p className="mt-1 text-xs leading-relaxed text-on-surface-variant">{mode.rhythm}</p>
-      </div>
-    </button>
+    <CheckRow title={mode.name} subtitle={mode.short} selected={selected} onSelect={onSelect}>
+      <InfoDetails>
+        <p>{mode.description}</p>
+        <p className="mt-2 text-neon-green">{mode.rhythm}</p>
+      </InfoDetails>
+    </CheckRow>
   );
 }
 
 function VictoryCard({ mode, selected, onSelect }) {
   return (
-    <button
-      type="button"
-      onClick={onSelect}
-      className={`rounded-xl border p-4 text-left transition-all ${selected ? 'border-neon-green bg-neon-green/10' : 'border-white/10 bg-black/10 hover:border-white/25'}`}
-    >
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <h3 className="font-headline-lg-mobile text-lg text-white">{mode.name}</h3>
-          <p className="mt-1 font-label-caps text-[10px] text-electric-purple">{mode.short}</p>
-        </div>
-        <span className="font-stats-xl text-3xl text-neon-green">{mode.targetScore}</span>
-      </div>
-      <p className="mt-2 text-xs leading-relaxed text-on-surface-variant">{mode.description}</p>
-    </button>
+    <CheckRow title={`${mode.targetScore} pts`} subtitle={mode.name} selected={selected} onSelect={onSelect}>
+      <InfoDetails>
+        <p>{mode.description}</p>
+      </InfoDetails>
+    </CheckRow>
   );
 }
 
@@ -52,25 +68,25 @@ function SabotageCard({ option, canUse, onUse }) {
       : 'border-electric-purple/60 text-electric-purple';
 
   return (
-    <div className={`rounded-xl border bg-white/5 p-4 ${colorClass}`}>
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <h3 className="font-headline-lg-mobile text-lg text-white">{option.name}</h3>
-          <p className="mt-1 text-xs leading-relaxed text-on-surface-variant">{option.effect}</p>
-        </div>
-        <span className="rounded-full bg-black/25 px-2 py-1 font-label-caps text-[10px] shrink-0">
-          {option.cost} pts
-        </span>
-      </div>
-      {canUse && (
+    <div className={`rounded-xl border bg-white/5 ${colorClass}`}>
+      <div className="flex items-center gap-3 p-3">
         <button
           type="button"
-          onClick={() => onUse(option.id)}
-          className="mt-3 h-9 w-full rounded-lg border border-current bg-black/15 font-label-caps text-[10px] text-current active:scale-95 transition-transform"
+          onClick={() => canUse && onUse(option.id)}
+          disabled={!canUse}
+          className={`w-6 h-6 rounded-md border flex items-center justify-center shrink-0 ${canUse ? 'border-current bg-black/15 text-current' : 'border-white/15 text-transparent opacity-50'}`}
+          aria-label={`Activar ${option.name}`}
         >
-          ACTIVAR SABOTAJE
+          <span className="material-symbols-outlined text-base">check</span>
         </button>
-      )}
+        <div className="min-w-0 flex-1">
+          <h3 className="text-sm font-bold text-white leading-tight">{option.name}</h3>
+          <p className="mt-1 font-label-caps text-[10px] text-current">{option.cost} pts</p>
+        </div>
+        <InfoDetails>
+          <p>{option.effect}</p>
+        </InfoDetails>
+      </div>
     </div>
   );
 }
@@ -146,16 +162,16 @@ export default function LobbyScreen() {
         </div>
 
         {role === 'host' && (
-          <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-5 text-left">
-            <p className="font-label-caps text-on-surface-variant text-xs mb-3">CONFIGURACION DE PARTIDA</p>
+          <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-4 text-left">
+            <p className="font-label-caps text-neon-green text-xs mb-3">CONFIGURACION</p>
 
-            <div className="space-y-5">
+            <div className="space-y-4">
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-bold text-white">Meta para ganar</span>
+                  <span className="text-sm font-bold text-white">Meta</span>
                   <span className="text-xs text-neon-green font-label-caps">{targetScore} puntos</span>
                 </div>
-                <div className="grid gap-2">
+                <div className="grid grid-cols-1 gap-2">
                   {VICTORY_MODES.map((mode) => (
                     <VictoryCard
                       key={mode.targetScore}
@@ -169,12 +185,9 @@ export default function LobbyScreen() {
 
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-bold text-white">Estilo de juego</span>
+                  <span className="text-sm font-bold text-white">Modo</span>
                   <span className="text-xs text-neon-green font-label-caps">{GAME_MODES[gameMode]?.short}</span>
                 </div>
-                <p className="mb-3 text-xs leading-relaxed text-on-surface-variant">
-                  El estilo cambia el tipo de preguntas y el ritmo de la partida. Si dudas, empieza con Pulso Dedicalo.
-                </p>
                 <div className="grid gap-2">
                   {Object.values(GAME_MODES).map((mode) => (
                     <ModeCard
@@ -185,13 +198,6 @@ export default function LobbyScreen() {
                     />
                   ))}
                 </div>
-              </div>
-
-              <div className="rounded-2xl border border-white/10 bg-black/15 p-4">
-                <p className="font-label-caps text-neon-green text-[10px]">CONTROL DEL HOST</p>
-                <p className="mt-2 text-sm leading-relaxed text-on-surface-variant">
-                  No hay limite de rondas ni temporizador fijo. El anfitrion deja sonar la musica el tiempo que quiera y pulsa corte cuando vea el momento.
-                </p>
               </div>
             </div>
 
@@ -211,31 +217,30 @@ export default function LobbyScreen() {
           </div>
         )}
 
-        <section className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-5 text-left">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <p className="font-label-caps text-electric-purple text-xs">SABOTAJES</p>
-              <h2 className="font-headline-lg-mobile text-2xl text-white">Golpes de escenario</h2>
+        {role === 'guest' && (
+          <details className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md text-left overflow-hidden">
+            <summary className="list-none p-4 flex items-center justify-between gap-3 cursor-pointer">
+              <div>
+                <p className="font-label-caps text-electric-purple text-xs">SABOTAJES</p>
+                <h2 className="text-base font-bold text-white">Opciones de esta ronda</h2>
+              </div>
+              <span className="material-symbols-outlined text-electric-purple">expand_more</span>
+            </summary>
+            <div className="px-4 pb-4 grid gap-2">
+              {SABOTAGE_OPTIONS.map((option) => (
+                <SabotageCard
+                  key={option.id}
+                  option={option}
+                  canUse={canUseSabotage}
+                  onUse={guestUseSabotage}
+                />
+              ))}
+              {!canUseSabotage && (
+                <p className="text-[11px] text-on-surface-variant">Se desbloquean despues de la primera ronda.</p>
+              )}
             </div>
-            <span className="material-symbols-outlined text-electric-purple">auto_awesome</span>
-          </div>
-          <p className="mt-2 text-xs leading-relaxed text-on-surface-variant">
-            Desde la ronda 2 tus puntos son un arma: puedes bloquear al lider, poner la letra al reves, dividir un acierto o forzar una categoria sorpresa. La pantalla lila avisa que hubo sabotaje.
-          </p>
-          <div className="mt-4 grid gap-3">
-            {SABOTAGE_OPTIONS.map((option) => (
-              <SabotageCard
-                key={option.id}
-                option={option}
-                canUse={canUseSabotage}
-                onUse={guestUseSabotage}
-              />
-            ))}
-          </div>
-          {!canUseSabotage && role === 'guest' && (
-            <p className="mt-3 text-[11px] text-on-surface-variant">Se desbloquean despues de la primera ronda.</p>
-          )}
-        </section>
+          </details>
+        )}
       </section>
 
       <section className="mt-8 w-full z-10">
