@@ -61,7 +61,11 @@ export default function GameScreen() {
     currentQuestion,
     spotifyPlaylistUrl,
     hostTriggerBlackout,
+    hostRevealResults,
     guestAnswer,
+    guestId,
+    players,
+    roundAnswers,
     setAudioPlaying
   } = useGameStore();
   const [answeredQuestionKey, setAnsweredQuestionKey] = useState(null);
@@ -133,7 +137,10 @@ export default function GameScreen() {
     return `${currentQuestion.type}-${currentQuestion.text}-${round}`;
   }, [currentQuestion, round]);
 
-  const hasAnswered = answeredQuestionKey === questionKey;
+  const hasRemoteAnswer = Boolean(guestId && roundAnswers?.[guestId]);
+  const hasAnswered = answeredQuestionKey === questionKey || hasRemoteAnswer;
+  const answerCount = Object.keys(roundAnswers || {}).length;
+  const expectedGuestVotes = players.filter((player) => !player.isHost).length;
   const mode = GAME_MODES[gameMode] || GAME_MODES.pulse;
   const activePlaylist = DEDICALO_PLAYLISTS.find((playlist) => (
     normalizeSpotifyPlaylistUrl(playlist.url) === normalizeSpotifyPlaylistUrl(spotifyPlaylistUrl)
@@ -269,18 +276,33 @@ export default function GameScreen() {
               </motion.h2>
             </div>
 
-            {hasAnswered ? (
+            {role === 'host' && (
+              <div className="mt-4 rounded-2xl border border-white/10 bg-white/5 p-4 text-center">
+                <p className="font-label-caps text-neon-green text-xs">VOTOS RECIBIDOS</p>
+                <p className="mt-1 text-4xl font-black text-white">{answerCount}/{expectedGuestVotes}</p>
+                <button
+                  type="button"
+                  onClick={hostRevealResults}
+                  className="mt-4 w-full h-12 rounded-xl bg-neon-green text-black font-label-caps font-bold active:scale-95 transition-transform"
+                >
+                  REVELAR RESULTADOS
+                </button>
+              </div>
+            )}
+
+            {role !== 'host' && hasAnswered ? (
               <div className="mt-8 rounded-2xl border border-neon-green/30 bg-neon-green/10 p-5 text-center">
                 <span className="material-symbols-outlined text-neon-green text-4xl">check_circle</span>
                 <p className="mt-3 text-on-surface-variant font-label-caps text-sm animate-pulse">RESPUESTA ENVIADA</p>
+                <p className="mt-2 text-xs text-on-surface-variant">Pantalla en negro hasta que el anfitrión revele.</p>
               </div>
-            ) : currentQuestion.answerType === 'timeline-placement' ? (
+            ) : role !== 'host' && currentQuestion.answerType === 'timeline-placement' ? (
               <TimelinePlacementQuestion
                 question={currentQuestion}
                 disabled={hasAnswered}
                 onPick={handleAnswer}
               />
-            ) : (
+            ) : role !== 'host' ? (
               <motion.div
                 variants={containerVariants}
                 initial="hidden"
@@ -301,7 +323,7 @@ export default function GameScreen() {
                   </motion.button>
                 ))}
               </motion.div>
-            )}
+            ) : null}
           </motion.div>
         )}
       </AnimatePresence>

@@ -214,6 +214,8 @@ export const useGameStore = create((setStore, getStore) => ({
   lastResultType: null,
   lastPointDelta: 0,
   lastSabotage: null,
+  roundAnswers: {},
+  revealResults: {},
   pointLocks: {},
   sharedPrize: null,
   pendingQuestionEffect: null,
@@ -290,6 +292,8 @@ export const useGameStore = create((setStore, getStore) => ({
         lastResultType: null,
         lastPointDelta: 0,
         lastSabotage: null,
+        roundAnswers: {},
+        revealResults: {},
         pointLocks: {},
         sharedPrize: null,
         pendingQuestionEffect: null
@@ -335,9 +339,87 @@ export const useGameStore = create((setStore, getStore) => ({
       : questionBase;
 
     await Promise.all([
-      patchData(`rooms/${pin}`, { phase: 'blackout', currentQuestion: question, pendingQuestionEffect: null }),
+      patchData(`rooms/${pin}`, { phase: 'blackout', currentQuestion: question, pendingQuestionEffect: null, roundAnswers: null, revealResults: null }),
       patchData(`rooms/${pin}/audio`, { isPlaying: false })
     ]);
+  },
+
+  hostRevealResults: async () => {
+    const { pin, targetScore } = getStore();
+    if (!pin) return;
+
+    const room = await readData(`rooms/${pin}`);
+    const playersById = room?.players || {};
+    const answers = room?.roundAnswers || {};
+    const pointLocks = room?.pointLocks || {};
+    const sharedPrize = room?.sharedPrize || null;
+    const remoteUpdates = {};
+    const revealResults = {};
+
+    Object.values(playersById).forEach((player) => {
+      const answer = answers[player.id];
+      const isCorrect = Boolean(answer?.isCorrect);
+      const pointLock = pointLocks[player.id] || null;
+      const isLocked = Boolean(isCorrect && pointLock);
+      const sharesWithBuyer = Boolean(isCorrect && sharedPrize?.buyerId && sharedPrize.buyerId !== player.id);
+      const delta = answer ? (isCorrect ? (isLocked ? 0 : sharesWithBuyer ? 3 : 5) : -3) : player.isHost ? 0 : -3;
+      const nextPoints = clampPoints(Number(player.points || 0) + delta);
+      const sabotage = isLocked
+        ? { name: 'Silencio al lider', by: pointLock.by, effect: `${pointLock.by} intentó bloquear tu acierto. Tus puntos quedan en 0 esta ronda.` }
+        : sharesWithBuyer
+          ? { name: 'Dueto dividido', by: sharedPrize.buyerName, effect: `${sharedPrize.buyerName} activó un dueto y compartió tu acierto.` }
+          : null;
+
+      remoteUpdates[`players/${player.id}/points`] = nextPoints;
+      revealResults[player.id] = {
+        resultType: sabotage ? 'sabotage' : isCorrect ? 'success' : 'fail',
+        isCorrect,
+        answered: Boolean(answer),
+        delta,
+        points: nextPoints,
+        sabotage
+      };
+
+      if (isLocked) {
+        remoteUpdates[`pointLocks/${player.id}`] = null;
+      }
+    });
+
+    if (sharedPrize?.buyerId && playersById[sharedPrize.buyerId]) {
+      const buyer = playersById[sharedPrize.buyerId];
+      const buyerNextPoints = clampPoints(Number(remoteUpdates[`players/${buyer.id}/points`] ?? buyer.points ?? 0) + 2);
+      remoteUpdates[`players/${buyer.id}/points`] = buyerNextPoints;
+      revealResults[buyer.id] = {
+        ...(revealResults[buyer.id] || {}),
+        resultType: 'sabotage',
+        delta: Number(revealResults[buyer.id]?.delta || 0) + 2,
+        points: buyerNextPoints,
+        sabotage: { name: 'Dueto dividido', by: buyer.name, effect: 'Tu sabotaje sumó 2 puntos por compartir un acierto.' }
+      };
+      remoteUpdates.sharedPrize = null;
+    }
+
+    const nextPlayers = sortPlayers(Object.values(playersById).map((player) => ({
+      ...player,
+      points: remoteUpdates[`players/${player.id}/points`] ?? player.points
+    })));
+    const winner = findWinner(nextPlayers, targetScore);
+    remoteUpdates.phase = winner ? 'final' : 'result';
+    remoteUpdates.revealResults = revealResults;
+    remoteUpdates.lastSabotage = Object.values(revealResults).find((result) => result.sabotage)?.sabotage || null;
+    remoteUpdates.currentQuestion = winner ? null : room.currentQuestion || null;
+
+    await patchData(`rooms/${pin}`, remoteUpdates);
+
+    const ownResult = revealResults[getStore().guestId] || null;
+    setStore({
+      phase: remoteUpdates.phase,
+      players: nextPlayers,
+      revealResults,
+      lastResultType: ownResult?.resultType || getStore().lastResultType,
+      lastPointDelta: ownResult?.delta || 0,
+      lastSabotage: ownResult?.sabotage || remoteUpdates.lastSabotage
+    });
   },
 
   hostNextRound: async () => {
@@ -353,6 +435,8 @@ export const useGameStore = create((setStore, getStore) => ({
       phase: 'lobby',
       round: round + 1,
       currentQuestion: null,
+      roundAnswers: null,
+      revealResults: null,
       lastSabotage: null
     });
   },
@@ -383,6 +467,8 @@ export const useGameStore = create((setStore, getStore) => ({
       lastResultType: null,
       lastPointDelta: 0,
       lastSabotage: null,
+      roundAnswers: {},
+      revealResults: {},
       pointLocks: {},
       sharedPrize: null,
       pendingQuestionEffect: null,
@@ -432,67 +518,19 @@ export const useGameStore = create((setStore, getStore) => ({
   },
 
   guestAnswer: async (isCorrect) => {
-    const { pin, guestId, targetScore } = getStore();
+    const { pin, guestId, guestName, round } = getStore();
     if (!pin || !guestId) return;
 
-    const room = await readData(`rooms/${pin}`);
-    const player = await readData(`rooms/${pin}/players/${guestId}`);
-    const pointLock = room?.pointLocks?.[guestId] || null;
-    const sharedPrize = room?.sharedPrize || null;
-    const isLocked = Boolean(isCorrect && pointLock);
-    const sharesWithBuyer = Boolean(isCorrect && sharedPrize?.buyerId && sharedPrize.buyerId !== guestId);
-    const delta = isCorrect ? (isLocked ? 0 : sharesWithBuyer ? 3 : 5) : -3;
-    let nextPoints = null;
-    const remoteUpdates = {};
-
-    if (player) {
-      nextPoints = clampPoints(Number(player.points || 0) + delta);
-      remoteUpdates[`players/${guestId}/points`] = nextPoints;
-    }
-
-    if (isLocked) {
-      remoteUpdates[`pointLocks/${guestId}`] = null;
-    }
-
-    if (sharesWithBuyer) {
-      const buyer = await readData(`rooms/${pin}/players/${sharedPrize.buyerId}`);
-      if (buyer) {
-        remoteUpdates[`players/${sharedPrize.buyerId}/points`] = clampPoints(Number(buyer.points || 0) + 2);
-      }
-      remoteUpdates.sharedPrize = null;
-    }
-
-    if (Object.keys(remoteUpdates).length > 0) {
-      await patchData(`rooms/${pin}`, remoteUpdates);
-    }
-
-    const players = nextPoints === null
-      ? getStore().players
-      : sortPlayers(getStore().players.map((playerItem) => {
-        if (playerItem.id === guestId) return { ...playerItem, points: nextPoints };
-        if (sharesWithBuyer && playerItem.id === sharedPrize.buyerId) {
-          return { ...playerItem, points: clampPoints(Number(playerItem.points || 0) + 2) };
-        }
-        return playerItem;
-      }));
-
-    if (findWinner(players, targetScore)) {
-      await Promise.all([
-        patchData(`rooms/${pin}`, { phase: 'final', currentQuestion: null }),
-        patchData(`rooms/${pin}/audio`, { isPlaying: false })
-      ]);
-    }
-
+    const answer = {
+      playerId: guestId,
+      playerName: guestName || getStore().players.find((player) => player.id === guestId)?.name || 'Jugador',
+      isCorrect: Boolean(isCorrect),
+      round,
+      at: Date.now()
+    };
+    await writeData(`rooms/${pin}/roundAnswers/${guestId}`, answer);
     setStore({
-      phase: findWinner(players, targetScore) ? 'final' : 'result',
-      players,
-      lastResultType: isLocked || sharesWithBuyer ? 'sabotage' : isCorrect ? 'success' : 'fail',
-      lastPointDelta: delta,
-      lastSabotage: isLocked
-        ? { name: 'Silencio al lider', effect: 'Acertaste, pero el sabotaje bloqueo tus puntos esta vuelta.' }
-        : sharesWithBuyer
-          ? { name: 'Dueto dividido', effect: `${sharedPrize.buyerName} activo un dueto: compartieron los puntos de tu acierto.` }
-          : null
+      roundAnswers: { ...getStore().roundAnswers, [guestId]: answer }
     });
   },
 
@@ -501,6 +539,7 @@ export const useGameStore = create((setStore, getStore) => ({
     const sabotage = SABOTAGE_OPTIONS.find((option) => option.id === sabotageId);
     if (!pin || !guestId || !sabotage) return;
 
+    const room = await readData(`rooms/${pin}`);
     const player = await readData(`rooms/${pin}/players/${guestId}`);
     if (!player || Number(player.points || 0) < sabotage.cost) {
       setStore({ lastResultType: 'sabotage', lastSabotage: { ...sabotage, blocked: true }, lastPointDelta: 0 });
@@ -513,16 +552,16 @@ export const useGameStore = create((setStore, getStore) => ({
     let remoteUpdates = {};
     let appliedSabotage = { ...sabotage, by: player.name };
 
-    if (sabotage.id === 'point_lock' && leader) {
+    if (sabotage.id === 'point_lock' && leader && !room?.pointLocks?.[leader.id]) {
       remoteUpdates[`pointLocks/${leader.id}`] = { by: player.name, byId: guestId, round: getStore().round };
       appliedSabotage = { ...appliedSabotage, target: leader.name };
     }
 
-    if (sabotage.id === 'reverse_lyrics' || sabotage.id === 'wild_question') {
+    if ((sabotage.id === 'reverse_lyrics' || sabotage.id === 'wild_question') && !room?.pendingQuestionEffect) {
       remoteUpdates.pendingQuestionEffect = { id: sabotage.id, by: player.name, byId: guestId };
     }
 
-    if (sabotage.id === 'shared_prize') {
+    if (sabotage.id === 'shared_prize' && !room?.sharedPrize) {
       remoteUpdates.sharedPrize = { buyerId: guestId, buyerName: player.name, round: getStore().round };
     }
 
@@ -541,14 +580,12 @@ export const useGameStore = create((setStore, getStore) => ({
     }));
 
     setStore({
-      phase: 'result',
       players,
-      pointLocks: sabotage.id === 'point_lock' && leader
+      pointLocks: sabotage.id === 'point_lock' && leader && remoteUpdates[`pointLocks/${leader.id}`]
         ? { ...getStore().pointLocks, [leader.id]: { by: player.name, byId: guestId, round: getStore().round } }
         : getStore().pointLocks,
-      sharedPrize: sabotage.id === 'shared_prize' ? remoteUpdates.sharedPrize : getStore().sharedPrize,
-      pendingQuestionEffect: sabotage.id === 'reverse_lyrics' || sabotage.id === 'wild_question' ? remoteUpdates.pendingQuestionEffect : getStore().pendingQuestionEffect,
-      lastResultType: 'sabotage',
+      sharedPrize: remoteUpdates.sharedPrize || getStore().sharedPrize,
+      pendingQuestionEffect: remoteUpdates.pendingQuestionEffect || getStore().pendingQuestionEffect,
       lastSabotage: appliedSabotage,
       lastPointDelta: playerDelta
     });
@@ -571,10 +608,12 @@ export const useGameStore = create((setStore, getStore) => ({
       guestAvatar: null,
       guestName: null,
       phase: 'lobby',
-      lastResultType: null,
-      lastPointDelta: 0,
-      lastSabotage: null,
-      pointLocks: {},
+        lastResultType: null,
+        lastPointDelta: 0,
+        lastSabotage: null,
+        roundAnswers: {},
+        revealResults: {},
+        pointLocks: {},
       sharedPrize: null,
       pendingQuestionEffect: null,
       roomSubscription: null
@@ -643,6 +682,8 @@ export const useGameStore = create((setStore, getStore) => ({
         targetScore: Number(data.settings?.targetScore || data.targetScore || 70),
         players: data.players ? sortPlayers(Object.values(data.players)) : [],
         currentQuestion: data.currentQuestion || null,
+        roundAnswers: data.roundAnswers || {},
+        revealResults: data.revealResults || {},
         lastSabotage: data.lastSabotage || getStore().lastSabotage,
         pointLocks: data.pointLocks || {},
         sharedPrize: data.sharedPrize || null,

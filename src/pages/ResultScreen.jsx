@@ -88,12 +88,17 @@ export default function ResultScreen() {
     guestId,
     lastResultType,
     lastPointDelta,
-    lastSabotage
+    lastSabotage,
+    revealResults
   } = useGameStore();
-  const guestPoints = players.find((player) => player.id === guestId)?.points ?? 10;
+  const guestReveal = revealResults?.[guestId] || null;
+  const guestPoints = guestReveal?.points ?? players.find((player) => player.id === guestId)?.points ?? 10;
   const isFinal = phase === 'final';
   const winner = [...players].sort((a, b) => Number(b.points || 0) - Number(a.points || 0))[0];
-  const style = RESULT_STYLES[lastResultType || 'success'];
+  const resultType = guestReveal?.resultType || lastResultType || 'success';
+  const pointDelta = guestReveal?.delta ?? lastPointDelta;
+  const sabotage = guestReveal?.sabotage || lastSabotage;
+  const style = RESULT_STYLES[resultType];
 
   useEffect(() => {
     if (phase === 'lobby') {
@@ -189,13 +194,13 @@ export default function ResultScreen() {
         <h1 className={`mt-4 font-headline-lg text-4xl font-black ${style.text}`}>
           {style.title}
         </h1>
-        <p className="mt-3 text-on-surface leading-relaxed">{lastSabotage?.effect || style.copy}</p>
+        <p className="mt-3 text-on-surface leading-relaxed">{sabotage?.effect || style.copy}</p>
 
         <div className="mt-8 rounded-2xl border border-white/15 bg-black/20 p-5">
           <p className="font-label-caps text-on-surface-variant tracking-widest text-xs">TU CAPITAL ACTUAL</p>
           <p className={`text-7xl font-stats-xl mt-2 ${style.text}`}>{guestPoints}</p>
           <p className="mt-2 text-sm text-on-surface-variant">
-            {lastPointDelta > 0 ? `+${lastPointDelta} puntos` : lastPointDelta < 0 ? `${lastPointDelta} puntos` : 'Sin cambio de puntos'}
+            {pointDelta > 0 ? `+${pointDelta} puntos` : pointDelta < 0 ? `${pointDelta} puntos` : 'Sin cambio de puntos'}
           </p>
         </div>
 
