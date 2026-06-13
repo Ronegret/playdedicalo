@@ -7,6 +7,17 @@ import { auth, googleProvider } from '../firebase';
 import VinylVisualizer from '../components/VinylVisualizer';
 import NeonButton from '../components/NeonButton';
 
+const SAVED_PLAYLISTS_KEY = 'dedicalo_saved_spotify_playlists';
+
+function readSavedPlaylists() {
+  try {
+    const saved = JSON.parse(window.localStorage.getItem(SAVED_PLAYLISTS_KEY) || '[]');
+    return Array.isArray(saved) ? saved : [];
+  } catch {
+    return [];
+  }
+}
+
 export default function HostSyncScreen() {
   const navigate = useNavigate();
   const { hostCreateRoom, spotifyPlaylistUrl, setSpotifyPlaylistUrl } = useGameStore((state) => ({
@@ -21,10 +32,13 @@ export default function HostSyncScreen() {
   const [musicMode, setMusicMode] = useState(null);
   const [selectedPlaylist, setSelectedPlaylist] = useState(DEDICALO_PLAYLISTS[0].id);
   const [customPlaylistUrl, setCustomPlaylistUrl] = useState(spotifyPlaylistUrl);
+  const [customPlaylistName, setCustomPlaylistName] = useState('');
+  const [savedPlaylists, setSavedPlaylists] = useState(() => readSavedPlaylists());
   const createStartedRef = useRef(false);
 
-  const selectedCuratedPlaylist = DEDICALO_PLAYLISTS.find((playlist) => playlist.id === selectedPlaylist) || DEDICALO_PLAYLISTS[0];
-  const hasMusicSelection = musicMode === 'curated' || (musicMode === 'custom' && customPlaylistUrl.trim().length > 0);
+  const allPresetPlaylists = [...DEDICALO_PLAYLISTS, ...savedPlaylists];
+  const selectedCuratedPlaylist = allPresetPlaylists.find((playlist) => playlist.id === selectedPlaylist) || DEDICALO_PLAYLISTS[0];
+  const hasMusicSelection = musicMode === 'curated' || (musicMode === 'custom' && customPlaylistUrl.trim().length > 0) || (musicMode === 'saved' && selectedCuratedPlaylist);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -66,7 +80,7 @@ export default function HostSyncScreen() {
     setIsCreating(true);
 
     try {
-      const playlistUrl = musicMode === 'curated' ? selectedCuratedPlaylist.url : customPlaylistUrl;
+      const playlistUrl = musicMode === 'custom' ? customPlaylistUrl : selectedCuratedPlaylist.url;
       setSpotifyPlaylistUrl(playlistUrl);
       await hostCreateRoom(googleUser);
       navigate('/lobby');
@@ -76,6 +90,23 @@ export default function HostSyncScreen() {
     } finally {
       setIsCreating(false);
     }
+  };
+
+  const handleSaveCustomPlaylist = () => {
+    const cleanUrl = customPlaylistUrl.trim();
+    if (!cleanUrl) return;
+
+    const nextPlaylist = {
+      id: `saved-${Date.now()}`,
+      name: customPlaylistName.trim() || 'Mi playlist',
+      mood: 'Guardada en este dispositivo.',
+      url: cleanUrl
+    };
+    const nextSaved = [nextPlaylist, ...savedPlaylists.filter((playlist) => playlist.url !== cleanUrl)].slice(0, 8);
+    window.localStorage.setItem(SAVED_PLAYLISTS_KEY, JSON.stringify(nextSaved));
+    setSavedPlaylists(nextSaved);
+    setSelectedPlaylist(nextPlaylist.id);
+    setMusicMode('saved');
   };
 
   return (
@@ -148,13 +179,19 @@ export default function HostSyncScreen() {
                 <h3 className="text-white font-headline-lg text-xl leading-tight">Que musica quieres usar?</h3>
                 <div className="grid grid-cols-1 gap-3 mt-4">
                   <button type="button" onClick={() => setMusicMode('curated')} className="rounded-xl border border-electric-purple/60 bg-electric-purple/15 p-4 text-left hover:bg-electric-purple/25 transition-colors">
-                    <span className="block text-sm font-bold text-white">Playlist de Dedicalo</span>
-                    <span className="block text-xs text-on-surface-variant mt-1">Rapido, curado y listo para empezar.</span>
+                    <span className="block text-sm font-bold text-white">Playlists sugeridas</span>
+                    <span className="block text-xs text-on-surface-variant mt-1">Listas para abrir en Spotify y jugar.</span>
                   </button>
                   <button type="button" onClick={() => setMusicMode('custom')} className="rounded-xl border border-white/10 bg-black/10 p-4 text-left hover:bg-white/10 transition-colors">
-                    <span className="block text-sm font-bold text-white">Mi playlist de Spotify</span>
-                    <span className="block text-xs text-on-surface-variant mt-1">Copia el link publico y pegalo aqui.</span>
+                    <span className="block text-sm font-bold text-white">Pegar una playlist</span>
+                    <span className="block text-xs text-on-surface-variant mt-1">Ponle nombre y guardala para despues.</span>
                   </button>
+                  {savedPlaylists.length > 0 && (
+                    <button type="button" onClick={() => setMusicMode('saved')} className="rounded-xl border border-neon-green/50 bg-neon-green/10 p-4 text-left hover:bg-neon-green/15 transition-colors">
+                      <span className="block text-sm font-bold text-white">Mis guardadas</span>
+                      <span className="block text-xs text-on-surface-variant mt-1">{savedPlaylists.length} playlist guardadas en este dispositivo.</span>
+                    </button>
+                  )}
                 </div>
               </motion.section>
             )}
@@ -162,7 +199,7 @@ export default function HostSyncScreen() {
             {googleUser && musicMode === 'curated' && (
               <motion.section key="curated" initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} className="rounded-2xl border border-white/10 bg-white/5 p-4 text-left">
                 <button type="button" onClick={() => setMusicMode(null)} className="text-xs text-on-surface-variant font-label-caps mb-3">Cambiar opcion</button>
-                <p className="text-xs text-neon-green font-label-caps mb-3">PLAYLISTS DEDICALO</p>
+                <p className="text-xs text-neon-green font-label-caps mb-3">PLAYLISTS SUGERIDAS</p>
                 <div className="space-y-2">
                   {DEDICALO_PLAYLISTS.map((playlist) => (
                     <button key={playlist.id} type="button" onClick={() => setSelectedPlaylist(playlist.id)} className={`w-full rounded-xl border p-3 text-left transition-colors ${selectedPlaylist === playlist.id ? 'border-electric-purple bg-electric-purple/15' : 'border-white/10 bg-white/5 hover:bg-white/10'}`}>
@@ -174,11 +211,33 @@ export default function HostSyncScreen() {
               </motion.section>
             )}
 
+            {googleUser && musicMode === 'saved' && (
+              <motion.section key="saved" initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} className="rounded-2xl border border-white/10 bg-white/5 p-4 text-left">
+                <button type="button" onClick={() => setMusicMode(null)} className="text-xs text-on-surface-variant font-label-caps mb-3">Cambiar opcion</button>
+                <p className="text-xs text-neon-green font-label-caps mb-3">MIS PLAYLISTS</p>
+                <div className="space-y-2">
+                  {savedPlaylists.map((playlist) => (
+                    <button key={playlist.id} type="button" onClick={() => setSelectedPlaylist(playlist.id)} className={`w-full rounded-xl border p-3 text-left transition-colors ${selectedPlaylist === playlist.id ? 'border-electric-purple bg-electric-purple/15' : 'border-white/10 bg-white/5 hover:bg-white/10'}`}>
+                      <span className="block text-sm font-bold text-white">{playlist.name}</span>
+                      <span className="block text-xs text-on-surface-variant mt-1 truncate">{playlist.url}</span>
+                    </button>
+                  ))}
+                </div>
+              </motion.section>
+            )}
+
             {googleUser && musicMode === 'custom' && (
               <motion.section key="custom" initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} className="rounded-2xl border border-white/10 bg-white/5 p-4 text-left">
                 <button type="button" onClick={() => setMusicMode(null)} className="text-xs text-on-surface-variant font-label-caps mb-3">Cambiar opcion</button>
                 <p className="text-xs text-neon-green font-label-caps mb-2">TU PLAYLIST</p>
-                <h3 className="text-white font-bold mb-2">Copia el link publico de Spotify y pegalo aqui.</h3>
+                <h3 className="text-white font-bold mb-2">Pega el link publico de Spotify.</h3>
+                <input
+                  type="text"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white font-body-md mt-1 focus:border-neon-green outline-none transition-colors"
+                  placeholder="Nombre para guardarla"
+                  value={customPlaylistName}
+                  onChange={(event) => setCustomPlaylistName(event.target.value)}
+                />
                 <input
                   type="text"
                   className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white font-body-md mt-1 focus:border-neon-green outline-none transition-colors"
@@ -186,6 +245,24 @@ export default function HostSyncScreen() {
                   value={customPlaylistUrl}
                   onChange={(event) => setCustomPlaylistUrl(event.target.value)}
                 />
+                <div className="mt-3 grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={handleSaveCustomPlaylist}
+                    disabled={!customPlaylistUrl.trim()}
+                    className="h-10 rounded-lg border border-neon-green/40 bg-neon-green/10 text-neon-green font-label-caps text-[10px] disabled:opacity-40"
+                  >
+                    GUARDAR
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSpotifyPlaylistUrl(customPlaylistUrl)}
+                    disabled={!customPlaylistUrl.trim()}
+                    className="h-10 rounded-lg border border-white/10 bg-white/5 text-white font-label-caps text-[10px] disabled:opacity-40"
+                  >
+                    USAR AHORA
+                  </button>
+                </div>
                 <p className="mt-2 text-xs text-on-surface-variant/70">Tambien puedes pegar solo el ID de la playlist.</p>
               </motion.section>
             )}

@@ -10,6 +10,7 @@ import LobbyScreen from './pages/LobbyScreen';
 import GameScreen from './pages/GameScreen';
 import ResultScreen from './pages/ResultScreen';
 import ShaderBackground from './components/ShaderBackground';
+import MusicVinylControl from './components/MusicVinylControl';
 
 function App() {
   const location = useLocation();
@@ -17,6 +18,7 @@ function App() {
   return (
     <>
       <ShaderBackground />
+      <MusicVinylControl />
       
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>

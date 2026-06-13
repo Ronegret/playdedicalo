@@ -4,38 +4,38 @@ const DATABASE_URL = 'https://dedicalo-play-trivia-7-default-rtdb.europe-west1.f
 export const DEDICALO_PLAYLISTS = [
   {
     id: 'dedicalo-party',
-    name: 'Dedicalo Party',
-    mood: 'Fiesta directa para empezar rapido.',
+    name: 'Cumbias TOP',
+    mood: 'Cumbias para entrar rapido en ambiente.',
     url: 'https://open.spotify.com/playlist/343Yqq5yv7NkRwLUTt3l7w'
   },
   {
     id: 'dale-hits',
-    name: 'Dale Hits',
-    mood: 'Hits reconocibles para grupos grandes.',
+    name: 'Old School Reggaeton',
+    mood: 'Perreo clasico para competir cantando.',
     url: 'https://open.spotify.com/playlist/6gWB69lNDbCNw6bH5s9bi9'
   },
   {
     id: 'latin-battle',
-    name: 'Latino Batalla',
-    mood: 'Reggaeton, pop latino y temas cantables.',
+    name: 'Viva Latino',
+    mood: 'Pop latino y hits actuales.',
     url: 'https://open.spotify.com/playlist/37i9dQZF1DX10zKzsJ2jva'
   },
   {
     id: 'noche-pop',
-    name: 'Noche Pop',
-    mood: 'Pop, energia y canciones para corear.',
+    name: 'Grandes Exitos del Rock Latino',
+    mood: 'Rock latino para memoria y nostalgia.',
     url: 'https://open.spotify.com/playlist/3MdPj5OKfEjnuawoN2UWFf'
   },
   {
     id: 'remix-mode',
-    name: 'Remix Mode',
-    mood: 'Para partidas con sabotajes y remontadas.',
+    name: 'Las 100 Mejores en Espanol',
+    mood: 'Clasicos en espanol de varias epocas.',
     url: 'https://open.spotify.com/playlist/3mprAoVqUMQqtrk82Fvkug'
   },
   {
     id: 'after-dale',
-    name: 'After Dale',
-    mood: 'Cierre de noche con ritmo y memoria.',
+    name: 'Temazos Espanoles',
+    mood: 'Canciones espanolas reconocibles.',
     url: 'https://open.spotify.com/playlist/43gflSKdrEdaQoG3nfNzeU'
   }
 ];
