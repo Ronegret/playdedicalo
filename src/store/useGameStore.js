@@ -1,7 +1,45 @@
 import { create } from 'zustand';
 
 const DATABASE_URL = 'https://dedicalo-play-trivia-7-default-rtdb.europe-west1.firebasedatabase.app';
-export const DEFAULT_SPOTIFY_PLAYLIST_URL = 'https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M';
+export const DEDICALO_PLAYLISTS = [
+  {
+    id: 'dedicalo-party',
+    name: 'Dedicalo Party',
+    mood: 'Fiesta directa para empezar rapido.',
+    url: 'https://open.spotify.com/playlist/343Yqq5yv7NkRwLUTt3l7w'
+  },
+  {
+    id: 'dale-hits',
+    name: 'Dale Hits',
+    mood: 'Hits reconocibles para grupos grandes.',
+    url: 'https://open.spotify.com/playlist/6gWB69lNDbCNw6bH5s9bi9'
+  },
+  {
+    id: 'latin-battle',
+    name: 'Latino Batalla',
+    mood: 'Reggaeton, pop latino y temas cantables.',
+    url: 'https://open.spotify.com/playlist/37i9dQZF1DX10zKzsJ2jva'
+  },
+  {
+    id: 'noche-pop',
+    name: 'Noche Pop',
+    mood: 'Pop, energia y canciones para corear.',
+    url: 'https://open.spotify.com/playlist/3MdPj5OKfEjnuawoN2UWFf'
+  },
+  {
+    id: 'remix-mode',
+    name: 'Remix Mode',
+    mood: 'Para partidas con sabotajes y remontadas.',
+    url: 'https://open.spotify.com/playlist/3mprAoVqUMQqtrk82Fvkug'
+  },
+  {
+    id: 'after-dale',
+    name: 'After Dale',
+    mood: 'Cierre de noche con ritmo y memoria.',
+    url: 'https://open.spotify.com/playlist/43gflSKdrEdaQoG3nfNzeU'
+  }
+];
+export const DEFAULT_SPOTIFY_PLAYLIST_URL = DEDICALO_PLAYLISTS[0].url;
 
 export const GAME_MODES = {
   pulse: {
@@ -186,6 +224,15 @@ export const useGameStore = create((setStore, getStore) => ({
   spotifyPlaylistUrl: DEFAULT_SPOTIFY_PLAYLIST_URL,
 
   setSpotifyPlaylistUrl: (url) => setStore({ spotifyPlaylistUrl: normalizeSpotifyPlaylistUrl(url) }),
+  hostSetSpotifyPlaylistUrl: async (url) => {
+    const playlistUrl = normalizeSpotifyPlaylistUrl(url);
+    const { pin, role } = getStore();
+    setStore({ spotifyPlaylistUrl: playlistUrl });
+
+    if (role === 'host' && pin) {
+      await patchData(`rooms/${pin}/audio`, { playlistUrl });
+    }
+  },
   setRole: (role) => setStore({ role }),
 
   setGameSettings: async ({ gameMode, targetScore }) => {

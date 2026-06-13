@@ -2,31 +2,10 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { onAuthStateChanged, signInWithPopup } from 'firebase/auth';
-import { useGameStore } from '../store/useGameStore';
+import { DEDICALO_PLAYLISTS, useGameStore } from '../store/useGameStore';
 import { auth, googleProvider } from '../firebase';
 import VinylVisualizer from '../components/VinylVisualizer';
 import NeonButton from '../components/NeonButton';
-
-const CURATED_PLAYLISTS = [
-  {
-    id: 'party',
-    name: 'Fiesta segura',
-    mood: 'Hits conocidos para romper el hielo.',
-    url: 'https://open.spotify.com/playlist/37i9dQZF1DXaXB8fQg7xif'
-  },
-  {
-    id: 'latin',
-    name: 'Latino batalla',
-    mood: 'Reggaeton, pop latino y temas cantables.',
-    url: 'https://open.spotify.com/playlist/37i9dQZF1DX10zKzsJ2jva'
-  },
-  {
-    id: 'nostalgia',
-    name: 'Nostalgia 2000',
-    mood: 'Temas para gritar "yo me la se".',
-    url: 'https://open.spotify.com/playlist/37i9dQZF1DX4o1oenSJRJd'
-  }
-];
 
 export default function HostSyncScreen() {
   const navigate = useNavigate();
@@ -40,11 +19,11 @@ export default function HostSyncScreen() {
   const [authMessage, setAuthMessage] = useState('');
   const [isCreating, setIsCreating] = useState(false);
   const [musicMode, setMusicMode] = useState(null);
-  const [selectedPlaylist, setSelectedPlaylist] = useState(CURATED_PLAYLISTS[0].id);
+  const [selectedPlaylist, setSelectedPlaylist] = useState(DEDICALO_PLAYLISTS[0].id);
   const [customPlaylistUrl, setCustomPlaylistUrl] = useState(spotifyPlaylistUrl);
   const createStartedRef = useRef(false);
 
-  const selectedCuratedPlaylist = CURATED_PLAYLISTS.find((playlist) => playlist.id === selectedPlaylist) || CURATED_PLAYLISTS[0];
+  const selectedCuratedPlaylist = DEDICALO_PLAYLISTS.find((playlist) => playlist.id === selectedPlaylist) || DEDICALO_PLAYLISTS[0];
   const hasMusicSelection = musicMode === 'curated' || (musicMode === 'custom' && customPlaylistUrl.trim().length > 0);
 
   useEffect(() => {
@@ -185,7 +164,7 @@ export default function HostSyncScreen() {
                 <button type="button" onClick={() => setMusicMode(null)} className="text-xs text-on-surface-variant font-label-caps mb-3">Cambiar opcion</button>
                 <p className="text-xs text-neon-green font-label-caps mb-3">PLAYLISTS DEDICALO</p>
                 <div className="space-y-2">
-                  {CURATED_PLAYLISTS.map((playlist) => (
+                  {DEDICALO_PLAYLISTS.map((playlist) => (
                     <button key={playlist.id} type="button" onClick={() => setSelectedPlaylist(playlist.id)} className={`w-full rounded-xl border p-3 text-left transition-colors ${selectedPlaylist === playlist.id ? 'border-electric-purple bg-electric-purple/15' : 'border-white/10 bg-white/5 hover:bg-white/10'}`}>
                       <span className="block text-sm font-bold text-white">{playlist.name}</span>
                       <span className="block text-xs text-on-surface-variant mt-1">{playlist.mood}</span>

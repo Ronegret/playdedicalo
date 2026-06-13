@@ -57,7 +57,7 @@ export default function GameScreen() {
   };
 
   return (
-    <div className={`relative z-10 min-h-screen w-full max-w-[430px] mx-auto flex flex-col items-center justify-center transition-colors duration-500 ${phase === 'blackout' ? 'bg-black' : 'bg-transparent'}`}>
+    <div className={`relative z-10 min-h-screen w-full flex flex-col items-center justify-center transition-colors duration-500 ${phase === 'blackout' ? 'bg-black' : 'bg-transparent'}`}>
       {role === 'host' && phase !== 'blackout' && (
         <header className="fixed top-0 left-0 right-0 h-16 flex items-center justify-between px-margin-mobile z-50 bg-surface/60 backdrop-blur-xl border-b border-white/10">
           <button onClick={() => navigate('/lobby')} className="text-on-surface-variant font-label-caps text-xs flex items-center gap-1">
@@ -75,7 +75,7 @@ export default function GameScreen() {
             animate={{ scale: [0.7, 1.08, 1], opacity: 1 }}
             exit={{ scale: 1.5, opacity: 0 }}
             transition={{ duration: 0.75 }}
-            className="text-center"
+            className="w-full max-w-[430px] px-margin-mobile text-center"
           >
             <p className="font-label-caps text-electric-purple tracking-widest">PREPARA EL OIDO</p>
             <div className="mt-3 font-stats-xl text-9xl text-neon-green drop-shadow-[0_0_24px_rgba(57,255,20,0.4)]">3</div>
@@ -88,7 +88,7 @@ export default function GameScreen() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="flex flex-col items-center gap-6 w-full px-5 text-center"
+            className="flex flex-col items-center gap-6 w-full max-w-[430px] px-5 text-center"
           >
             <div className="relative w-64 h-64 rounded-full border-4 border-neon-green flex items-center justify-center animate-pulse shadow-[0_0_30px_rgba(57,255,20,0.28)] bg-black/15">
               <div className="absolute inset-4 rounded-full border border-white/10" />
@@ -132,7 +132,7 @@ export default function GameScreen() {
             key="blackout"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="w-full px-margin-mobile py-20 flex flex-col gap-4"
+            className="w-full max-w-[430px] px-margin-mobile py-20 flex flex-col gap-4"
           >
             <div className="text-center">
               <p className="font-label-caps text-intense-red text-xs tracking-widest">BLACKOUT · {currentQuestion.type}</p>
