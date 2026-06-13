@@ -11,7 +11,6 @@ import GameScreen from './pages/GameScreen';
 import ResultScreen from './pages/ResultScreen';
 import AudioAtmosphere from './components/AudioAtmosphere';
 import ShaderBackground from './components/ShaderBackground';
-import SpotifyPlayer from './components/SpotifyPlayer';
 
 function App() {
   const location = useLocation();
@@ -20,7 +19,6 @@ function App() {
     <>
       <ShaderBackground />
       <AudioAtmosphere />
-      <SpotifyPlayer />
       
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
