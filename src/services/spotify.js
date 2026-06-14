@@ -16,6 +16,7 @@ const SPOTIFY_SCOPES = [
 
 let spotifyPlayerPromise = null;
 let spotifyDeviceId = null;
+let lastSpotifySdkError = '';
 
 function getRedirectUri() {
   return `${window.location.origin}/spotify/callback`;
@@ -77,6 +78,7 @@ export function getSpotifyStatus() {
   const token = readToken();
   return {
     connected: Boolean(token?.access_token),
+    expiresAt: token?.expires_at || null,
     premiumRequired: true
   };
 }
@@ -150,6 +152,10 @@ async function spotifyFetch(url, options = {}) {
   return response.status === 204 ? null : response.json();
 }
 
+function setSpotifySdkError(prefix, message) {
+  lastSpotifySdkError = `${prefix}: ${message}`;
+}
+
 function loadSpotifySdk() {
   if (window.Spotify) return Promise.resolve();
 
@@ -191,19 +197,27 @@ async function getSpotifyPlayer() {
     });
 
     player.addListener('initialization_error', ({ message }) => {
+      setSpotifySdkError('Inicializacion', message);
       console.error('Spotify initialization_error:', message);
     });
     player.addListener('authentication_error', ({ message }) => {
+      setSpotifySdkError('Autenticacion', message);
       console.error('Spotify authentication_error:', message);
     });
     player.addListener('account_error', ({ message }) => {
+      setSpotifySdkError('Cuenta', message);
       console.error('Spotify account_error:', message);
     });
     player.addListener('playback_error', ({ message }) => {
+      setSpotifySdkError('Reproduccion', message);
       console.error('Spotify playback_error:', message);
     });
+    player.addListener('autoplay_failed', () => {
+      setSpotifySdkError('Autoplay', 'El navegador bloqueo el inicio automatico. Pulsa PLAY en el vinilo.');
+    });
 
-    await player.connect();
+    const connected = await player.connect();
+    if (!connected) throw new Error('Spotify no acepto la conexion del reproductor web.');
     return player;
   })();
 
@@ -217,6 +231,51 @@ export async function prepareSpotifyPlayback() {
   }
   await ensureSpotifyDevice();
   return true;
+}
+
+export async function getSpotifyDiagnostics() {
+  const token = readToken();
+  if (!token?.access_token) {
+    return {
+      ok: false,
+      message: 'Spotify no esta conectado.'
+    };
+  }
+
+  try {
+    const [profile, devices] = await Promise.all([
+      spotifyFetch('https://api.spotify.com/v1/me'),
+      spotifyFetch('https://api.spotify.com/v1/me/player/devices')
+    ]);
+    const product = profile?.product || 'unknown';
+    const hasPremium = product === 'premium';
+
+    return {
+      ok: hasPremium,
+      product,
+      devices: devices?.devices || [],
+      deviceId: spotifyDeviceId,
+      sdkError: lastSpotifySdkError,
+      message: hasPremium
+        ? 'Cuenta Premium detectada. Ya puedes probar sonido.'
+        : `Esta cuenta aparece como ${product}. Spotify Web Playback necesita Premium completo.`
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      sdkError: lastSpotifySdkError,
+      message: error.message
+    };
+  }
+}
+
+export function explainSpotifyError(error) {
+  const message = String(error?.message || error || '');
+  if (message.includes('403')) return 'Spotify rechazo la reproduccion. Revisa que la cuenta sea Premium completa y este autorizada en User Management.';
+  if (message.includes('404')) return 'Spotify no encontro un dispositivo activo. Pulsa Conectar Spotify y luego Prueba sonido.';
+  if (message.includes('401')) return 'La sesion de Spotify expiro. Pulsa Reconectar.';
+  if (lastSpotifySdkError) return lastSpotifySdkError;
+  return message || 'Spotify no pudo iniciar la reproduccion.';
 }
 
 async function ensureSpotifyDevice() {

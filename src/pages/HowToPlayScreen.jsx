@@ -12,7 +12,7 @@ const FLOW = [
 
 const EXAMPLES = [
   { label: 'Pulso', question: '¿Qué palabra aparece?', answers: ['Noche', 'Corazón', 'Dedícalo'] },
-  { label: 'Ritmo', question: 'Colócala en la línea', answers: ['1998', '2006', '2019'] },
+  { label: 'Ritmo', question: 'Colócala en la línea', timeline: [1998, 2006, 2019] },
   { label: 'Remix', question: '¿Usas jugada?', answers: ['Bloquear', 'Robar', 'Guardar'] }
 ];
 
@@ -67,16 +67,32 @@ export default function HowToPlayScreen() {
                 <span className="material-symbols-outlined text-white/50 text-base">touch_app</span>
               </div>
               <h3 className="mt-2 text-white font-bold">{example.question}</h3>
-              <div className="mt-3 grid gap-2">
-                {example.answers.map((answer, index) => (
-                  <div key={answer} className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 flex items-center gap-2">
-                    <span className="w-6 h-6 rounded-md bg-neon-green/15 text-neon-green text-xs font-black flex items-center justify-center">
-                      {String.fromCharCode(65 + index)}
-                    </span>
-                    <span className="text-sm text-white">{answer}</span>
+              {example.timeline ? (
+                <div className="mt-3 overflow-x-auto">
+                  <div className="min-w-max flex items-center gap-2">
+                    <span className="w-16 h-12 rounded-xl border border-dashed border-neon-green/50 bg-neon-green/10 text-neon-green flex items-center justify-center text-[10px] font-label-caps">Antes</span>
+                    {example.timeline.map((year, index) => (
+                      <div key={year} className="flex items-center gap-2">
+                        <span className="w-16 h-14 rounded-xl border border-white/10 bg-white/5 text-white flex items-center justify-center font-black">{year}</span>
+                        <span className="w-16 h-12 rounded-xl border border-dashed border-neon-green/50 bg-neon-green/10 text-neon-green flex items-center justify-center text-[10px] font-label-caps">
+                          {index === example.timeline.length - 1 ? 'Después' : 'Entre'}
+                        </span>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </div>
+              ) : (
+                <div className="mt-3 grid gap-2">
+                  {example.answers.map((answer, index) => (
+                    <div key={answer} className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 flex items-center gap-2">
+                      <span className="w-6 h-6 rounded-md bg-neon-green/15 text-neon-green text-xs font-black flex items-center justify-center">
+                        {String.fromCharCode(65 + index)}
+                      </span>
+                      <span className="text-sm text-white">{answer}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </article>
           ))}
         </div>

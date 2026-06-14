@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ChaosEconomyBubbles from '../components/ChaosEconomyBubbles';
 import { GAME_MODES, SABOTAGE_OPTIONS, VICTORY_MODES, useGameStore } from '../store/useGameStore';
-import { prepareSpotifyPlayback } from '../services/spotify';
+import { explainSpotifyError, prepareSpotifyPlayback } from '../services/spotify';
 
 function InfoDetails({ title, children }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -171,7 +171,7 @@ export default function LobbyScreen() {
       await hostStartGame();
     } catch (error) {
       console.error(error);
-      setStartError('Conecta Spotify Premium y deja esta pestaña con sonido.');
+      setStartError(explainSpotifyError(error));
     }
   };
 

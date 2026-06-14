@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DEDICALO_PLAYLISTS, GAME_MODES, normalizeSpotifyPlaylistUrl, useGameStore } from '../store/useGameStore';
-import { createQuestionFromTrack, getCurrentHiddenTrack, pauseSpotifyPlayback, startRandomPlaylistTrack } from '../services/spotify';
+import { createQuestionFromTrack, explainSpotifyError, getCurrentHiddenTrack, pauseSpotifyPlayback, startRandomPlaylistTrack } from '../services/spotify';
 
 const EQUALIZER_BARS = [0.35, 0.58, 0.42, 0.71, 0.49, 0.64, 0.39];
 
@@ -121,7 +121,7 @@ export default function GameScreen() {
       .catch((error) => {
         console.error(error);
         if (!cancelled) {
-          setSpotifyMessage('Spotify no pudo sonar. Revisa Premium, permisos y volumen.');
+          setSpotifyMessage(explainSpotifyError(error));
           setAudioPlaying(false);
         }
       });

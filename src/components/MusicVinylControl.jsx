@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { useGameStore } from '../store/useGameStore';
-import { pauseSpotifyPlayback, startRandomPlaylistTrack } from '../services/spotify';
+import { explainSpotifyError, pauseSpotifyPlayback, startRandomPlaylistTrack } from '../services/spotify';
 
 export default function MusicVinylControl() {
   const [error, setError] = useState('');
@@ -30,7 +30,7 @@ export default function MusicVinylControl() {
       await startRandomPlaylistTrack(spotifyPlaylistUrl);
     } catch (spotifyError) {
       console.warn('No se pudo iniciar Spotify:', spotifyError);
-      setError('Conecta Spotify Premium');
+      setError(explainSpotifyError(spotifyError));
       return;
     }
     setAudioPlaying(true);
@@ -61,7 +61,7 @@ export default function MusicVinylControl() {
       <span className={`rounded-full px-2 py-1 text-[9px] font-label-caps border pointer-events-none ${isAudioPlaying ? 'border-neon-green/40 bg-neon-green/10 text-neon-green' : 'border-white/10 bg-black/40 text-on-surface-variant'}`}>
         {canControl ? (isAudioPlaying ? 'STOP' : 'PLAY') : (isAudioPlaying ? 'PLAY' : 'STOP')}
       </span>
-      {error && <span className="max-w-20 text-center text-[9px] text-intense-red font-label-caps">{error}</span>}
+      {error && <span className="w-32 text-center text-[9px] leading-tight text-intense-red font-label-caps">{error}</span>}
     </div>
   );
 }

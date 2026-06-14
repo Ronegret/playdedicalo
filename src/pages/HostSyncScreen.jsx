@@ -6,7 +6,7 @@ import { DEDICALO_PLAYLISTS, useGameStore } from '../store/useGameStore';
 import { auth, googleProvider } from '../firebase';
 import VinylVisualizer from '../components/VinylVisualizer';
 import NeonButton from '../components/NeonButton';
-import { connectSpotify, getSpotifyStatus } from '../services/spotify';
+import { connectSpotify, explainSpotifyError, getSpotifyDiagnostics, getSpotifyStatus, pauseSpotifyPlayback, startRandomPlaylistTrack } from '../services/spotify';
 
 const SAVED_PLAYLISTS_KEY = 'dedicalo_saved_spotify_playlists';
 
@@ -36,11 +36,14 @@ export default function HostSyncScreen() {
   const [customPlaylistName, setCustomPlaylistName] = useState('');
   const [savedPlaylists, setSavedPlaylists] = useState(() => readSavedPlaylists());
   const [spotifyStatus, setSpotifyStatus] = useState(() => getSpotifyStatus());
+  const [spotifyCheck, setSpotifyCheck] = useState(null);
+  const [isTestingSpotify, setIsTestingSpotify] = useState(false);
   const createStartedRef = useRef(false);
 
   const allPresetPlaylists = [...DEDICALO_PLAYLISTS, ...savedPlaylists];
   const selectedCuratedPlaylist = allPresetPlaylists.find((playlist) => playlist.id === selectedPlaylist) || DEDICALO_PLAYLISTS[0];
   const hasMusicSelection = musicMode === 'curated' || (musicMode === 'custom' && customPlaylistUrl.trim().length > 0) || (musicMode === 'saved' && selectedCuratedPlaylist);
+  const canCreateRoom = Boolean(googleUser && hasMusicSelection && spotifyStatus.connected);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -117,6 +120,35 @@ export default function HostSyncScreen() {
     setMusicMode('saved');
   };
 
+  const handleCheckSpotify = async () => {
+    setIsTestingSpotify(true);
+    setSpotifyCheck({ type: 'info', message: 'Probando Spotify...' });
+
+    try {
+      const playlistUrl = musicMode === 'custom' && customPlaylistUrl.trim() ? customPlaylistUrl : selectedCuratedPlaylist.url;
+      const diagnostic = await getSpotifyDiagnostics();
+      if (!diagnostic.ok) {
+        setSpotifyCheck({ type: 'error', message: diagnostic.message });
+        return;
+      }
+
+      await startRandomPlaylistTrack(playlistUrl);
+      setSpotifyCheck({
+        type: 'success',
+        message: `Sonido enviado al navegador. Dispositivos Spotify: ${diagnostic.devices?.length || 1}. Si no se oye, revisa volumen del navegador y salida Bluetooth.`
+      });
+    } catch (error) {
+      setSpotifyCheck({ type: 'error', message: explainSpotifyError(error) });
+    } finally {
+      setIsTestingSpotify(false);
+    }
+  };
+
+  const handleStopSpotifyTest = async () => {
+    await pauseSpotifyPlayback().catch((error) => console.warn('No se pudo parar Spotify:', error));
+    setSpotifyCheck({ type: 'info', message: 'Spotify pausado.' });
+  };
+
   const goBackToMusicMenu = () => setMusicMode(null);
 
   return (
@@ -182,7 +214,7 @@ export default function HostSyncScreen() {
               <div className="flex items-center justify-between gap-3">
                 <div className="min-w-0">
                   <p className="text-sm font-bold text-white">{spotifyStatus.connected ? 'Conectado' : 'Conectar para reproducir'}</p>
-                  <p className="mt-1 text-xs text-on-surface-variant">Solo el host necesita Spotify Premium.</p>
+                  <p className="mt-1 text-xs text-on-surface-variant">Solo el host necesita Spotify Premium completo.</p>
                 </div>
                 <button
                   type="button"
@@ -192,6 +224,37 @@ export default function HostSyncScreen() {
                   {spotifyStatus.connected ? 'RECONECTAR' : 'CONECTAR'}
                 </button>
               </div>
+              {spotifyStatus.connected && (
+                <div className="mt-3 grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={handleCheckSpotify}
+                    disabled={isTestingSpotify}
+                    className="h-10 rounded-lg border border-neon-green/40 bg-neon-green/10 text-neon-green font-label-caps text-[10px] disabled:opacity-50"
+                  >
+                    {isTestingSpotify ? 'PROBANDO...' : 'PROBAR SONIDO'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleStopSpotifyTest}
+                    className="h-10 rounded-lg border border-white/10 bg-black/15 text-white font-label-caps text-[10px]"
+                  >
+                    PARAR
+                  </button>
+                </div>
+              )}
+              {spotifyCheck && (
+                <p className={`mt-3 rounded-xl border px-3 py-2 text-xs leading-relaxed ${
+                  spotifyCheck.type === 'success'
+                    ? 'border-neon-green/40 bg-neon-green/10 text-neon-green'
+                    : spotifyCheck.type === 'error'
+                      ? 'border-intense-red/40 bg-intense-red/10 text-intense-red'
+                      : 'border-white/10 bg-black/15 text-on-surface-variant'
+                }`}
+                >
+                  {spotifyCheck.message}
+                </p>
+              )}
             </section>
           )}
 
@@ -309,10 +372,10 @@ export default function HostSyncScreen() {
           <button
             type="button"
             onClick={handleHostCreate}
-            disabled={isCreating || !googleUser || !hasMusicSelection}
+            disabled={isCreating || !canCreateRoom}
             className="mt-6 w-full h-14 bg-glass-surface glass-blur border-2 border-electric-purple/50 rounded-xl flex items-center justify-center text-on-surface font-label-caps text-label-caps uppercase tracking-widest disabled:opacity-50 disabled:cursor-not-allowed hover:bg-electric-purple/10 transition-colors"
           >
-            {isCreating ? 'CREANDO SALA...' : hasMusicSelection ? 'CREAR SALA' : 'ELIGE LA MUSICA'}
+            {isCreating ? 'CREANDO SALA...' : !googleUser ? 'CONECTA GOOGLE' : !spotifyStatus.connected ? 'CONECTA SPOTIFY' : hasMusicSelection ? 'CREAR SALA' : 'ELIGE LA MUSICA'}
           </button>
         </div>
       </section>
