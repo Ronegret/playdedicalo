@@ -12,6 +12,8 @@ dist
 dist-ssr
 .firebase
 .vercel
+catalog-output/
+.spotify-user-token.json
 *.local
 .env
 .env.*
