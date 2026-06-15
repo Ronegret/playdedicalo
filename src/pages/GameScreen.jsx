@@ -1,4 +1,4 @@
-﻿import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DEDICALO_PLAYLISTS, GAME_MODES, SABOTAGE_OPTIONS, getCombinedTimelineYears, normalizeSpotifyPlaylistUrl, useGameStore } from '../store/useGameStore';
@@ -18,9 +18,9 @@ function SabotageSquares({ options, points, enabled, onUse }) {
       <summary className="list-none cursor-pointer p-3 flex items-center justify-between gap-3">
         <div>
           <p className="font-label-caps text-electric-purple text-[10px] tracking-widest">ATAQUES</p>
-          <p className="text-sm font-bold text-white">Usa sabotajes mientras suena</p>
+          <p className="text-sm font-bold text-white">Sabotajes mientras suena</p>
         </div>
-        <span className="material-symbols-outlined text-electric-purple">expand_more</span>
+        <span className="material-symbols-outlined text-electric-purple text-2xl">expand_more</span>
       </summary>
       <div className="px-3 pb-3">
         <div className="grid grid-cols-4 gap-2">
@@ -37,14 +37,14 @@ function SabotageSquares({ options, points, enabled, onUse }) {
                 className={`aspect-square rounded-2xl border p-2 flex flex-col items-center justify-center gap-1 transition-transform active:scale-95 disabled:opacity-35 disabled:cursor-not-allowed ${SABOTAGE_STYLES[option.color] || SABOTAGE_STYLES.purple}`}
                 aria-label={`Usar ${option.name}`}
               >
-                <span className="material-symbols-outlined text-xl">{option.icon}</span>
+                <span className="material-symbols-outlined text-2xl">{option.icon}</span>
                 <span className="text-[9px] font-label-caps leading-none">{option.cost} pts</span>
               </button>
             );
           })}
         </div>
         <p className="mt-2 text-[11px] text-on-surface-variant leading-snug">
-          {enabled ? 'Toca un cuadrado para preparar el ataque de la ronda.' : 'Se desbloquean desde la ronda 2.'}
+          {enabled ? 'Toca un cuadrado para preparar el ataque.' : 'Se desbloquean desde la ronda 2.'}
         </p>
       </div>
     </details>
@@ -125,6 +125,7 @@ export default function GameScreen() {
     setAudioPlaying
   } = useGameStore();
   const [answeredQuestionKey, setAnsweredQuestionKey] = useState(null);
+  const [lastAnswerCorrect, setLastAnswerCorrect] = useState(null);
   const [countdownValue, setCountdownValue] = useState(3);
   const [spotifyMessage, setSpotifyMessage] = useState('');
   const [sabotageMessage, setSabotageMessage] = useState('');
@@ -210,21 +211,20 @@ export default function GameScreen() {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
-      transition: {
-        staggerChildren: 0.12,
-        delayChildren: 0.2
-      }
+      transition: { staggerChildren: 0.1, delayChildren: 0.15 }
     }
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 18 },
-    show: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 120 } }
+    hidden: { opacity: 0, y: 20, scale: 0.96 },
+    show: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', stiffness: 130 } }
   };
 
   const handleAnswer = (isCorrect) => {
+    setLastAnswerCorrect(isCorrect);
     setAnsweredQuestionKey(questionKey);
     guestAnswer(isCorrect);
+    setTimeout(() => setLastAnswerCorrect(null), 900);
   };
 
   const handleHostBlackout = async () => {
@@ -252,10 +252,30 @@ export default function GameScreen() {
 
   return (
     <div className={`relative z-10 min-h-screen w-full flex flex-col items-center justify-center transition-colors duration-500 ${phase === 'blackout' ? 'bg-black' : 'bg-transparent'}`}>
+
+      {/* Answer flash overlay */}
+      <AnimatePresence>
+        {lastAnswerCorrect !== null && (
+          <motion.div
+            key="flash"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            className="fixed inset-0 z-[200] pointer-events-none"
+            style={{
+              background: lastAnswerCorrect
+                ? 'radial-gradient(circle at center, rgba(57,255,20,0.45) 0%, rgba(57,255,20,0.1) 60%, transparent 100%)'
+                : 'radial-gradient(circle at center, rgba(255,107,139,0.5) 0%, rgba(255,107,139,0.12) 60%, transparent 100%)'
+            }}
+          />
+        )}
+      </AnimatePresence>
+
       {role === 'host' && phase !== 'blackout' && (
         <header className="fixed top-0 left-0 right-0 h-16 flex items-center justify-between px-margin-mobile z-50 bg-surface/60 backdrop-blur-xl border-b border-white/10">
-          <button onClick={() => navigate('/lobby')} className="text-on-surface-variant font-label-caps text-xs flex items-center gap-1">
-            <span className="material-symbols-outlined text-sm">arrow_back</span> CANCELAR
+          <button onClick={() => navigate('/lobby')} className="text-on-surface-variant font-label-caps text-xs flex items-center gap-2">
+            <span className="material-symbols-outlined text-xl">arrow_back</span> CANCELAR
           </button>
           <span className="font-label-caps text-xs text-neon-green">RONDA {round}</span>
         </header>
@@ -271,11 +291,10 @@ export default function GameScreen() {
             transition={{ duration: 0.5 }}
             className="w-full max-w-[430px] px-margin-mobile text-center flex flex-col items-center"
           >
-            <p className="font-label-caps text-electric-purple tracking-widest text-xs">PREPARA EL OÍDO</p>
+            <p className="font-label-caps text-electric-purple tracking-widest text-sm">PREPARA EL OÍDO</p>
 
-            {/* Countdown number with expanding rings */}
-            <div className="relative flex items-center justify-center mt-6 mb-6 w-44 h-44">
-              {[0, 0.5, 1].map((delay) => (
+            <div className="relative flex items-center justify-center mt-6 mb-6 w-48 h-48">
+              {[0, 0.55, 1.1].map((delay) => (
                 <div
                   key={delay}
                   className="absolute inset-0 rounded-full border-2 border-neon-green/25 ring-expand-anim"
@@ -284,10 +303,10 @@ export default function GameScreen() {
               ))}
               <motion.div
                 key={countdownValue}
-                initial={{ scale: 0.4, opacity: 0 }}
-                animate={{ scale: [0.7, 1.1, 1], opacity: 1 }}
-                transition={{ duration: 0.3, ease: 'backOut' }}
-                className="font-stats-xl text-[7rem] leading-none text-neon-green drop-shadow-[0_0_32px_rgba(57,255,20,0.5)]"
+                initial={{ scale: 0.3, opacity: 0 }}
+                animate={{ scale: [0.6, 1.15, 1], opacity: 1 }}
+                transition={{ duration: 0.35, ease: 'backOut' }}
+                className="font-stats-xl text-[8rem] leading-none text-neon-green drop-shadow-[0_0_40px_rgba(57,255,20,0.6)]"
               >
                 {countdownValue}
               </motion.div>
@@ -305,40 +324,44 @@ export default function GameScreen() {
             exit={{ opacity: 0 }}
             className="flex flex-col items-center gap-6 w-full max-w-[430px] px-5 text-center"
           >
-            {/* Vinyl listen circle with expanding rings */}
-            <div className="relative w-64 h-64 flex items-center justify-center">
-              {[0, 0.7, 1.4].map((delay) => (
+            {/* Vinyl listen circle */}
+            <div className="relative w-72 h-72 flex items-center justify-center">
+              {[0, 0.8, 1.6].map((delay) => (
                 <div
                   key={delay}
                   className="absolute inset-0 rounded-full border-2 border-neon-green/20 ring-expand-anim"
                   style={{ animationDelay: `${delay}s` }}
                 />
               ))}
-              <div className="w-56 h-56 rounded-full border-4 border-neon-green flex items-center justify-center shadow-[0_0_40px_rgba(57,255,20,0.3),inset_0_0_24px_rgba(0,0,0,0.5)] bg-black/25 relative">
-                <div className="absolute inset-5 rounded-full border border-white/10" />
+              <div className="w-64 h-64 rounded-full border-4 border-neon-green flex items-center justify-center shadow-[0_0_50px_rgba(57,255,20,0.35),inset_0_0_30px_rgba(0,0,0,0.6)] bg-black/30 relative">
+                <div className="absolute inset-6 rounded-full border border-white/10" />
+                <div className="absolute inset-12 rounded-full border border-white/5" />
                 <div className="relative z-10 text-center">
                   <p className="font-label-caps text-[10px] text-electric-purple tracking-widest">{mode.name}</p>
-                  <span className="block mt-2 font-headline-lg-mobile text-3xl text-neon-green font-bold tracking-widest drop-shadow-[0_0_14px_rgba(57,255,20,0.5)]">
+                  <span className="block mt-2 font-headline-lg-mobile text-4xl text-neon-green font-black tracking-widest drop-shadow-[0_0_18px_rgba(57,255,20,0.6)]">
                     {role === 'host' ? 'SONANDO' : 'ESCUCHA'}
                   </span>
-                  <p className="mt-2 font-label-caps text-[9px] text-white/60 tracking-widest">EL ANFITRIÓN DECIDE EL CORTE</p>
+                  <p className="mt-2 font-label-caps text-[9px] text-white/50 tracking-widest">
+                    {role === 'host' ? 'CORTA CUANDO QUIERAS' : 'EL ANFITRIÓN DECIDE'}
+                  </p>
                 </div>
               </div>
             </div>
 
-            <div className="flex gap-3 items-end h-16">
+            {/* Equalizer */}
+            <div className="flex gap-2 items-end h-14">
               {EQUALIZER_BARS.map((duration, index) => (
                 <motion.div
                   key={`${duration}-${index}`}
-                  animate={{ height: ['22%', '100%', '32%'] }}
+                  animate={{ height: ['20%', '100%', '30%'] }}
                   transition={{ repeat: Infinity, duration, delay: index * 0.04 }}
-                  className="w-4 bg-neon-green rounded-t-sm shadow-[0_0_12px_rgba(57,255,20,0.3)]"
+                  className="w-5 bg-neon-green rounded-full shadow-[0_0_14px_rgba(57,255,20,0.4)]"
                 />
               ))}
             </div>
 
             <p className="max-w-xs text-sm text-on-surface-variant">
-              {role === 'host' && spotifyMessage ? spotifyMessage : `${activePlaylist?.icon || ''} Escucha con atención. Nadie ve la canción.`}
+              {role === 'host' && spotifyMessage ? spotifyMessage : `${activePlaylist?.icon || '🎵'} Escucha con atención. Nadie ve la canción.`}
             </p>
 
             <SabotageSquares
@@ -348,19 +371,25 @@ export default function GameScreen() {
               onUse={handleUseSabotage}
             />
             {sabotageMessage && (
-              <p className="max-w-sm rounded-xl border border-electric-purple/40 bg-electric-purple/10 px-3 py-2 text-xs text-electric-purple">
+              <motion.p
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="max-w-sm rounded-xl border border-electric-purple/40 bg-electric-purple/10 px-3 py-2 text-xs text-electric-purple"
+              >
                 {sabotageMessage}
-              </p>
+              </motion.p>
             )}
 
             {role === 'host' && (
               <div className="w-full max-w-xs grid gap-3">
-                <button
+                <motion.button
+                  whileTap={{ scale: 0.96 }}
                   onClick={handleHostBlackout}
-                  className="w-full h-16 bg-intense-red hover:bg-red-600 text-white font-headline-lg-mobile text-2xl rounded-2xl shadow-[0_0_20px_rgba(255,0,0,0.38)] active:scale-95 transition-transform font-black border-2 border-white/20"
+                  className="w-full h-20 bg-intense-red hover:bg-red-600 text-white font-headline-lg-mobile text-3xl rounded-2xl shadow-[0_0_30px_rgba(255,107,139,0.45)] transition-colors font-black border-2 border-white/15 relative overflow-hidden"
                 >
+                  <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
                   CORTAR MÚSICA
-                </button>
+                </motion.button>
               </div>
             )}
           </motion.div>
@@ -374,9 +403,15 @@ export default function GameScreen() {
             className="w-full max-w-[430px] px-margin-mobile py-20 flex flex-col gap-4"
           >
             <div className="text-center">
-              <p className="font-label-caps text-intense-red text-xs tracking-widest">RESPONDE · {currentQuestion.type}</p>
+              <motion.p
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="font-label-caps text-intense-red text-sm tracking-widest"
+              >
+                RESPONDE · {currentQuestion.type}
+              </motion.p>
               <motion.h2
-                initial={{ opacity: 0, y: 12 }}
+                initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.35 }}
                 className="mt-3 text-white font-headline-lg-mobile text-3xl leading-tight"
@@ -387,8 +422,15 @@ export default function GameScreen() {
 
             {role === 'host' && (
               <div className="mt-4 rounded-2xl border border-white/10 bg-white/5 p-4 text-center">
-                <p className="font-label-caps text-neon-green text-xs">VOTOS RECIBIDOS</p>
-                <p className="mt-1 text-4xl font-black text-white">{answerCount}/{expectedVotes}</p>
+                <p className="font-label-caps text-neon-green text-sm">VOTOS RECIBIDOS</p>
+                <motion.p
+                  key={answerCount}
+                  initial={{ scale: 0.8 }}
+                  animate={{ scale: 1 }}
+                  className="mt-1 text-5xl font-black text-white"
+                >
+                  {answerCount}/{expectedVotes}
+                </motion.p>
                 {!hasAnswered && (
                   <p className="mt-2 text-xs text-on-surface-variant">Responde primero. Tu voto también cuenta.</p>
                 )}
@@ -396,7 +438,7 @@ export default function GameScreen() {
                   type="button"
                   onClick={hostRevealResults}
                   disabled={!hasAnswered}
-                  className="mt-4 w-full h-12 rounded-xl bg-neon-green text-black font-label-caps font-bold active:scale-95 transition-transform disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="mt-4 w-full h-14 rounded-xl bg-neon-green text-black font-label-caps text-sm font-bold active:scale-95 transition-transform disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   REVELAR RESULTADOS
                 </button>
@@ -404,13 +446,17 @@ export default function GameScreen() {
             )}
 
             {hasAnswered ? (
-              <div className={`mt-8 rounded-2xl border p-5 text-center ${role === 'host' ? 'border-electric-purple/40 bg-electric-purple/10' : 'border-neon-green/30 bg-neon-green/10'}`}>
-                <span className="material-symbols-outlined text-neon-green text-4xl">check_circle</span>
-                <p className="mt-3 text-on-surface-variant font-label-caps text-sm animate-pulse">RESPUESTA ENVIADA</p>
-                <p className="mt-2 text-xs text-on-surface-variant">
-                  {role === 'host' ? 'Cuando todos estén listos, revela.' : 'Pantalla en negro hasta que el anfitrión revele.'}
+              <motion.div
+                initial={{ scale: 0.95, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className={`mt-6 rounded-2xl border p-6 text-center ${role === 'host' ? 'border-electric-purple/40 bg-electric-purple/10' : 'border-neon-green/30 bg-neon-green/10'}`}
+              >
+                <span className="material-symbols-outlined text-neon-green" style={{ fontSize: '3.5rem' }}>check_circle</span>
+                <p className="mt-3 text-white font-bold text-lg">RESPUESTA ENVIADA</p>
+                <p className="mt-1 text-xs text-on-surface-variant">
+                  {role === 'host' ? 'Cuando todos estén listos, revela.' : 'Esperando al anfitrión...'}
                 </p>
-              </div>
+              </motion.div>
             ) : currentQuestion.answerType === 'timeline-placement' ? (
               <TimelinePlacementQuestion
                 question={currentQuestion}
@@ -430,12 +476,12 @@ export default function GameScreen() {
                     key={option}
                     variants={itemVariants}
                     onClick={() => handleAnswer(index === currentQuestion.correct)}
-                    className="w-full min-h-16 p-4 bg-white/8 text-white rounded-2xl border border-white/15 hover:border-neon-green/60 hover:bg-neon-green/8 active:scale-[0.98] active:bg-neon-green/15 text-left font-body-md text-base transition-all duration-150 flex items-center gap-3 group"
+                    className="w-full min-h-[5rem] p-4 bg-white/8 text-white rounded-2xl border border-white/15 hover:border-neon-green/60 hover:bg-neon-green/8 active:scale-[0.97] text-left font-body-md text-base transition-all duration-150 flex items-center gap-4 group"
                   >
-                    <span className="w-8 h-8 rounded-xl bg-black/25 border border-white/10 text-neon-green group-hover:bg-neon-green group-hover:text-black group-hover:border-neon-green flex items-center justify-center font-black shrink-0 transition-all duration-150">
+                    <span className="w-10 h-10 rounded-xl bg-black/30 border border-white/15 text-neon-green group-hover:bg-neon-green group-hover:text-black group-hover:border-neon-green flex items-center justify-center font-black text-lg shrink-0 transition-all duration-150">
                       {String.fromCharCode(65 + index)}
                     </span>
-                    <span className="leading-snug">{option}</span>
+                    <span className="leading-snug text-base">{option}</span>
                   </motion.button>
                 ))}
               </motion.div>
@@ -446,5 +492,3 @@ export default function GameScreen() {
     </div>
   );
 }
-
-

@@ -97,7 +97,7 @@ function GuideSection({ icon, title, subtitle, defaultOpen = false, children }) 
           <h2 className="text-white font-black leading-tight">{title}</h2>
           <p className="text-xs text-on-surface-variant mt-1">{subtitle}</p>
         </div>
-        <span className="material-symbols-outlined text-on-surface-variant transition-transform group-open:rotate-180">expand_more</span>
+        <span className="material-symbols-outlined text-on-surface-variant transition-transform group-open:rotate-180 text-2xl">expand_more</span>
       </summary>
       <div className="px-4 pb-4 text-left">
         {children}
@@ -147,7 +147,7 @@ export default function HowToPlayScreen() {
           onClick={() => navigate('/')}
           className="text-on-surface-variant hover:text-white transition-colors flex items-center gap-2 font-label-caps text-xs tracking-[0.18em]"
         >
-          <span className="material-symbols-outlined text-sm">arrow_back</span>
+          <span className="material-symbols-outlined text-xl">arrow_back</span>
           VOLVER
         </button>
       </header>
@@ -176,9 +176,12 @@ export default function HowToPlayScreen() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.04 }}
-            className="rounded-[1.4rem] border border-white/10 bg-surface-container/55 p-4 text-center"
+            className="rounded-[1.4rem] border border-white/10 bg-surface-container/55 p-5 text-center relative overflow-hidden"
           >
-            <span className="material-symbols-outlined text-vinyl-orange text-3xl">{step.icon}</span>
+            <div className="absolute top-2 right-3 text-[10px] font-black text-white/10 select-none" style={{ fontSize: '3rem', lineHeight: 1 }}>{index + 1}</div>
+            <div className="w-16 h-16 rounded-2xl bg-vinyl-orange/12 border border-vinyl-orange/25 flex items-center justify-center mx-auto">
+              <span className="material-symbols-outlined text-vinyl-orange" style={{ fontSize: '2rem' }}>{step.icon}</span>
+            </div>
             <h2 className="mt-3 text-white font-black leading-tight">{step.title}</h2>
             <p className="mt-1 text-xs text-on-surface-variant leading-snug">{step.text}</p>
           </motion.article>

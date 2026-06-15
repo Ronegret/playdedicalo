@@ -196,12 +196,55 @@ export default function LobbyScreen() {
       <ChaosEconomyBubbles />
 
       <header className="fixed top-0 left-0 right-0 h-16 bg-surface/85 backdrop-blur-xl border-b border-white/10 flex justify-between items-center px-margin-mobile z-50">
-        <button onClick={handleExit} className="text-on-surface-variant hover:text-white transition-colors flex items-center font-label-caps text-xs gap-1">
-          <span className="material-symbols-outlined text-sm">arrow_back</span> SALIR
+        <button onClick={handleExit} className="text-on-surface-variant hover:text-white transition-colors flex items-center font-label-caps text-xs gap-2">
+          <span className="material-symbols-outlined text-xl">arrow_back</span> SALIR
         </button>
-        <span className="font-headline-lg-mobile text-xl font-black italic tracking-tighter text-white">DEDICALO</span>
+        <img src="/images/logo-main.png" alt="Dedícalo" className="h-8 w-auto object-contain" />
         <div className="w-8 h-8 opacity-0" />
       </header>
+
+      {/* Host vinyl hero */}
+      {role === 'host' && (
+        <div className="w-full flex flex-col items-center gap-1 mb-2 z-10">
+          <div className="relative" style={{ width: 'min(180px, 45vw)', aspectRatio: '1' }}>
+            {/* Rings */}
+            {[0, 0.9].map((delay) => (
+              <div
+                key={delay}
+                className="absolute inset-[-20%] rounded-full border border-vinyl-orange/15 ring-expand-anim"
+                style={{ animationDelay: `${delay}s`, animationDuration: '3.8s' }}
+              />
+            ))}
+            <div className="absolute -inset-6 rounded-full bg-vinyl-orange/10 blur-2xl pointer-events-none" />
+            {/* Spinning disc */}
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ repeat: Infinity, duration: 10, ease: 'linear' }}
+              className="absolute inset-0 rounded-full"
+              style={{
+                background: `repeating-radial-gradient(circle, #0b0b0b 0px, #0b0b0b 2px, #191919 3px, #191919 5px, #0b0b0b 6px, #0b0b0b 9px)`,
+                boxShadow: '0 0 0 2px rgba(255,255,255,0.06), 0 12px 40px rgba(0,0,0,0.8)',
+              }}
+            />
+            {/* Logo label */}
+            <div
+              className="absolute rounded-full bg-white overflow-hidden flex items-center justify-center"
+              style={{ inset: '20%', boxShadow: '0 0 0 3px rgba(0,0,0,0.5), 0 0 20px rgba(255,122,26,0.4)' }}
+            >
+              <img src="/images/logo-main.png" alt="Dedícalo" className="w-[78%] h-[78%] object-contain" draggable={false} />
+            </div>
+            <div className="absolute rounded-full bg-black" style={{ inset: '47.5%' }} />
+          </div>
+          {/* Mini EQ under vinyl */}
+          <div className="flex items-end gap-[3px] h-5 mt-1 opacity-60">
+            {[0.4,0.7,0.55,0.9,0.45,0.8,0.6,0.35,0.75,0.5].map((h, i) => (
+              <div key={i} className="w-[4px] rounded-full eq-bar"
+                style={{ height: `${h*100}%`, background: i%3===0?'#ff7a1a':i%3===1?'#a855f7':'#3f78ff',
+                  animationDelay: `${i*0.09}s`, animationDuration: `${0.6+(i%4)*0.18}s` }} />
+            ))}
+          </div>
+        </div>
+      )}
 
       <section className="w-full flex flex-col gap-4 z-10">
         <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-5">
@@ -323,7 +366,7 @@ export default function LobbyScreen() {
                 <p className="font-label-caps text-electric-purple text-xs">SABOTAJES</p>
                 <h2 className="text-base font-bold text-white">Opciones de esta ronda</h2>
               </div>
-              <span className="material-symbols-outlined text-electric-purple">expand_more</span>
+              <span className="material-symbols-outlined text-electric-purple text-2xl">expand_more</span>
             </summary>
             <div className="px-4 pb-4 grid gap-2">
               {SABOTAGE_OPTIONS.map((option) => (

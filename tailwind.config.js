@@ -85,7 +85,7 @@ export default {
         "headline-lg-mobile": ["Montserrat", "Arial", "sans-serif"],
         "body-md": ["Hanken Grotesk", "Arial", "sans-serif"],
         "headline-lg": ["Montserrat", "Arial", "sans-serif"],
-        "label-caps": ["Montserrat", "Arial", "sans-serif"]
+        "label-caps": ["Barlow Condensed", "Montserrat", "Arial", "sans-serif"]
       },
       "fontSize": {
         "headline-xl": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "900"}],
@@ -94,7 +94,7 @@ export default {
         "headline-lg-mobile": ["28px", {"lineHeight": "1.2", "fontWeight": "800"}],
         "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
         "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "800"}],
-        "label-caps": ["11px", {"lineHeight": "1.2", "letterSpacing": "0.08em", "fontWeight": "700"}]
+        "label-caps": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.14em", "fontWeight": "800"}]
       }
     },
   },

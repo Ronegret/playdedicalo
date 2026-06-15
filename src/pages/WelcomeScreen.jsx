@@ -2,6 +2,8 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import NeonButton from '../components/NeonButton';
 
+const EQ_BARS = [0.4, 0.7, 0.55, 0.9, 0.45, 0.8, 0.6, 0.35, 0.75, 0.5];
+
 export default function WelcomeScreen() {
   const navigate = useNavigate();
 
@@ -11,7 +13,7 @@ export default function WelcomeScreen() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, scale: 0.98 }}
       transition={{ duration: 0.4 }}
-      className="relative z-10 w-full max-w-[430px] mx-auto min-h-screen flex flex-col items-center justify-center px-5 py-10 gap-7 text-center overflow-hidden"
+      className="relative z-10 w-full max-w-[430px] mx-auto min-h-screen flex flex-col items-center justify-center px-5 py-10 gap-6 text-center overflow-hidden"
     >
       {/* Label */}
       <motion.p
@@ -23,7 +25,7 @@ export default function WelcomeScreen() {
         Party Game Musical
       </motion.p>
 
-      {/* ─── Vinyl Hero ───────────────────────────────────── */}
+      {/* Vinyl Hero */}
       <motion.div
         initial={{ opacity: 0, scale: 0.82 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -31,9 +33,18 @@ export default function WelcomeScreen() {
         className="relative"
         style={{ width: 'min(300px, calc(100vw - 40px))', aspectRatio: '1' }}
       >
+        {/* Outer pulse rings */}
+        {[0, 0.8, 1.6].map((delay) => (
+          <div
+            key={delay}
+            className="absolute inset-[-18%] rounded-full border border-vinyl-orange/18 ring-expand-anim"
+            style={{ animationDelay: `${delay}s`, animationDuration: '3.5s' }}
+          />
+        ))}
+
         {/* Ambient glow */}
-        <div className="absolute -inset-6 rounded-full bg-vinyl-orange/12 blur-3xl pointer-events-none" />
-        <div className="absolute -inset-8 rounded-full bg-electric-purple/8 blur-[60px] pointer-events-none" />
+        <div className="absolute -inset-8 rounded-full bg-vinyl-orange/15 blur-3xl pointer-events-none" />
+        <div className="absolute -inset-10 rounded-full bg-electric-purple/8 blur-[70px] pointer-events-none" />
 
         {/* Spinning disc */}
         <motion.div
@@ -59,7 +70,7 @@ export default function WelcomeScreen() {
           }}
         />
 
-        {/* Logo label — static, doesn't rotate */}
+        {/* Logo label — static */}
         <div
           className="absolute rounded-full bg-white overflow-hidden flex items-center justify-center"
           style={{
@@ -79,14 +90,36 @@ export default function WelcomeScreen() {
         <div className="absolute rounded-full bg-black" style={{ inset: '47.5%' }} />
       </motion.div>
 
-      {/* ─── Headline + Subtitle ──────────────────────────── */}
+      {/* Mini equalizer below vinyl */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.6 }}
+        className="flex items-end gap-[3px] h-8"
+      >
+        {EQ_BARS.map((h, i) => (
+          <div
+            key={i}
+            className="w-[5px] rounded-full eq-bar"
+            style={{
+              height: `${h * 100}%`,
+              background: i % 3 === 0 ? '#ff7a1a' : i % 3 === 1 ? '#a855f7' : '#3f78ff',
+              opacity: 0.55,
+              animationDelay: `${i * 0.09}s`,
+              animationDuration: `${0.6 + (i % 4) * 0.18}s`,
+            }}
+          />
+        ))}
+      </motion.div>
+
+      {/* Headline */}
       <motion.div
         initial={{ opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4, duration: 0.65 }}
         className="space-y-2 max-w-xs"
       >
-        <h1 className="text-2xl sm:text-[1.65rem] font-black text-white leading-tight uppercase tracking-tight">
+        <h1 className="text-3xl sm:text-[1.9rem] font-black text-white leading-tight uppercase tracking-tight">
           La música como nunca{' '}
           <span className="text-animated-gradient">la habías jugado</span>
         </h1>
@@ -95,7 +128,7 @@ export default function WelcomeScreen() {
         </p>
       </motion.div>
 
-      {/* ─── CTAs ─────────────────────────────────────────── */}
+      {/* CTAs */}
       <motion.div
         initial={{ opacity: 0, y: 14 }}
         animate={{ opacity: 1, y: 0 }}
@@ -108,7 +141,7 @@ export default function WelcomeScreen() {
         <button
           type="button"
           onClick={() => navigate('/role-selection')}
-          className="h-12 rounded-2xl border border-white/10 bg-white/[0.04] text-white/80 text-xs font-semibold uppercase tracking-[0.18em] hover:bg-white/8 hover:border-white/20 active:scale-95 transition-all"
+          className="h-14 rounded-2xl border border-white/10 bg-white/[0.04] text-white/80 text-xs font-semibold uppercase tracking-[0.18em] hover:bg-white/8 hover:border-white/20 active:scale-95 transition-all"
         >
           Ya sé jugar — Entrar
         </button>

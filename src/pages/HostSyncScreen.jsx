@@ -161,7 +161,7 @@ export default function HostSyncScreen() {
           onClick={() => navigate('/role-selection')}
           className="text-on-surface-variant hover:text-white transition-colors flex items-center gap-2 font-label-caps text-xs tracking-[0.18em]"
         >
-          <span className="material-symbols-outlined text-sm">arrow_back</span>
+          <span className="material-symbols-outlined text-xl">arrow_back</span>
           VOLVER
         </button>
         <h1 className="font-headline-xl text-2xl italic tracking-tighter text-electric-purple leading-none select-none">

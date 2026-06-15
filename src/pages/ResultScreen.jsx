@@ -205,24 +205,25 @@ export default function ResultScreen() {
         className="max-w-sm w-full"
       >
         {/* Burst rings + icon */}
-        <div className="relative flex items-center justify-center h-32 mb-2">
-          {[0, 0.5, 1].map((delay) => (
+        <div className="relative flex items-center justify-center h-40 mb-2">
+          {[0, 0.6, 1.2].map((delay) => (
             <div
               key={delay}
-              className={`absolute w-20 h-20 rounded-full border-2 ${style.border} ring-expand-anim`}
+              className={`absolute w-28 h-28 rounded-full border-2 ${style.border} ring-expand-anim`}
               style={{ animationDelay: `${delay}s`, animationDuration: '2.2s' }}
             />
           ))}
           <motion.span
-            animate={{ scale: [1, 1.12, 1], rotate: [0, 4, -4, 0] }}
+            animate={{ scale: [1, 1.15, 1], rotate: [0, 5, -5, 0] }}
             transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
-            className={`material-symbols-outlined text-7xl relative z-10 ${style.text}`}
+            className={`material-symbols-outlined relative z-10 ${style.text}`}
+            style={{ fontSize: '5.5rem' }}
           >
             {style.icon}
           </motion.span>
         </div>
 
-        <h1 className={`font-headline-lg text-4xl font-black ${style.text}`}>
+        <h1 className={`font-headline-lg text-5xl font-black ${style.text}`}>
           {style.title}
         </h1>
         <p className="mt-3 text-on-surface leading-relaxed">{sabotage?.effect || style.copy}</p>
