@@ -237,6 +237,7 @@ export function normalizeSpotifyPlaylistUrl(value) {
 }
 
 function sortPlayers(players) {
+  if (!Array.isArray(players)) return [];
   return [...players].sort((a, b) => Number(b.points || 0) - Number(a.points || 0));
 }
 
@@ -264,9 +265,10 @@ function normalizeTimelineYears(years = []) {
     .slice(0, 12);
 }
 
-export function getCombinedTimelineYears(player = {}) {
-  const baseYear = Number(player.timelineBaseYear || 2000);
-  return normalizeTimelineYears([baseYear, ...(player.timelineYears || [])]);
+export function getCombinedTimelineYears(player) {
+  const p = player || {};
+  const baseYear = Number(p.timelineBaseYear || 2000);
+  return normalizeTimelineYears([baseYear, ...(p.timelineYears || [])]);
 }
 
 function reverseReadableText(text) {
@@ -293,6 +295,7 @@ export const useGameStore = create((setStore, getStore) => ({
   pointLocks: {},
   sharedPrize: null,
   pendingQuestionEffect: null,
+  roomError: null,
   timelineYears: [],
   roomSubscription: null,
 
@@ -720,11 +723,11 @@ export const useGameStore = create((setStore, getStore) => ({
       guestAvatar: null,
       guestName: null,
       phase: 'lobby',
-        lastResultType: null,
-        lastPointDelta: 0,
-        lastSabotage: null,
-        roundAnswers: {},
-        revealResults: {},
+      lastResultType: null,
+      lastPointDelta: 0,
+      lastSabotage: null,
+      roundAnswers: {},
+      revealResults: {},
       pointLocks: {},
       sharedPrize: null,
       pendingQuestionEffect: null,
@@ -732,6 +735,8 @@ export const useGameStore = create((setStore, getStore) => ({
       roomSubscription: null
     });
   },
+
+  clearRoomError: () => setStore({ roomError: null }),
 
   togglePlay: () => {
     const { pin, role, isAudioPlaying } = getStore();
@@ -774,8 +779,8 @@ export const useGameStore = create((setStore, getStore) => ({
 
       if (!data) {
         if (current.role === 'guest') {
-          alert('La sala ha sido cerrada.');
           getStore().guestLeaveRoom();
+          setStore({ roomError: 'La sala ha sido cerrada por el anfitrión.' });
         }
         return;
       }

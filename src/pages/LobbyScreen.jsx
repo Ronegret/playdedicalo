@@ -157,7 +157,9 @@ export default function LobbyScreen() {
     setGameSettings,
     guestUseSabotage,
     guestLeaveRoom,
-    hostCloseRoom
+    hostCloseRoom,
+    roomError,
+    clearRoomError
   } = useGameStore();
   const [showQR, setShowQR] = useState(false);
   const [startError, setStartError] = useState('');
@@ -167,6 +169,13 @@ export default function LobbyScreen() {
     if (phase === 'countdown' || phase === 'listen' || phase === 'blackout') navigate('/game');
     if (phase === 'result' || phase === 'final') navigate('/game/result');
   }, [phase, navigate]);
+
+  useEffect(() => {
+    if (roomError) {
+      clearRoomError();
+      navigate('/role-selection');
+    }
+  }, [roomError, clearRoomError, navigate]);
 
   const handleExit = () => {
     if (role === 'guest') guestLeaveRoom();
@@ -219,7 +228,7 @@ export default function LobbyScreen() {
             {/* Spinning disc */}
             <motion.div
               animate={{ rotate: 360 }}
-              transition={{ repeat: Infinity, duration: 10, ease: 'linear' }}
+              transition={{ repeat: Infinity, duration: 8, ease: 'linear' }}
               className="absolute inset-0 rounded-full"
               style={{
                 background: `repeating-radial-gradient(circle, #0b0b0b 0px, #0b0b0b 2px, #191919 3px, #191919 5px, #0b0b0b 6px, #0b0b0b 9px)`,

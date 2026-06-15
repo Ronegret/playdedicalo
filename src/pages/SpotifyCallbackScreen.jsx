@@ -12,12 +12,12 @@ export default function SpotifyCallbackScreen() {
     const error = params.get('error');
 
     if (error) {
-      window.setTimeout(() => setMessage(`Spotify rechazo la conexion: ${error}`), 0);
+      window.setTimeout(() => setMessage(`Spotify rechazó la conexión: ${error}`), 0);
       return;
     }
 
     if (!code) {
-      window.setTimeout(() => setMessage('No llego el codigo de Spotify. Vuelve a conectar.'), 0);
+      window.setTimeout(() => setMessage('No llegó el código de Spotify. Vuelve a conectar.'), 0);
       return;
     }
 
@@ -28,7 +28,7 @@ export default function SpotifyCallbackScreen() {
       })
       .catch((spotifyError) => {
         console.error(spotifyError);
-        setMessage('No se pudo conectar Spotify. Revisa la configuracion de Redirect URI.');
+        setMessage('No se pudo conectar Spotify. Revisa la configuración de Redirect URI.');
       });
   }, [navigate]);
 

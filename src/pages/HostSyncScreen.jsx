@@ -114,7 +114,7 @@ export default function HostSyncScreen() {
       await hostCreateRoom(googleUser);
       navigate('/lobby');
     } catch (error) {
-      alert(error.message);
+      setSpotifyCheck({ type: 'error', message: error.message || 'No se pudo crear la sala. Inténtalo otra vez.' });
       createStartedRef.current = false;
     } finally {
       setIsCreating(false);

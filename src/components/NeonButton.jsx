@@ -54,7 +54,7 @@ export default function NeonButton({
       whileTap={{ scale: 0.97 }}
       onClick={handleClick}
       disabled={disabled}
-      className={`w-full min-h-14 border rounded-2xl flex items-center justify-center gap-3 group overflow-hidden relative disabled:opacity-50 disabled:cursor-not-allowed px-5 py-3 ${className}`}
+      className={`w-full min-h-14 border rounded-2xl flex items-center justify-center gap-3 group overflow-hidden relative disabled:opacity-50 disabled:cursor-not-allowed px-5 py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background ${className}`}
       style={{
         borderColor: accentBorder,
         backgroundColor: primary ? accent : 'rgba(255,255,255,0.04)',

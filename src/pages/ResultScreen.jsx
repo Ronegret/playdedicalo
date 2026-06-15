@@ -2,6 +2,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TIMELINE_GOAL_YEARS, getCombinedTimelineYears, useGameStore } from '../store/useGameStore';
+import { AnimatePresence } from 'framer-motion';
 
 const RESULT_STYLES = {
   success: {
@@ -106,22 +107,31 @@ export default function ResultScreen() {
     lastResultType,
     lastPointDelta,
     lastSabotage,
-    revealResults
+    revealResults,
+    roomError,
+    clearRoomError
   } = useGameStore();
   const guestReveal = revealResults?.[guestId] || null;
   const guestPoints = guestReveal?.points ?? players.find((player) => player.id === guestId)?.points ?? 10;
   const isFinal = phase === 'final';
-  const winner = [...players].sort((a, b) => Number(b.points || 0) - Number(a.points || 0))[0];
+  const winner = Array.isArray(players) && players.length
+    ? [...players].sort((a, b) => Number(b.points || 0) - Number(a.points || 0))[0]
+    : null;
   const resultType = guestReveal?.resultType || lastResultType || 'success';
   const pointDelta = guestReveal?.delta ?? lastPointDelta;
   const sabotage = guestReveal?.sabotage || lastSabotage;
   const style = RESULT_STYLES[resultType];
 
   useEffect(() => {
-    if (phase === 'lobby') {
-      navigate('/lobby');
-    }
+    if (phase === 'lobby') navigate('/lobby');
   }, [phase, navigate]);
+
+  useEffect(() => {
+    if (roomError) {
+      clearRoomError();
+      navigate('/role-selection');
+    }
+  }, [roomError, clearRoomError, navigate]);
 
   const handleFinish = () => {
     if (role === 'host') hostCloseRoom();

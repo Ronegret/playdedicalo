@@ -122,7 +122,9 @@ export default function GameScreen() {
     guestId,
     players,
     roundAnswers,
-    setAudioPlaying
+    setAudioPlaying,
+    roomError,
+    clearRoomError
   } = useGameStore();
   const [answeredQuestionKey, setAnsweredQuestionKey] = useState(null);
   const [lastAnswerCorrect, setLastAnswerCorrect] = useState(null);
@@ -132,13 +134,16 @@ export default function GameScreen() {
   const startedSpotifyRoundRef = useRef('');
 
   useEffect(() => {
-    if (phase === 'result' || phase === 'final') {
-      navigate('/game/result');
-    }
-    if (phase === 'lobby') {
-      navigate('/lobby');
-    }
+    if (phase === 'result' || phase === 'final') navigate('/game/result');
+    if (phase === 'lobby') navigate('/lobby');
   }, [phase, navigate]);
+
+  useEffect(() => {
+    if (roomError) {
+      clearRoomError();
+      navigate('/role-selection');
+    }
+  }, [roomError, clearRoomError, navigate]);
 
   useEffect(() => {
     if (phase !== 'countdown') return undefined;

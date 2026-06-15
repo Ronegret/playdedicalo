@@ -32,6 +32,7 @@ export default function GuestJoinScreen() {
   const [name, setName] = useState('');
   const [avatar, setAvatar] = useState('😎');
   const [isLoading, setIsLoading] = useState(false);
+  const [joinError, setJoinError] = useState('');
   const [scannerOpen, setScannerOpen] = useState(false);
   const [scannerError, setScannerError] = useState('');
 
@@ -129,11 +130,12 @@ export default function GuestJoinScreen() {
     if (!canJoin) return;
 
     setIsLoading(true);
+    setJoinError('');
     try {
       await guestJoinRoom(pin, name, avatar);
       navigate('/lobby');
     } catch (error) {
-      alert(error.message);
+      setJoinError(error.message || 'No pudimos unirte a la sala. Revisa el PIN e inténtalo de nuevo.');
     } finally {
       setIsLoading(false);
     }
@@ -190,11 +192,12 @@ export default function GuestJoinScreen() {
         </section>
 
         <section className="w-full">
-          <label className="font-label-caps text-on-surface-variant text-xs mb-2 block">TU ALIAS (MAX. 12)</label>
+          <label htmlFor="guest-name" className="font-label-caps text-on-surface-variant text-xs mb-2 block">TU ALIAS (MAX. 12)</label>
           <input
+            id="guest-name"
             type="text"
             maxLength={12}
-            className="w-full bg-white/5 border border-white/10 rounded-xl h-14 px-4 font-body-lg text-on-surface text-center font-bold outline-none focus:border-neon-green transition-colors"
+            className="w-full bg-white/5 border border-white/10 rounded-xl h-14 px-4 font-body-lg text-on-surface text-center font-bold outline-none focus:border-neon-green focus:ring-2 focus:ring-neon-green/30 transition-colors"
             value={name}
             onChange={(event) => setName(event.target.value)}
             placeholder="DJ Invitado"
@@ -218,6 +221,16 @@ export default function GuestJoinScreen() {
             ))}
           </div>
         </section>
+
+        {joinError && (
+          <motion.p
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="w-full rounded-xl border border-intense-red/40 bg-intense-red/10 px-4 py-3 text-sm text-intense-red text-center"
+          >
+            {joinError}
+          </motion.p>
+        )}
 
         <NeonButton
           primary={true}
