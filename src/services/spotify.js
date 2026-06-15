@@ -2,6 +2,8 @@ const SPOTIFY_CLIENT_ID = import.meta.env.VITE_SPOTIFY_CLIENT_ID || '8d753e32e5c
 const TOKEN_KEY = 'dedicalo_spotify_token';
 const VERIFIER_KEY = 'dedicalo_spotify_verifier';
 const TRACK_KEY = 'dedicalo_current_spotify_track';
+const PLAYED_TRACKS_KEY = 'dedicalo_played_spotify_tracks';
+const CATALOG_URL = '/data/dedicalo-song-catalog.full.clean.json';
 const PLAYER_NAME = 'Dedicalo Host Player';
 
 const SPOTIFY_SCOPES = [
@@ -17,6 +19,7 @@ const SPOTIFY_SCOPES = [
 let spotifyPlayerPromise = null;
 let spotifyDeviceId = null;
 let lastSpotifySdkError = '';
+let catalogPromise = null;
 
 function getRedirectUri() {
   return `${window.location.origin}/spotify/callback`;
@@ -302,9 +305,80 @@ export function getPlaylistId(playlistUrl) {
   return null;
 }
 
+function readPlayedTracks() {
+  try {
+    return JSON.parse(window.sessionStorage.getItem(PLAYED_TRACKS_KEY) || '{}');
+  } catch {
+    return {};
+  }
+}
+
+function savePlayedTracks(value) {
+  window.sessionStorage.setItem(PLAYED_TRACKS_KEY, JSON.stringify(value));
+}
+
+function trackFromCatalogRow(row) {
+  return {
+    uri: row.spotify_uri || `spotify:track:${row.spotify_track_id}`,
+    name: row.title,
+    artist: row.artist_main || 'Artista sorpresa',
+    releaseYear: Number(row.release_year) || null,
+    coverUrl: row.cover_url || '',
+    spotifyUrl: row.spotify_url || ''
+  };
+}
+
+async function loadSongCatalog() {
+  if (!catalogPromise) {
+    catalogPromise = fetch(CATALOG_URL)
+      .then((response) => {
+        if (!response.ok) throw new Error(`Catalogo no disponible: ${response.status}`);
+        return response.json();
+      })
+      .catch((error) => {
+        catalogPromise = null;
+        throw error;
+      });
+  }
+  return catalogPromise;
+}
+
+async function getCatalogTracks(playlistId) {
+  try {
+    const catalog = await loadSongCatalog();
+    return catalog
+      .filter((row) => row.playlist_id === playlistId && (row.spotify_uri || row.spotify_track_id))
+      .map(trackFromCatalogRow);
+  } catch (error) {
+    console.warn('No se pudo usar el catalogo local:', error);
+    return [];
+  }
+}
+
+function pickTrackWithoutRepeating(playlistUrl, tracks) {
+  const playlistId = getPlaylistId(playlistUrl) || 'default';
+  const played = readPlayedTracks();
+  const alreadyPlayed = new Set(played[playlistId] || []);
+  let availableTracks = tracks.filter((track) => !alreadyPlayed.has(track.uri));
+
+  if (!availableTracks.length) {
+    availableTracks = tracks;
+    alreadyPlayed.clear();
+  }
+
+  const track = availableTracks[Math.floor(Math.random() * availableTracks.length)];
+  alreadyPlayed.add(track.uri);
+  played[playlistId] = Array.from(alreadyPlayed);
+  savePlayedTracks(played);
+  return track;
+}
+
 export async function getPlaylistTracks(playlistUrl) {
   const playlistId = getPlaylistId(playlistUrl);
   if (!playlistId) throw new Error('El enlace de Spotify no parece una playlist valida.');
+
+  const catalogTracks = await getCatalogTracks(playlistId);
+  if (catalogTracks.length) return catalogTracks;
 
   const tracks = [];
   let url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks?limit=100&fields=items(track(uri,type,name,artists(name),album(release_date))),next`;
@@ -385,7 +459,7 @@ export function createQuestionFromTrack(track, gameMode, round = 1) {
 export async function startRandomPlaylistTrack(playlistUrl) {
   const deviceId = await ensureSpotifyDevice();
   const tracks = await getPlaylistTracks(playlistUrl);
-  const track = tracks[Math.floor(Math.random() * tracks.length)];
+  const track = pickTrackWithoutRepeating(playlistUrl, tracks);
   window.sessionStorage.setItem(TRACK_KEY, JSON.stringify(track));
 
   await spotifyFetch(`https://api.spotify.com/v1/me/player/play?device_id=${encodeURIComponent(deviceId)}`, {

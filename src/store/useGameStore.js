@@ -3,40 +3,64 @@ import { create } from 'zustand';
 const DATABASE_URL = 'https://dedicalo-play-trivia-7-default-rtdb.europe-west1.firebasedatabase.app';
 export const DEDICALO_PLAYLISTS = [
   {
-    id: 'dedicalo-party',
-    name: 'Cumbias TOP',
-    mood: 'Cumbias para entrar rapido en ambiente.',
-    url: 'https://open.spotify.com/playlist/343Yqq5yv7NkRwLUTt3l7w'
+    id: 'reggaeton-historia',
+    name: 'Los mejores reggetones de la historia',
+    mood: 'Reggaeton histórico para reconocer hits al instante.',
+    url: 'https://open.spotify.com/playlist/64B6t8la0Rf3JTTaBXiNcm'
   },
   {
-    id: 'dale-hits',
-    name: 'Old School Reggaeton',
-    mood: 'Perreo clasico para competir cantando.',
-    url: 'https://open.spotify.com/playlist/6gWB69lNDbCNw6bH5s9bi9'
+    id: 'hits-todos-los-tiempos',
+    name: 'Las mejores canciones de todos los tiempos',
+    mood: 'Hits globales para partidas con todos los gustos.',
+    url: 'https://open.spotify.com/playlist/0f3YRJO2HyZTpCLCVxzBt0'
   },
   {
-    id: 'latin-battle',
-    name: 'Viva Latino',
-    mood: 'Pop latino y hits actuales.',
-    url: 'https://open.spotify.com/playlist/37i9dQZF1DX10zKzsJ2jva'
+    id: 'rock-latino',
+    name: 'Rock Latino',
+    mood: 'Guitarras, nostalgia y coros para cantar fuerte.',
+    url: 'https://open.spotify.com/playlist/07iEAd20wfnMh8VfbmovYG'
   },
   {
-    id: 'noche-pop',
-    name: 'Grandes Exitos del Rock Latino',
-    mood: 'Rock latino para memoria y nostalgia.',
-    url: 'https://open.spotify.com/playlist/3MdPj5OKfEjnuawoN2UWFf'
+    id: 'mix-latino',
+    name: 'Latino Mix 2026',
+    mood: 'Latino actual para rondas rapidas y energia alta.',
+    url: 'https://open.spotify.com/playlist/2UBikaEIZWV9LOAjE0dBgx'
   },
   {
-    id: 'remix-mode',
-    name: 'Las 100 Mejores en Espanol',
-    mood: 'Clasicos en espanol de varias epocas.',
-    url: 'https://open.spotify.com/playlist/3mprAoVqUMQqtrk82Fvkug'
+    id: 'bailable-todos-los-tiempos',
+    name: 'Bailables todos los tiempos',
+    mood: 'Fiesta transversal: canciones fáciles de reconocer.',
+    url: 'https://open.spotify.com/playlist/7FnGVaOj5s9JvAUtvZENfC'
   },
   {
-    id: 'after-dale',
-    name: 'Temazos Espanoles',
-    mood: 'Canciones espanolas reconocibles.',
-    url: 'https://open.spotify.com/playlist/43gflSKdrEdaQoG3nfNzeU'
+    id: 'romanticos',
+    name: 'Éxitos románticos en español',
+    mood: 'Baladas y recuerdos para jugar por artista y época.',
+    url: 'https://open.spotify.com/playlist/3dmrZtJOYx1naGoLtyHFOk'
+  },
+  {
+    id: 'perreo-clasico',
+    name: 'Mix temazos de paradero',
+    mood: 'Perreo clasico y reggaeton de memoria colectiva.',
+    url: 'https://open.spotify.com/playlist/2aatYbsZb0ZiY3aQjcVSw2'
+  },
+  {
+    id: 'temazos-espanoles',
+    name: 'Temazos Españoles',
+    mood: 'Música española de siempre para rondas nostálgicas.',
+    url: 'https://open.spotify.com/playlist/7bsAMCUlTcMTGzG1RzxWTX'
+  },
+  {
+    id: 'rock-ska-espanolisimo',
+    name: 'Españolísimos',
+    mood: 'Rock, ska y clásicos españoles con mucha identidad.',
+    url: 'https://open.spotify.com/playlist/6ZcRMfq1UCg0QzC2KkopvV'
+  },
+  {
+    id: 'de-to2',
+    name: 'De To2',
+    mood: 'Mezcla abierta para partidas variadas.',
+    url: 'https://open.spotify.com/playlist/0Pn8mtBmo8HDfuKiky5tNj'
   }
 ];
 export const DEFAULT_SPOTIFY_PLAYLIST_URL = DEDICALO_PLAYLISTS[0].url;
