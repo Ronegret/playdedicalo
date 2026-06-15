@@ -1,7 +1,7 @@
 ﻿import { motion } from 'framer-motion';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useGameStore } from '../store/useGameStore';
+import { TIMELINE_GOAL_YEARS, getCombinedTimelineYears, useGameStore } from '../store/useGameStore';
 
 const RESULT_STYLES = {
   success: {
@@ -33,8 +33,8 @@ const RESULT_STYLES = {
 function TimelineYears({ years = [] }) {
   return (
     <div className="mt-3 flex flex-wrap items-center gap-1.5 pl-12">
-      <span className="font-label-caps text-[10px] text-on-surface-variant">Línea {Math.min(years.length, 12)}/12</span>
-      {years.slice(0, 12).map((year) => (
+      <span className="font-label-caps text-[10px] text-on-surface-variant">Línea {Math.min(years.length, TIMELINE_GOAL_YEARS)}/{TIMELINE_GOAL_YEARS}</span>
+      {years.slice(0, TIMELINE_GOAL_YEARS).map((year) => (
         <span key={year} className="rounded-lg border border-neon-green/30 bg-neon-green/10 px-2 py-1 text-[10px] font-black text-neon-green">
           {year}
         </span>
@@ -83,7 +83,7 @@ function RankingList({ players, final = false, showTimeline = false }) {
               </div>
               <span className="font-stats-xl text-neon-green shrink-0">{player.points} PTS</span>
             </div>
-            {showTimeline && <TimelineYears years={player.timelineYears || []} />}
+            {showTimeline && <TimelineYears years={getCombinedTimelineYears(player)} />}
           </motion.div>
         );
       })}
@@ -142,7 +142,11 @@ export default function ResultScreen() {
             className="w-full text-center"
           >
             <p className="font-label-caps text-electric-purple tracking-widest text-xs">
-              {isFinal ? `META ${targetScore} PUNTOS` : `RONDA ${round} · META ${targetScore}`}
+              {gameMode === 'timeline'
+                ? `META ${TIMELINE_GOAL_YEARS} AÑOS`
+                : isFinal
+                  ? `META ${targetScore} PUNTOS`
+                  : `RONDA ${round} · META ${targetScore}`}
             </p>
             <h1 className="font-headline-lg text-4xl font-black mt-2 mb-6">
               {isFinal ? 'RANKING FINAL' : 'PUNTUACIONES'}

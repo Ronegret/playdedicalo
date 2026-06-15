@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ChaosEconomyBubbles from '../components/ChaosEconomyBubbles';
-import { GAME_MODES, SABOTAGE_OPTIONS, VICTORY_MODES, useGameStore } from '../store/useGameStore';
+import { GAME_MODES, SABOTAGE_OPTIONS, TIMELINE_GOAL_YEARS, VICTORY_MODES, getCombinedTimelineYears, useGameStore } from '../store/useGameStore';
 import { explainSpotifyError, prepareSpotifyPlayback } from '../services/spotify';
 
 function InfoDetails({ title, children }) {
@@ -133,8 +133,8 @@ function SabotageCard({ option, canUse, onUse }) {
 function TimelineYears({ years = [] }) {
   return (
     <div className="mt-3 flex flex-wrap items-center gap-1.5 pl-9">
-      <span className="font-label-caps text-[10px] text-on-surface-variant">Línea {Math.min(years.length, 12)}/12</span>
-      {years.slice(0, 12).map((year) => (
+      <span className="font-label-caps text-[10px] text-on-surface-variant">Línea {Math.min(years.length, TIMELINE_GOAL_YEARS)}/{TIMELINE_GOAL_YEARS}</span>
+      {years.slice(0, TIMELINE_GOAL_YEARS).map((year) => (
         <span key={year} className="rounded-lg border border-neon-green/30 bg-neon-green/10 px-2 py-1 text-[10px] font-black text-neon-green">
           {year}
         </span>
@@ -233,26 +233,40 @@ export default function LobbyScreen() {
             {gameLocked ? (
               <div className="rounded-xl border border-neon-green/30 bg-neon-green/10 p-4">
                 <p className="text-lg font-black text-white">{GAME_MODES[gameMode]?.name}</p>
-                <p className="mt-1 text-sm text-on-surface-variant">Meta: {targetScore} puntos. La partida sigue con las mismas reglas hasta el final.</p>
+                <p className="mt-1 text-sm text-on-surface-variant">
+                  {gameMode === 'timeline'
+                    ? `Meta de Línea: ${TIMELINE_GOAL_YEARS} años. Cada jugador arranca con un año base distinto.`
+                    : `Meta: ${targetScore} puntos. La partida sigue con las mismas reglas hasta el final.`}
+                </p>
               </div>
             ) : (
               <div className="space-y-4">
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-bold text-white">Meta</span>
-                    <span className="text-xs text-neon-green font-label-caps">{targetScore} puntos</span>
+                {gameMode === 'timeline' ? (
+                  <div className="rounded-xl border border-vinyl-orange/30 bg-vinyl-orange/10 p-4 text-left">
+                    <p className="font-label-caps text-[10px] text-vinyl-orange tracking-[0.2em]">META DE LÍNEA</p>
+                    <h3 className="mt-1 text-lg font-black text-white">{TIMELINE_GOAL_YEARS} años</h3>
+                    <p className="mt-1 text-sm text-on-surface-variant">
+                      Cada jugador arranca con un año base distinto y va completando su línea hasta llegar a la meta.
+                    </p>
                   </div>
-                  <div className="grid grid-cols-1 gap-2">
-                    {VICTORY_MODES.map((mode) => (
-                      <VictoryCard
-                        key={mode.targetScore}
-                        mode={mode}
-                        selected={targetScore === mode.targetScore}
-                        onSelect={() => handleSettingsChange({ targetScore: mode.targetScore })}
-                      />
-                    ))}
+                ) : (
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-bold text-white">Meta</span>
+                      <span className="text-xs text-neon-green font-label-caps">{targetScore} puntos</span>
+                    </div>
+                    <div className="grid grid-cols-1 gap-2">
+                      {VICTORY_MODES.map((mode) => (
+                        <VictoryCard
+                          key={mode.targetScore}
+                          mode={mode}
+                          selected={targetScore === mode.targetScore}
+                          onSelect={() => handleSettingsChange({ targetScore: mode.targetScore })}
+                        />
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
 
                 <div>
                   <div className="flex items-center justify-between mb-2">
@@ -348,7 +362,7 @@ export default function LobbyScreen() {
                   <span className="text-xs ml-1">PTS</span>
                 </div>
               </div>
-              {gameMode === 'timeline' && <TimelineYears years={player.timelineYears || []} />}
+              {gameMode === 'timeline' && <TimelineYears years={getCombinedTimelineYears(player)} />}
             </div>
           ))}
         </div>

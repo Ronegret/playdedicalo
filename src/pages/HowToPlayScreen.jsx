@@ -1,14 +1,14 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import NeonButton from '../components/NeonButton';
-import { SABOTAGE_OPTIONS } from '../store/useGameStore';
+import { SABOTAGE_OPTIONS, TIMELINE_GOAL_YEARS, VICTORY_MODES } from '../store/useGameStore';
 
 const STEPS = [
   { icon: 'groups', title: 'Entran todos', text: 'El anfitrión crea la sala, comparte el PIN y también juega.' },
   { icon: 'album', title: 'Suena la música', text: 'La playlist se mantiene oculta mientras la canción está sonando.' },
   { icon: 'offline_bolt', title: 'Corte sorpresa', text: 'El anfitrión corta la música y aparece el reto.' },
-  { icon: 'touch_app', title: 'Responden rápido', text: 'Cada jugador elige o coloca la canción en su línea de tiempo.' },
-  { icon: 'emoji_events', title: 'Sube el ranking', text: 'Gana quien llegue primero a la meta elegida.' }
+  { icon: 'touch_app', title: 'Responden rápido', text: 'Cada jugador actúa a tiempo y la ronda sigue.' },
+  { icon: 'emoji_events', title: 'Suma y gana', text: 'Gana quien llegue primero a la meta de la partida.' }
 ];
 
 const MODES = [
@@ -16,13 +16,20 @@ const MODES = [
     id: 'pulse',
     icon: 'flash_on',
     title: 'Pulso',
-    subtitle: 'Pregunta rápida',
-    body: 'Escuchas un fragmento y respondes algo simple: artista, palabra, título, energía o contexto.',
+    subtitle: 'Puntos',
+    body: 'Suena un corte y se responde rápido. La meta de puntos se elige en 40, 70 o 100.',
     visual: (
       <div className="grid gap-2">
-        {['A  NOCHE', 'B  CORAZÓN', 'C  DEDÍCALO'].map((answer, index) => (
-          <div key={answer} className={`rounded-xl border px-3 py-3 text-sm font-bold ${index === 2 ? 'border-vinyl-orange bg-vinyl-orange/12 text-white' : 'border-white/10 bg-white/5 text-white'}`}>
-            {answer}
+        {['40', '70', '100'].map((score, index) => (
+          <div
+            key={score}
+            className={`rounded-xl border px-3 py-3 text-sm font-black ${
+              index === 1
+                ? 'border-neon-green bg-neon-green/12 text-white'
+                : 'border-white/10 bg-white/5 text-white'
+            }`}
+          >
+            META {score}
           </div>
         ))}
       </div>
@@ -32,12 +39,19 @@ const MODES = [
     id: 'timeline',
     icon: 'timeline',
     title: 'Línea',
-    subtitle: 'Ordena por años',
-    body: 'Cada jugador crea su propia línea de años. Los demás pueden verla y la partida sigue hasta completar la meta.',
+    subtitle: 'Años',
+    body: `Cada jugador empieza con un año base distinto y completa una línea de ${TIMELINE_GOAL_YEARS} años.`,
     visual: (
       <div className="grid grid-cols-5 gap-1">
-        {['ANTES', '1998', 'ENTRE', '2006', 'DESPUÉS'].map((item) => (
-          <div key={item} className={`h-12 min-w-0 rounded-xl border flex items-center justify-center px-1 text-center font-black ${/^\d/.test(item) ? 'border-white/10 bg-white/10 text-white text-sm' : 'border-dashed border-vinyl-orange/55 bg-vinyl-orange/10 text-vinyl-orange text-[8px]'}`}>
+        {['1990', '1998', '2004', '2011', 'META'].map((item) => (
+          <div
+            key={item}
+            className={`h-12 min-w-0 rounded-xl border flex items-center justify-center px-1 text-center font-black ${
+              item === 'META'
+                ? 'border-dashed border-vinyl-orange/55 bg-vinyl-orange/10 text-vinyl-orange text-[8px]'
+                : 'border-white/10 bg-white/10 text-white text-sm'
+            }`}
+          >
             {item}
           </div>
         ))}
@@ -48,8 +62,8 @@ const MODES = [
     id: 'remix',
     icon: 'auto_awesome',
     title: 'Remix',
-    subtitle: 'Ataques y jugadas',
-    body: 'Mientras suena la música puedes gastar puntos para preparar sabotajes. Se ven como cuadrados de colores.',
+    subtitle: 'Ataques',
+    body: 'Mientras suena la música puedes gastar puntos para preparar sabotajes y cambiar la ronda.',
     visual: (
       <div className="grid grid-cols-4 gap-2">
         {SABOTAGE_OPTIONS.map((option) => (
@@ -59,7 +73,7 @@ const MODES = [
               option.color === 'red'
                 ? 'border-intense-red/60 bg-intense-red/10 text-intense-red'
                 : option.color === 'green'
-                  ? 'border-vinyl-orange/50 bg-vinyl-orange/10 text-vinyl-orange'
+                  ? 'border-neon-green/50 bg-neon-green/10 text-neon-green'
                   : 'border-electric-purple/60 bg-electric-purple/15 text-electric-purple'
             }`}
           >
@@ -89,6 +103,32 @@ function GuideSection({ icon, title, subtitle, defaultOpen = false, children }) 
         {children}
       </div>
     </details>
+  );
+}
+
+function ScoreGrid() {
+  return (
+    <div className="grid gap-3 md:grid-cols-2">
+      <div className="rounded-[1.4rem] border border-neon-green/40 bg-neon-green/8 p-4 text-center">
+        <p className="font-label-caps text-neon-green text-[10px] tracking-[0.22em]">PULSO / REMIX</p>
+        <div className="mt-3 grid grid-cols-3 gap-2">
+          {VICTORY_MODES.map((mode) => (
+            <div key={mode.targetScore} className="rounded-xl bg-black/18 border border-white/10 p-3">
+              <span className="block text-2xl text-vinyl-orange font-black">{mode.targetScore}</span>
+              <span className="text-[10px] text-on-surface-variant">puntos</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="rounded-[1.4rem] border border-electric-purple/45 bg-electric-purple/10 p-4 text-center">
+        <p className="font-label-caps text-electric-purple text-[10px] tracking-[0.22em]">LÍNEA</p>
+        <div className="mt-3 rounded-xl bg-black/18 border border-white/10 p-4">
+          <span className="block text-4xl text-vinyl-orange font-black">{TIMELINE_GOAL_YEARS}</span>
+          <span className="text-xs text-on-surface-variant">años para completar la línea</span>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -124,7 +164,7 @@ export default function HowToPlayScreen() {
           <p className="font-label-caps text-neon-green text-xs tracking-[0.28em]">GUÍA RÁPIDA</p>
           <h1 className="mt-2 font-headline-lg text-4xl text-white font-black leading-tight">Así se juega</h1>
           <p className="mt-3 text-sm leading-relaxed text-on-surface-variant max-w-xl mx-auto">
-            Se escucha una canción, el anfitrión corta la música, todos responden y la partida continúa ronda tras ronda.
+            Suena una canción, el anfitrión corta, todos responden y la partida continúa ronda tras ronda hasta que alguien llega a la meta.
           </p>
         </div>
       </section>
@@ -163,7 +203,7 @@ export default function HowToPlayScreen() {
           </div>
         </GuideSection>
 
-        <GuideSection icon="sports_esports" title="Tipos de juego" subtitle="Ejemplos de lo que vas a ver">
+        <GuideSection icon="sports_esports" title="Tipos de juego" subtitle="Cada modo se juega distinto">
           <div className="grid gap-3 md:grid-cols-3">
             {MODES.map((mode) => (
               <article key={mode.id} className="rounded-[1.4rem] border border-white/10 bg-surface-container/55 p-4 text-center">
@@ -181,19 +221,28 @@ export default function HowToPlayScreen() {
           </div>
         </GuideSection>
 
+        <GuideSection icon="emoji_events" title="Metas" subtitle="Pulso y Remix usan puntos; Línea usa años">
+          <ScoreGrid />
+          <p className="mt-3 text-sm text-on-surface-variant leading-relaxed text-center">
+            En Pulso y Remix gana quien llegue primero a la meta de puntos. En Línea gana quien complete primero {TIMELINE_GOAL_YEARS} años en su propia línea.
+          </p>
+        </GuideSection>
+
         <GuideSection icon="auto_awesome" title="Sabotajes" subtitle="Ataques durante la música">
           <p className="text-sm text-on-surface-variant leading-relaxed text-center">
             Desde la ronda 2 puedes gastar puntos mientras la canción está sonando. Los ataques preparan efectos para el corte.
           </p>
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             {SABOTAGE_OPTIONS.map((option) => (
-              <div key={option.id} className={`rounded-[1.4rem] border p-4 text-center ${
-                option.color === 'red'
-                  ? 'border-intense-red/50 bg-intense-red/10'
-                  : option.color === 'green'
-                    ? 'border-vinyl-orange/45 bg-vinyl-orange/10'
-                    : 'border-electric-purple/60 bg-electric-purple/14'
-              }`}
+              <div
+                key={option.id}
+                className={`rounded-[1.4rem] border p-4 text-center ${
+                  option.color === 'red'
+                    ? 'border-intense-red/50 bg-intense-red/10'
+                    : option.color === 'green'
+                      ? 'border-neon-green/45 bg-neon-green/10'
+                      : 'border-electric-purple/60 bg-electric-purple/14'
+                }`}
               >
                 <div className="flex items-center justify-center gap-3">
                   <span className="w-12 h-12 rounded-2xl bg-black/18 flex items-center justify-center">
@@ -208,20 +257,6 @@ export default function HowToPlayScreen() {
               </div>
             ))}
           </div>
-        </GuideSection>
-
-        <GuideSection icon="emoji_events" title="Puntos y meta" subtitle="Cómo se gana">
-          <div className="grid grid-cols-3 gap-2">
-            {[40, 70, 100].map((score) => (
-              <div key={score} className="rounded-xl bg-surface-container-lowest/50 border border-white/10 p-4 text-center">
-                <span className="block text-3xl text-vinyl-orange font-black">{score}</span>
-                <span className="text-[10px] text-on-surface-variant">puntos</span>
-              </div>
-            ))}
-          </div>
-          <p className="mt-3 text-sm text-on-surface-variant leading-relaxed text-center">
-            Gana la primera persona que llegue a la meta elegida y quede #1 en el ranking.
-          </p>
         </GuideSection>
       </section>
 

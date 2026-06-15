@@ -1,7 +1,7 @@
 ﻿import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { DEDICALO_PLAYLISTS, GAME_MODES, SABOTAGE_OPTIONS, normalizeSpotifyPlaylistUrl, useGameStore } from '../store/useGameStore';
+import { DEDICALO_PLAYLISTS, GAME_MODES, SABOTAGE_OPTIONS, getCombinedTimelineYears, normalizeSpotifyPlaylistUrl, useGameStore } from '../store/useGameStore';
 import { createQuestionFromTrack, explainSpotifyError, getCurrentHiddenTrack, pauseSpotifyPlayback, startRandomPlaylistTrack } from '../services/spotify';
 
 const EQUALIZER_BARS = [0.35, 0.58, 0.42, 0.71, 0.49, 0.64, 0.39];
@@ -203,6 +203,7 @@ export default function GameScreen() {
     normalizeSpotifyPlaylistUrl(playlist.url) === normalizeSpotifyPlaylistUrl(spotifyPlaylistUrl)
   ));
   const ownPlayer = players.find((player) => player.id === guestId);
+  const ownTimelineYears = getCombinedTimelineYears(ownPlayer);
   const canUseSabotageNow = Boolean(guestId && phase === 'listen' && round > 1 && players.length > 1);
 
   const containerVariants = {
@@ -228,7 +229,7 @@ export default function GameScreen() {
 
   const handleHostBlackout = async () => {
     const hiddenTrack = getCurrentHiddenTrack();
-    const spotifyQuestion = hiddenTrack ? createQuestionFromTrack(hiddenTrack, gameMode, round, ownPlayer?.timelineYears || []) : null;
+    const spotifyQuestion = hiddenTrack ? createQuestionFromTrack(hiddenTrack, gameMode, round, ownTimelineYears) : null;
     await pauseSpotifyPlayback().catch((error) => console.warn('No se pudo pausar Spotify:', error));
     setAudioPlaying(false);
     await hostTriggerBlackout(spotifyQuestion);
@@ -391,7 +392,7 @@ export default function GameScreen() {
             ) : currentQuestion.answerType === 'timeline-placement' ? (
               <TimelinePlacementQuestion
                 question={currentQuestion}
-                playerYears={ownPlayer?.timelineYears || []}
+                playerYears={ownTimelineYears}
                 disabled={hasAnswered}
                 onPick={handleAnswer}
               />

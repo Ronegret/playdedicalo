@@ -1,6 +1,7 @@
 ﻿import { create } from 'zustand';
 
 const DATABASE_URL = 'https://dedicalo-play-trivia-7-default-rtdb.europe-west1.firebasedatabase.app';
+export const TIMELINE_GOAL_YEARS = 12;
 export const DEDICALO_PLAYLISTS = [
   {
     id: 'reggaeton-historia',
@@ -101,8 +102,8 @@ export const GAME_MODES = {
     id: 'timeline',
     name: 'LÍNEA',
     short: 'Ordena la música',
-    description: 'Cada ronda suma años a la línea de cada jugador.',
-    rhythm: 'Perfecto para comparar épocas y discutir qué va antes o después.'
+    description: `Cada jugador tiene un año base distinto y gana quien completa primero ${TIMELINE_GOAL_YEARS} años en su línea.`,
+    rhythm: `Perfecto para comparar épocas y construir una línea de ${TIMELINE_GOAL_YEARS} años.`
   },
   chaos: {
     id: 'chaos',
@@ -118,19 +119,19 @@ export const VICTORY_MODES = [
     targetScore: 40,
     name: 'RÁPIDA',
     short: 'Rápida',
-    description: 'Gana quien llega primero a 40 puntos.'
+    description: 'Disponible para Pulso y Remix. Gana quien llega primero a 40 puntos.'
   },
   {
     targetScore: 70,
     name: 'EQUILIBRADA',
     short: 'Equilibrada',
-    description: 'Meta de 70 puntos. Da espacio a remontadas y ataques.'
+    description: 'Disponible para Pulso y Remix. Meta de 70 puntos con más remontadas.'
   },
   {
     targetScore: 100,
     name: 'LARGA',
     short: 'Larga',
-    description: 'Meta de 100 puntos para partidas largas.'
+    description: 'Disponible para Pulso y Remix. Meta de 100 puntos para partidas largas.'
   }
 ];
 
@@ -243,6 +244,16 @@ function clampPoints(value) {
   return Math.max(0, Number(value || 0));
 }
 
+function hashString(text = '') {
+  return String(text)
+    .split('')
+    .reduce((hash, char) => ((hash << 5) - hash + char.charCodeAt(0)) >>> 0, 0);
+}
+
+function getTimelineBaseYear(seed = '') {
+  return 1990 + (hashString(seed) % 21);
+}
+
 function findWinner(players, targetScore) {
   return sortPlayers(players).find((player) => Number(player.points || 0) >= Number(targetScore || 70));
 }
@@ -251,6 +262,11 @@ function normalizeTimelineYears(years = []) {
   return [...new Set((years || []).map(Number).filter(Boolean))]
     .sort((a, b) => a - b)
     .slice(0, 12);
+}
+
+export function getCombinedTimelineYears(player = {}) {
+  const baseYear = Number(player.timelineBaseYear || 2000);
+  return normalizeTimelineYears([baseYear, ...(player.timelineYears || [])]);
 }
 
 function reverseReadableText(text) {
@@ -325,6 +341,7 @@ export const useGameStore = create((setStore, getStore) => ({
       avatar: hostUser?.photoURL || 'La Consola Maestra',
       points: 10,
       isHost: true,
+      timelineBaseYear: getTimelineBaseYear(hostId),
       timelineYears: []
     };
 
@@ -475,16 +492,15 @@ export const useGameStore = create((setStore, getStore) => ({
       remoteUpdates.sharedPrize = null;
     }
 
-    const nextPlayers = sortPlayers(Object.values(playersById).map((player) => ({
+      const nextPlayers = sortPlayers(Object.values(playersById).map((player) => ({
       ...player,
       points: remoteUpdates[`players/${player.id}/points`] ?? player.points,
       timelineYears: remoteUpdates[`players/${player.id}/timelineYears`] ?? normalizeTimelineYears(player.timelineYears || [])
     })));
     const timelineComplete = gameMode === 'timeline'
-      && nextPlayers.some((player) => normalizeTimelineYears(player.timelineYears || []).length >= 12);
-    const winner = findWinner(nextPlayers, targetScore);
-    remoteUpdates.phase = winner ? 'final' : 'result';
-    if (timelineComplete) remoteUpdates.phase = 'final';
+      && nextPlayers.some((player) => getCombinedTimelineYears(player).length >= TIMELINE_GOAL_YEARS);
+    const winner = gameMode === 'timeline' ? null : findWinner(nextPlayers, targetScore);
+    remoteUpdates.phase = timelineComplete ? 'final' : (winner ? 'final' : 'result');
     remoteUpdates.revealResults = revealResults;
     remoteUpdates.lastSabotage = Object.values(revealResults).find((result) => result.sabotage)?.sabotage || null;
     remoteUpdates.currentQuestion = (winner || timelineComplete) ? null : room.currentQuestion || null;
@@ -503,10 +519,10 @@ export const useGameStore = create((setStore, getStore) => ({
   },
 
   hostNextRound: async () => {
-    const { pin, round, players, targetScore } = getStore();
+    const { pin, round, players, targetScore, gameMode } = getStore();
     if (!pin) return;
 
-    if (findWinner(players, targetScore)) {
+    if (gameMode !== 'timeline' && findWinner(players, targetScore)) {
       await getStore().hostEndGame();
       return;
     }
@@ -583,6 +599,7 @@ export const useGameStore = create((setStore, getStore) => ({
         avatar: guestAvatar,
         points: 10,
         isHost: false,
+        timelineBaseYear: getTimelineBaseYear(guestId),
         timelineYears: []
       };
 
@@ -776,7 +793,12 @@ export const useGameStore = create((setStore, getStore) => ({
         round: remoteRound,
         gameMode: data.settings?.gameMode || data.gameMode || 'pulse',
         targetScore: Number(data.settings?.targetScore || data.targetScore || 70),
-        players: data.players ? sortPlayers(Object.values(data.players)) : [],
+        players: data.players
+          ? sortPlayers(Object.values(data.players).map((player) => ({
+            ...player,
+            timelineBaseYear: Number(player.timelineBaseYear || getTimelineBaseYear(player.id))
+          })))
+          : [],
         currentQuestion: data.currentQuestion || null,
         roundAnswers: data.roundAnswers || {},
         revealResults: data.revealResults || {},
