@@ -323,6 +323,7 @@ function trackFromCatalogRow(row) {
     name: row.title,
     artist: row.artist_main || 'Artista sorpresa',
     releaseYear: Number(row.release_year) || null,
+    albumImage: row.cover_url || null,
     coverUrl: row.cover_url || '',
     spotifyUrl: row.spotify_url || ''
   };
@@ -381,7 +382,7 @@ export async function getPlaylistTracks(playlistUrl) {
   if (catalogTracks.length) return catalogTracks;
 
   const tracks = [];
-  let url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks?limit=100&fields=items(track(uri,type,name,artists(name),album(release_date))),next`;
+  let url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks?limit=100&fields=items(track(uri,type,name,artists(name),album(release_date,images))),next`;
 
   while (url) {
     const data = await spotifyFetch(url);
@@ -393,7 +394,8 @@ export async function getPlaylistTracks(playlistUrl) {
           uri: track.uri,
           name: track.name,
           artist: track.artists?.[0]?.name || 'Artista sorpresa',
-          releaseYear: Number(String(track.album?.release_date || '').slice(0, 4)) || null
+          releaseYear: Number(String(track.album?.release_date || '').slice(0, 4)) || null,
+          albumImage: track.album?.images?.[0]?.url || null
         }))
     );
     url = data.next;

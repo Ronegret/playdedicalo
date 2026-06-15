@@ -15,3 +15,6 @@ const app = getApps().find((firebaseApp) => firebaseApp.name === 'dedicalo') || 
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
 
+import { getDatabase } from 'firebase/database';
+export const database = getDatabase(app);
+

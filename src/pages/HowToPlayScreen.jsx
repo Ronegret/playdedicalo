@@ -4,133 +4,55 @@ import NeonButton from '../components/NeonButton';
 import { SABOTAGE_OPTIONS, TIMELINE_GOAL_YEARS, VICTORY_MODES } from '../store/useGameStore';
 
 const STEPS = [
-  { icon: 'groups', title: 'Entran todos', text: 'El anfitrión crea la sala, comparte el PIN y también juega.' },
-  { icon: 'album', title: 'Suena la música', text: 'La playlist se mantiene oculta mientras la canción está sonando.' },
-  { icon: 'offline_bolt', title: 'Corte sorpresa', text: 'El anfitrión corta la música y aparece el reto.' },
-  { icon: 'touch_app', title: 'Responden rápido', text: 'Cada jugador actúa a tiempo y la ronda sigue.' },
-  { icon: 'emoji_events', title: 'Suma y gana', text: 'Gana quien llegue primero a la meta de la partida.' }
+  { icon: 'groups', color: '#ff7a1a', title: 'Entran todos', text: 'El anfitrión crea la sala y comparte el PIN. Él también juega.' },
+  { icon: 'album', color: '#a855f7', title: 'Suena la música', text: 'La playlist está oculta. Nadie sabe qué canción está sonando.' },
+  { icon: 'content_cut', color: '#ff6b8b', title: 'Corte sorpresa', text: 'El anfitrión decide cuándo cortar y aparece la pregunta.' },
+  { icon: 'touch_app', color: '#3f78ff', title: 'Todos responden', text: 'Cada jugador vota antes de que se revele el resultado.' },
+  { icon: 'emoji_events', color: '#39ff14', title: 'Gana el primero', text: 'Llega a la meta de puntos o de años antes que los demás.' }
 ];
 
 const MODES = [
   {
     id: 'pulse',
     icon: 'flash_on',
-    title: 'Pulso',
-    subtitle: 'Puntos',
-    body: 'Suena un corte y se responde rápido. La meta de puntos se elige en 40, 70 o 100.',
-    visual: (
-      <div className="grid gap-2">
-        {['40', '70', '100'].map((score, index) => (
-          <div
-            key={score}
-            className={`rounded-xl border px-3 py-3 text-sm font-black ${
-              index === 1
-                ? 'border-neon-green bg-neon-green/12 text-white'
-                : 'border-white/10 bg-white/5 text-white'
-            }`}
-          >
-            META {score}
-          </div>
-        ))}
-      </div>
-    )
+    color: '#ff7a1a',
+    title: 'PULSO',
+    subtitle: 'Responde rápido',
+    body: 'Suena un fragmento, el anfitrión corta y todos responden una pregunta sobre la canción. Elige una meta de puntos.'
   },
   {
     id: 'timeline',
     icon: 'timeline',
-    title: 'Línea',
-    subtitle: 'Años',
-    body: `Cada jugador empieza con un año base distinto y completa una línea de ${TIMELINE_GOAL_YEARS} años.`,
-    visual: (
-      <div className="grid grid-cols-5 gap-1">
-        {['1990', '1998', '2004', '2011', 'META'].map((item) => (
-          <div
-            key={item}
-            className={`h-12 min-w-0 rounded-xl border flex items-center justify-center px-1 text-center font-black ${
-              item === 'META'
-                ? 'border-dashed border-vinyl-orange/55 bg-vinyl-orange/10 text-vinyl-orange text-[8px]'
-                : 'border-white/10 bg-white/10 text-white text-sm'
-            }`}
-          >
-            {item}
-          </div>
-        ))}
-      </div>
-    )
+    color: '#a855f7',
+    title: 'LÍNEA',
+    subtitle: `${TIMELINE_GOAL_YEARS} años primero`,
+    body: `Cada jugador tiene su propia línea del tiempo. Gana quien la complete con ${TIMELINE_GOAL_YEARS} años antes que los demás.`
   },
   {
     id: 'remix',
     icon: 'auto_awesome',
-    title: 'Remix',
-    subtitle: 'Ataques',
-    body: 'Mientras suena la música puedes gastar puntos para preparar sabotajes y cambiar la ronda.',
-    visual: (
-      <div className="grid grid-cols-4 gap-2">
-        {SABOTAGE_OPTIONS.map((option) => (
-          <div
-            key={option.id}
-            className={`aspect-square rounded-2xl border flex flex-col items-center justify-center gap-1 ${
-              option.color === 'red'
-                ? 'border-intense-red/60 bg-intense-red/10 text-intense-red'
-                : option.color === 'green'
-                  ? 'border-neon-green/50 bg-neon-green/10 text-neon-green'
-                  : 'border-electric-purple/60 bg-electric-purple/15 text-electric-purple'
-            }`}
-          >
-            <span className="material-symbols-outlined text-xl">{option.icon}</span>
-            <span className="text-[9px] font-label-caps">{option.cost} pts</span>
-          </div>
-        ))}
-      </div>
-    )
+    color: '#39ff14',
+    title: 'REMIX',
+    subtitle: 'Puntos + ataques',
+    body: 'Como Pulso pero mientras suena la música puedes gastar puntos para sabotear a otros jugadores.'
   }
 ];
 
-function GuideSection({ icon, title, subtitle, defaultOpen = false, children }) {
-  return (
-    <details open={defaultOpen} className="group rounded-[1.5rem] border border-white/10 bg-surface-container/60 overflow-hidden">
-      <summary className="list-none cursor-pointer p-4 flex items-center gap-3 outline-none focus-visible:ring-2 focus-visible:ring-vinyl-orange/70">
-        <span className="w-10 h-10 rounded-2xl bg-vinyl-orange/12 text-vinyl-orange flex items-center justify-center shrink-0">
-          <span className="material-symbols-outlined">{icon}</span>
-        </span>
-        <div className="min-w-0 flex-1 text-left">
-          <h2 className="text-white font-black leading-tight">{title}</h2>
-          <p className="text-xs text-on-surface-variant mt-1">{subtitle}</p>
-        </div>
-        <span className="material-symbols-outlined text-on-surface-variant transition-transform group-open:rotate-180 text-2xl">expand_more</span>
-      </summary>
-      <div className="px-4 pb-4 text-left">
-        {children}
-      </div>
-    </details>
-  );
-}
+const SABOTAGE_STYLES = {
+  red: { border: 'border-intense-red/50', bg: 'bg-intense-red/10', text: 'text-intense-red' },
+  green: { border: 'border-neon-green/45', bg: 'bg-neon-green/10', text: 'text-neon-green' },
+  purple: { border: 'border-electric-purple/60', bg: 'bg-electric-purple/12', text: 'text-electric-purple' }
+};
 
-function ScoreGrid() {
-  return (
-    <div className="grid gap-3 md:grid-cols-2">
-      <div className="rounded-[1.4rem] border border-neon-green/40 bg-neon-green/8 p-4 text-center">
-        <p className="font-label-caps text-neon-green text-[10px] tracking-[0.22em]">PULSO / REMIX</p>
-        <div className="mt-3 grid grid-cols-3 gap-2">
-          {VICTORY_MODES.map((mode) => (
-            <div key={mode.targetScore} className="rounded-xl bg-black/18 border border-white/10 p-3">
-              <span className="block text-2xl text-vinyl-orange font-black">{mode.targetScore}</span>
-              <span className="text-[10px] text-on-surface-variant">puntos</span>
-            </div>
-          ))}
-        </div>
-      </div>
+const stagger = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.09, delayChildren: 0.05 } }
+};
 
-      <div className="rounded-[1.4rem] border border-electric-purple/45 bg-electric-purple/10 p-4 text-center">
-        <p className="font-label-caps text-electric-purple text-[10px] tracking-[0.22em]">LÍNEA</p>
-        <div className="mt-3 rounded-xl bg-black/18 border border-white/10 p-4">
-          <span className="block text-4xl text-vinyl-orange font-black">{TIMELINE_GOAL_YEARS}</span>
-          <span className="text-xs text-on-surface-variant">años para completar la línea</span>
-        </div>
-      </div>
-    </div>
-  );
-}
+const fadeUp = {
+  hidden: { opacity: 0, y: 18 },
+  show: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 140, damping: 18 } }
+};
 
 export default function HowToPlayScreen() {
   const navigate = useNavigate();
@@ -140,7 +62,7 @@ export default function HowToPlayScreen() {
       initial={{ opacity: 0, y: 18 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -18 }}
-      className="relative z-10 w-full max-w-4xl mx-auto min-h-screen px-margin-mobile pt-20 pb-10 text-center"
+      className="relative z-10 w-full max-w-2xl mx-auto min-h-screen px-margin-mobile pt-20 pb-12"
     >
       <header className="fixed top-0 left-0 right-0 h-16 z-50 bg-background/80 backdrop-blur-xl border-b border-white/8 flex items-center px-margin-mobile">
         <button
@@ -152,122 +74,223 @@ export default function HowToPlayScreen() {
         </button>
       </header>
 
-      <section className="flex flex-col items-center gap-4 text-center">
-        <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-[0_0_28px_rgba(255,122,26,0.3),0_0_0_2px_rgba(255,122,26,0.2)]">
-          <img
-            src="/images/icon-app.png"
-            alt="Dedícalo"
-            className="w-full h-full object-contain"
+      {/* Hero */}
+      <motion.section
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.45 }}
+        className="flex flex-col items-center gap-4 text-center pt-2"
+      >
+        <div className="relative" style={{ width: 108, height: 108 }}>
+          {[0, 1.3].map((delay) => (
+            <div
+              key={delay}
+              className="absolute inset-[-22%] rounded-full border border-vinyl-orange/18 ring-expand-anim"
+              style={{ animationDelay: `${delay}s`, animationDuration: '3.6s' }}
+            />
+          ))}
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ repeat: Infinity, duration: 7, ease: 'linear' }}
+            className="absolute inset-0 rounded-full"
+            style={{
+              background: 'repeating-radial-gradient(circle, #0b0b0b 0px, #0b0b0b 2px, #1a1a1a 3px, #1a1a1a 5px, #0b0b0b 6px, #0b0b0b 9px)',
+              boxShadow: '0 0 0 2px rgba(255,255,255,0.05), 0 8px 30px rgba(0,0,0,0.7)'
+            }}
           />
+          <div
+            className="absolute rounded-full bg-white overflow-hidden flex items-center justify-center"
+            style={{ inset: '22%', boxShadow: '0 0 0 2px rgba(0,0,0,0.5), 0 0 16px rgba(255,122,26,0.3)' }}
+          >
+            <img src="/images/logo-main.png" alt="Dedícalo" className="w-[76%] h-[76%] object-contain" draggable={false} />
+          </div>
+          <div className="absolute rounded-full bg-black" style={{ inset: '47%' }} />
         </div>
+
         <div>
           <p className="font-label-caps text-neon-green text-xs tracking-[0.22em]">GUÍA RÁPIDA</p>
-          <h1 className="mt-2 font-headline-lg text-4xl text-white font-black leading-tight">Así se juega</h1>
-          <p className="mt-3 text-sm leading-relaxed text-on-surface-variant max-w-xl mx-auto">
-            Suena una canción, el anfitrión corta, todos responden y la partida continúa ronda tras ronda hasta que alguien llega a la meta.
+          <h1 className="mt-2 font-headline-lg text-4xl sm:text-5xl text-white font-black leading-tight">Así se juega</h1>
+          <p className="mt-3 text-sm leading-relaxed text-on-surface-variant max-w-xs mx-auto">
+            Música, corte, respuesta y puntos. El primero en llegar a la meta gana.
           </p>
         </div>
-      </section>
+      </motion.section>
 
-      <section className="mt-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-        {STEPS.map((step, index) => (
-          <motion.article
-            key={step.title}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.04 }}
-            className="rounded-[1.4rem] border border-white/10 bg-surface-container/55 p-5 text-center relative overflow-hidden"
-          >
-            <div className="absolute top-2 right-3 text-[10px] font-black text-white/10 select-none" style={{ fontSize: '3rem', lineHeight: 1 }}>{index + 1}</div>
-            <div className="w-16 h-16 rounded-2xl bg-vinyl-orange/12 border border-vinyl-orange/25 flex items-center justify-center mx-auto">
-              <span className="material-symbols-outlined text-vinyl-orange" style={{ fontSize: '2rem' }}>{step.icon}</span>
-            </div>
-            <h2 className="mt-3 text-white font-black leading-tight">{step.title}</h2>
-            <p className="mt-1 text-xs text-on-surface-variant leading-snug">{step.text}</p>
-          </motion.article>
-        ))}
-      </section>
-
-      <section className="mt-7 grid gap-3">
-        <GuideSection icon="play_circle" title="La ronda" subtitle="Lo básico para jugar sin leer mucho" defaultOpen>
-          <div className="grid gap-3 md:grid-cols-3">
-            <div className="rounded-xl border border-vinyl-orange/35 bg-vinyl-orange/10 p-4 text-center">
-              <p className="font-label-caps text-vinyl-orange text-[10px] tracking-[0.22em]">1. ESCUCHA</p>
-              <p className="mt-2 text-sm text-white">Suena la playlist elegida. Nadie ve el título.</p>
-            </div>
-            <div className="rounded-xl border border-intense-red/35 bg-intense-red/10 p-4 text-center">
-              <p className="font-label-caps text-intense-red text-[10px] tracking-[0.22em]">2. CORTE</p>
-              <p className="mt-2 text-sm text-white">El anfitrión pulsa corte y aparece el reto.</p>
-            </div>
-            <div className="rounded-xl border border-electric-purple/50 bg-electric-purple/14 p-4 text-center">
-              <p className="font-label-caps text-electric-purple text-[10px] tracking-[0.22em]">3. RESPONDE</p>
-              <p className="mt-2 text-sm text-white">Todos votan. El anfitrión también juega.</p>
-            </div>
+      {/* Scoring callout */}
+      <motion.section
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2, type: 'spring', stiffness: 130 }}
+        className="mt-7 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm p-5"
+      >
+        <p className="font-label-caps text-[10px] text-on-surface-variant tracking-[0.22em] text-center mb-4">PUNTOS POR RONDA</p>
+        <div className="flex items-stretch gap-2">
+          <div className="flex-1 rounded-xl border border-neon-green/35 bg-neon-green/10 p-4 text-center">
+            <motion.p
+              animate={{ scale: [1, 1.08, 1] }}
+              transition={{ repeat: Infinity, duration: 2.4, ease: 'easeInOut' }}
+              className="font-stats-xl text-4xl text-neon-green font-black leading-none"
+            >
+              +5
+            </motion.p>
+            <p className="font-label-caps text-[10px] text-neon-green/70 mt-2">POR ACIERTO</p>
           </div>
-        </GuideSection>
-
-        <GuideSection icon="sports_esports" title="Tipos de juego" subtitle="Cada modo se juega distinto">
-          <div className="grid gap-3 md:grid-cols-3">
-            {MODES.map((mode) => (
-              <article key={mode.id} className="rounded-[1.4rem] border border-white/10 bg-surface-container/55 p-4 text-center">
-                <div className="flex items-center justify-center gap-2">
-                  <span className="material-symbols-outlined text-vinyl-orange">{mode.icon}</span>
-                  <div>
-                    <h3 className="text-white font-black leading-tight">{mode.title}</h3>
-                    <p className="text-[10px] font-label-caps text-electric-purple tracking-[0.18em]">{mode.subtitle}</p>
-                  </div>
-                </div>
-                <p className="mt-3 text-xs text-on-surface-variant leading-relaxed">{mode.body}</p>
-                <div className="mt-4">{mode.visual}</div>
-              </article>
-            ))}
+          <div className="flex-1 rounded-xl border border-intense-red/35 bg-intense-red/10 p-4 text-center">
+            <motion.p
+              animate={{ scale: [1, 1.08, 1] }}
+              transition={{ repeat: Infinity, duration: 2.4, delay: 0.6, ease: 'easeInOut' }}
+              className="font-stats-xl text-4xl text-intense-red font-black leading-none"
+            >
+              -3
+            </motion.p>
+            <p className="font-label-caps text-[10px] text-intense-red/70 mt-2">POR FALLO</p>
           </div>
-        </GuideSection>
+          <div className="flex-1 rounded-xl border border-electric-purple/30 bg-electric-purple/10 p-4 text-center">
+            <p className="font-stats-xl text-4xl text-white font-black leading-none">10</p>
+            <p className="font-label-caps text-[10px] text-on-surface-variant mt-2">DE INICIO</p>
+          </div>
+        </div>
+        <p className="mt-3 text-xs text-on-surface-variant text-center leading-relaxed">
+          Los sabotajes pueden modificar puntos ganados o protegerte de los ataques.
+        </p>
+      </motion.section>
 
-        <GuideSection icon="emoji_events" title="Metas" subtitle="Pulso y Remix usan puntos; Línea usa años">
-          <ScoreGrid />
-          <p className="mt-3 text-sm text-on-surface-variant leading-relaxed text-center">
-            En Pulso y Remix gana quien llegue primero a la meta de puntos. En Línea gana quien complete primero {TIMELINE_GOAL_YEARS} años en su propia línea.
-          </p>
-        </GuideSection>
-
-        <GuideSection icon="auto_awesome" title="Sabotajes" subtitle="Ataques durante la música">
-          <p className="text-sm text-on-surface-variant leading-relaxed text-center">
-            Desde la ronda 2 puedes gastar puntos mientras la canción está sonando. Los ataques preparan efectos para el corte.
-          </p>
-          <div className="mt-4 grid gap-3 sm:grid-cols-2">
-            {SABOTAGE_OPTIONS.map((option) => (
+      {/* Steps */}
+      <section className="mt-8">
+        <p className="font-label-caps text-[10px] text-on-surface-variant tracking-[0.22em] text-center mb-4">CÓMO FUNCIONA</p>
+        <motion.div
+          variants={stagger}
+          initial="hidden"
+          animate="show"
+          className="flex flex-col gap-3"
+        >
+          {STEPS.map((step, index) => (
+            <motion.article
+              key={step.title}
+              variants={fadeUp}
+              whileHover={{ scale: 1.02, x: 5 }}
+              className="rounded-2xl border border-white/10 bg-surface-container/60 p-4 flex items-center gap-4 relative overflow-hidden"
+            >
               <div
-                key={option.id}
-                className={`rounded-[1.4rem] border p-4 text-center ${
-                  option.color === 'red'
-                    ? 'border-intense-red/50 bg-intense-red/10'
-                    : option.color === 'green'
-                      ? 'border-neon-green/45 bg-neon-green/10'
-                      : 'border-electric-purple/60 bg-electric-purple/14'
-                }`}
+                className="absolute right-0 top-0 bottom-0 w-24 pointer-events-none select-none flex items-center justify-end pr-4"
+                style={{ background: `linear-gradient(to right, transparent, ${step.color}06)` }}
               >
-                <div className="flex items-center justify-center gap-3">
-                  <span className="w-12 h-12 rounded-2xl bg-black/18 flex items-center justify-center">
-                    <span className="material-symbols-outlined text-white">{option.icon}</span>
-                  </span>
-                  <div className="text-left">
-                    <h3 className="text-white font-black">{option.name}</h3>
-                    <p className="font-label-caps text-[10px] text-vinyl-orange tracking-[0.18em]">{option.cost} puntos</p>
-                  </div>
-                </div>
-                <p className="mt-3 text-xs text-on-surface-variant leading-relaxed">{option.effect}</p>
+                <span className="font-black text-white opacity-[0.06]" style={{ fontSize: '5rem', lineHeight: 1 }}>{index + 1}</span>
+              </div>
+              <div
+                className="w-14 h-14 rounded-2xl shrink-0 flex items-center justify-center"
+                style={{ backgroundColor: `${step.color}1A`, border: `1.5px solid ${step.color}40` }}
+              >
+                <span className="material-symbols-outlined" style={{ fontSize: '2.2rem', color: step.color }}>{step.icon}</span>
+              </div>
+              <div className="min-w-0 flex-1">
+                <span className="font-label-caps text-[10px]" style={{ color: step.color }}>PASO {index + 1}</span>
+                <h2 className="text-white font-black text-base leading-tight">{step.title}</h2>
+                <p className="mt-1 text-xs text-on-surface-variant leading-snug">{step.text}</p>
+              </div>
+            </motion.article>
+          ))}
+        </motion.div>
+      </section>
+
+      {/* Modes */}
+      <section className="mt-8">
+        <p className="font-label-caps text-[10px] text-on-surface-variant tracking-[0.22em] text-center mb-4">MODOS DE JUEGO</p>
+        <div className="grid gap-3 sm:grid-cols-3">
+          {MODES.map((mode, index) => (
+            <motion.article
+              key={mode.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.35 + index * 0.1, type: 'spring', stiffness: 130 }}
+              whileHover={{ scale: 1.04, y: -4 }}
+              className="rounded-2xl border border-white/10 bg-surface-container/60 p-5 text-center"
+              style={{ borderColor: `${mode.color}20` }}
+            >
+              <div
+                className="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center"
+                style={{ backgroundColor: `${mode.color}1A`, border: `1.5px solid ${mode.color}45` }}
+              >
+                <span className="material-symbols-outlined" style={{ fontSize: '2.5rem', color: mode.color }}>{mode.icon}</span>
+              </div>
+              <h3 className="mt-3 font-headline-lg text-xl text-white font-black">{mode.title}</h3>
+              <p className="font-label-caps text-[10px] mt-0.5" style={{ color: mode.color }}>{mode.subtitle}</p>
+              <p className="mt-2 text-xs text-on-surface-variant leading-relaxed">{mode.body}</p>
+            </motion.article>
+          ))}
+        </div>
+
+        {/* Victory targets */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.65 }}
+          className="mt-4 rounded-2xl border border-white/10 bg-white/5 p-4"
+        >
+          <p className="font-label-caps text-[10px] text-on-surface-variant tracking-[0.22em] text-center mb-3">METAS · PULSO & REMIX</p>
+          <div className="grid grid-cols-3 gap-2">
+            {VICTORY_MODES.map((mode, index) => (
+              <div
+                key={mode.targetScore}
+                className={`rounded-xl border p-3 text-center transition-all ${index === 1 ? 'border-neon-green/40 bg-neon-green/10' : 'border-white/10 bg-white/5'}`}
+              >
+                <p className="font-stats-xl text-2xl text-white font-black">{mode.targetScore}</p>
+                <p className="font-label-caps text-[9px] text-on-surface-variant mt-1">{mode.short.toUpperCase()}</p>
               </div>
             ))}
           </div>
-        </GuideSection>
+          <p className="mt-3 text-[11px] text-on-surface-variant text-center">
+            En Línea la meta son siempre <span className="text-electric-purple font-bold">{TIMELINE_GOAL_YEARS} años</span> completados.
+          </p>
+        </motion.div>
       </section>
 
-      <div className="mt-8">
-        <NeonButton primary={true} onClick={() => navigate('/role-selection')}>
+      {/* Sabotages */}
+      <section className="mt-8">
+        <p className="font-label-caps text-[10px] text-on-surface-variant tracking-[0.22em] text-center mb-1">SABOTAJES</p>
+        <p className="text-xs text-on-surface-variant text-center mb-4">Disponibles desde la ronda 2 mientras suena la música.</p>
+        <motion.div
+          variants={stagger}
+          initial="hidden"
+          animate="show"
+          className="grid grid-cols-2 gap-3"
+        >
+          {SABOTAGE_OPTIONS.map((option) => {
+            const s = SABOTAGE_STYLES[option.color] || SABOTAGE_STYLES.purple;
+            return (
+              <motion.div
+                key={option.id}
+                variants={fadeUp}
+                whileHover={{ scale: 1.04 }}
+                className={`rounded-2xl border ${s.border} ${s.bg} p-4`}
+              >
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-11 h-11 rounded-xl bg-black/20 flex items-center justify-center shrink-0">
+                    <span className={`material-symbols-outlined text-2xl ${s.text}`}>{option.icon}</span>
+                  </div>
+                  <div>
+                    <h3 className="text-white font-black text-sm leading-tight">{option.name}</h3>
+                    <p className={`font-label-caps text-[10px] ${s.text}`}>{option.cost} pts</p>
+                  </div>
+                </div>
+                <p className="text-xs text-on-surface-variant leading-snug">{option.effect}</p>
+              </motion.div>
+            );
+          })}
+        </motion.div>
+      </section>
+
+      {/* CTA */}
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.85 }}
+        className="mt-10"
+      >
+        <NeonButton primary color="electric-purple" onClick={() => navigate('/role-selection')}>
           Elegir mi rol
         </NeonButton>
-      </div>
+      </motion.div>
     </motion.main>
   );
 }

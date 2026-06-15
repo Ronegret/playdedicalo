@@ -237,7 +237,7 @@ export default function GameScreen() {
     const spotifyQuestion = hiddenTrack ? createQuestionFromTrack(hiddenTrack, gameMode, round, ownTimelineYears) : null;
     await pauseSpotifyPlayback().catch((error) => console.warn('No se pudo pausar Spotify:', error));
     setAudioPlaying(false);
-    await hostTriggerBlackout(spotifyQuestion);
+    await hostTriggerBlackout(spotifyQuestion, hiddenTrack);
   };
 
   const handleUseSabotage = async (option) => {
@@ -423,6 +423,16 @@ export default function GameScreen() {
               >
                 {currentQuestion.text}
               </motion.h2>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+                className="mt-3 inline-flex items-center gap-3 rounded-full border border-white/10 bg-black/30 px-4 py-1.5"
+              >
+                <span className="font-label-caps text-[11px] text-neon-green">+5 ACIERTO</span>
+                <span className="w-px h-3 bg-white/20" />
+                <span className="font-label-caps text-[11px] text-intense-red">-3 FALLO</span>
+              </motion.div>
             </div>
 
             {role === 'host' && (
@@ -436,6 +446,36 @@ export default function GameScreen() {
                 >
                   {answerCount}/{expectedVotes}
                 </motion.p>
+
+                {players.length > 0 && (
+                  <div className="mt-3 flex flex-wrap justify-center gap-3">
+                    {players.map((player) => {
+                      const answered = Boolean(roundAnswers?.[player.id]);
+                      return (
+                        <div key={player.id} className="relative flex flex-col items-center gap-1">
+                          {player.avatar?.startsWith?.('http') ? (
+                            <img
+                              src={player.avatar}
+                              alt={player.name}
+                              className={`w-10 h-10 rounded-full object-cover border-2 transition-all ${answered ? 'border-neon-green shadow-[0_0_10px_rgba(57,255,20,0.5)]' : 'border-white/15 opacity-35'}`}
+                            />
+                          ) : (
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-xl bg-black/20 border-2 transition-all ${answered ? 'border-neon-green shadow-[0_0_10px_rgba(57,255,20,0.5)]' : 'border-white/15 opacity-35'}`}>
+                              {player.avatar || '•'}
+                            </div>
+                          )}
+                          {answered && (
+                            <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-neon-green flex items-center justify-center">
+                              <span className="material-symbols-outlined text-black" style={{ fontSize: '10px', lineHeight: 1 }}>check</span>
+                            </span>
+                          )}
+                          <span className="text-[9px] text-on-surface-variant font-label-caps max-w-[2.5rem] truncate">{player.name}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
                 {!hasAnswered && (
                   <p className="mt-2 text-xs text-on-surface-variant">Responde primero. Tu voto también cuenta.</p>
                 )}

@@ -1,8 +1,7 @@
-﻿import { motion } from 'framer-motion';
-import { useEffect } from 'react';
+﻿import { AnimatePresence, motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TIMELINE_GOAL_YEARS, getCombinedTimelineYears, useGameStore } from '../store/useGameStore';
-import { AnimatePresence } from 'framer-motion';
 
 const RESULT_STYLES = {
   success: {
@@ -94,6 +93,7 @@ function RankingList({ players, final = false, showTimeline = false }) {
 
 export default function ResultScreen() {
   const navigate = useNavigate();
+  const [shareCopied, setShareCopied] = useState(false);
   const {
     role,
     phase,
@@ -108,6 +108,7 @@ export default function ResultScreen() {
     lastPointDelta,
     lastSabotage,
     revealResults,
+    currentTrack,
     roomError,
     clearRoomError
   } = useGameStore();
@@ -136,6 +137,22 @@ export default function ResultScreen() {
   const handleFinish = () => {
     if (role === 'host') hostCloseRoom();
     navigate('/role-selection');
+  };
+
+  const handleShare = async () => {
+    const isFinalShare = phase === 'final' && winner;
+    const text = isFinalShare
+      ? `¡${winner.name} ganó en Dedícalo con ${winner.points} puntos! 🎵 ¿Te atreves? ${window.location.origin}`
+      : `Llevo ${guestPoints} puntos en Dedícalo 🎵 ${window.location.origin}`;
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: 'Dedícalo', text, url: window.location.origin });
+      } else {
+        await navigator.clipboard.writeText(text);
+        setShareCopied(true);
+        setTimeout(() => setShareCopied(false), 2500);
+      }
+    } catch {}
   };
 
   if (isFinal) {
@@ -189,10 +206,18 @@ export default function ResultScreen() {
               </button>
             )}
 
+            <button
+              onClick={handleShare}
+              className="mt-4 w-full h-11 rounded-xl border border-white/15 bg-white/5 text-white font-label-caps text-xs font-bold active:scale-95 transition-all flex items-center justify-center gap-2"
+            >
+              <span className="material-symbols-outlined text-lg">share</span>
+              {shareCopied ? 'COPIADO AL PORTAPAPELES' : 'COMPARTIR RESULTADO'}
+            </button>
+
             {role !== 'host' && isFinal && (
               <button
                 onClick={() => navigate('/role-selection')}
-                className="mt-8 px-8 py-4 bg-white/10 text-white rounded-xl font-label-caps uppercase tracking-widest font-bold border border-white/20 active:scale-95 transition-all w-full"
+                className="mt-3 px-8 py-4 bg-white/10 text-white rounded-xl font-label-caps uppercase tracking-widest font-bold border border-white/20 active:scale-95 transition-all w-full"
               >
                 SALIR
               </button>
@@ -258,12 +283,51 @@ export default function ResultScreen() {
           </p>
         </motion.div>
 
-        <p className="mt-8 text-sm text-on-surface-variant/80 animate-pulse">ESPERANDO AL ANFITRIÓN...</p>
+        {currentTrack && (
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.9 }}
+            className="mt-5 rounded-2xl border border-white/15 bg-black/40 backdrop-blur-sm overflow-hidden text-left"
+          >
+            {currentTrack.albumImage && (
+              <img src={currentTrack.albumImage} alt={currentTrack.name} className="w-full h-28 object-cover opacity-55" />
+            )}
+            <div className="px-4 py-3 flex items-center gap-3">
+              {!currentTrack.albumImage && (
+                <span className="material-symbols-outlined text-electric-purple text-3xl shrink-0">album</span>
+              )}
+              <div className="min-w-0">
+                <p className="font-label-caps text-[10px] text-on-surface-variant">LA CANCIÓN ERA</p>
+                <p className="mt-0.5 font-bold text-white text-base leading-tight truncate">{currentTrack.name}</p>
+                <p className="text-sm text-on-surface-variant truncate">{currentTrack.artist}</p>
+                {currentTrack.releaseYear && (
+                  <span className="mt-1 inline-block rounded-lg border border-neon-green/30 bg-neon-green/10 px-2 py-0.5 text-[10px] font-label-caps text-neon-green">{currentTrack.releaseYear}</span>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        <motion.button
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.1 }}
+          onClick={handleShare}
+          className="mt-4 w-full h-11 rounded-xl border border-white/15 bg-white/5 text-white font-label-caps text-xs font-bold active:scale-95 transition-all flex items-center justify-center gap-2"
+        >
+          <span className="material-symbols-outlined text-lg">share</span>
+          {shareCopied ? 'COPIADO AL PORTAPAPELES' : 'COMPARTIR RESULTADO'}
+        </motion.button>
+
+        {role !== 'host' && (
+          <p className="mt-6 text-sm text-on-surface-variant/80 animate-pulse">ESPERANDO AL ANFITRIÓN...</p>
+        )}
 
         {role === 'host' && (
           <button
             onClick={hostNextRound}
-            className="mt-6 px-8 py-4 bg-neon-green text-black rounded-xl font-label-caps uppercase tracking-widest font-bold border border-white/20 active:scale-95 transition-all w-full"
+            className="mt-4 px-8 py-4 bg-neon-green text-black rounded-xl font-label-caps uppercase tracking-widest font-bold border border-white/20 active:scale-95 transition-all w-full"
           >
             SIGUIENTE RONDA
           </button>

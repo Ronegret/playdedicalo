@@ -1,4 +1,6 @@
 ﻿import { create } from 'zustand';
+import { ref, onValue } from 'firebase/database';
+import { database } from '../firebase';
 
 const DATABASE_URL = 'https://dedicalo-play-trivia-7-default-rtdb.europe-west1.firebasedatabase.app';
 export const TIMELINE_GOAL_YEARS = 12;
@@ -116,22 +118,22 @@ export const GAME_MODES = {
 
 export const VICTORY_MODES = [
   {
-    targetScore: 40,
+    targetScore: 70,
     name: 'RÁPIDA',
     short: 'Rápida',
-    description: 'Disponible para Pulso y Remix. Gana quien llega primero a 40 puntos.'
+    description: 'Disponible para Pulso y Remix. Gana quien llega primero a 70 puntos.'
   },
   {
-    targetScore: 70,
+    targetScore: 120,
     name: 'EQUILIBRADA',
     short: 'Equilibrada',
-    description: 'Disponible para Pulso y Remix. Meta de 70 puntos con más remontadas.'
+    description: 'Disponible para Pulso y Remix. Meta de 120 puntos con más remontadas.'
   },
   {
-    targetScore: 100,
+    targetScore: 200,
     name: 'LARGA',
     short: 'Larga',
-    description: 'Disponible para Pulso y Remix. Meta de 100 puntos para partidas largas.'
+    description: 'Disponible para Pulso y Remix. Meta de 200 puntos para partidas largas.'
   }
 ];
 
@@ -296,6 +298,7 @@ export const useGameStore = create((setStore, getStore) => ({
   sharedPrize: null,
   pendingQuestionEffect: null,
   roomError: null,
+  currentTrack: null,
   timelineYears: [],
   roomSubscription: null,
 
@@ -407,7 +410,7 @@ export const useGameStore = create((setStore, getStore) => ({
     }, 3000);
   },
 
-  hostTriggerBlackout: async (questionOverride = null) => {
+  hostTriggerBlackout: async (questionOverride = null, trackInfo = null) => {
     const { pin, gameMode } = getStore();
     if (!pin) return;
 
@@ -427,7 +430,14 @@ export const useGameStore = create((setStore, getStore) => ({
       : questionBase;
 
     await Promise.all([
-      patchData(`rooms/${pin}`, { phase: 'blackout', currentQuestion: question, pendingQuestionEffect: null, roundAnswers: null, revealResults: null }),
+      patchData(`rooms/${pin}`, {
+        phase: 'blackout',
+        currentQuestion: question,
+        currentTrack: trackInfo || null,
+        pendingQuestionEffect: null,
+        roundAnswers: null,
+        revealResults: null
+      }),
       patchData(`rooms/${pin}/audio`, { isPlaying: false })
     ]);
   },
@@ -533,6 +543,7 @@ export const useGameStore = create((setStore, getStore) => ({
     await patchData(`rooms/${pin}`, {
       round: round + 1,
       currentQuestion: null,
+      currentTrack: null,
       roundAnswers: null,
       revealResults: null,
       lastSabotage: null,
@@ -559,10 +570,10 @@ export const useGameStore = create((setStore, getStore) => ({
 
   hostCloseRoom: () => {
     const { pin, roomSubscription } = getStore();
-    if (roomSubscription) window.clearInterval(roomSubscription);
+    if (typeof roomSubscription === 'function') roomSubscription();
     if (pin) {
       Promise.all([
-        patchData(`rooms/${pin}`, { phase: 'final', currentQuestion: null }),
+        patchData(`rooms/${pin}`, { phase: 'final', currentQuestion: null, currentTrack: null }),
         patchData(`rooms/${pin}/audio`, { isPlaying: false })
       ]).catch((error) => console.error('Error al cerrar la sala:', error));
     }
@@ -573,6 +584,7 @@ export const useGameStore = create((setStore, getStore) => ({
       players: [],
       phase: 'lobby',
       currentQuestion: null,
+      currentTrack: null,
       lastResultType: null,
       lastPointDelta: 0,
       lastSabotage: null,
@@ -712,7 +724,7 @@ export const useGameStore = create((setStore, getStore) => ({
 
   guestLeaveRoom: () => {
     const { pin, guestId, roomSubscription } = getStore();
-    if (roomSubscription) window.clearInterval(roomSubscription);
+    if (typeof roomSubscription === 'function') roomSubscription();
     if (pin && guestId) {
       deleteData(`rooms/${pin}/players/${guestId}`).catch((error) => console.error('Error al salir de la sala:', error));
     }
@@ -723,6 +735,7 @@ export const useGameStore = create((setStore, getStore) => ({
       guestAvatar: null,
       guestName: null,
       phase: 'lobby',
+      currentTrack: null,
       lastResultType: null,
       lastPointDelta: 0,
       lastSabotage: null,
@@ -771,10 +784,11 @@ export const useGameStore = create((setStore, getStore) => ({
 
   _subscribeToRoom: (pin) => {
     const existingSubscription = getStore().roomSubscription;
-    if (existingSubscription) window.clearInterval(existingSubscription);
+    if (typeof existingSubscription === 'function') existingSubscription();
 
-    const syncRoom = async () => {
-      const data = await readData(`rooms/${pin}`);
+    const roomRef = ref(database, `rooms/${pin}`);
+    const unsubscribe = onValue(roomRef, (snapshot) => {
+      const data = snapshot.val();
       const current = getStore();
 
       if (!data) {
@@ -805,6 +819,7 @@ export const useGameStore = create((setStore, getStore) => ({
           })))
           : [],
         currentQuestion: data.currentQuestion || null,
+        currentTrack: data.currentTrack || null,
         roundAnswers: data.roundAnswers || {},
         revealResults: data.revealResults || {},
         lastSabotage: data.lastSabotage || getStore().lastSabotage,
@@ -821,14 +836,11 @@ export const useGameStore = create((setStore, getStore) => ({
           spotifyPlaylistUrl: normalizeSpotifyPlaylistUrl(data.audio.playlistUrl || data.audio.playlistId)
         });
       }
-    };
+    }, (error) => {
+      console.error('Error en la suscripción de sala:', error);
+    });
 
-    syncRoom().catch((error) => console.error('Error al sincronizar sala:', error));
-    const subscription = window.setInterval(() => {
-      syncRoom().catch((error) => console.error('Error al sincronizar sala:', error));
-    }, 1200);
-
-    setStore({ roomSubscription: subscription });
+    setStore({ roomSubscription: unsubscribe });
   }
 }));
 

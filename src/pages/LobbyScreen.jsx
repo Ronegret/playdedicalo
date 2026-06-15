@@ -162,6 +162,7 @@ export default function LobbyScreen() {
     clearRoomError
   } = useGameStore();
   const [showQR, setShowQR] = useState(false);
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
   const [startError, setStartError] = useState('');
   const gameLocked = round > 1;
 
@@ -178,6 +179,10 @@ export default function LobbyScreen() {
   }, [roomError, clearRoomError, navigate]);
 
   const handleExit = () => {
+    setShowExitConfirm(true);
+  };
+
+  const handleConfirmExit = () => {
     if (role === 'guest') guestLeaveRoom();
     if (role === 'host') hostCloseRoom();
     navigate('/role-selection');
@@ -456,6 +461,49 @@ export default function LobbyScreen() {
               </div>
               <p className="font-stats-xl text-4xl text-primary tracking-widest">{pin}</p>
               <button onClick={() => setShowQR(false)} className="px-6 py-2 bg-white/10 rounded-full font-label-caps text-xs hover:bg-white/20 transition-colors">CERRAR</button>
+            </motion.div>
+          </motion.div>
+        )}
+
+        {showExitConfirm && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[110] flex items-end sm:items-center justify-center bg-black/80 backdrop-blur-sm px-4 pb-4 sm:pb-0"
+            onClick={() => setShowExitConfirm(false)}
+          >
+            <motion.div
+              initial={{ y: 40, scale: 0.96 }}
+              animate={{ y: 0, scale: 1 }}
+              exit={{ y: 40, scale: 0.96 }}
+              transition={{ type: 'spring', stiffness: 260, damping: 28 }}
+              className="w-full max-w-sm rounded-2xl border border-white/10 bg-surface-container p-6 text-center shadow-[0_0_50px_rgba(0,0,0,0.6)]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <span className="material-symbols-outlined text-intense-red" style={{ fontSize: '2.5rem' }}>logout</span>
+              <h3 className="mt-3 font-headline-lg text-xl font-black text-white">
+                {role === 'host' ? '¿Cerrar la sala?' : '¿Salir de la sala?'}
+              </h3>
+              <p className="mt-2 text-sm text-on-surface-variant">
+                {role === 'host'
+                  ? 'La partida terminará para todos los jugadores.'
+                  : 'Perderás tu progreso en esta partida.'}
+              </p>
+              <div className="mt-5 flex flex-col gap-2">
+                <button
+                  onClick={handleConfirmExit}
+                  className="w-full h-12 rounded-xl bg-intense-red text-white font-label-caps text-sm font-bold active:scale-95 transition-all"
+                >
+                  {role === 'host' ? 'SÍ, CERRAR SALA' : 'SÍ, SALIR'}
+                </button>
+                <button
+                  onClick={() => setShowExitConfirm(false)}
+                  className="w-full h-12 rounded-xl bg-white/5 border border-white/10 text-white font-label-caps text-sm font-bold active:scale-95 transition-all"
+                >
+                  CANCELAR
+                </button>
+              </div>
             </motion.div>
           </motion.div>
         )}
