@@ -53,6 +53,16 @@ const PLAYLISTS = [
     style: 'De To2',
     slug: 'de-to2',
     url: 'https://open.spotify.com/playlist/0Pn8mtBmo8HDfuKiky5tNj'
+  },
+  {
+    style: 'Fiestas en el Pueblo',
+    slug: 'fiestas-en-el-pueblo',
+    url: 'https://open.spotify.com/playlist/5kkHb7jc3WocICRywvY6Yz'
+  },
+  {
+    style: 'Just Go',
+    slug: 'just-go',
+    url: 'https://open.spotify.com/playlist/0yUgOnkSswjzWwNxI2QjNC'
   }
 ];
 
