@@ -5,9 +5,9 @@ import VinylVisualizer from '../components/VinylVisualizer';
 import { SABOTAGE_OPTIONS } from '../store/useGameStore';
 
 const STEPS = [
-  { icon: 'groups', title: 'Entran todos', text: 'El host crea sala, comparte PIN y también juega.' },
+  { icon: 'groups', title: 'Entran todos', text: 'El anfitrión crea sala, comparte PIN y también juega.' },
   { icon: 'album', title: 'Suena la música', text: 'Nadie ve el nombre de la canción. Solo se escucha.' },
-  { icon: 'offline_bolt', title: 'Corte sorpresa', text: 'El host corta la música y aparece una pregunta.' },
+  { icon: 'offline_bolt', title: 'Corte sorpresa', text: 'El anfitrión corta la música y aparece una pregunta.' },
   { icon: 'touch_app', title: 'Responden rápido', text: 'Cada jugador elige una opción o coloca la canción en la línea.' },
   { icon: 'emoji_events', title: 'Sube el ranking', text: 'Gana quien llegue primero a 40, 70 o 100 puntos.' }
 ];
@@ -115,7 +115,7 @@ export default function HowToPlayScreen() {
           <p className="font-label-caps text-neon-green text-xs tracking-widest">GUIA RAPIDA</p>
           <h1 className="mt-2 font-headline-lg text-4xl text-white font-black leading-tight">Cómo se juega Dedícalo</h1>
           <p className="mt-3 text-sm leading-relaxed text-on-surface-variant max-w-xl">
-            Escuchan una canción, el host corta la música, todos responden y el ranking decide quién gana.
+            Escuchan una canción, el anfitrión corta la música, todos responden y el ranking decide quién gana.
           </p>
         </div>
       </section>
@@ -145,11 +145,11 @@ export default function HowToPlayScreen() {
             </div>
             <div className="rounded-xl border border-intense-red/40 bg-intense-red/10 p-4">
               <p className="font-label-caps text-intense-red text-[10px]">2. CORTE</p>
-              <p className="mt-2 text-sm text-white">El host pulsa corte y aparece el reto.</p>
+              <p className="mt-2 text-sm text-white">El anfitrión pulsa corte y aparece el reto.</p>
             </div>
             <div className="rounded-xl border border-electric-purple/50 bg-electric-purple/15 p-4">
               <p className="font-label-caps text-electric-purple text-[10px]">3. RESPONDE</p>
-              <p className="mt-2 text-sm text-white">Todos votan. El host también juega.</p>
+              <p className="mt-2 text-sm text-white">Todos votan. El anfitrión también juega.</p>
             </div>
           </div>
         </GuideSection>
@@ -174,7 +174,7 @@ export default function HowToPlayScreen() {
 
         <GuideSection icon="auto_awesome" title="Sabotajes" subtitle="Ataques durante la música">
           <p className="text-sm text-on-surface-variant leading-relaxed">
-            Desde la ronda 2 puedes gastar puntos mientras la canción está sonando. Los ataques preparan efectos para el blackout.
+            Desde la ronda 2 puedes gastar puntos mientras la canción está sonando. Los ataques preparan efectos para el corte.
           </p>
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             {SABOTAGE_OPTIONS.map((option) => (

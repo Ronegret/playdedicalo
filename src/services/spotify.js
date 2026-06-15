@@ -4,7 +4,7 @@ const VERIFIER_KEY = 'dedicalo_spotify_verifier';
 const TRACK_KEY = 'dedicalo_current_spotify_track';
 const PLAYED_TRACKS_KEY = 'dedicalo_played_spotify_tracks';
 const CATALOG_URL = '/data/dedicalo-song-catalog.full.clean.json';
-const PLAYER_NAME = 'Dedicalo Host Player';
+const PLAYER_NAME = 'Dedicalo Anfitrion';
 
 const SPOTIFY_SCOPES = [
   'streaming',
@@ -118,9 +118,9 @@ export async function completeSpotifyLogin(code) {
 
 export async function getSpotifyAccessToken() {
   const token = readToken();
-  if (!token) throw new Error('Spotify no esta conectado.');
+  if (!token) throw new Error('Spotify no está conectado.');
   if (Date.now() < Number(token.expires_at || 0)) return token.access_token;
-  if (!token.refresh_token) throw new Error('La sesion de Spotify expiro. Vuelve a conectar Spotify.');
+  if (!token.refresh_token) throw new Error('La sesión de Spotify expiró. Vuelve a conectar Spotify.');
 
   const refreshed = await requestToken({
     grant_type: 'refresh_token',
@@ -149,7 +149,7 @@ async function spotifyFetch(url, options = {}) {
 
   if (!response.ok && response.status !== 204) {
     const text = await response.text();
-    throw new Error(`Spotify API error ${response.status}: ${text}`);
+    throw new Error(`Spotify error ${response.status}: ${text}`);
   }
 
   return response.status === 204 ? null : response.json();
@@ -164,7 +164,7 @@ function loadSpotifySdk() {
 
   return new Promise((resolve, reject) => {
     const existingScript = document.querySelector('script[src="https://sdk.scdn.co/spotify-player.js"]');
-    const timeout = window.setTimeout(() => reject(new Error('Spotify Web Playback SDK tardo demasiado en cargar.')), 10000);
+    const timeout = window.setTimeout(() => reject(new Error('Spotify tardó demasiado en cargar.')), 10000);
     window.onSpotifyWebPlaybackSDKReady = () => {
       window.clearTimeout(timeout);
       resolve();
@@ -175,7 +175,7 @@ function loadSpotifySdk() {
     const script = document.createElement('script');
     script.src = 'https://sdk.scdn.co/spotify-player.js';
     script.async = true;
-    script.onerror = () => reject(new Error('No se pudo cargar Spotify Web Playback SDK.'));
+    script.onerror = () => reject(new Error('No pudimos cargar Spotify.'));
     document.body.appendChild(script);
   });
 }
@@ -200,11 +200,11 @@ async function getSpotifyPlayer() {
     });
 
     player.addListener('initialization_error', ({ message }) => {
-      setSpotifySdkError('Inicializacion', message);
+      setSpotifySdkError('Inicio', message);
       console.error('Spotify initialization_error:', message);
     });
     player.addListener('authentication_error', ({ message }) => {
-      setSpotifySdkError('Autenticacion', message);
+      setSpotifySdkError('Conexión', message);
       console.error('Spotify authentication_error:', message);
     });
     player.addListener('account_error', ({ message }) => {
@@ -212,15 +212,15 @@ async function getSpotifyPlayer() {
       console.error('Spotify account_error:', message);
     });
     player.addListener('playback_error', ({ message }) => {
-      setSpotifySdkError('Reproduccion', message);
+      setSpotifySdkError('Reproducción', message);
       console.error('Spotify playback_error:', message);
     });
     player.addListener('autoplay_failed', () => {
-      setSpotifySdkError('Autoplay', 'El navegador bloqueo el inicio automatico. Pulsa PLAY en el vinilo.');
+      setSpotifySdkError('Reproducción', 'El navegador bloqueó el inicio automático. Pulsa PLAY en el vinilo.');
     });
 
     const connected = await player.connect();
-    if (!connected) throw new Error('Spotify no acepto la conexion del reproductor web.');
+    if (!connected) throw new Error('Spotify no aceptó la conexión.');
     return player;
   })();
 
@@ -241,7 +241,7 @@ export async function getSpotifyDiagnostics() {
   if (!token?.access_token) {
     return {
       ok: false,
-      message: 'Spotify no esta conectado.'
+      message: 'Spotify no está conectado.'
     };
   }
 
@@ -261,7 +261,7 @@ export async function getSpotifyDiagnostics() {
       sdkError: lastSpotifySdkError,
       message: hasPremium
         ? 'Cuenta Premium detectada. Ya puedes probar sonido.'
-        : `Esta cuenta aparece como ${product}. Spotify Web Playback necesita Premium completo.`
+        : 'Esta cuenta no aparece como Premium. Para sonar dentro del juego necesita Premium completo.'
     };
   } catch (error) {
     return {
@@ -274,11 +274,11 @@ export async function getSpotifyDiagnostics() {
 
 export function explainSpotifyError(error) {
   const message = String(error?.message || error || '');
-  if (message.includes('403')) return 'Spotify rechazo la reproduccion. Revisa que la cuenta sea Premium completa y este autorizada en User Management.';
-  if (message.includes('404')) return 'Spotify no encontro un dispositivo activo. Pulsa Conectar Spotify y luego Prueba sonido.';
-  if (message.includes('401')) return 'La sesion de Spotify expiro. Pulsa Reconectar.';
+  if (message.includes('403')) return 'Spotify no dejó iniciar la música. Revisa que la cuenta sea Premium y vuelve a conectar.';
+  if (message.includes('404')) return 'No encontramos donde reproducir. Pulsa Conectar Spotify y luego Probar.';
+  if (message.includes('401')) return 'La sesión de Spotify expiró. Pulsa Reconectar.';
   if (lastSpotifySdkError) return lastSpotifySdkError;
-  return message || 'Spotify no pudo iniciar la reproduccion.';
+  return message || 'Spotify no pudo iniciar la reproducción.';
 }
 
 async function ensureSpotifyDevice() {
@@ -295,7 +295,7 @@ async function ensureSpotifyDevice() {
     await new Promise((resolve) => window.setTimeout(resolve, 250));
   }
 
-  throw new Error('Spotify no entrego un dispositivo de reproduccion. Revisa Premium y prueba de nuevo.');
+  throw new Error('Spotify no entregó un dispositivo de reproducción. Revisa Premium y prueba de nuevo.');
 }
 
 export function getPlaylistId(playlistUrl) {
@@ -375,7 +375,7 @@ function pickTrackWithoutRepeating(playlistUrl, tracks) {
 
 export async function getPlaylistTracks(playlistUrl) {
   const playlistId = getPlaylistId(playlistUrl);
-  if (!playlistId) throw new Error('El enlace de Spotify no parece una playlist valida.');
+  if (!playlistId) throw new Error('El enlace de Spotify no parece una playlist válida.');
 
   const catalogTracks = await getCatalogTracks(playlistId);
   if (catalogTracks.length) return catalogTracks;
@@ -399,7 +399,7 @@ export async function getPlaylistTracks(playlistUrl) {
     url = data.next;
   }
 
-  if (!tracks.length) throw new Error('No encontre canciones reproducibles en esta playlist.');
+  if (!tracks.length) throw new Error('No encontré canciones reproducibles en esta playlist.');
   return tracks;
 }
 
@@ -415,21 +415,31 @@ function buildTimelineYears(songYear, round = 1) {
   return [...new Set(years.filter((year) => year !== songYear))].sort((a, b) => a - b);
 }
 
-export function createQuestionFromTrack(track, gameMode, round = 1) {
+function getTimelineYearsForRound(songYear, round, timelineYears = []) {
+  const savedYears = [...new Set((timelineYears || []).map(Number).filter(Boolean))]
+    .filter((timelineYear) => timelineYear !== songYear)
+    .sort((a, b) => a - b)
+    .slice(0, 12);
+
+  if (savedYears.length) return savedYears;
+  return buildTimelineYears(songYear, round).slice(0, 12);
+}
+
+export function createQuestionFromTrack(track, gameMode, round = 1, timelineYears = []) {
   const year = track.releaseYear || 2016;
 
   if (gameMode === 'timeline') {
-    const timelineYears = buildTimelineYears(year, round);
-    const correct = timelineYears.filter((timelineYear) => timelineYear < year).length;
+    const roundTimelineYears = getTimelineYearsForRound(year, round, timelineYears);
+    const correct = roundTimelineYears.filter((timelineYear) => timelineYear < year).length;
 
     return {
       mode: 'timeline',
       answerType: 'timeline-placement',
       type: 'Línea del Ritmo',
       text: '¿Dónde encaja esta canción en la línea?',
-      timelineYears,
+      timelineYears: roundTimelineYears,
       songYear: year,
-      options: Array.from({ length: timelineYears.length + 1 }, (_, index) => String(index)),
+      options: Array.from({ length: roundTimelineYears.length + 1 }, (_, index) => String(index)),
       correct
     };
   }
@@ -438,7 +448,7 @@ export function createQuestionFromTrack(track, gameMode, round = 1) {
     return {
       mode: 'chaos',
       type: 'Remix Salvaje',
-      text: 'Que jugada conviene despues de escuchar este corte?',
+      text: '¿Qué jugada conviene después de escuchar este corte?',
       options: ['Guardar puntos', 'Activar sabotaje', 'Arriesgar respuesta', 'Cambiar playlist'],
       correct: 2
     };
@@ -450,7 +460,7 @@ export function createQuestionFromTrack(track, gameMode, round = 1) {
   return {
     mode: 'pulse',
     type: 'Identidad',
-    text: 'Quien canta principalmente este corte?',
+    text: '¿Quién canta principalmente este corte?',
     options: uniqueOptions,
     correct: uniqueOptions.indexOf(track.artist)
   };

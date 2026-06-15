@@ -112,6 +112,7 @@ export default function GameScreen() {
     guestId,
     players,
     roundAnswers,
+    timelineYears,
     setAudioPlaying
   } = useGameStore();
   const [answeredQuestionKey, setAnsweredQuestionKey] = useState(null);
@@ -161,7 +162,7 @@ export default function GameScreen() {
     startRandomPlaylistTrack(spotifyPlaylistUrl)
       .then(() => {
         if (!cancelled) {
-          setSpotifyMessage('Musica sonando. Corta cuando quieras.');
+          setSpotifyMessage('Música sonando. Corta cuando quieras.');
           setAudioPlaying(true);
         }
       })
@@ -218,7 +219,7 @@ export default function GameScreen() {
 
   const handleHostBlackout = async () => {
     const hiddenTrack = getCurrentHiddenTrack();
-    const spotifyQuestion = hiddenTrack ? createQuestionFromTrack(hiddenTrack, gameMode, round) : null;
+    const spotifyQuestion = hiddenTrack ? createQuestionFromTrack(hiddenTrack, gameMode, round, timelineYears) : null;
     await pauseSpotifyPlayback().catch((error) => console.warn('No se pudo pausar Spotify:', error));
     setAudioPlaying(false);
     await hostTriggerBlackout(spotifyQuestion);
@@ -270,7 +271,7 @@ export default function GameScreen() {
             >
               {countdownValue}
             </motion.div>
-            <p className="mt-4 text-sm text-on-surface-variant">La musica empieza al terminar la cuenta.</p>
+            <p className="mt-4 text-sm text-on-surface-variant">La música empieza al terminar la cuenta.</p>
           </motion.div>
         )}
 
@@ -289,7 +290,7 @@ export default function GameScreen() {
                 <span className="block mt-2 font-headline-lg-mobile text-3xl text-neon-green font-bold tracking-widest">
                   {role === 'host' ? 'SONANDO' : 'ESCUCHA'}
                 </span>
-                <p className="mt-2 font-label-caps text-xs text-white/70 tracking-widest">EL HOST DECIDE EL CORTE</p>
+                <p className="mt-2 font-label-caps text-xs text-white/70 tracking-widest">EL ANFITRIÓN DECIDE EL CORTE</p>
               </div>
             </div>
 
@@ -305,7 +306,7 @@ export default function GameScreen() {
             </div>
 
             <p className="max-w-xs text-sm text-on-surface-variant">
-              {role === 'host' && spotifyMessage ? spotifyMessage : `${activePlaylist?.icon || ''} Escucha con atencion. Nadie ve la cancion.`}
+              {role === 'host' && spotifyMessage ? spotifyMessage : `${activePlaylist?.icon || ''} Escucha con atención. Nadie ve la canción.`}
             </p>
 
             <SabotageSquares
@@ -326,7 +327,7 @@ export default function GameScreen() {
                   onClick={handleHostBlackout}
                   className="w-full h-16 bg-intense-red hover:bg-red-600 text-white font-headline-lg-mobile text-2xl rounded-2xl shadow-[0_0_20px_rgba(255,0,0,0.38)] active:scale-95 transition-transform font-black border-2 border-white/20"
                 >
-                  CORTE BLACKOUT
+                  CORTAR MÚSICA
                 </button>
               </div>
             )}
@@ -341,7 +342,7 @@ export default function GameScreen() {
             className="w-full max-w-[430px] px-margin-mobile py-20 flex flex-col gap-4"
           >
             <div className="text-center">
-              <p className="font-label-caps text-intense-red text-xs tracking-widest">BLACKOUT · {currentQuestion.type}</p>
+              <p className="font-label-caps text-intense-red text-xs tracking-widest">RESPONDE · {currentQuestion.type}</p>
               <motion.h2
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -357,7 +358,7 @@ export default function GameScreen() {
                 <p className="font-label-caps text-neon-green text-xs">VOTOS RECIBIDOS</p>
                 <p className="mt-1 text-4xl font-black text-white">{answerCount}/{expectedVotes}</p>
                 {!hasAnswered && (
-                  <p className="mt-2 text-xs text-on-surface-variant">Responde primero. Tu voto tambien cuenta.</p>
+                  <p className="mt-2 text-xs text-on-surface-variant">Responde primero. Tu voto también cuenta.</p>
                 )}
                 <button
                   type="button"
@@ -375,7 +376,7 @@ export default function GameScreen() {
                 <span className="material-symbols-outlined text-neon-green text-4xl">check_circle</span>
                 <p className="mt-3 text-on-surface-variant font-label-caps text-sm animate-pulse">RESPUESTA ENVIADA</p>
                 <p className="mt-2 text-xs text-on-surface-variant">
-                  {role === 'host' ? 'Cuando todos esten listos, revela.' : 'Pantalla en negro hasta que el host revele.'}
+                  {role === 'host' ? 'Cuando todos estén listos, revela.' : 'Pantalla en negro hasta que el anfitrión revele.'}
                 </p>
               </div>
             ) : currentQuestion.answerType === 'timeline-placement' ? (

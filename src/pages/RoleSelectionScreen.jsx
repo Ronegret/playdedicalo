@@ -27,7 +27,7 @@ export default function RoleSelectionScreen() {
           Elige como vas a jugar
         </h1>
         <p className="mt-3 text-on-surface-variant text-base leading-relaxed">
-          Dedicalo tiene dos entradas. El anfitrion crea la sala y tambien compite. Los invitados entran con PIN o QR.
+          Dedicalo tiene dos entradas. El anfitrión crea la sala y también compite. Los invitados entran con PIN o QR.
         </p>
       </section>
 
@@ -52,7 +52,7 @@ export default function RoleSelectionScreen() {
             <span className="material-symbols-outlined text-electric-purple text-4xl">person_add</span>
             <div>
               <h2 className="font-headline-lg-mobile text-2xl text-white">Invitado</h2>
-              <p className="text-sm text-on-surface-variant mt-1">Entra con el PIN de 4 digitos o escanea el QR del anfitrion.</p>
+              <p className="text-sm text-on-surface-variant mt-1">Entra con el PIN de 4 dígitos o escanea el QR del anfitrión.</p>
             </div>
           </div>
           <div className="mt-4">

@@ -269,7 +269,7 @@ export default function LobbyScreen() {
 
         {role !== 'host' && (
           <div className="w-full h-12 bg-white/5 text-on-surface-variant font-label-caps text-label-caps rounded-xl flex items-center justify-center border border-white/10">
-            ESPERANDO AL ANFITRION...
+            ESPERANDO AL ANFITRIÓN...
           </div>
         )}
 
@@ -292,7 +292,7 @@ export default function LobbyScreen() {
                 />
               ))}
               {!canUseSabotage && (
-                <p className="text-[11px] text-on-surface-variant">Se desbloquean despues de la primera ronda.</p>
+                <p className="text-[11px] text-on-surface-variant">Se desbloquean despu?s de la primera ronda.</p>
               )}
             </div>
           </details>
@@ -307,7 +307,7 @@ export default function LobbyScreen() {
         </div>
 
         <div className="flex flex-col gap-3">
-          {players.length === 0 && <p className="text-center text-on-surface-variant text-sm">No hay jugadores aun.</p>}
+          {players.length === 0 && <p className="text-center text-on-surface-variant text-sm">No hay jugadores aún.</p>}
           {players.map((player, index) => (
             <div key={player.id} className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/10 backdrop-blur-md">
               <div className="flex items-center gap-3 min-w-0">

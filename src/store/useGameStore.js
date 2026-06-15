@@ -27,7 +27,7 @@ export const DEDICALO_PLAYLISTS = [
     id: 'mix-latino',
     icon: '⚡',
     name: 'Latino Mix 2026',
-    mood: 'Latino actual para rondas rapidas y energia alta.',
+    mood: 'Latino actual para rondas rápidas y energía alta.',
     url: 'https://open.spotify.com/playlist/2UBikaEIZWV9LOAjE0dBgx'
   },
   {
@@ -48,7 +48,7 @@ export const DEDICALO_PLAYLISTS = [
     id: 'perreo-clasico',
     icon: '🕶️',
     name: 'Mix temazos de paradero',
-    mood: 'Perreo clasico y reggaeton de memoria colectiva.',
+    mood: 'Perreo clásico y reggaeton de memoria colectiva.',
     url: 'https://open.spotify.com/playlist/2aatYbsZb0ZiY3aQjcVSw2'
   },
   {
@@ -78,24 +78,24 @@ export const DEFAULT_SPOTIFY_PLAYLIST_URL = DEDICALO_PLAYLISTS[0].url;
 export const GAME_MODES = {
   pulse: {
     id: 'pulse',
-    name: 'Pulso Dedicalo',
+    name: 'Pulso Dedícalo',
     short: 'Escucha y responde',
-    description: 'El modo principal. Suena un fragmento, se corta la musica y todos responden una pregunta clara sobre artista, titulo, letra, energia o contexto.',
-    rhythm: 'Es el mas facil de explicar: ideal para primeras partidas, grupos nuevos y gente que solo quiere entrar rapido a jugar.'
+    description: 'El modo principal. Suena un fragmento, se corta la música y todos responden una pregunta clara sobre artista, título, letra, energía o contexto.',
+    rhythm: 'Es el más fácil de explicar: ideal para primeras partidas, grupos nuevos y gente que solo quiere entrar rápido a jugar.'
   },
   timeline: {
     id: 'timeline',
-    name: 'Linea del Ritmo',
-    short: 'Ordena la musica',
-    description: 'La partida gira alrededor de epocas, anos, modas y momentos musicales. No hace falta saber la fecha exacta: hay que ubicar la cancion en la linea correcta.',
-    rhythm: 'Da conversacion y risas: perfecto para nostalgia, comparaciones entre generaciones y debates de "esto era de antes o de ahora?".'
+    name: 'Línea del Ritmo',
+    short: 'Ordena la música',
+    description: 'La partida gira alrededor de épocas, años, modas y momentos musicales. No hace falta saber la fecha exacta: hay que ubicar la canción en la línea correcta.',
+    rhythm: 'Da conversación y risas: perfecto para nostalgia, comparaciones entre generaciones y debates de "esto era de antes o de ahora?".'
   },
   chaos: {
     id: 'chaos',
     name: 'Remix Salvaje',
-    short: 'Musica con sabotajes',
-    description: 'La dinamica sigue siendo musical, pero la estrategia pesa mas. Los jugadores gastan puntos para bloquear, arriesgar o provocar remontadas.',
-    rhythm: 'Para grupos competitivos: mas tension, mas bromas y mas posibilidades de que el ultimo le robe la noche al lider.'
+    short: 'Música con sabotajes',
+    description: 'La dinámica sigue siendo musical, pero la estrategia pesa más. Los jugadores gastan puntos para bloquear, arriesgar o provocar remontadas.',
+    rhythm: 'Para grupos competitivos: más tensión, más bromas y más posibilidades de que el último le robe la noche al líder.'
   }
 };
 
@@ -103,38 +103,38 @@ export const VICTORY_MODES = [
   {
     targetScore: 40,
     name: 'Hit Express',
-    short: 'Rapida',
+    short: 'Rápida',
     description: 'Gana quien llega primero a 40 puntos. Ideal para una partida corta antes de salir.'
   },
   {
     targetScore: 70,
     name: 'Fiesta Principal',
     short: 'Equilibrada',
-    description: 'Meta a 70 puntos. Da tiempo a remontadas, sabotajes y cambios de lider.'
+    description: 'Meta a 70 puntos. Da tiempo a remontadas, sabotajes y cambios de líder.'
   },
   {
     targetScore: 100,
-    name: 'Sesion Legendaria',
+    name: 'Sesión Legendaria',
     short: 'Larga',
-    description: 'Meta a 100 puntos. Para grupos grandes o noches donde la musica manda.'
+    description: 'Meta a 100 puntos. Para grupos grandes o noches donde la música manda.'
   }
 ];
 
 export const SABOTAGE_OPTIONS = [
   {
     id: 'point_lock',
-    name: 'Silencio al lider',
+    name: 'Silencio al líder',
     icon: 'block',
     cost: 5,
-    effect: 'El lider queda bloqueado: si acierta en la proxima vuelta, no gana puntos.',
+    effect: 'El líder queda bloqueado: si acierta en la próxima vuelta, no gana puntos.',
     color: 'red'
   },
   {
     id: 'reverse_lyrics',
-    name: 'Letra al reves',
+    name: 'Letra al revés',
     icon: 'sync_alt',
     cost: 4,
-    effect: 'La proxima pregunta aparece escrita al reves para subir la presion del blackout.',
+    effect: 'La próxima pregunta aparece escrita al revés para subir la presión.',
     color: 'purple'
   },
   {
@@ -142,7 +142,7 @@ export const SABOTAGE_OPTIONS = [
     name: 'Dueto dividido',
     icon: 'group',
     cost: 4,
-    effect: 'Si otro jugador acierta la proxima, esa persona gana 3 puntos y tu robas 2 por la jugada.',
+    effect: 'Si otro jugador acierta la próxima, esa persona gana 3 puntos y tú robas 2 por la jugada.',
     color: 'green'
   },
   {
@@ -150,23 +150,23 @@ export const SABOTAGE_OPTIONS = [
     name: 'Cambio de aguja',
     icon: 'shuffle',
     cost: 3,
-    effect: 'La proxima pregunta salta a una categoria sorpresa, aunque el host haya elegido otro estilo.',
+    effect: 'La próxima pregunta salta a una categoría sorpresa, aunque el anfitrión haya elegido otro estilo.',
     color: 'purple'
   }
 ];
 
 const MUSIC_QUESTIONS = [
-  { mode: 'pulse', type: 'Letra incompleta', text: "Completa la letra: 'Yo te lo...'", options: ['Dije', 'Juro', 'Dedicalo', 'Doy'], correct: 2 },
-  { mode: 'pulse', type: 'Identidad', text: 'Como se llama el artista principal?', options: ['Bad Bunny', 'Rauw Alejandro', 'El artista sorpresa', 'Feid'], correct: 2 },
-  { mode: 'pulse', type: 'Titulo exacto', text: 'Que palabra aparece en el titulo?', options: ['Noche', 'Corazon', 'Dedicalo', 'Perreo'], correct: 2 },
-  { mode: 'pulse', type: 'Colaboracion', text: 'Que papel tiene la voz invitada en este corte?', options: ['Coro principal', 'Verso invitado', 'Intro hablada', 'No hay invitado'], correct: 1 },
-  { mode: 'pulse', type: 'Cultura pop', text: 'Donde sonaria mejor este corte?', options: ['Final de fiesta', 'Escena triste', 'Entrenamiento', 'Creditos finales'], correct: 0 },
+  { mode: 'pulse', type: 'Letra incompleta', text: "Completa la letra: 'Yo te lo...'", options: ['Dije', 'Juro', 'Dedícalo', 'Doy'], correct: 2 },
+  { mode: 'pulse', type: 'Identidad', text: '¿Cómo se llama el artista principal?', options: ['Bad Bunny', 'Rauw Alejandro', 'El artista sorpresa', 'Feid'], correct: 2 },
+  { mode: 'pulse', type: 'Título exacto', text: '¿Qué palabra aparece en el título?', options: ['Noche', 'Corazón', 'Dedícalo', 'Perreo'], correct: 2 },
+  { mode: 'pulse', type: 'Colaboración', text: '¿Qué papel tiene la voz invitada en este corte?', options: ['Coro principal', 'Verso invitado', 'Intro hablada', 'No hay invitado'], correct: 1 },
+  { mode: 'pulse', type: 'Cultura pop', text: '¿Dónde sonaría mejor este corte?', options: ['Final de fiesta', 'Escena triste', 'Entrenamiento', 'Créditos finales'], correct: 0 },
   { mode: 'timeline', answerType: 'timeline-placement', type: 'Línea del Ritmo', text: '¿Dónde encaja esta canción en la línea?', timelineYears: [2000], songYear: 2014, options: ['0', '1'], correct: 1 },
   { mode: 'timeline', answerType: 'timeline-placement', type: 'Línea del Ritmo', text: '¿Dónde pondrías este corte?', timelineYears: [1995, 2005], songYear: 2001, options: ['0', '1', '2'], correct: 1 },
   { mode: 'timeline', answerType: 'timeline-placement', type: 'Línea del Ritmo', text: 'Escucha y colócala por año.', timelineYears: [1990, 2000, 2010], songYear: 2020, options: ['0', '1', '2', '3'], correct: 3 },
-  { mode: 'chaos', type: 'Remix Salvaje', text: 'Que jugada conviene ahora?', options: ['Guardar puntos', 'Activar sabotaje', 'Cambiar de avatar', 'Salir de la sala'], correct: 1 },
-  { mode: 'chaos', type: 'Colaboracion', text: 'Si aparece un dueto, que conviene escuchar primero?', options: ['Quien entra despues', 'El volumen del movil', 'El color del boton', 'La posicion del ranking'], correct: 0 },
-  { mode: 'chaos', type: 'Remix Salvaje', text: 'Que color anuncia sabotaje?', options: ['Verde', 'Rojo', 'Lila', 'Azul'], correct: 2 }
+  { mode: 'chaos', type: 'Remix Salvaje', text: '¿Qué jugada conviene ahora?', options: ['Guardar puntos', 'Activar sabotaje', 'Cambiar de avatar', 'Salir de la sala'], correct: 1 },
+  { mode: 'chaos', type: 'Colaboración', text: 'Si aparece un dueto, ¿qué conviene escuchar primero?', options: ['Quién entra después', 'El volumen del móvil', 'El color del botón', 'La posición del ranking'], correct: 0 },
+  { mode: 'chaos', type: 'Remix Salvaje', text: '¿Qué color anuncia sabotaje?', options: ['Verde', 'Rojo', 'Lila', 'Azul'], correct: 2 }
 ];
 
 function databasePath(path) {
@@ -257,6 +257,7 @@ export const useGameStore = create((setStore, getStore) => ({
   pointLocks: {},
   sharedPrize: null,
   pendingQuestionEffect: null,
+  timelineYears: [],
   roomSubscription: null,
 
   isAudioPlaying: false,
@@ -277,14 +278,19 @@ export const useGameStore = create((setStore, getStore) => ({
 
   setGameSettings: async ({ gameMode, targetScore }) => {
     const pin = getStore().pin;
+    const currentGameMode = getStore().gameMode;
     const nextSettings = {
       gameMode: gameMode || getStore().gameMode,
       targetScore: Number(targetScore || getStore().targetScore)
     };
+    const modeChanged = nextSettings.gameMode !== currentGameMode;
 
-    setStore(nextSettings);
+    setStore({ ...nextSettings, ...(modeChanged ? { timelineYears: [] } : {}) });
     if (pin && getStore().role === 'host') {
-      await patchData(`rooms/${pin}/settings`, nextSettings);
+      await patchData(`rooms/${pin}`, {
+        settings: nextSettings,
+        ...(modeChanged ? { timelineYears: [] } : {})
+      });
     }
   },
 
@@ -294,7 +300,7 @@ export const useGameStore = create((setStore, getStore) => ({
 
     const hostPlayer = {
       id: hostId,
-      name: hostUser?.displayName || 'DJ Host',
+      name: hostUser?.displayName || 'Anfitrión',
       avatar: hostUser?.photoURL || 'La Consola Maestra',
       points: 10,
       isHost: true
@@ -312,7 +318,8 @@ export const useGameStore = create((setStore, getStore) => ({
         isPlaying: false,
         isMuted: false,
         playlistUrl: normalizeSpotifyPlaylistUrl(getStore().spotifyPlaylistUrl)
-      }
+      },
+      timelineYears: []
     };
 
     try {
@@ -334,12 +341,13 @@ export const useGameStore = create((setStore, getStore) => ({
         revealResults: {},
         pointLocks: {},
         sharedPrize: null,
-        pendingQuestionEffect: null
+        pendingQuestionEffect: null,
+        timelineYears: []
       });
       getStore()._subscribeToRoom(newPin);
     } catch (error) {
       console.error('Error al crear la sala:', error);
-      throw new Error('No se pudo conectar a Firebase. Revisa los permisos de Realtime Database.', { cause: error });
+      throw new Error('No pudimos crear la sala. Inténtalo otra vez.', { cause: error });
     }
   },
 
@@ -372,7 +380,7 @@ export const useGameStore = create((setStore, getStore) => ({
       ? {
         ...questionBase,
         text: reverseReadableText(questionBase.text),
-        type: `${questionBase.type} al reves`
+        type: `${questionBase.type} al revés`
       }
       : questionBase;
 
@@ -383,7 +391,7 @@ export const useGameStore = create((setStore, getStore) => ({
   },
 
   hostRevealResults: async () => {
-    const { pin, targetScore } = getStore();
+    const { pin, targetScore, gameMode } = getStore();
     if (!pin) return;
 
     const room = await readData(`rooms/${pin}`);
@@ -391,6 +399,7 @@ export const useGameStore = create((setStore, getStore) => ({
     const answers = room?.roundAnswers || {};
     const pointLocks = room?.pointLocks || {};
     const sharedPrize = room?.sharedPrize || null;
+    const currentQuestion = room?.currentQuestion || {};
     const remoteUpdates = {};
     const revealResults = {};
 
@@ -403,7 +412,7 @@ export const useGameStore = create((setStore, getStore) => ({
       const delta = answer ? (isCorrect ? (isLocked ? 0 : sharesWithBuyer ? 3 : 5) : -3) : player.isHost ? 0 : -3;
       const nextPoints = clampPoints(Number(player.points || 0) + delta);
       const sabotage = isLocked
-        ? { name: 'Silencio al lider', by: pointLock.by, effect: `${pointLock.by} intentó bloquear tu acierto. Tus puntos quedan en 0 esta ronda.` }
+        ? { name: 'Silencio al líder', by: pointLock.by, effect: `${pointLock.by} intentó bloquear tu acierto. Tus puntos quedan en 0 esta ronda.` }
         : sharesWithBuyer
           ? { name: 'Dueto dividido', by: sharedPrize.buyerName, effect: `${sharedPrize.buyerName} activó un dueto y compartió tu acierto.` }
           : null;
@@ -441,11 +450,21 @@ export const useGameStore = create((setStore, getStore) => ({
       ...player,
       points: remoteUpdates[`players/${player.id}/points`] ?? player.points
     })));
+    const hasCorrectTimelineAnswer = currentQuestion?.answerType === 'timeline-placement'
+      && Object.values(answers).some((answer) => Boolean(answer?.isCorrect));
+    const nextTimelineYears = hasCorrectTimelineAnswer
+      ? [...new Set([...(room?.timelineYears || []), Number(currentQuestion.songYear)].filter(Boolean))]
+        .sort((a, b) => a - b)
+        .slice(0, 12)
+      : (room?.timelineYears || []);
+    const timelineComplete = gameMode === 'timeline' && nextTimelineYears.length >= 12;
     const winner = findWinner(nextPlayers, targetScore);
     remoteUpdates.phase = winner ? 'final' : 'result';
+    if (timelineComplete) remoteUpdates.phase = 'final';
     remoteUpdates.revealResults = revealResults;
     remoteUpdates.lastSabotage = Object.values(revealResults).find((result) => result.sabotage)?.sabotage || null;
-    remoteUpdates.currentQuestion = winner ? null : room.currentQuestion || null;
+    remoteUpdates.currentQuestion = (winner || timelineComplete) ? null : room.currentQuestion || null;
+    remoteUpdates.timelineYears = nextTimelineYears;
 
     await patchData(`rooms/${pin}`, remoteUpdates);
 
@@ -456,7 +475,8 @@ export const useGameStore = create((setStore, getStore) => ({
       revealResults,
       lastResultType: ownResult?.resultType || getStore().lastResultType,
       lastPointDelta: ownResult?.delta || 0,
-      lastSabotage: ownResult?.sabotage || remoteUpdates.lastSabotage
+      lastSabotage: ownResult?.sabotage || remoteUpdates.lastSabotage,
+      timelineYears: nextTimelineYears
     });
   },
 
@@ -493,7 +513,10 @@ export const useGameStore = create((setStore, getStore) => ({
     const { pin, roomSubscription } = getStore();
     if (roomSubscription) window.clearInterval(roomSubscription);
     if (pin) {
-      deleteData(`rooms/${pin}`).catch((error) => console.error('Error al cerrar la sala:', error));
+      Promise.all([
+        patchData(`rooms/${pin}`, { phase: 'final', currentQuestion: null }),
+        patchData(`rooms/${pin}/audio`, { isPlaying: false })
+      ]).catch((error) => console.error('Error al cerrar la sala:', error));
     }
     setStore({
       role: null,
@@ -510,6 +533,7 @@ export const useGameStore = create((setStore, getStore) => ({
       pointLocks: {},
       sharedPrize: null,
       pendingQuestionEffect: null,
+      timelineYears: [],
       roomSubscription: null
     });
   },
@@ -546,12 +570,13 @@ export const useGameStore = create((setStore, getStore) => ({
         lastSabotage: null,
         pointLocks: room.pointLocks || {},
         sharedPrize: room.sharedPrize || null,
-        pendingQuestionEffect: room.pendingQuestionEffect || null
+        pendingQuestionEffect: room.pendingQuestionEffect || null,
+        timelineYears: room.timelineYears || []
       });
       getStore()._subscribeToRoom(cleanPin);
     } catch (error) {
       console.error('Error al unirse a la sala:', error);
-      throw new Error('Error al unirse a la base de datos.', { cause: error });
+      throw new Error('No pudimos unirte a la sala. Inténtalo otra vez.', { cause: error });
     }
   },
 
@@ -651,9 +676,10 @@ export const useGameStore = create((setStore, getStore) => ({
         lastSabotage: null,
         roundAnswers: {},
         revealResults: {},
-        pointLocks: {},
+      pointLocks: {},
       sharedPrize: null,
       pendingQuestionEffect: null,
+      timelineYears: [],
       roomSubscription: null
     });
   },
@@ -725,7 +751,8 @@ export const useGameStore = create((setStore, getStore) => ({
         lastSabotage: data.lastSabotage || getStore().lastSabotage,
         pointLocks: data.pointLocks || {},
         sharedPrize: data.sharedPrize || null,
-        pendingQuestionEffect: data.pendingQuestionEffect || null
+        pendingQuestionEffect: data.pendingQuestionEffect || null,
+        timelineYears: data.timelineYears || []
       });
 
       if (data.audio) {

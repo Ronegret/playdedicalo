@@ -57,13 +57,13 @@ export default function HostSyncScreen() {
     } catch (error) {
       console.error('Google popup error', error);
       const messageByCode = {
-        'auth/unauthorized-domain': 'Este dominio no esta autorizado en Firebase. Agrega dedicalo-app.vercel.app y play.dedicalo.es en Firebase.',
-        'auth/operation-not-allowed': 'Activa Google Sign-In en Firebase Authentication.',
-        'auth/popup-blocked': 'El navegador bloqueo la ventana de Google. Permite popups para esta pagina.',
+        'auth/unauthorized-domain': 'No pudimos abrir Google en este dominio. Avisanos y lo dejamos listo.',
+        'auth/operation-not-allowed': 'Google no esta disponible ahora. Prueba otra vez en un momento.',
+        'auth/popup-blocked': 'El navegador bloqueo la ventana. Permite ventanas emergentes para entrar.',
         'auth/popup-closed-by-user': 'Se cerro Google antes de terminar.'
       };
       setAuthStatus('error');
-      setAuthMessage(messageByCode[error.code] || 'No se pudo abrir Google. Intentalo de nuevo.');
+      setAuthMessage(messageByCode[error.code] || 'No se pudo abrir Google. Inténtalo de nuevo.');
     }
   };
 
@@ -98,7 +98,7 @@ export default function HostSyncScreen() {
       await startRandomPlaylistTrack(selectedCuratedPlaylist.url);
       setSpotifyCheck({
         type: 'success',
-        message: 'Suena bien. El host controla la musica y tambien juega.'
+        message: 'Suena bien. El anfitrión controla la música y también juega.'
       });
     } catch (error) {
       setSpotifyCheck({ type: 'error', message: explainSpotifyError(error) });
@@ -109,7 +109,7 @@ export default function HostSyncScreen() {
 
   const handleStopSpotifyTest = async () => {
     await pauseSpotifyPlayback().catch((error) => console.warn('No se pudo parar Spotify:', error));
-    setSpotifyCheck({ type: 'info', message: 'Musica pausada.' });
+    setSpotifyCheck({ type: 'info', message: 'Música pausada.' });
   };
 
   return (
@@ -123,7 +123,7 @@ export default function HostSyncScreen() {
         <button onClick={() => navigate('/role-selection')} className="text-on-surface-variant hover:text-white transition-colors flex items-center gap-2 font-label-caps text-xs">
           <span className="material-symbols-outlined text-sm">arrow_back</span> VOLVER
         </button>
-        <h1 className="font-headline-xl text-2xl italic tracking-tighter text-electric-purple leading-none select-none">HOST</h1>
+        <h1 className="font-headline-xl text-2xl italic tracking-tighter text-electric-purple leading-none select-none">ANFITRIÓN</h1>
         <div className="w-8 h-8 rounded-full border-2 border-electric-purple overflow-hidden flex items-center justify-center bg-electric-purple/20">
           {googleUser?.photoURL ? (
             <img src={googleUser.photoURL} alt="Avatar" className="w-full h-full object-cover" />
@@ -137,7 +137,7 @@ export default function HostSyncScreen() {
 
       <section className="text-center w-full max-w-sm">
         <p className="font-label-caps text-neon-green text-xs tracking-widest">CREA SALA</p>
-        <h2 className="font-headline-lg text-3xl font-black mt-2 text-on-surface leading-tight">Tu mandas la musica y tambien juegas</h2>
+        <h2 className="font-headline-lg text-3xl font-black mt-2 text-on-surface leading-tight">Tu mandas la música y también juegas</h2>
         <p className="text-on-surface-variant text-sm mt-3 mb-5 font-body-md leading-relaxed">
           Elige una lista, comparte el PIN y responde como todos.
         </p>
@@ -171,7 +171,7 @@ export default function HostSyncScreen() {
               <div className="flex items-center justify-between gap-3">
                 <div className="min-w-0">
                   <p className="text-sm font-bold text-white">{spotifyStatus.connected ? 'LISTO PARA SONAR' : 'CONECTA TU CUENTA'}</p>
-                  <p className="mt-1 text-xs text-on-surface-variant">Solo el host necesita Spotify Premium.</p>
+                  <p className="mt-1 text-xs text-on-surface-variant">Solo el anfitrión necesita Spotify Premium.</p>
                 </div>
                 <button
                   type="button"
@@ -238,14 +238,16 @@ export default function HostSyncScreen() {
             </section>
           )}
 
-          <button
-            type="button"
-            onClick={handleHostCreate}
-            disabled={isCreating || !canCreateRoom}
-            className="mt-6 w-full h-14 bg-glass-surface glass-blur border-2 border-electric-purple/50 rounded-xl flex items-center justify-center text-on-surface font-label-caps text-label-caps uppercase tracking-widest disabled:opacity-50 disabled:cursor-not-allowed hover:bg-electric-purple/10 transition-colors"
-          >
-            {isCreating ? 'CREANDO...' : !googleUser ? 'CONECTA GOOGLE' : !spotifyStatus.connected ? 'CONECTA SPOTIFY' : 'CREAR SALA'}
-          </button>
+          {googleUser && (
+            <button
+              type="button"
+              onClick={handleHostCreate}
+              disabled={isCreating || !canCreateRoom}
+              className="mt-6 w-full h-14 bg-glass-surface glass-blur border-2 border-electric-purple/50 rounded-xl flex items-center justify-center text-on-surface font-label-caps text-label-caps uppercase tracking-widest disabled:opacity-50 disabled:cursor-not-allowed hover:bg-electric-purple/10 transition-colors"
+            >
+              {isCreating ? 'CREANDO...' : !spotifyStatus.connected ? 'CONECTA SPOTIFY' : 'CREAR SALA'}
+            </button>
+          )}
         </div>
       </section>
     </motion.main>

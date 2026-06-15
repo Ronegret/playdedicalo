@@ -47,7 +47,7 @@ export default function GuestJoinScreen() {
       setScannerError('');
 
       if (!('BarcodeDetector' in window)) {
-        setScannerError('Este navegador no permite leer QR desde camara. Escribe el PIN manualmente.');
+        setScannerError('Este navegador no permite leer QR desde cámara. Escribe el PIN manualmente.');
         return;
       }
 
@@ -84,7 +84,7 @@ export default function GuestJoinScreen() {
 
         scan();
       } catch {
-        setScannerError('No pudimos abrir la camara. Revisa permisos o escribe el PIN manualmente.');
+        setScannerError('No pudimos abrir la cámara. Revisa permisos o escribe el PIN manualmente.');
       }
     }
 
@@ -152,7 +152,7 @@ export default function GuestJoinScreen() {
           <p className="font-label-caps text-neon-green text-xs mb-2">INVITADO</p>
           <h1 className="font-headline-lg text-4xl font-black uppercase text-on-surface leading-tight">Unirse a la sala</h1>
           <p className="text-on-surface-variant text-base mt-3 leading-relaxed">
-            Escribe el PIN de 4 digitos o escanea el QR que muestra el anfitrion. Entras con 10 puntos base.
+            Escribe el PIN de 4 dígitos o escanea el QR que muestra el anfitrión. Entras con 10 puntos base.
           </p>
         </section>
 
@@ -242,7 +242,7 @@ export default function GuestJoinScreen() {
               <div className="flex items-center justify-between mb-4">
                 <div>
                   <h2 className="font-headline-lg text-xl text-white">Escanear QR</h2>
-                  <p className="text-xs text-on-surface-variant mt-1">Apunta al QR del anfitrion.</p>
+                  <p className="text-xs text-on-surface-variant mt-1">Apunta al QR del anfitrión.</p>
                 </div>
                 <button type="button" onClick={() => setScannerOpen(false)} className="w-9 h-9 rounded-full bg-white/10 text-white">
                   <span className="material-symbols-outlined text-lg">close</span>

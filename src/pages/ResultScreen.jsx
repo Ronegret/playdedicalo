@@ -204,7 +204,7 @@ export default function ResultScreen() {
           </p>
         </div>
 
-        <p className="mt-8 text-sm text-on-surface-variant/80 animate-pulse">ESPERANDO AL ANFITRION...</p>
+        <p className="mt-8 text-sm text-on-surface-variant/80 animate-pulse">ESPERANDO AL ANFITRIÓN...</p>
       </motion.div>
     </motion.main>
   );
