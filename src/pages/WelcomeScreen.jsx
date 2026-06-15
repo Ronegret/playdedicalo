@@ -19,13 +19,6 @@ export default function WelcomeScreen() {
         transition={{ delay: 0.08, duration: 0.8 }}
         className="w-full flex flex-col items-center gap-4"
       >
-        <div className="w-full max-w-[260px] rounded-[2rem] border border-white/10 bg-surface-container-lowest/55 p-3 shadow-[0_24px_60px_rgba(0,0,0,0.28)] backdrop-blur-xl">
-          <img
-            src="/images/logo-main.png"
-            alt="Dedícalo"
-            className="w-full h-auto rounded-[1.35rem] object-contain"
-          />
-        </div>
         <img
           src="/images/logo-horizontal.png"
           alt="Dedícalo"
