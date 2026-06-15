@@ -221,7 +221,15 @@ export default function LobbyScreen() {
 
           <div className="grid grid-cols-4 gap-2 mt-4">
             {pin ? pin.split('').map((char, index) => (
-              <input key={`${char}-${index}`} className="h-14 bg-black/20 border-2 border-white/10 rounded-xl text-center font-stats-xl text-3xl text-neon-green" value={char} readOnly />
+              <motion.div
+                key={`${char}-${index}`}
+                initial={{ opacity: 0, y: 10, scale: 0.85 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ delay: index * 0.08, type: 'spring', stiffness: 200 }}
+                className="h-14 bg-black/25 border-2 border-neon-green/35 rounded-xl flex items-center justify-center font-stats-xl text-3xl text-neon-green shadow-[0_0_16px_rgba(57,255,20,0.15),inset_0_0_10px_rgba(0,0,0,0.3)] select-none"
+              >
+                {char}
+              </motion.div>
             )) : <p className="text-on-surface-variant col-span-4">Cargando sala...</p>}
           </div>
         </div>
@@ -344,26 +352,32 @@ export default function LobbyScreen() {
         <div className="flex flex-col gap-3">
           {players.length === 0 && <p className="text-center text-on-surface-variant text-sm">No hay jugadores aún.</p>}
           {players.map((player, index) => (
-            <div key={player.id} className="p-4 bg-white/5 rounded-xl border border-white/10 backdrop-blur-md">
+            <motion.div
+              key={player.id}
+              initial={{ opacity: 0, x: -12 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.06, type: 'spring', stiffness: 180 }}
+              className="p-4 bg-white/5 rounded-xl border border-white/10 backdrop-blur-md hover:border-white/20 transition-colors"
+            >
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3 min-w-0">
                   <span className="w-6 text-center font-label-caps text-xs text-on-surface-variant">#{index + 1}</span>
                   {player.avatar?.startsWith?.('http') ? (
-                    <img src={player.avatar} alt={player.name} className="w-10 h-10 rounded-full object-cover border border-electric-purple" />
+                    <img src={player.avatar} alt={player.name} className="w-10 h-10 rounded-full object-cover border-2 border-electric-purple/60 shadow-[0_0_12px_rgba(168,85,247,0.3)]" />
                   ) : (
-                    <div className="w-10 h-10 rounded-full flex items-center justify-center text-2xl bg-white/10 border border-white/5 shrink-0">
+                    <div className="w-10 h-10 rounded-full flex items-center justify-center text-2xl bg-white/10 border border-white/10 shrink-0">
                       {player.avatar || '•'}
                     </div>
                   )}
                   <span className="font-body-md font-bold text-white truncate">{player.name}</span>
                 </div>
-                <div className="text-right text-neon-green shrink-0">
-                  <span className="font-black">{player.points}</span>
-                  <span className="text-xs ml-1">PTS</span>
+                <div className="text-right shrink-0">
+                  <span className="font-black text-neon-green drop-shadow-[0_0_8px_rgba(57,255,20,0.4)]">{player.points}</span>
+                  <span className="text-xs ml-1 text-on-surface-variant">PTS</span>
                 </div>
               </div>
               {gameMode === 'timeline' && <TimelineYears years={getCombinedTimelineYears(player)} />}
-            </div>
+            </motion.div>
           ))}
         </div>
       </section>

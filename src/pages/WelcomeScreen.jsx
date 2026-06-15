@@ -9,82 +9,110 @@ export default function WelcomeScreen() {
     <motion.main
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 0, y: -20 }}
-      className="relative z-10 w-full max-w-[430px] mx-auto min-h-screen flex flex-col items-center justify-center px-margin-mobile py-10 gap-5 overflow-hidden text-center"
+      exit={{ opacity: 0, scale: 0.98 }}
+      transition={{ duration: 0.4 }}
+      className="relative z-10 w-full max-w-[430px] mx-auto min-h-screen flex flex-col items-center justify-center px-5 py-10 gap-7 text-center overflow-hidden"
     >
-      <motion.div
-        initial={{ opacity: 0, y: 16, scale: 0.97 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.75 }}
-        className="w-full flex flex-col items-center gap-4"
+      {/* Label */}
+      <motion.p
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.15 }}
+        className="text-[10px] font-bold uppercase tracking-[0.3em] text-vinyl-orange"
       >
-        <p
-          className="font-black italic uppercase tracking-[0.34em] text-electric-purple text-[11px] sm:text-xs"
-          style={{ fontFamily: 'Space Mono, monospace' }}
+        Party Game Musical
+      </motion.p>
+
+      {/* ─── Vinyl Hero ───────────────────────────────────── */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.82 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.05, duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+        className="relative"
+        style={{ width: 'min(300px, calc(100vw - 40px))', aspectRatio: '1' }}
+      >
+        {/* Ambient glow */}
+        <div className="absolute -inset-6 rounded-full bg-vinyl-orange/12 blur-3xl pointer-events-none" />
+        <div className="absolute -inset-8 rounded-full bg-electric-purple/8 blur-[60px] pointer-events-none" />
+
+        {/* Spinning disc */}
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ repeat: Infinity, duration: 8, ease: 'linear' }}
+          className="absolute inset-0 rounded-full"
+          style={{
+            background: `repeating-radial-gradient(
+              circle,
+              #0b0b0b 0px, #0b0b0b 2px,
+              #191919 3px, #191919 5px,
+              #0b0b0b 6px, #0b0b0b 9px
+            )`,
+            boxShadow: '0 0 0 2px rgba(255,255,255,0.06), 0 20px 70px rgba(0,0,0,0.85)',
+          }}
+        />
+
+        {/* Highlight sheen on disc */}
+        <div
+          className="absolute inset-0 rounded-full pointer-events-none"
+          style={{
+            background: 'conic-gradient(from 200deg, transparent 0deg, rgba(255,255,255,0.04) 30deg, transparent 60deg)',
+          }}
+        />
+
+        {/* Logo label — static, doesn't rotate */}
+        <div
+          className="absolute rounded-full bg-white overflow-hidden flex items-center justify-center"
+          style={{
+            inset: '18%',
+            boxShadow: '0 0 0 4px rgba(0,0,0,0.5), 0 0 32px rgba(255,122,26,0.4)',
+          }}
         >
-          PARTY GAME MUSICAL
-        </p>
-
-        <div className="w-full max-w-[340px] rounded-[2rem] border border-white/10 bg-surface-container/80 p-4 shadow-[0_26px_60px_rgba(0,0,0,0.28)] backdrop-blur-xl">
-          <div className="rounded-[1.75rem] border border-white/10 bg-surface-container-lowest/70 p-4">
-            <div className="flex items-center gap-3">
-              <div className="flex-1 rounded-[1.5rem] border border-white/10 bg-black/15 p-3">
-                <img
-                  src="/images/logo-main.png"
-                  alt="Dedícalo"
-                  className="w-full h-auto object-contain"
-                />
-              </div>
-              <div className="shrink-0 w-14 h-14 rounded-full bg-vinyl-orange text-black flex items-center justify-center shadow-[0_0_22px_rgba(255,122,26,0.35)]">
-                <span className="material-symbols-outlined text-3xl">play_arrow</span>
-              </div>
-            </div>
-
-            <div className="mt-4 h-2 rounded-full bg-white/8 overflow-hidden">
-              <div className="h-full w-[68%] rounded-full bg-gradient-to-r from-vinyl-orange via-electric-purple to-vinyl-orange" />
-            </div>
-
-            <div className="mt-3 flex items-center justify-between text-[10px] uppercase tracking-[0.22em] text-on-surface-variant">
-              <span>DEDICALO.ES</span>
-              <span>spotify style</span>
-            </div>
-          </div>
+          <img
+            src="/images/logo-main.png"
+            alt="Dedícalo"
+            className="w-[78%] h-[78%] object-contain"
+            draggable={false}
+          />
         </div>
+
+        {/* Spindle hole */}
+        <div className="absolute rounded-full bg-black" style={{ inset: '47.5%' }} />
       </motion.div>
 
-      <section className="flex flex-col gap-4 text-center w-full">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15, duration: 0.75 }}
-          className="space-y-3"
-        >
-          <h1 className="font-headline-lg-mobile text-headline-lg-mobile text-on-surface font-black leading-tight uppercase tracking-tight">
-            Convierte la música en una <span className="text-animated-gradient">batalla de amigos</span>.
-          </h1>
-          <p className="text-on-surface-variant text-base leading-relaxed px-2 max-w-md mx-auto">
-            Escucha una playlist, responde antes que el resto, usa sabotajes y gana llegando primero a la meta.
-          </p>
-        </motion.div>
+      {/* ─── Headline + Subtitle ──────────────────────────── */}
+      <motion.div
+        initial={{ opacity: 0, y: 18 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4, duration: 0.65 }}
+        className="space-y-2 max-w-xs"
+      >
+        <h1 className="text-2xl sm:text-[1.65rem] font-black text-white leading-tight uppercase tracking-tight">
+          La música como nunca{' '}
+          <span className="text-animated-gradient">la habías jugado</span>
+        </h1>
+        <p className="text-sm text-on-surface-variant leading-relaxed">
+          Adivina canciones, sabotea a tus amigos y gana llegando primero a la meta.
+        </p>
+      </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.75 }}
-          className="flex flex-col gap-3"
+      {/* ─── CTAs ─────────────────────────────────────────── */}
+      <motion.div
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.55, duration: 0.6 }}
+        className="w-full flex flex-col gap-3"
+      >
+        <NeonButton primary color="vinyl-orange" onClick={() => navigate('/how-to-play')}>
+          Cómo se juega
+        </NeonButton>
+        <button
+          type="button"
+          onClick={() => navigate('/role-selection')}
+          className="h-12 rounded-2xl border border-white/10 bg-white/[0.04] text-white/80 text-xs font-semibold uppercase tracking-[0.18em] hover:bg-white/8 hover:border-white/20 active:scale-95 transition-all"
         >
-          <NeonButton primary={true} onClick={() => navigate('/how-to-play')}>
-            Cómo se juega
-          </NeonButton>
-          <button
-            type="button"
-            onClick={() => navigate('/role-selection')}
-            className="h-12 rounded-2xl border border-white/10 bg-white/5 text-white font-label-caps text-xs tracking-[0.22em] hover:bg-white/10 transition-colors"
-          >
-            Ya sé jugar
-          </button>
-        </motion.div>
-      </section>
+          Ya sé jugar — Entrar
+        </button>
+      </motion.div>
     </motion.main>
   );
 }

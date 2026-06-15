@@ -265,23 +265,35 @@ export default function GameScreen() {
         {phase === 'countdown' && (
           <motion.div
             key="countdown"
-            initial={{ scale: 0.5, opacity: 0 }}
-            animate={{ scale: [0.7, 1.08, 1], opacity: 1 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             exit={{ scale: 1.5, opacity: 0 }}
-            transition={{ duration: 0.75 }}
-            className="w-full max-w-[430px] px-margin-mobile text-center"
+            transition={{ duration: 0.5 }}
+            className="w-full max-w-[430px] px-margin-mobile text-center flex flex-col items-center"
           >
-            <p className="font-label-caps text-electric-purple tracking-widest">PREPARA EL OÍDO</p>
-            <motion.div
-              key={countdownValue}
-              initial={{ scale: 0.45, opacity: 0 }}
-              animate={{ scale: [0.8, 1.12, 1], opacity: 1 }}
-              transition={{ duration: 0.28 }}
-              className="mt-3 font-stats-xl text-9xl text-neon-green drop-shadow-[0_0_24px_rgba(57,255,20,0.4)]"
-            >
-              {countdownValue}
-            </motion.div>
-            <p className="mt-4 text-sm text-on-surface-variant">La música empieza al terminar la cuenta.</p>
+            <p className="font-label-caps text-electric-purple tracking-widest text-xs">PREPARA EL OÍDO</p>
+
+            {/* Countdown number with expanding rings */}
+            <div className="relative flex items-center justify-center mt-6 mb-6 w-44 h-44">
+              {[0, 0.5, 1].map((delay) => (
+                <div
+                  key={delay}
+                  className="absolute inset-0 rounded-full border-2 border-neon-green/25 ring-expand-anim"
+                  style={{ animationDelay: `${delay}s` }}
+                />
+              ))}
+              <motion.div
+                key={countdownValue}
+                initial={{ scale: 0.4, opacity: 0 }}
+                animate={{ scale: [0.7, 1.1, 1], opacity: 1 }}
+                transition={{ duration: 0.3, ease: 'backOut' }}
+                className="font-stats-xl text-[7rem] leading-none text-neon-green drop-shadow-[0_0_32px_rgba(57,255,20,0.5)]"
+              >
+                {countdownValue}
+              </motion.div>
+            </div>
+
+            <p className="text-sm text-on-surface-variant">La música empieza al terminar la cuenta.</p>
           </motion.div>
         )}
 
@@ -293,14 +305,24 @@ export default function GameScreen() {
             exit={{ opacity: 0 }}
             className="flex flex-col items-center gap-6 w-full max-w-[430px] px-5 text-center"
           >
-            <div className="relative w-64 h-64 rounded-full border-4 border-neon-green flex items-center justify-center animate-pulse shadow-[0_0_30px_rgba(57,255,20,0.28)] bg-black/15">
-              <div className="absolute inset-4 rounded-full border border-white/10" />
-              <div>
-                <p className="font-label-caps text-[10px] text-electric-purple tracking-widest">{mode.name}</p>
-                <span className="block mt-2 font-headline-lg-mobile text-3xl text-neon-green font-bold tracking-widest">
-                  {role === 'host' ? 'SONANDO' : 'ESCUCHA'}
-                </span>
-                <p className="mt-2 font-label-caps text-xs text-white/70 tracking-widest">EL ANFITRIÓN DECIDE EL CORTE</p>
+            {/* Vinyl listen circle with expanding rings */}
+            <div className="relative w-64 h-64 flex items-center justify-center">
+              {[0, 0.7, 1.4].map((delay) => (
+                <div
+                  key={delay}
+                  className="absolute inset-0 rounded-full border-2 border-neon-green/20 ring-expand-anim"
+                  style={{ animationDelay: `${delay}s` }}
+                />
+              ))}
+              <div className="w-56 h-56 rounded-full border-4 border-neon-green flex items-center justify-center shadow-[0_0_40px_rgba(57,255,20,0.3),inset_0_0_24px_rgba(0,0,0,0.5)] bg-black/25 relative">
+                <div className="absolute inset-5 rounded-full border border-white/10" />
+                <div className="relative z-10 text-center">
+                  <p className="font-label-caps text-[10px] text-electric-purple tracking-widest">{mode.name}</p>
+                  <span className="block mt-2 font-headline-lg-mobile text-3xl text-neon-green font-bold tracking-widest drop-shadow-[0_0_14px_rgba(57,255,20,0.5)]">
+                    {role === 'host' ? 'SONANDO' : 'ESCUCHA'}
+                  </span>
+                  <p className="mt-2 font-label-caps text-[9px] text-white/60 tracking-widest">EL ANFITRIÓN DECIDE EL CORTE</p>
+                </div>
               </div>
             </div>
 
@@ -408,9 +430,9 @@ export default function GameScreen() {
                     key={option}
                     variants={itemVariants}
                     onClick={() => handleAnswer(index === currentQuestion.correct)}
-                    className="w-full min-h-16 p-4 bg-white/10 text-white rounded-xl border border-white/20 hover:border-neon-green active:bg-white/30 text-left font-body-md text-base transition-colors flex items-center gap-3"
+                    className="w-full min-h-16 p-4 bg-white/8 text-white rounded-2xl border border-white/15 hover:border-neon-green/60 hover:bg-neon-green/8 active:scale-[0.98] active:bg-neon-green/15 text-left font-body-md text-base transition-all duration-150 flex items-center gap-3 group"
                   >
-                    <span className="w-8 h-8 rounded-lg bg-black/20 text-neon-green flex items-center justify-center font-black shrink-0">
+                    <span className="w-8 h-8 rounded-xl bg-black/25 border border-white/10 text-neon-green group-hover:bg-neon-green group-hover:text-black group-hover:border-neon-green flex items-center justify-center font-black shrink-0 transition-all duration-150">
                       {String.fromCharCode(65 + index)}
                     </span>
                     <span className="leading-snug">{option}</span>

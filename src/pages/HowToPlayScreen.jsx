@@ -152,16 +152,16 @@ export default function HowToPlayScreen() {
         </button>
       </header>
 
-      <section className="grid gap-5 sm:grid-cols-[180px_1fr] sm:items-center">
-        <div className="justify-self-center sm:justify-self-start w-full max-w-[220px] rounded-[1.75rem] border border-white/10 bg-surface-container-lowest/60 p-3 shadow-[0_24px_60px_rgba(0,0,0,0.26)]">
+      <section className="flex flex-col items-center gap-4 text-center">
+        <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-[0_0_28px_rgba(255,122,26,0.3),0_0_0_2px_rgba(255,122,26,0.2)]">
           <img
-            src="/images/hero-how-to-play.png"
-            alt="Cómo se juega"
-            className="w-full h-auto rounded-[1.25rem] object-cover"
+            src="/images/icon-app.png"
+            alt="Dedícalo"
+            className="w-full h-full object-contain"
           />
         </div>
-        <div className="text-center">
-          <p className="font-label-caps text-neon-green text-xs tracking-[0.28em]">GUÍA RÁPIDA</p>
+        <div>
+          <p className="font-label-caps text-neon-green text-xs tracking-[0.22em]">GUÍA RÁPIDA</p>
           <h1 className="mt-2 font-headline-lg text-4xl text-white font-black leading-tight">Así se juega</h1>
           <p className="mt-3 text-sm leading-relaxed text-on-surface-variant max-w-xl mx-auto">
             Suena una canción, el anfitrión corta, todos responden y la partida continúa ronda tras ronda hasta que alguien llega a la meta.

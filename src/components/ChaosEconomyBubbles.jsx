@@ -16,7 +16,7 @@ export default function ChaosEconomyBubbles() {
       bubble.style.height = size + 'px';
       bubble.style.left = Math.random() * 100 + '%';
       bubble.style.top = Math.random() * 100 + '%';
-      bubble.style.background = Math.random() > 0.5 ? '#BD00FF' : '#39FF14';
+      bubble.style.background = Math.random() > 0.5 ? '#a855f7' : '#39ff14';
       bubble.style.filter = 'blur(40px)';
       
       container.appendChild(bubble);

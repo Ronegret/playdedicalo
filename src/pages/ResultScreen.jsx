@@ -204,26 +204,48 @@ export default function ResultScreen() {
         animate={{ y: 0, opacity: 1 }}
         className="max-w-sm w-full"
       >
-        <motion.span
-          animate={{ scale: [1, 1.14, 1] }}
-          transition={{ repeat: Infinity, duration: 1.5 }}
-          className={`material-symbols-outlined text-7xl ${style.text}`}
-        >
-          {style.icon}
-        </motion.span>
+        {/* Burst rings + icon */}
+        <div className="relative flex items-center justify-center h-32 mb-2">
+          {[0, 0.5, 1].map((delay) => (
+            <div
+              key={delay}
+              className={`absolute w-20 h-20 rounded-full border-2 ${style.border} ring-expand-anim`}
+              style={{ animationDelay: `${delay}s`, animationDuration: '2.2s' }}
+            />
+          ))}
+          <motion.span
+            animate={{ scale: [1, 1.12, 1], rotate: [0, 4, -4, 0] }}
+            transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
+            className={`material-symbols-outlined text-7xl relative z-10 ${style.text}`}
+          >
+            {style.icon}
+          </motion.span>
+        </div>
 
-        <h1 className={`mt-4 font-headline-lg text-4xl font-black ${style.text}`}>
+        <h1 className={`font-headline-lg text-4xl font-black ${style.text}`}>
           {style.title}
         </h1>
         <p className="mt-3 text-on-surface leading-relaxed">{sabotage?.effect || style.copy}</p>
 
-        <div className="mt-8 rounded-2xl border border-white/15 bg-black/20 p-5">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.92 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.3, type: 'spring', stiffness: 140 }}
+          className={`mt-8 rounded-2xl border p-5 ${style.border} bg-black/30 backdrop-blur-sm shadow-[0_0_30px_rgba(0,0,0,0.4)]`}
+        >
           <p className="font-label-caps text-on-surface-variant tracking-widest text-xs">TU CAPITAL ACTUAL</p>
-          <p className={`text-7xl font-stats-xl mt-2 ${style.text}`}>{guestPoints}</p>
-          <p className="mt-2 text-sm text-on-surface-variant">
+          <motion.p
+            initial={{ scale: 0.5, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.5, type: 'spring', stiffness: 120 }}
+            className={`text-7xl font-stats-xl mt-2 ${style.text}`}
+          >
+            {guestPoints}
+          </motion.p>
+          <p className={`mt-2 text-sm font-bold ${pointDelta > 0 ? 'text-neon-green' : pointDelta < 0 ? 'text-intense-red' : 'text-on-surface-variant'}`}>
             {pointDelta > 0 ? `+${pointDelta} puntos` : pointDelta < 0 ? `${pointDelta} puntos` : 'Sin cambio de puntos'}
           </p>
-        </div>
+        </motion.div>
 
         <p className="mt-8 text-sm text-on-surface-variant/80 animate-pulse">ESPERANDO AL ANFITRIÓN...</p>
 

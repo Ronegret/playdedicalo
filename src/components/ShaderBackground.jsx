@@ -1,18 +1,88 @@
+const EQ_HEIGHTS = [0.3, 0.5, 0.7, 0.45, 0.8, 0.35, 0.6, 0.9, 0.4, 0.65, 0.55, 0.75, 0.38, 0.62, 0.48, 0.82, 0.3, 0.5, 0.7, 0.45, 0.6, 0.8, 0.35, 0.5];
+const EQ_COLORS = ['#ff7a1a', '#a855f7', '#3f78ff'];
+
+const MUSIC_NOTES = [
+  { char: '♪', x: '8%',  y: '12%', size: 22, delay: '0s',    dur: '6s' },
+  { char: '♫', x: '88%', y: '8%',  size: 18, delay: '-2.5s', dur: '7s' },
+  { char: '♩', x: '5%',  y: '55%', size: 16, delay: '-1s',   dur: '5s' },
+  { char: '♬', x: '92%', y: '48%', size: 20, delay: '-4s',   dur: '8s' },
+  { char: '♪', x: '15%', y: '80%', size: 14, delay: '-1.5s', dur: '6s' },
+  { char: '♫', x: '80%', y: '75%', size: 18, delay: '-3s',   dur: '7s' },
+  { char: '♩', x: '50%', y: '5%',  size: 15, delay: '-0.5s', dur: '9s' },
+];
+
 export default function ShaderBackground() {
   return (
     <div
       aria-hidden="true"
       className="fixed inset-0 -z-10 pointer-events-none overflow-hidden bg-background"
     >
+      {/* Base texture */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-95"
         style={{ backgroundImage: "url('/images/background-dark.png')" }}
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-surface/35 via-background/35 to-background/80" />
+
+      {/* Gradient vignette */}
+      <div className="absolute inset-0 bg-gradient-to-b from-surface/35 via-background/35 to-background/90" />
+
+      {/* Animated color mesh */}
       <div className="absolute inset-0 animated-mesh opacity-55 mix-blend-screen" />
-      <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-vinyl-orange/25 blur-3xl" />
-      <div className="absolute top-8 right-0 h-64 w-64 rounded-full bg-electric-purple/18 blur-3xl" />
-      <div className="absolute bottom-0 left-1/2 h-56 w-[32rem] -translate-x-1/2 rounded-full bg-deep-blue/22 blur-3xl" />
+
+      {/* Floating blobs */}
+      <div className="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-vinyl-orange/18 blur-[90px] float-slow" />
+      <div
+        className="absolute top-16 right-0 h-80 w-80 rounded-full bg-electric-purple/15 blur-[80px] float-medium"
+        style={{ animationDelay: '-2s' }}
+      />
+      <div
+        className="absolute bottom-0 left-1/2 -translate-x-1/2 h-72 w-[44rem] rounded-full bg-deep-blue/18 blur-[100px] float-slow"
+        style={{ animationDelay: '-4s' }}
+      />
+      <div
+        className="absolute top-1/3 left-1/4 h-56 w-56 rounded-full bg-electric-purple/10 blur-[70px] float-medium"
+        style={{ animationDelay: '-1.5s' }}
+      />
+
+      {/* Floating music note characters — Unicode, no icon font needed */}
+      {MUSIC_NOTES.map((note, i) => (
+        <div
+          key={i}
+          className="absolute select-none float-slow"
+          style={{
+            left: note.x,
+            top: note.y,
+            fontSize: note.size,
+            animationDelay: note.delay,
+            animationDuration: note.dur,
+            color: i % 3 === 0 ? 'rgba(255,122,26,0.18)' : i % 3 === 1 ? 'rgba(168,85,247,0.15)' : 'rgba(63,120,255,0.15)',
+          }}
+        >
+          {note.char}
+        </div>
+      ))}
+
+      {/* Subtle grid */}
+      <div className="absolute inset-0 bg-grid opacity-[0.028]" />
+
+      {/* Top accent line */}
+      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-vinyl-orange/55 to-transparent" />
+
+      {/* Bottom decorative equalizer */}
+      <div className="absolute bottom-0 left-0 right-0 flex items-end justify-center gap-[2px] h-20 px-3 overflow-hidden">
+        {EQ_HEIGHTS.map((h, i) => (
+          <div
+            key={i}
+            className="flex-1 max-w-[5px] rounded-t-sm eq-bar opacity-[0.07]"
+            style={{
+              height: `${h * 100}%`,
+              background: EQ_COLORS[i % 3],
+              animationDelay: `${i * 0.07}s`,
+              animationDuration: `${0.7 + (i % 5) * 0.22}s`,
+            }}
+          />
+        ))}
+      </div>
     </div>
   );
 }

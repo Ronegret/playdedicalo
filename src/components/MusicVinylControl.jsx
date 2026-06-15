@@ -42,7 +42,7 @@ export default function MusicVinylControl() {
         type="button"
         onClick={handleToggle}
         disabled={!canControl}
-        className={`relative w-16 h-16 rounded-full bg-background border border-white/12 shadow-[0_0_24px_rgba(255,122,26,0.16),0_0_30px_rgba(255,79,216,0.12)] flex items-center justify-center overflow-hidden pointer-events-auto ${canControl ? 'active:scale-95' : 'cursor-default'}`}
+        className={`relative w-16 h-16 rounded-full bg-background border border-white/12 shadow-[0_0_24px_rgba(255,122,26,0.16),0_0_30px_rgba(168,85,247,0.12)] flex items-center justify-center overflow-hidden pointer-events-auto ${canControl ? 'active:scale-95' : 'cursor-default'}`}
         aria-label={isAudioPlaying ? 'Parar musica de la sala' : 'Marcar musica en play'}
       >
         <motion.div
