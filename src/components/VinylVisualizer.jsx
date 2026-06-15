@@ -1,8 +1,9 @@
 export default function VinylVisualizer({ rotating = true, logoSrc, size = 'default' }) {
   const isHero = size === 'hero';
-  const shellSize = isHero ? 'w-[360px] h-[360px] md:w-[420px] md:h-[420px]' : 'w-64 h-64 md:w-80 md:h-80';
-  const labelSize = isHero ? 'w-36 h-36 md:w-44 md:h-44' : 'w-28 h-28 md:w-36 md:h-36';
-  const spotifyLabelSize = isHero ? 'w-40 h-40 md:w-48 md:h-48' : 'w-32 h-32 md:w-40 md:h-40';
+  const isCompact = size === 'compact';
+  const shellSize = isHero ? 'w-[360px] h-[360px] md:w-[420px] md:h-[420px]' : isCompact ? 'w-36 h-36 md:w-44 md:h-44' : 'w-64 h-64 md:w-80 md:h-80';
+  const labelSize = isHero ? 'w-36 h-36 md:w-44 md:h-44' : isCompact ? 'w-16 h-16 md:w-20 md:h-20' : 'w-28 h-28 md:w-36 md:h-36';
+  const spotifyLabelSize = isHero ? 'w-40 h-40 md:w-48 md:h-48' : isCompact ? 'w-20 h-20 md:w-24 md:h-24' : 'w-32 h-32 md:w-40 md:h-40';
   const discShadow = isHero ? 'shadow-[0_12px_34px_rgba(0,0,0,0.35)]' : 'shadow-[0_0_40px_rgba(0,0,0,0.8)]';
 
   return (

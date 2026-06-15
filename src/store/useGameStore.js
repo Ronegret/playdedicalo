@@ -124,6 +124,7 @@ export const SABOTAGE_OPTIONS = [
   {
     id: 'point_lock',
     name: 'Silencio al lider',
+    icon: 'block',
     cost: 5,
     effect: 'El lider queda bloqueado: si acierta en la proxima vuelta, no gana puntos.',
     color: 'red'
@@ -131,6 +132,7 @@ export const SABOTAGE_OPTIONS = [
   {
     id: 'reverse_lyrics',
     name: 'Letra al reves',
+    icon: 'sync_alt',
     cost: 4,
     effect: 'La proxima pregunta aparece escrita al reves para subir la presion del blackout.',
     color: 'purple'
@@ -138,6 +140,7 @@ export const SABOTAGE_OPTIONS = [
   {
     id: 'shared_prize',
     name: 'Dueto dividido',
+    icon: 'group',
     cost: 4,
     effect: 'Si otro jugador acierta la proxima, esa persona gana 3 puntos y tu robas 2 por la jugada.',
     color: 'green'
@@ -145,6 +148,7 @@ export const SABOTAGE_OPTIONS = [
   {
     id: 'wild_question',
     name: 'Cambio de aguja',
+    icon: 'shuffle',
     cost: 3,
     effect: 'La proxima pregunta salta a una categoria sorpresa, aunque el host haya elegido otro estilo.',
     color: 'purple'

@@ -1,10 +1,55 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { DEDICALO_PLAYLISTS, GAME_MODES, normalizeSpotifyPlaylistUrl, useGameStore } from '../store/useGameStore';
+import { DEDICALO_PLAYLISTS, GAME_MODES, SABOTAGE_OPTIONS, normalizeSpotifyPlaylistUrl, useGameStore } from '../store/useGameStore';
 import { createQuestionFromTrack, explainSpotifyError, getCurrentHiddenTrack, pauseSpotifyPlayback, startRandomPlaylistTrack } from '../services/spotify';
 
 const EQUALIZER_BARS = [0.35, 0.58, 0.42, 0.71, 0.49, 0.64, 0.39];
+
+const SABOTAGE_STYLES = {
+  red: 'border-intense-red/60 bg-intense-red/10 text-intense-red',
+  purple: 'border-electric-purple/60 bg-electric-purple/15 text-electric-purple',
+  green: 'border-neon-green/50 bg-neon-green/10 text-neon-green'
+};
+
+function SabotageSquares({ options, points, enabled, onUse }) {
+  return (
+    <details className="w-full max-w-sm rounded-2xl border border-white/10 bg-black/25 text-left overflow-hidden">
+      <summary className="list-none cursor-pointer p-3 flex items-center justify-between gap-3">
+        <div>
+          <p className="font-label-caps text-electric-purple text-[10px] tracking-widest">ATAQUES</p>
+          <p className="text-sm font-bold text-white">Usa sabotajes mientras suena</p>
+        </div>
+        <span className="material-symbols-outlined text-electric-purple">expand_more</span>
+      </summary>
+      <div className="px-3 pb-3">
+        <div className="grid grid-cols-4 gap-2">
+          {options.map((option) => {
+            const canPay = Number(points || 0) >= option.cost;
+            const canUse = enabled && canPay;
+
+            return (
+              <button
+                key={option.id}
+                type="button"
+                disabled={!canUse}
+                onClick={() => onUse(option)}
+                className={`aspect-square rounded-2xl border p-2 flex flex-col items-center justify-center gap-1 transition-transform active:scale-95 disabled:opacity-35 disabled:cursor-not-allowed ${SABOTAGE_STYLES[option.color] || SABOTAGE_STYLES.purple}`}
+                aria-label={`Usar ${option.name}`}
+              >
+                <span className="material-symbols-outlined text-xl">{option.icon}</span>
+                <span className="text-[9px] font-label-caps leading-none">{option.cost} pts</span>
+              </button>
+            );
+          })}
+        </div>
+        <p className="mt-2 text-[11px] text-on-surface-variant leading-snug">
+          {enabled ? 'Toca un cuadrado para preparar el ataque de la ronda.' : 'Se desbloquean desde la ronda 2.'}
+        </p>
+      </div>
+    </details>
+  );
+}
 
 function getTimelineSlotLabel(years, index) {
   if (index === 0) return `Antes de ${years[0]}`;
@@ -63,6 +108,7 @@ export default function GameScreen() {
     hostTriggerBlackout,
     hostRevealResults,
     guestAnswer,
+    guestUseSabotage,
     guestId,
     players,
     roundAnswers,
@@ -71,6 +117,7 @@ export default function GameScreen() {
   const [answeredQuestionKey, setAnsweredQuestionKey] = useState(null);
   const [countdownValue, setCountdownValue] = useState(3);
   const [spotifyMessage, setSpotifyMessage] = useState('');
+  const [sabotageMessage, setSabotageMessage] = useState('');
   const startedSpotifyRoundRef = useRef('');
 
   useEffect(() => {
@@ -145,6 +192,8 @@ export default function GameScreen() {
   const activePlaylist = DEDICALO_PLAYLISTS.find((playlist) => (
     normalizeSpotifyPlaylistUrl(playlist.url) === normalizeSpotifyPlaylistUrl(spotifyPlaylistUrl)
   ));
+  const ownPlayer = players.find((player) => player.id === guestId);
+  const canUseSabotageNow = Boolean(guestId && phase === 'listen' && round > 1 && players.length > 1);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -173,6 +222,21 @@ export default function GameScreen() {
     await pauseSpotifyPlayback().catch((error) => console.warn('No se pudo pausar Spotify:', error));
     setAudioPlaying(false);
     await hostTriggerBlackout(spotifyQuestion);
+  };
+
+  const handleUseSabotage = async (option) => {
+    setSabotageMessage('');
+    if (!canUseSabotageNow) {
+      setSabotageMessage('Los ataques se activan desde la ronda 2.');
+      return;
+    }
+    if (Number(ownPlayer?.points || 0) < option.cost) {
+      setSabotageMessage('Te faltan puntos para ese ataque.');
+      return;
+    }
+
+    await guestUseSabotage(option.id);
+    setSabotageMessage(`${option.name} preparado.`);
   };
 
   return (
@@ -243,6 +307,18 @@ export default function GameScreen() {
             <p className="max-w-xs text-sm text-on-surface-variant">
               {role === 'host' && spotifyMessage ? spotifyMessage : `${activePlaylist?.icon || ''} Escucha con atencion. Nadie ve la cancion.`}
             </p>
+
+            <SabotageSquares
+              options={SABOTAGE_OPTIONS}
+              points={ownPlayer?.points || 0}
+              enabled={canUseSabotageNow}
+              onUse={handleUseSabotage}
+            />
+            {sabotageMessage && (
+              <p className="max-w-sm rounded-xl border border-electric-purple/40 bg-electric-purple/10 px-3 py-2 text-xs text-electric-purple">
+                {sabotageMessage}
+              </p>
+            )}
 
             {role === 'host' && (
               <div className="w-full max-w-xs grid gap-3">
