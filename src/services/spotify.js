@@ -427,6 +427,75 @@ function getTimelineYearsForRound(songYear, round, timelineYears = []) {
   return buildTimelineYears(songYear, round).slice(0, 12);
 }
 
+const ARTIST_DISTRACTORS = [
+  'Bad Bunny', 'Rosalía', 'J Balvin', 'Ozuna', 'Shakira', 'Maluma',
+  'Anuel AA', 'Karol G', 'Rauw Alejandro', 'Daddy Yankee', 'Nicky Jam',
+  'Feid', 'Myke Towers', 'Jhay Cortez', 'Sech', 'Lunay', 'Bizarrap',
+  'C. Tangana', 'Dua Lipa', 'The Weeknd', 'Drake', 'Ed Sheeran',
+  'Becky G', 'Sebastián Yatra', 'Luis Fonsi', 'Enrique Iglesias'
+];
+
+const CHAOS_TEMPLATES = [
+  { text: '¿Qué jugada conviene después de escuchar esta canción?', options: ['Guardar puntos', 'Activar sabotaje', 'Arriesgar respuesta', 'Cambiar playlist'], correct: 2 },
+  { text: '¿Cuál es el mejor momento para activar un sabotaje?', options: ['Al inicio de la canción', 'Mientras suena', 'Justo al cortarla', 'En el resultado'], correct: 1 },
+  { text: '¿Qué color anuncia un sabotaje en Dedícalo?', options: ['Verde', 'Rojo', 'Lila', 'Azul'], correct: 2 },
+  { text: '¿Qué pasa si el líder está bloqueado y acierta?', options: ['Suma el doble', 'No suma puntos', 'Pierde puntos', 'Elimina el bloqueo'], correct: 1 },
+  { text: '¿Desde qué ronda se pueden usar los sabotajes?', options: ['Desde la ronda 1', 'Desde la ronda 2', 'Desde la ronda 3', 'Solo en el final'], correct: 1 },
+];
+
+function shuffleArray(arr) {
+  const copy = [...arr];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
+function buildArtistQuestion(track, text, type = 'Identidad') {
+  const pool = ARTIST_DISTRACTORS.filter((a) => a !== track.artist);
+  const distractors = shuffleArray(pool).slice(0, 3);
+  const options = shuffleArray([track.artist, ...distractors]);
+  return {
+    mode: 'pulse',
+    type,
+    text,
+    options,
+    correct: options.indexOf(track.artist)
+  };
+}
+
+function buildYearQuestion(track) {
+  if (!track.releaseYear) return null;
+  const year = track.releaseYear;
+  const offsets = shuffleArray([-6, -4, -2, 2, 4, 6, 8, -8]).slice(0, 3);
+  const options = shuffleArray([String(year), ...offsets.map((off) => String(year + off))]);
+  return {
+    mode: 'pulse',
+    type: 'Año',
+    text: '¿En qué año salió esta canción?',
+    options,
+    correct: options.indexOf(String(year))
+  };
+}
+
+function buildDecadeQuestion(track) {
+  if (!track.releaseYear) return null;
+  const year = track.releaseYear;
+  const decade = Math.floor(year / 10) * 10;
+  const decadeStr = (d) => `Años ${d}`;
+  const allDecades = [1980, 1990, 2000, 2010, 2020].map(decadeStr);
+  const correctLabel = decadeStr(decade);
+  if (!allDecades.includes(correctLabel)) return null;
+  return {
+    mode: 'pulse',
+    type: 'Época',
+    text: '¿En qué época salió esta canción?',
+    options: allDecades,
+    correct: allDecades.indexOf(correctLabel)
+  };
+}
+
 export function createQuestionFromTrack(track, gameMode, round = 1, timelineYears = []) {
   const year = track.releaseYear || 2016;
 
@@ -447,25 +516,19 @@ export function createQuestionFromTrack(track, gameMode, round = 1, timelineYear
   }
 
   if (gameMode === 'chaos') {
-    return {
-      mode: 'chaos',
-      type: 'Remix Salvaje',
-      text: '¿Qué jugada conviene después de escuchar este corte?',
-      options: ['Guardar puntos', 'Activar sabotaje', 'Arriesgar respuesta', 'Cambiar playlist'],
-      correct: 2
-    };
+    const template = CHAOS_TEMPLATES[Math.floor(Math.random() * CHAOS_TEMPLATES.length)];
+    return { mode: 'chaos', ...template };
   }
 
-  const artistOptions = [track.artist, 'Bad Bunny', 'Rosalia', 'Shakira'];
-  const uniqueOptions = [...new Set(artistOptions)].slice(0, 4);
+  const candidates = [
+    buildArtistQuestion(track, '¿Quién canta principalmente esta canción?'),
+    buildArtistQuestion(track, '¿A qué artista pertenece esta voz?', 'Reconoce la voz'),
+    buildArtistQuestion(track, '¿Quién es el intérprete de esta canción?', 'Intérprete'),
+    buildYearQuestion(track),
+    buildDecadeQuestion(track)
+  ].filter(Boolean);
 
-  return {
-    mode: 'pulse',
-    type: 'Identidad',
-    text: '¿Quién canta principalmente este corte?',
-    options: uniqueOptions,
-    correct: uniqueOptions.indexOf(track.artist)
-  };
+  return candidates[Math.floor(Math.random() * candidates.length)];
 }
 
 export async function startRandomPlaylistTrack(playlistUrl) {

@@ -163,6 +163,9 @@ export default function LobbyScreen() {
   } = useGameStore();
   const [showQR, setShowQR] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
+  const [pinCopied, setPinCopied] = useState(false);
+  const [linkShared, setLinkShared] = useState(false);
+  const [sabotageOpen, setSabotageOpen] = useState(false);
   const [startError, setStartError] = useState('');
   const gameLocked = round > 1;
 
@@ -283,11 +286,45 @@ export default function LobbyScreen() {
                 initial={{ opacity: 0, y: 10, scale: 0.85 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ delay: index * 0.08, type: 'spring', stiffness: 200 }}
-                className="h-14 bg-black/25 border-2 border-neon-green/35 rounded-xl flex items-center justify-center font-stats-xl text-3xl text-neon-green shadow-[0_0_16px_rgba(57,255,20,0.15),inset_0_0_10px_rgba(0,0,0,0.3)] select-none"
+                className="h-16 bg-black/25 border-2 border-neon-green/35 rounded-xl flex items-center justify-center font-stats-xl text-4xl text-neon-green shadow-[0_0_16px_rgba(57,255,20,0.15),inset_0_0_10px_rgba(0,0,0,0.3)] select-none"
               >
                 {char}
               </motion.div>
             )) : <p className="text-on-surface-variant col-span-4">Cargando sala...</p>}
+          </div>
+
+          <div className="mt-3 grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                navigator.clipboard?.writeText(pin).catch(() => {});
+                setPinCopied(true);
+                setTimeout(() => setPinCopied(false), 2000);
+              }}
+              className="h-10 rounded-xl border border-white/10 bg-white/5 text-on-surface-variant font-label-caps text-xs flex items-center justify-center gap-2 active:scale-95 transition-all hover:bg-white/10"
+            >
+              <span className="material-symbols-outlined text-sm">{pinCopied ? 'check' : 'content_copy'}</span>
+              {pinCopied ? 'COPIADO' : 'COPIAR PIN'}
+            </button>
+            <button
+              type="button"
+              onClick={async () => {
+                const shareUrl = `${window.location.origin}/guest/join?pin=${pin}`;
+                if (navigator.share) {
+                  try {
+                    await navigator.share({ title: 'Únete a Dedícalo', text: `Únete a mi sala con PIN ${pin}`, url: shareUrl });
+                  } catch {}
+                } else {
+                  navigator.clipboard?.writeText(shareUrl).catch(() => {});
+                  setLinkShared(true);
+                  setTimeout(() => setLinkShared(false), 2000);
+                }
+              }}
+              className="h-10 rounded-xl border border-neon-green/25 bg-neon-green/8 text-neon-green font-label-caps text-xs flex items-center justify-center gap-2 active:scale-95 transition-all hover:bg-neon-green/15"
+            >
+              <span className="material-symbols-outlined text-sm">{linkShared ? 'check' : 'share'}</span>
+              {linkShared ? 'COPIADO' : 'COMPARTIR'}
+            </button>
           </div>
         </div>
 
@@ -374,28 +411,50 @@ export default function LobbyScreen() {
         )}
 
         {role === 'guest' && (
-          <details className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md text-left overflow-hidden">
-            <summary className="list-none p-4 flex items-center justify-between gap-3 cursor-pointer">
+          <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md text-left overflow-hidden">
+            <button
+              type="button"
+              onClick={() => setSabotageOpen((prev) => !prev)}
+              className="w-full p-4 flex items-center justify-between gap-3"
+            >
               <div>
                 <p className="font-label-caps text-electric-purple text-xs">SABOTAJES</p>
                 <h2 className="text-base font-bold text-white">Opciones de esta ronda</h2>
               </div>
-              <span className="material-symbols-outlined text-electric-purple text-2xl">expand_more</span>
-            </summary>
-            <div className="px-4 pb-4 grid gap-2">
-              {SABOTAGE_OPTIONS.map((option) => (
-                <SabotageCard
-                  key={option.id}
-                  option={option}
-                  canUse={canUseSabotage}
-                  onUse={guestUseSabotage}
-                />
-              ))}
-              {!canUseSabotage && (
-                <p className="text-[11px] text-on-surface-variant">Se desbloquean después de la primera ronda.</p>
+              <motion.span
+                animate={{ rotate: sabotageOpen ? 180 : 0 }}
+                transition={{ duration: 0.22 }}
+                className="material-symbols-outlined text-electric-purple text-2xl"
+              >
+                expand_more
+              </motion.span>
+            </button>
+            <AnimatePresence initial={false}>
+              {sabotageOpen && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.24, ease: 'easeInOut' }}
+                  className="overflow-hidden"
+                >
+                  <div className="px-4 pb-4 grid gap-2">
+                    {SABOTAGE_OPTIONS.map((option) => (
+                      <SabotageCard
+                        key={option.id}
+                        option={option}
+                        canUse={canUseSabotage}
+                        onUse={guestUseSabotage}
+                      />
+                    ))}
+                    {!canUseSabotage && (
+                      <p className="text-[11px] text-on-surface-variant">Se desbloquean después de la primera ronda.</p>
+                    )}
+                  </div>
+                </motion.div>
               )}
-            </div>
-          </details>
+            </AnimatePresence>
+          </div>
         )}
       </section>
 

@@ -155,15 +155,15 @@ export default function WelcomeScreen() {
             transition={{ delay: 0.5, duration: 0.6 }}
             className="w-full max-w-xs flex flex-col gap-2"
           >
-            <NeonButton primary color="vinyl-orange" onClick={() => navigate('/how-to-play')}>
-              Cómo se juega
+            <NeonButton primary color="vinyl-orange" onClick={() => navigate('/role-selection')}>
+              Entrar a jugar
             </NeonButton>
             <button
               type="button"
-              onClick={() => navigate('/role-selection')}
+              onClick={() => navigate('/how-to-play')}
               className="h-12 rounded-2xl border border-white/10 bg-white/[0.04] text-white/80 text-xs font-semibold uppercase tracking-[0.18em] hover:bg-white/8 hover:border-white/20 active:scale-95 transition-all"
             >
-              Ya sé jugar — Entrar
+              Cómo se juega
             </button>
           </motion.div>
         </div>

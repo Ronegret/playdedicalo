@@ -1,4 +1,5 @@
 ﻿import { AnimatePresence, motion } from 'framer-motion';
+import jsQR from 'jsqr';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useGameStore } from '../store/useGameStore';
@@ -26,6 +27,7 @@ export default function GuestJoinScreen() {
   const guestJoinRoom = useGameStore((state) => state.guestJoinRoom);
   const inputRefs = useRef([]);
   const videoRef = useRef(null);
+  const canvasRef = useRef(null);
   const scanLoopRef = useRef(null);
   const streamRef = useRef(null);
   const [pin, setPin] = useState(() => searchParams.get('pin')?.replace(/\D/g, '').slice(0, 4) || '');
@@ -47,14 +49,14 @@ export default function GuestJoinScreen() {
     async function startScanner() {
       setScannerError('');
 
-      if (!('BarcodeDetector' in window)) {
-        setScannerError('Este navegador no permite leer QR desde cámara. Escribe el PIN manualmente.');
+      if (!navigator.mediaDevices?.getUserMedia) {
+        setScannerError('Tu navegador no permite acceder a la cámara. Escribe el PIN manualmente.');
         return;
       }
 
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: 'environment' },
+          video: { facingMode: { ideal: 'environment' } },
           audio: false
         });
         streamRef.current = stream;
@@ -64,20 +66,30 @@ export default function GuestJoinScreen() {
           await videoRef.current.play();
         }
 
-        const detector = new window.BarcodeDetector({ formats: ['qr_code'] });
-        const scan = async () => {
-          if (!isActive || !videoRef.current) return;
+        const canvas = canvasRef.current || document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
 
-          try {
-            const codes = await detector.detect(videoRef.current);
-            const nextPin = getPinFromQrValue(codes[0]?.rawValue);
-            if (nextPin.length === 4) {
-              setPin(nextPin);
-              setScannerOpen(false);
-              return;
+        const scan = () => {
+          if (!isActive || !videoRef.current || videoRef.current.readyState < 2) {
+            scanLoopRef.current = window.requestAnimationFrame(scan);
+            return;
+          }
+
+          const { videoWidth: w, videoHeight: h } = videoRef.current;
+          if (w && h) {
+            canvas.width = w;
+            canvas.height = h;
+            ctx.drawImage(videoRef.current, 0, 0, w, h);
+            const imageData = ctx.getImageData(0, 0, w, h);
+            const code = jsQR(imageData.data, w, h, { inversionAttempts: 'dontInvert' });
+            if (code) {
+              const nextPin = getPinFromQrValue(code.data);
+              if (nextPin.length === 4) {
+                setPin(nextPin);
+                setScannerOpen(false);
+                return;
+              }
             }
-          } catch {
-            // Some frames are not readable; keep scanning.
           }
 
           scanLoopRef.current = window.requestAnimationFrame(scan);
@@ -85,7 +97,7 @@ export default function GuestJoinScreen() {
 
         scan();
       } catch {
-        setScannerError('No pudimos abrir la cámara. Revisa permisos o escribe el PIN manualmente.');
+        setScannerError('No pudimos abrir la cámara. Revisa los permisos del navegador y vuelve a intentarlo.');
       }
     }
 
@@ -270,7 +282,10 @@ export default function GuestJoinScreen() {
                 {scannerError ? (
                   <p className="text-center text-sm text-on-surface-variant px-6">{scannerError}</p>
                 ) : (
-                  <video ref={videoRef} className="w-full h-full object-cover" playsInline muted />
+                  <>
+                    <video ref={videoRef} className="w-full h-full object-cover" playsInline muted />
+                    <canvas ref={canvasRef} className="hidden" />
+                  </>
                 )}
               </div>
             </motion.div>

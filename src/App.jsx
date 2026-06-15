@@ -2,8 +2,8 @@ import { lazy, Suspense } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import ShaderBackground from './components/ShaderBackground';
-import MusicVinylControl from './components/MusicVinylControl';
 import ErrorBoundary from './components/ErrorBoundary';
+import OfflineBanner from './components/OfflineBanner';
 
 const WelcomeScreen = lazy(() => import('./pages/WelcomeScreen'));
 const HowToPlayScreen = lazy(() => import('./pages/HowToPlayScreen'));
@@ -28,8 +28,8 @@ function App() {
 
   return (
     <ErrorBoundary>
+      <OfflineBanner />
       <ShaderBackground />
-      <MusicVinylControl />
 
       <Suspense fallback={<PageLoader />}>
         <AnimatePresence mode="wait">

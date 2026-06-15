@@ -6,7 +6,7 @@ import { SABOTAGE_OPTIONS, TIMELINE_GOAL_YEARS, VICTORY_MODES } from '../store/u
 const STEPS = [
   { icon: 'groups', color: '#ff7a1a', title: 'Entran todos', text: 'El anfitrión crea la sala y comparte el PIN. Él también juega.' },
   { icon: 'album', color: '#a855f7', title: 'Suena la música', text: 'La playlist está oculta. Nadie sabe qué canción está sonando.' },
-  { icon: 'content_cut', color: '#ff6b8b', title: 'Corte sorpresa', text: 'El anfitrión decide cuándo cortar y aparece la pregunta.' },
+  { icon: 'content_cut', color: '#ff6b8b', title: 'Para la música', text: 'El anfitrión decide cuándo parar y aparece la pregunta.' },
   { icon: 'touch_app', color: '#3f78ff', title: 'Todos responden', text: 'Cada jugador vota antes de que se revele el resultado.' },
   { icon: 'emoji_events', color: '#39ff14', title: 'Gana el primero', text: 'Llega a la meta de puntos o de años antes que los demás.' }
 ];
@@ -111,7 +111,7 @@ export default function HowToPlayScreen() {
           <p className="font-label-caps text-neon-green text-xs tracking-[0.22em]">GUÍA RÁPIDA</p>
           <h1 className="mt-2 font-headline-lg text-4xl sm:text-5xl text-white font-black leading-tight">Así se juega</h1>
           <p className="mt-3 text-sm leading-relaxed text-on-surface-variant max-w-xs mx-auto">
-            Música, corte, respuesta y puntos. El primero en llegar a la meta gana.
+            Música, pausa, respuesta y puntos. El primero en llegar a la meta gana.
           </p>
         </div>
       </motion.section>

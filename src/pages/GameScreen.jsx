@@ -6,6 +6,70 @@ import { createQuestionFromTrack, explainSpotifyError, getCurrentHiddenTrack, pa
 
 const EQUALIZER_BARS = [0.35, 0.58, 0.42, 0.71, 0.49, 0.64, 0.39];
 
+function RankingPeek({ players, guestId }) {
+  const [rankOpen, setRankOpen] = useState(false);
+  if (!players.length) return null;
+  const sorted = [...players].sort((a, b) => Number(b.points || 0) - Number(a.points || 0));
+  const myRank = sorted.findIndex((p) => p.id === guestId) + 1;
+
+  return (
+    <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-black/25 text-left overflow-hidden">
+      <button
+        type="button"
+        onClick={() => setRankOpen((prev) => !prev)}
+        className="w-full p-3 flex items-center justify-between gap-3"
+      >
+        <div>
+          <p className="font-label-caps text-neon-green text-[10px] tracking-widest">RANKING</p>
+          <p className="text-sm font-bold text-white">
+            {myRank ? `Posición ${myRank} de ${sorted.length}` : 'Ver puntuaciones'}
+          </p>
+        </div>
+        <motion.span
+          animate={{ rotate: rankOpen ? 180 : 0 }}
+          transition={{ duration: 0.22 }}
+          className="material-symbols-outlined text-neon-green text-2xl"
+        >
+          expand_more
+        </motion.span>
+      </button>
+      <AnimatePresence initial={false}>
+        {rankOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.24, ease: 'easeInOut' }}
+            className="overflow-hidden"
+          >
+            <div className="px-3 pb-3 flex flex-col gap-2">
+              {sorted.map((player, index) => (
+                <div
+                  key={player.id}
+                  className={`flex items-center justify-between rounded-xl px-3 py-2 ${player.id === guestId ? 'bg-neon-green/10 border border-neon-green/25' : 'bg-white/5'}`}
+                >
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className={`w-6 h-6 rounded-lg text-xs font-black flex items-center justify-center shrink-0 ${index === 0 ? 'bg-neon-green text-black' : 'bg-white/10 text-white'}`}>
+                      {index + 1}
+                    </span>
+                    {player.avatar?.startsWith?.('http') ? (
+                      <img src={player.avatar} alt={player.name} className="w-7 h-7 rounded-full object-cover shrink-0" />
+                    ) : (
+                      <span className="w-7 h-7 rounded-full bg-black/20 flex items-center justify-center text-sm shrink-0">{player.avatar || '•'}</span>
+                    )}
+                    <span className="text-sm font-bold text-white truncate">{player.name}</span>
+                  </div>
+                  <span className="text-sm font-black text-neon-green shrink-0">{player.points} pts</span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 const SABOTAGE_STYLES = {
   red: 'border-intense-red/60 bg-intense-red/10 text-intense-red',
   purple: 'border-electric-purple/60 bg-electric-purple/15 text-electric-purple',
@@ -13,41 +77,64 @@ const SABOTAGE_STYLES = {
 };
 
 function SabotageSquares({ options, points, enabled, onUse }) {
+  const [sabOpen, setSabOpen] = useState(false);
+
   return (
-    <details className="w-full max-w-sm rounded-2xl border border-white/10 bg-black/25 text-left overflow-hidden">
-      <summary className="list-none cursor-pointer p-3 flex items-center justify-between gap-3">
+    <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-black/25 text-left overflow-hidden">
+      <button
+        type="button"
+        onClick={() => setSabOpen((prev) => !prev)}
+        className="w-full p-3 flex items-center justify-between gap-3"
+      >
         <div>
           <p className="font-label-caps text-electric-purple text-[10px] tracking-widest">ATAQUES</p>
           <p className="text-sm font-bold text-white">Sabotajes mientras suena</p>
         </div>
-        <span className="material-symbols-outlined text-electric-purple text-2xl">expand_more</span>
-      </summary>
-      <div className="px-3 pb-3">
-        <div className="grid grid-cols-4 gap-2">
-          {options.map((option) => {
-            const canPay = Number(points || 0) >= option.cost;
-            const canUse = enabled && canPay;
-
-            return (
-              <button
-                key={option.id}
-                type="button"
-                disabled={!canUse}
-                onClick={() => onUse(option)}
-                className={`aspect-square rounded-2xl border p-2 flex flex-col items-center justify-center gap-1 transition-transform active:scale-95 disabled:opacity-35 disabled:cursor-not-allowed ${SABOTAGE_STYLES[option.color] || SABOTAGE_STYLES.purple}`}
-                aria-label={`Usar ${option.name}`}
-              >
-                <span className="material-symbols-outlined text-2xl">{option.icon}</span>
-                <span className="text-[9px] font-label-caps leading-none">{option.cost} pts</span>
-              </button>
-            );
-          })}
-        </div>
-        <p className="mt-2 text-[11px] text-on-surface-variant leading-snug">
-          {enabled ? 'Toca un cuadrado para preparar el ataque.' : 'Se desbloquean desde la ronda 2.'}
-        </p>
-      </div>
-    </details>
+        <motion.span
+          animate={{ rotate: sabOpen ? 180 : 0 }}
+          transition={{ duration: 0.22 }}
+          className="material-symbols-outlined text-electric-purple text-2xl"
+        >
+          expand_more
+        </motion.span>
+      </button>
+      <AnimatePresence initial={false}>
+        {sabOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.24, ease: 'easeInOut' }}
+            className="overflow-hidden"
+          >
+            <div className="px-3 pb-3">
+              <div className="grid grid-cols-4 gap-2">
+                {options.map((option) => {
+                  const canPay = Number(points || 0) >= option.cost;
+                  const canUse = enabled && canPay;
+                  return (
+                    <button
+                      key={option.id}
+                      type="button"
+                      disabled={!canUse}
+                      onClick={() => onUse(option)}
+                      className={`aspect-square rounded-2xl border p-2 flex flex-col items-center justify-center gap-1 transition-transform active:scale-95 disabled:opacity-35 disabled:cursor-not-allowed ${SABOTAGE_STYLES[option.color] || SABOTAGE_STYLES.purple}`}
+                      aria-label={`Usar ${option.name}`}
+                    >
+                      <span className="material-symbols-outlined text-2xl">{option.icon}</span>
+                      <span className="text-[9px] font-label-caps leading-none">{option.cost} pts</span>
+                    </button>
+                  );
+                })}
+              </div>
+              <p className="mt-2 text-[11px] text-on-surface-variant leading-snug">
+                {enabled ? 'Toca un cuadrado para preparar el ataque.' : 'Se desbloquean desde la ronda 2.'}
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }
 
@@ -113,6 +200,7 @@ export default function GameScreen() {
     phase,
     round,
     gameMode,
+    targetScore,
     currentQuestion,
     spotifyPlaylistUrl,
     hostTriggerBlackout,
@@ -130,7 +218,9 @@ export default function GameScreen() {
   const [lastAnswerCorrect, setLastAnswerCorrect] = useState(null);
   const [countdownValue, setCountdownValue] = useState(3);
   const [spotifyMessage, setSpotifyMessage] = useState('');
+  const [spotifyError, setSpotifyError] = useState(false);
   const [sabotageMessage, setSabotageMessage] = useState('');
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
   const startedSpotifyRoundRef = useRef('');
 
   useEffect(() => {
@@ -174,10 +264,12 @@ export default function GameScreen() {
       if (!cancelled) setSpotifyMessage('Preparando Spotify...');
     }, 0);
 
+    setSpotifyError(false);
     startRandomPlaylistTrack(spotifyPlaylistUrl)
       .then(() => {
         if (!cancelled) {
-          setSpotifyMessage('Música sonando. Corta cuando quieras.');
+          setSpotifyMessage('Música sonando. Para cuando quieras.');
+          setSpotifyError(false);
           setAudioPlaying(true);
         }
       })
@@ -185,6 +277,7 @@ export default function GameScreen() {
         console.error(error);
         if (!cancelled) {
           setSpotifyMessage(explainSpotifyError(error));
+          setSpotifyError(true);
           setAudioPlaying(false);
         }
       });
@@ -200,7 +293,7 @@ export default function GameScreen() {
     return `${currentQuestion.type}-${currentQuestion.text}-${round}`;
   }, [currentQuestion, round]);
 
-  const hasRemoteAnswer = Boolean(guestId && roundAnswers?.[guestId]);
+  const hasRemoteAnswer = Boolean(guestId && roundAnswers?.[guestId] && roundAnswers[guestId].round === round);
   const hasAnswered = answeredQuestionKey === questionKey || hasRemoteAnswer;
   const answerCount = Object.keys(roundAnswers || {}).length;
   const expectedVotes = players.length;
@@ -229,6 +322,7 @@ export default function GameScreen() {
     setLastAnswerCorrect(isCorrect);
     setAnsweredQuestionKey(questionKey);
     guestAnswer(isCorrect);
+    if (navigator.vibrate) navigator.vibrate(isCorrect ? [30] : [100, 30, 100]);
     setTimeout(() => setLastAnswerCorrect(null), 900);
   };
 
@@ -238,6 +332,21 @@ export default function GameScreen() {
     await pauseSpotifyPlayback().catch((error) => console.warn('No se pudo pausar Spotify:', error));
     setAudioPlaying(false);
     await hostTriggerBlackout(spotifyQuestion, hiddenTrack);
+  };
+
+  const handleSpotifyRetry = () => {
+    setSpotifyError(false);
+    setSpotifyMessage('Reintentando...');
+    startRandomPlaylistTrack(spotifyPlaylistUrl)
+      .then(() => {
+        setSpotifyMessage('Música sonando. Para cuando quieras.');
+        setAudioPlaying(true);
+      })
+      .catch((error) => {
+        setSpotifyMessage(explainSpotifyError(error));
+        setSpotifyError(true);
+        setAudioPlaying(false);
+      });
   };
 
   const handleUseSabotage = async (option) => {
@@ -256,7 +365,7 @@ export default function GameScreen() {
   };
 
   return (
-    <div className={`relative z-10 min-h-screen w-full flex flex-col items-center justify-center transition-colors duration-500 ${phase === 'blackout' ? 'bg-black' : 'bg-transparent'}`}>
+    <div className={`relative z-10 min-h-screen w-full flex flex-col items-center justify-center pt-16 transition-colors duration-500 ${phase === 'blackout' ? 'bg-black' : 'bg-transparent'}`}>
 
       {/* Answer flash overlay */}
       <AnimatePresence>
@@ -277,12 +386,21 @@ export default function GameScreen() {
         )}
       </AnimatePresence>
 
-      {role === 'host' && phase !== 'blackout' && (
+      {role === 'host' && (
         <header className="fixed top-0 left-0 right-0 h-16 flex items-center justify-between px-margin-mobile z-50 bg-surface/60 backdrop-blur-xl border-b border-white/10">
-          <button onClick={() => navigate('/lobby')} className="text-on-surface-variant font-label-caps text-xs flex items-center gap-2">
+          <button onClick={() => setShowExitConfirm(true)} className="text-on-surface-variant font-label-caps text-xs flex items-center gap-2">
             <span className="material-symbols-outlined text-xl">arrow_back</span> CANCELAR
           </button>
-          <span className="font-label-caps text-xs text-neon-green">RONDA {round}</span>
+          <div className="text-center">
+            <p className="font-label-caps text-xs text-neon-green">RONDA {round}</p>
+            <p className="font-label-caps text-[10px] text-on-surface-variant">
+              {gameMode === 'timeline' ? 'MODO LÍNEA' : `META ${targetScore} PTS`}
+            </p>
+          </div>
+          <div className="text-right">
+            <p className="font-label-caps text-[10px] text-on-surface-variant">TUS PUNTOS</p>
+            <p className="font-label-caps text-sm font-black text-neon-green">{ownPlayer?.points ?? 0}</p>
+          </div>
         </header>
       )}
 
@@ -347,7 +465,7 @@ export default function GameScreen() {
                     {role === 'host' ? 'SONANDO' : 'ESCUCHA'}
                   </span>
                   <p className="mt-2 font-label-caps text-[9px] text-white/50 tracking-widest">
-                    {role === 'host' ? 'CORTA CUANDO QUIERAS' : 'EL ANFITRIÓN DECIDE'}
+                    {role === 'host' ? 'PARA CUANDO QUIERAS' : 'EL ANFITRIÓN DECIDE'}
                   </p>
                 </div>
               </div>
@@ -365,9 +483,24 @@ export default function GameScreen() {
               ))}
             </div>
 
-            <p className="max-w-xs text-sm text-on-surface-variant">
-              {role === 'host' && spotifyMessage ? spotifyMessage : `${activePlaylist?.icon || '🎵'} Escucha con atención. Nadie ve la canción.`}
-            </p>
+            {role === 'host' ? (
+              <div className="flex flex-col items-center gap-2 text-center">
+                <p className="max-w-xs text-sm text-on-surface-variant">{spotifyMessage || 'Preparando Spotify...'}</p>
+                {spotifyError && (
+                  <button
+                    onClick={handleSpotifyRetry}
+                    className="flex items-center gap-2 px-4 py-2 rounded-xl border border-vinyl-orange/50 bg-vinyl-orange/15 text-vinyl-orange font-label-caps text-xs font-bold active:scale-95 transition-all"
+                  >
+                    <span className="material-symbols-outlined text-sm">refresh</span>
+                    REINTENTAR SPOTIFY
+                  </button>
+                )}
+              </div>
+            ) : (
+              <p className="max-w-xs text-sm text-on-surface-variant text-center">
+                {`${activePlaylist?.icon || '🎵'} Escucha con atención. Nadie ve la canción.`}
+              </p>
+            )}
 
             <SabotageSquares
               options={SABOTAGE_OPTIONS}
@@ -385,6 +518,17 @@ export default function GameScreen() {
               </motion.p>
             )}
 
+            <RankingPeek players={players} guestId={guestId} />
+
+            {gameMode === 'timeline' && (
+              <div className="flex items-start gap-2 rounded-xl border border-neon-green/20 bg-neon-green/5 px-3 py-2 max-w-sm text-left">
+                <span className="material-symbols-outlined text-neon-green text-sm shrink-0 mt-px">timeline</span>
+                <p className="text-xs text-on-surface-variant leading-snug">
+                  Modo Línea: escucha el año y prepárate para colocarla en tu línea musical.
+                </p>
+              </div>
+            )}
+
             {role === 'host' && (
               <div className="w-full max-w-xs grid gap-3">
                 <motion.button
@@ -393,7 +537,7 @@ export default function GameScreen() {
                   className="w-full h-20 bg-intense-red hover:bg-red-600 text-white font-headline-lg-mobile text-3xl rounded-2xl shadow-[0_0_30px_rgba(255,107,139,0.45)] transition-colors font-black border-2 border-white/15 relative overflow-hidden"
                 >
                   <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
-                  CORTAR MÚSICA
+                  PARAR MÚSICA
                 </motion.button>
               </div>
             )}
@@ -491,17 +635,22 @@ export default function GameScreen() {
             )}
 
             {hasAnswered ? (
-              <motion.div
-                initial={{ scale: 0.95, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                className={`mt-6 rounded-2xl border p-6 text-center ${role === 'host' ? 'border-electric-purple/40 bg-electric-purple/10' : 'border-neon-green/30 bg-neon-green/10'}`}
-              >
-                <span className="material-symbols-outlined text-neon-green" style={{ fontSize: '3.5rem' }}>check_circle</span>
-                <p className="mt-3 text-white font-bold text-lg">RESPUESTA ENVIADA</p>
-                <p className="mt-1 text-xs text-on-surface-variant">
-                  {role === 'host' ? 'Cuando todos estén listos, revela.' : 'Esperando al anfitrión...'}
-                </p>
-              </motion.div>
+              <>
+                <motion.div
+                  initial={{ scale: 0.95, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  className={`mt-6 rounded-2xl border p-6 text-center ${role === 'host' ? 'border-electric-purple/40 bg-electric-purple/10' : 'border-neon-green/30 bg-neon-green/10'}`}
+                >
+                  <span className="material-symbols-outlined text-neon-green" style={{ fontSize: '3.5rem' }}>check_circle</span>
+                  <p className="mt-3 text-white font-bold text-lg">RESPUESTA ENVIADA</p>
+                  <p className="mt-1 text-xs text-on-surface-variant">
+                    {role === 'host' ? 'Cuando todos estén listos, revela.' : 'Esperando al anfitrión...'}
+                  </p>
+                </motion.div>
+                <div className="mt-3 w-full flex flex-col gap-2">
+                  <RankingPeek players={players} guestId={guestId} />
+                </div>
+              </>
             ) : currentQuestion.answerType === 'timeline-placement' ? (
               <TimelinePlacementQuestion
                 question={currentQuestion}
@@ -531,6 +680,47 @@ export default function GameScreen() {
                 ))}
               </motion.div>
             )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showExitConfirm && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center bg-black/80 backdrop-blur-sm px-4 pb-4 sm:pb-0"
+            onClick={() => setShowExitConfirm(false)}
+          >
+            <motion.div
+              initial={{ y: 40, scale: 0.96 }}
+              animate={{ y: 0, scale: 1 }}
+              exit={{ y: 40, scale: 0.96 }}
+              transition={{ type: 'spring', stiffness: 260, damping: 28 }}
+              className="w-full max-w-sm rounded-2xl border border-white/10 bg-surface-container p-6 text-center shadow-[0_0_50px_rgba(0,0,0,0.6)]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <span className="material-symbols-outlined text-vinyl-orange" style={{ fontSize: '2.5rem' }}>warning</span>
+              <h3 className="mt-3 font-headline-lg text-xl font-black text-white">¿Cancelar la ronda?</h3>
+              <p className="mt-2 text-sm text-on-surface-variant">
+                Volverás al lobby. La ronda actual se perderá para todos.
+              </p>
+              <div className="mt-5 flex flex-col gap-2">
+                <button
+                  onClick={() => navigate('/lobby')}
+                  className="w-full h-12 rounded-xl bg-intense-red text-white font-label-caps text-sm font-bold active:scale-95 transition-all"
+                >
+                  SÍ, CANCELAR RONDA
+                </button>
+                <button
+                  onClick={() => setShowExitConfirm(false)}
+                  className="w-full h-12 rounded-xl bg-white/5 border border-white/10 text-white font-label-caps text-sm font-bold active:scale-95 transition-all"
+                >
+                  SEGUIR JUGANDO
+                </button>
+              </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
