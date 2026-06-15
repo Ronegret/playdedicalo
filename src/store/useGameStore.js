@@ -233,6 +233,12 @@ function findWinner(players, targetScore) {
   return sortPlayers(players).find((player) => Number(player.points || 0) >= Number(targetScore || 70));
 }
 
+function normalizeTimelineYears(years = []) {
+  return [...new Set((years || []).map(Number).filter(Boolean))]
+    .sort((a, b) => a - b)
+    .slice(0, 12);
+}
+
 function reverseReadableText(text) {
   return String(text || '').split('').reverse().join('');
 }
@@ -278,6 +284,7 @@ export const useGameStore = create((setStore, getStore) => ({
 
   setGameSettings: async ({ gameMode, targetScore }) => {
     const pin = getStore().pin;
+    if (getStore().round > 1 || getStore().phase !== 'lobby') return;
     const currentGameMode = getStore().gameMode;
     const nextSettings = {
       gameMode: gameMode || getStore().gameMode,
@@ -303,7 +310,8 @@ export const useGameStore = create((setStore, getStore) => ({
       name: hostUser?.displayName || 'Anfitrión',
       avatar: hostUser?.photoURL || 'La Consola Maestra',
       points: 10,
-      isHost: true
+      isHost: true,
+      timelineYears: []
     };
 
     const roomData = {
@@ -430,6 +438,13 @@ export const useGameStore = create((setStore, getStore) => ({
       if (isLocked) {
         remoteUpdates[`pointLocks/${player.id}`] = null;
       }
+
+      if (currentQuestion?.answerType === 'timeline-placement' && isCorrect) {
+        remoteUpdates[`players/${player.id}/timelineYears`] = normalizeTimelineYears([
+          ...(player.timelineYears || []),
+          currentQuestion.songYear
+        ]);
+      }
     });
 
     if (sharedPrize?.buyerId && playersById[sharedPrize.buyerId]) {
@@ -448,23 +463,17 @@ export const useGameStore = create((setStore, getStore) => ({
 
     const nextPlayers = sortPlayers(Object.values(playersById).map((player) => ({
       ...player,
-      points: remoteUpdates[`players/${player.id}/points`] ?? player.points
+      points: remoteUpdates[`players/${player.id}/points`] ?? player.points,
+      timelineYears: remoteUpdates[`players/${player.id}/timelineYears`] ?? normalizeTimelineYears(player.timelineYears || [])
     })));
-    const hasCorrectTimelineAnswer = currentQuestion?.answerType === 'timeline-placement'
-      && Object.values(answers).some((answer) => Boolean(answer?.isCorrect));
-    const nextTimelineYears = hasCorrectTimelineAnswer
-      ? [...new Set([...(room?.timelineYears || []), Number(currentQuestion.songYear)].filter(Boolean))]
-        .sort((a, b) => a - b)
-        .slice(0, 12)
-      : (room?.timelineYears || []);
-    const timelineComplete = gameMode === 'timeline' && nextTimelineYears.length >= 12;
+    const timelineComplete = gameMode === 'timeline'
+      && nextPlayers.some((player) => normalizeTimelineYears(player.timelineYears || []).length >= 12);
     const winner = findWinner(nextPlayers, targetScore);
     remoteUpdates.phase = winner ? 'final' : 'result';
     if (timelineComplete) remoteUpdates.phase = 'final';
     remoteUpdates.revealResults = revealResults;
     remoteUpdates.lastSabotage = Object.values(revealResults).find((result) => result.sabotage)?.sabotage || null;
     remoteUpdates.currentQuestion = (winner || timelineComplete) ? null : room.currentQuestion || null;
-    remoteUpdates.timelineYears = nextTimelineYears;
 
     await patchData(`rooms/${pin}`, remoteUpdates);
 
@@ -475,8 +484,7 @@ export const useGameStore = create((setStore, getStore) => ({
       revealResults,
       lastResultType: ownResult?.resultType || getStore().lastResultType,
       lastPointDelta: ownResult?.delta || 0,
-      lastSabotage: ownResult?.sabotage || remoteUpdates.lastSabotage,
-      timelineYears: nextTimelineYears
+      lastSabotage: ownResult?.sabotage || remoteUpdates.lastSabotage
     });
   },
 
@@ -553,7 +561,8 @@ export const useGameStore = create((setStore, getStore) => ({
         name: guestName.trim().slice(0, 12) || 'Invitado',
         avatar: guestAvatar,
         points: 10,
-        isHost: false
+        isHost: false,
+        timelineYears: []
       };
 
       await writeData(`rooms/${cleanPin}/players/${guestId}`, newPlayer);
@@ -580,14 +589,16 @@ export const useGameStore = create((setStore, getStore) => ({
     }
   },
 
-  guestAnswer: async (isCorrect) => {
+  guestAnswer: async (answerInput) => {
     const { pin, guestId, guestName, round } = getStore();
     if (!pin || !guestId) return;
+    const isTimelineAnswer = typeof answerInput === 'object';
 
     const answer = {
       playerId: guestId,
       playerName: guestName || getStore().players.find((player) => player.id === guestId)?.name || 'Jugador',
-      isCorrect: Boolean(isCorrect),
+      isCorrect: Boolean(isTimelineAnswer ? answerInput.isCorrect : answerInput),
+      ...(isTimelineAnswer ? { timelineSlot: answerInput.timelineSlot } : {}),
       round,
       at: Date.now()
     };

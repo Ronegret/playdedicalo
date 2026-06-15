@@ -30,9 +30,22 @@ const RESULT_STYLES = {
   }
 };
 
-function RankingList({ players, final = false }) {
+function TimelineYears({ years = [] }) {
+  return (
+    <div className="mt-3 flex flex-wrap items-center gap-1.5 pl-12">
+      <span className="font-label-caps text-[10px] text-on-surface-variant">Línea {Math.min(years.length, 12)}/12</span>
+      {years.slice(0, 12).map((year) => (
+        <span key={year} className="rounded-lg border border-neon-green/30 bg-neon-green/10 px-2 py-1 text-[10px] font-black text-neon-green">
+          {year}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+function RankingList({ players, final = false, showTimeline = false }) {
   if (players.length === 0) {
-    return <p className="text-center text-on-surface-variant">Ningun invitado jugo esta partida.</p>;
+    return <p className="text-center text-on-surface-variant">Ning?n invitado jug? esta partida.</p>;
   }
 
   return (
@@ -52,22 +65,25 @@ function RankingList({ players, final = false }) {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.05 }}
-            className={`flex justify-between items-center p-4 rounded-xl border gap-4 ${final && index === 0 ? 'bg-neon-green/10 border-neon-green/50' : 'bg-white/5 border-white/10'}`}
+            className={`p-4 rounded-xl border ${final && index === 0 ? 'bg-neon-green/10 border-neon-green/50' : 'bg-white/5 border-white/10'}`}
           >
-            <div className="flex items-center gap-3 min-w-0">
-              <span className={`w-9 h-9 rounded-xl flex items-center justify-center font-black ${medalClass}`}>
-                {index + 1}
-              </span>
-              {player.avatar?.startsWith?.('http') ? (
-                <img src={player.avatar} alt={player.name} className="w-10 h-10 rounded-full object-cover border border-white/10" />
-              ) : (
-                <span className="w-10 h-10 rounded-full bg-black/20 flex items-center justify-center text-xl shrink-0">
-                  {player.avatar || '😎'}
+            <div className="flex justify-between items-center gap-4">
+              <div className="flex items-center gap-3 min-w-0">
+                <span className={`w-9 h-9 rounded-xl flex items-center justify-center font-black ${medalClass}`}>
+                  {index + 1}
                 </span>
-              )}
-              <span className="font-bold font-body-md truncate">{player.name}</span>
+                {player.avatar?.startsWith?.('http') ? (
+                  <img src={player.avatar} alt={player.name} className="w-10 h-10 rounded-full object-cover border border-white/10" />
+                ) : (
+                  <span className="w-10 h-10 rounded-full bg-black/20 flex items-center justify-center text-xl shrink-0">
+                    {player.avatar || '??'}
+                  </span>
+                )}
+                <span className="font-bold font-body-md truncate">{player.name}</span>
+              </div>
+              <span className="font-stats-xl text-neon-green shrink-0">{player.points} PTS</span>
             </div>
-            <span className="font-stats-xl text-neon-green shrink-0">{player.points} PTS</span>
+            {showTimeline && <TimelineYears years={player.timelineYears || []} />}
           </motion.div>
         );
       })}
@@ -82,6 +98,7 @@ export default function ResultScreen() {
     phase,
     players,
     round,
+    gameMode,
     targetScore,
     hostNextRound,
     hostCloseRoom,
@@ -147,7 +164,7 @@ export default function ResultScreen() {
               </div>
             )}
 
-            <RankingList players={players} final={isFinal} />
+            <RankingList players={players} final={isFinal} showTimeline={gameMode === 'timeline'} />
 
             {role === 'host' && (
               <button

@@ -53,34 +53,44 @@ function SabotageSquares({ options, points, enabled, onUse }) {
 
 function getTimelineSlotLabel(years, index) {
   if (index === 0) return `Antes de ${years[0]}`;
-  if (index === years.length) return `Después de ${years[years.length - 1]}`;
+  if (index === years.length) return `Despu?s de ${years[years.length - 1]}`;
   return `Entre ${years[index - 1]} y ${years[index]}`;
 }
 
-function TimelinePlacementQuestion({ question, disabled, onPick }) {
-  const years = question.timelineYears?.length ? question.timelineYears : [2000];
+function TimelinePlacementQuestion({ question, playerYears = [], disabled, onPick }) {
+  const years = playerYears.length ? playerYears : [2000];
   const slots = Array.from({ length: years.length + 1 }, (_, index) => index);
+  const correctSlot = years.filter((year) => year < question.songYear).length;
 
   return (
     <div className="mt-5">
-      <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-        <p className="font-label-caps text-[10px] text-neon-green tracking-widest">ELIGE EL HUECO</p>
-        <div className="mt-4 overflow-x-auto pb-2">
+      <div className="rounded-3xl border border-neon-green/20 bg-[radial-gradient(circle_at_top,rgba(57,255,20,0.12),rgba(255,255,255,0.04)_42%,rgba(0,0,0,0.24)_100%)] p-4 shadow-[0_0_30px_rgba(57,255,20,0.08)]">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <p className="font-label-caps text-[10px] text-neon-green tracking-widest">TU L?NEA MUSICAL</p>
+            <p className="mt-1 text-sm text-white font-bold">Elige d?nde colocar esta canci?n</p>
+          </div>
+          <span className="rounded-full border border-white/10 bg-black/25 px-3 py-1 text-[10px] font-label-caps text-on-surface-variant">
+            {Math.min(years.length, 12)}/12
+          </span>
+        </div>
+
+        <div className="mt-4 overflow-x-auto pb-2 snap-x">
           <div className="min-w-max flex items-center gap-2 px-1">
             {slots.map((slot, index) => (
               <div key={slot} className="flex items-center gap-2">
                 <button
                   type="button"
                   disabled={disabled}
-                  onClick={() => onPick(slot === question.correct)}
-                  className="w-24 h-20 rounded-2xl border border-dashed border-neon-green/50 bg-neon-green/10 text-neon-green active:scale-95 transition-transform flex flex-col items-center justify-center gap-1"
+                  onClick={() => onPick({ isCorrect: slot === correctSlot, timelineSlot: slot })}
+                  className="w-24 h-20 snap-center rounded-2xl border border-dashed border-neon-green/50 bg-neon-green/10 text-neon-green active:scale-95 transition-transform flex flex-col items-center justify-center gap-1 hover:bg-neon-green/20 focus:outline-none focus:ring-2 focus:ring-neon-green"
                 >
-                  <span className="material-symbols-outlined text-xl">add</span>
+                  <span className="material-symbols-outlined text-xl">add_circle</span>
                   <span className="text-[10px] font-label-caps leading-tight px-1">{getTimelineSlotLabel(years, slot)}</span>
                 </button>
                 {index < years.length && (
-                  <div className="w-20 h-24 rounded-2xl border border-white/15 bg-black/30 flex flex-col items-center justify-center shadow-[0_0_18px_rgba(0,0,0,0.22)]">
-                    <span className="text-[10px] font-label-caps text-on-surface-variant">Carta</span>
+                  <div className="w-20 h-24 snap-center rounded-2xl border border-white/15 bg-black/35 flex flex-col items-center justify-center shadow-[0_0_18px_rgba(0,0,0,0.22)]">
+                    <span className="material-symbols-outlined text-sm text-electric-purple">album</span>
                     <span className="mt-1 text-3xl font-black text-white">{years[index]}</span>
                   </div>
                 )}
@@ -89,7 +99,7 @@ function TimelinePlacementQuestion({ question, disabled, onPick }) {
           </div>
         </div>
         <p className="mt-3 text-xs text-on-surface-variant">
-          No necesitas saber el día: solo ubica si la canción va antes, después o entre esos años.
+          Tu l?nea es personal. Coloca la canci?n antes, despu?s o entre tus a?os.
         </p>
       </div>
     </div>
@@ -112,7 +122,6 @@ export default function GameScreen() {
     guestId,
     players,
     roundAnswers,
-    timelineYears,
     setAudioPlaying
   } = useGameStore();
   const [answeredQuestionKey, setAnsweredQuestionKey] = useState(null);
@@ -219,7 +228,7 @@ export default function GameScreen() {
 
   const handleHostBlackout = async () => {
     const hiddenTrack = getCurrentHiddenTrack();
-    const spotifyQuestion = hiddenTrack ? createQuestionFromTrack(hiddenTrack, gameMode, round, timelineYears) : null;
+    const spotifyQuestion = hiddenTrack ? createQuestionFromTrack(hiddenTrack, gameMode, round, ownPlayer?.timelineYears || []) : null;
     await pauseSpotifyPlayback().catch((error) => console.warn('No se pudo pausar Spotify:', error));
     setAudioPlaying(false);
     await hostTriggerBlackout(spotifyQuestion);
@@ -382,6 +391,7 @@ export default function GameScreen() {
             ) : currentQuestion.answerType === 'timeline-placement' ? (
               <TimelinePlacementQuestion
                 question={currentQuestion}
+                playerYears={ownPlayer?.timelineYears || []}
                 disabled={hasAnswered}
                 onPick={handleAnswer}
               />

@@ -17,11 +17,11 @@ const MODES = [
     id: 'pulse',
     icon: 'flash_on',
     title: 'Pulso Dedicalo',
-    subtitle: 'Pregunta rapida',
+    subtitle: 'Pregunta rápida',
     body: 'Escuchas un fragmento y respondes algo simple: artista, palabra, título, energía o contexto.',
     visual: (
       <div className="grid gap-2">
-        {['A  NOCHE', 'B  CORAZON', 'C  DEDICALO'].map((answer, index) => (
+        {['A  NOCHE', 'B  CORAZÓN', 'C  DEDÍCALO'].map((answer, index) => (
           <div key={answer} className={`rounded-xl border px-3 py-3 text-sm font-bold ${index === 2 ? 'border-neon-green bg-neon-green/10 text-neon-green' : 'border-white/10 bg-white/5 text-white'}`}>
             {answer}
           </div>
@@ -32,12 +32,12 @@ const MODES = [
   {
     id: 'timeline',
     icon: 'timeline',
-    title: 'Linea del Ritmo',
+    title: 'Línea del Ritmo',
     subtitle: 'Ordena por años',
-    body: 'No se usan meses. Solo decides si la canción va antes, después o entre años.',
+    body: 'Cada jugador crea su propia línea de años. Los demás pueden verla y la partida termina cuando alguien completa 12 años o llega a la meta.',
     visual: (
       <div className="grid grid-cols-5 gap-1">
-        {['ANTES', '1998', 'ENTRE', '2006', 'DESPUES'].map((item) => (
+          {['ANTES', '1998', 'ENTRE', '2006', 'DESPUÉS'].map((item) => (
           <div key={item} className={`h-12 min-w-0 rounded-xl border flex items-center justify-center px-1 text-center font-black ${/^\d/.test(item) ? 'border-white/10 bg-white/10 text-white text-sm' : 'border-dashed border-neon-green/50 bg-neon-green/10 text-neon-green text-[8px]'}`}>
             {item}
           </div>

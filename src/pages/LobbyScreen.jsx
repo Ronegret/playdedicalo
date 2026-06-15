@@ -130,6 +130,19 @@ function SabotageCard({ option, canUse, onUse }) {
   );
 }
 
+function TimelineYears({ years = [] }) {
+  return (
+    <div className="mt-3 flex flex-wrap items-center gap-1.5 pl-9">
+      <span className="font-label-caps text-[10px] text-on-surface-variant">Línea {Math.min(years.length, 12)}/12</span>
+      {years.slice(0, 12).map((year) => (
+        <span key={year} className="rounded-lg border border-neon-green/30 bg-neon-green/10 px-2 py-1 text-[10px] font-black text-neon-green">
+          {year}
+        </span>
+      ))}
+    </div>
+  );
+}
+
 export default function LobbyScreen() {
   const navigate = useNavigate();
   const {
@@ -148,6 +161,7 @@ export default function LobbyScreen() {
   } = useGameStore();
   const [showQR, setShowQR] = useState(false);
   const [startError, setStartError] = useState('');
+  const gameLocked = round > 1;
 
   useEffect(() => {
     if (phase === 'countdown' || phase === 'listen' || phase === 'blackout') navigate('/game');
@@ -214,43 +228,50 @@ export default function LobbyScreen() {
 
         {role === 'host' && (
           <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-4 text-left">
-            <p className="font-label-caps text-neon-green text-xs mb-3">CONFIGURACION</p>
+            <p className="font-label-caps text-neon-green text-xs mb-3">{gameLocked ? 'PARTIDA EN CURSO' : 'ELIGE LA PARTIDA'}</p>
 
-            <div className="space-y-4">
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-bold text-white">Meta</span>
-                  <span className="text-xs text-neon-green font-label-caps">{targetScore} puntos</span>
+            {gameLocked ? (
+              <div className="rounded-xl border border-neon-green/30 bg-neon-green/10 p-4">
+                <p className="text-lg font-black text-white">{GAME_MODES[gameMode]?.name}</p>
+                <p className="mt-1 text-sm text-on-surface-variant">Meta: {targetScore} puntos. Las reglas quedan fijas hasta el ranking final.</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-bold text-white">Meta</span>
+                    <span className="text-xs text-neon-green font-label-caps">{targetScore} puntos</span>
+                  </div>
+                  <div className="grid grid-cols-1 gap-2">
+                    {VICTORY_MODES.map((mode) => (
+                      <VictoryCard
+                        key={mode.targetScore}
+                        mode={mode}
+                        selected={targetScore === mode.targetScore}
+                        onSelect={() => handleSettingsChange({ targetScore: mode.targetScore })}
+                      />
+                    ))}
+                  </div>
                 </div>
-                <div className="grid grid-cols-1 gap-2">
-                  {VICTORY_MODES.map((mode) => (
-                    <VictoryCard
-                      key={mode.targetScore}
-                      mode={mode}
-                      selected={targetScore === mode.targetScore}
-                      onSelect={() => handleSettingsChange({ targetScore: mode.targetScore })}
-                    />
-                  ))}
+
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-bold text-white">Modo</span>
+                    <span className="text-xs text-neon-green font-label-caps">{GAME_MODES[gameMode]?.short}</span>
+                  </div>
+                  <div className="grid gap-2">
+                    {Object.values(GAME_MODES).map((mode) => (
+                      <ModeCard
+                        key={mode.id}
+                        mode={mode}
+                        selected={gameMode === mode.id}
+                        onSelect={() => handleSettingsChange({ gameMode: mode.id })}
+                      />
+                    ))}
+                  </div>
                 </div>
               </div>
-
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-bold text-white">Modo</span>
-                  <span className="text-xs text-neon-green font-label-caps">{GAME_MODES[gameMode]?.short}</span>
-                </div>
-                <div className="grid gap-2">
-                  {Object.values(GAME_MODES).map((mode) => (
-                    <ModeCard
-                      key={mode.id}
-                      mode={mode}
-                      selected={gameMode === mode.id}
-                      onSelect={() => handleSettingsChange({ gameMode: mode.id })}
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
+            )}
 
             <button
               onClick={handleHostStartGame}
@@ -309,22 +330,25 @@ export default function LobbyScreen() {
         <div className="flex flex-col gap-3">
           {players.length === 0 && <p className="text-center text-on-surface-variant text-sm">No hay jugadores aún.</p>}
           {players.map((player, index) => (
-            <div key={player.id} className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/10 backdrop-blur-md">
-              <div className="flex items-center gap-3 min-w-0">
-                <span className="w-6 text-center font-label-caps text-xs text-on-surface-variant">#{index + 1}</span>
-                {player.avatar?.startsWith?.('http') ? (
-                  <img src={player.avatar} alt={player.name} className="w-10 h-10 rounded-full object-cover border border-electric-purple" />
-                ) : (
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center text-2xl bg-white/10 border border-white/5 shrink-0">
-                    {player.avatar || '😎'}
-                  </div>
-                )}
-                <span className="font-body-md font-bold text-white truncate">{player.name}</span>
+            <div key={player.id} className="p-4 bg-white/5 rounded-xl border border-white/10 backdrop-blur-md">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3 min-w-0">
+                  <span className="w-6 text-center font-label-caps text-xs text-on-surface-variant">#{index + 1}</span>
+                  {player.avatar?.startsWith?.('http') ? (
+                    <img src={player.avatar} alt={player.name} className="w-10 h-10 rounded-full object-cover border border-electric-purple" />
+                  ) : (
+                    <div className="w-10 h-10 rounded-full flex items-center justify-center text-2xl bg-white/10 border border-white/5 shrink-0">
+                      {player.avatar || '??'}
+                    </div>
+                  )}
+                  <span className="font-body-md font-bold text-white truncate">{player.name}</span>
+                </div>
+                <div className="text-right text-neon-green shrink-0">
+                  <span className="font-black">{player.points}</span>
+                  <span className="text-xs ml-1">PTS</span>
+                </div>
               </div>
-              <div className="text-right text-neon-green shrink-0">
-                <span className="font-black">{player.points}</span>
-                <span className="text-xs ml-1">PTS</span>
-              </div>
+              {gameMode === 'timeline' && <TimelineYears years={player.timelineYears || []} />}
             </div>
           ))}
         </div>
