@@ -5,14 +5,14 @@ export const DEDICALO_PLAYLISTS = [
   {
     id: 'reggaeton-historia',
     icon: '🔥',
-    name: 'Los mejores reggetones de la historia',
-    mood: 'Reggaeton histórico para reconocer hits al instante.',
+    name: 'Reggaeton Hits',
+    mood: 'Reggaeton clásico para reconocer hits al instante.',
     url: 'https://open.spotify.com/playlist/64B6t8la0Rf3JTTaBXiNcm'
   },
   {
     id: 'hits-todos-los-tiempos',
     icon: '🌍',
-    name: 'Las mejores canciones de todos los tiempos',
+    name: 'Hits Globales',
     mood: 'Hits globales para partidas con todos los gustos.',
     url: 'https://open.spotify.com/playlist/0f3YRJO2HyZTpCLCVxzBt0'
   },
@@ -26,49 +26,49 @@ export const DEDICALO_PLAYLISTS = [
   {
     id: 'mix-latino',
     icon: '⚡',
-    name: 'Latino Mix 2026',
+    name: 'Latino Mix',
     mood: 'Latino actual para rondas rápidas y energía alta.',
     url: 'https://open.spotify.com/playlist/2UBikaEIZWV9LOAjE0dBgx'
   },
   {
     id: 'bailable-todos-los-tiempos',
     icon: '💃',
-    name: 'Bailables todos los tiempos',
+    name: 'Bailable',
     mood: 'Fiesta transversal: canciones fáciles de reconocer.',
     url: 'https://open.spotify.com/playlist/7FnGVaOj5s9JvAUtvZENfC'
   },
   {
     id: 'romanticos',
     icon: '💜',
-    name: 'Éxitos románticos en español',
+    name: 'Románticas',
     mood: 'Baladas y recuerdos para jugar por artista y época.',
     url: 'https://open.spotify.com/playlist/3dmrZtJOYx1naGoLtyHFOk'
   },
   {
     id: 'perreo-clasico',
     icon: '🕶️',
-    name: 'Mix temazos de paradero',
+    name: 'Perreo Clásico',
     mood: 'Perreo clásico y reggaeton de memoria colectiva.',
     url: 'https://open.spotify.com/playlist/2aatYbsZb0ZiY3aQjcVSw2'
   },
   {
     id: 'temazos-espanoles',
     icon: '🇪🇸',
-    name: 'Temazos Españoles',
+    name: 'Temazos ES',
     mood: 'Música española de siempre para rondas nostálgicas.',
     url: 'https://open.spotify.com/playlist/7bsAMCUlTcMTGzG1RzxWTX'
   },
   {
     id: 'rock-ska-espanolisimo',
     icon: '🎺',
-    name: 'Españolísimos',
+    name: 'Rock & Ska',
     mood: 'Rock, ska y clásicos españoles con mucha identidad.',
     url: 'https://open.spotify.com/playlist/6ZcRMfq1UCg0QzC2KkopvV'
   },
   {
     id: 'de-to2',
     icon: '🎲',
-    name: 'De To2',
+    name: 'De Todo',
     mood: 'Mezcla abierta para partidas variadas.',
     url: 'https://open.spotify.com/playlist/0Pn8mtBmo8HDfuKiky5tNj'
   }

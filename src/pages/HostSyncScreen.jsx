@@ -217,24 +217,62 @@ export default function HostSyncScreen() {
 
           {googleUser && (
             <section className="rounded-2xl border border-white/10 bg-white/5 p-4 text-left">
-              <label htmlFor="playlist-select" className="block text-xs text-neon-green font-label-caps mb-2">
-                PLAYLIST SUGERIDA
-              </label>
-              <select
-                id="playlist-select"
-                value={selectedPlaylist}
-                onChange={(event) => setSelectedPlaylist(event.target.value)}
-                className="w-full h-12 rounded-xl border border-white/10 bg-black/30 px-3 text-white font-bold outline-none focus:border-neon-green"
-              >
-                {DEDICALO_PLAYLISTS.map((playlist) => (
-                  <option key={playlist.id} value={playlist.id}>
-                    {playlist.icon} {playlist.name.toUpperCase()}
-                  </option>
-                ))}
-              </select>
-              <p className="mt-3 text-xs text-on-surface-variant leading-relaxed">
-                {selectedCuratedPlaylist.icon} {selectedCuratedPlaylist.mood}
-              </p>
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-xs text-neon-green font-label-caps">ELIGE ESTILO</p>
+                  <p className="mt-1 text-[11px] text-on-surface-variant">Toca una tarjeta para jugar.</p>
+                </div>
+                <span className="grid h-10 w-10 place-items-center rounded-full border border-neon-green/30 bg-neon-green/10 text-xl">
+                  {selectedCuratedPlaylist.icon}
+                </span>
+              </div>
+
+              <div className="mt-4 grid grid-cols-2 gap-2" role="listbox" aria-label="Estilos disponibles">
+                {DEDICALO_PLAYLISTS.map((playlist) => {
+                  const isSelected = playlist.id === selectedPlaylist;
+
+                  return (
+                    <button
+                      key={playlist.id}
+                      type="button"
+                      role="option"
+                      aria-selected={isSelected}
+                      onClick={() => setSelectedPlaylist(playlist.id)}
+                      className={`min-h-[74px] rounded-2xl border p-3 text-left transition-all duration-200 ${
+                        isSelected
+                          ? 'border-neon-green bg-neon-green/15 shadow-[0_0_22px_rgba(57,255,20,0.18)]'
+                          : 'border-white/10 bg-black/20 hover:border-electric-purple/60 hover:bg-electric-purple/10'
+                      }`}
+                    >
+                      <span className="flex items-center gap-2">
+                        <span className="text-lg leading-none">{playlist.icon}</span>
+                        <span className={`font-label-caps text-[11px] leading-tight tracking-wider ${
+                          isSelected ? 'text-neon-green' : 'text-white'
+                        }`}
+                        >
+                          {playlist.name.toUpperCase()}
+                        </span>
+                      </span>
+                      {isSelected && (
+                        <span className="mt-3 inline-flex items-center gap-1 rounded-full bg-neon-green px-2 py-1 text-[9px] font-black uppercase tracking-widest text-black">
+                          <span className="material-symbols-outlined text-[12px]">check</span>
+                          LISTA
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div className="mt-3 rounded-xl border border-neon-green/25 bg-neon-green/10 px-3 py-2">
+                <p className="font-label-caps text-[10px] text-neon-green">SELECCIONADO</p>
+                <p className="mt-1 text-sm font-black uppercase tracking-wide text-white">
+                  {selectedCuratedPlaylist.name}
+                </p>
+                <p className="mt-1 text-xs text-on-surface-variant leading-relaxed">
+                  {selectedCuratedPlaylist.mood}
+                </p>
+              </div>
             </section>
           )}
 
