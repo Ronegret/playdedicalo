@@ -114,7 +114,7 @@ export default function GameScreen() {
     startRandomPlaylistTrack(spotifyPlaylistUrl)
       .then(() => {
         if (!cancelled) {
-          setSpotifyMessage('Sonando en Spotify. No mires el titulo.');
+          setSpotifyMessage('Musica sonando. Corta cuando quieras.');
           setAudioPlaying(true);
         }
       })
@@ -140,7 +140,7 @@ export default function GameScreen() {
   const hasRemoteAnswer = Boolean(guestId && roundAnswers?.[guestId]);
   const hasAnswered = answeredQuestionKey === questionKey || hasRemoteAnswer;
   const answerCount = Object.keys(roundAnswers || {}).length;
-  const expectedGuestVotes = players.filter((player) => !player.isHost).length;
+  const expectedVotes = players.length;
   const mode = GAME_MODES[gameMode] || GAME_MODES.pulse;
   const activePlaylist = DEDICALO_PLAYLISTS.find((playlist) => (
     normalizeSpotifyPlaylistUrl(playlist.url) === normalizeSpotifyPlaylistUrl(spotifyPlaylistUrl)
@@ -241,7 +241,7 @@ export default function GameScreen() {
             </div>
 
             <p className="max-w-xs text-sm text-on-surface-variant">
-              {role === 'host' && spotifyMessage ? spotifyMessage : `${activePlaylist ? `Playlist: ${activePlaylist.name}. ` : ''}Memoriza el ritmo, la epoca, la letra y el ambiente.`}
+              {role === 'host' && spotifyMessage ? spotifyMessage : `${activePlaylist?.icon || ''} Escucha con atencion. Nadie ve la cancion.`}
             </p>
 
             {role === 'host' && (
@@ -279,30 +279,36 @@ export default function GameScreen() {
             {role === 'host' && (
               <div className="mt-4 rounded-2xl border border-white/10 bg-white/5 p-4 text-center">
                 <p className="font-label-caps text-neon-green text-xs">VOTOS RECIBIDOS</p>
-                <p className="mt-1 text-4xl font-black text-white">{answerCount}/{expectedGuestVotes}</p>
+                <p className="mt-1 text-4xl font-black text-white">{answerCount}/{expectedVotes}</p>
+                {!hasAnswered && (
+                  <p className="mt-2 text-xs text-on-surface-variant">Responde primero. Tu voto tambien cuenta.</p>
+                )}
                 <button
                   type="button"
                   onClick={hostRevealResults}
-                  className="mt-4 w-full h-12 rounded-xl bg-neon-green text-black font-label-caps font-bold active:scale-95 transition-transform"
+                  disabled={!hasAnswered}
+                  className="mt-4 w-full h-12 rounded-xl bg-neon-green text-black font-label-caps font-bold active:scale-95 transition-transform disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   REVELAR RESULTADOS
                 </button>
               </div>
             )}
 
-            {role !== 'host' && hasAnswered ? (
-              <div className="mt-8 rounded-2xl border border-neon-green/30 bg-neon-green/10 p-5 text-center">
+            {hasAnswered ? (
+              <div className={`mt-8 rounded-2xl border p-5 text-center ${role === 'host' ? 'border-electric-purple/40 bg-electric-purple/10' : 'border-neon-green/30 bg-neon-green/10'}`}>
                 <span className="material-symbols-outlined text-neon-green text-4xl">check_circle</span>
                 <p className="mt-3 text-on-surface-variant font-label-caps text-sm animate-pulse">RESPUESTA ENVIADA</p>
-                <p className="mt-2 text-xs text-on-surface-variant">Pantalla en negro hasta que el anfitrión revele.</p>
+                <p className="mt-2 text-xs text-on-surface-variant">
+                  {role === 'host' ? 'Cuando todos esten listos, revela.' : 'Pantalla en negro hasta que el host revele.'}
+                </p>
               </div>
-            ) : role !== 'host' && currentQuestion.answerType === 'timeline-placement' ? (
+            ) : currentQuestion.answerType === 'timeline-placement' ? (
               <TimelinePlacementQuestion
                 question={currentQuestion}
                 disabled={hasAnswered}
                 onPick={handleAnswer}
               />
-            ) : role !== 'host' ? (
+            ) : (
               <motion.div
                 variants={containerVariants}
                 initial="hidden"
@@ -323,7 +329,7 @@ export default function GameScreen() {
                   </motion.button>
                 ))}
               </motion.div>
-            ) : null}
+            )}
           </motion.div>
         )}
       </AnimatePresence>
