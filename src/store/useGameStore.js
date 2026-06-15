@@ -71,6 +71,20 @@ export const DEDICALO_PLAYLISTS = [
     name: 'De Todo',
     mood: 'Mezcla abierta para partidas variadas.',
     url: 'https://open.spotify.com/playlist/0Pn8mtBmo8HDfuKiky5tNj'
+  },
+  {
+    id: 'fiestas-en-el-pueblo',
+    icon: '🎉',
+    name: 'Fiesta Pueblo',
+    mood: 'Canciones de fiesta para cantar, bailar y reconocer rápido.',
+    url: 'https://open.spotify.com/playlist/5kkHb7jc3WocICRywvY6Yz'
+  },
+  {
+    id: 'just-go',
+    icon: '🚀',
+    name: 'Just Go',
+    mood: 'Mezcla directa para partidas con energía y ritmo.',
+    url: 'https://open.spotify.com/playlist/0yUgOnkSswjzWwNxI2QjNC'
   }
 ];
 export const DEFAULT_SPOTIFY_PLAYLIST_URL = DEDICALO_PLAYLISTS[0].url;
