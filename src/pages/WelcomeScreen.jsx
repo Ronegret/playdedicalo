@@ -11,15 +11,27 @@ export default function WelcomeScreen() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, y: -20 }}
-      className="relative z-10 w-full max-w-[430px] mx-auto min-h-screen flex flex-col items-center justify-center px-margin-mobile py-stack-lg gap-5 overflow-hidden"
+      className="relative z-10 w-full max-w-[430px] mx-auto min-h-screen flex flex-col items-center justify-center px-margin-mobile py-10 gap-5 overflow-hidden text-center"
     >
       <motion.div
-        initial={{ opacity: 0, y: 20, scale: 0.94 }}
+        initial={{ opacity: 0, y: 18, scale: 0.96 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ delay: 0.1, duration: 0.8 }}
-        className="-mt-8"
+        transition={{ delay: 0.08, duration: 0.8 }}
+        className="w-full flex flex-col items-center gap-4"
       >
-        <VinylVisualizer size="hero" logoSrc="https://lh3.googleusercontent.com/aida-public/AB6AXuB1RetzBF8-HbJ_i7Z6O1UPQS8ck_ja3otVu2iIyd4o_Cq-iPO3jcy3HzeHus2OgNrAqGpw-5kaptsja_BLeBDv9niT9sRzGrVce6M25VLz2-9kQd8JLQd6UzLMgPCTqwi4RfkLWGrOldT9Hqu-clEDN6jee11qj92BfYUGbJqzGa_4wJlPl3AdRTs3jb0zaRFQvULdNZs9l3-LVE73Up7TfFmbyEcftbA4JcRRNwpMhGEp-ihBGQYgTla_m0l50IAIhYk-_PjzHbsB" />
+        <div className="w-full max-w-[260px] rounded-[2rem] border border-white/10 bg-surface-container-lowest/55 p-3 shadow-[0_24px_60px_rgba(0,0,0,0.28)] backdrop-blur-xl">
+          <img
+            src="/images/logo-main.png"
+            alt="Dedícalo"
+            className="w-full h-auto rounded-[1.35rem] object-contain"
+          />
+        </div>
+        <img
+          src="/images/logo-horizontal.png"
+          alt="Dedícalo"
+          className="w-[240px] max-w-[80vw] h-auto drop-shadow-[0_12px_34px_rgba(255,122,26,0.18)]"
+        />
+        <VinylVisualizer size="compact" logoSrc="/images/icon-app.png" />
       </motion.div>
 
       <section className="flex flex-col gap-5 text-center w-full">
@@ -29,12 +41,12 @@ export default function WelcomeScreen() {
           transition={{ delay: 0.25, duration: 0.8 }}
           className="space-y-3"
         >
-          <p className="font-label-caps text-neon-green text-xs tracking-widest">INTERACCION MUSICAL SOCIAL</p>
+          <p className="font-label-caps text-neon-green text-xs tracking-[0.28em]">PARTY GAME MUSICAL</p>
           <h1 className="font-headline-lg-mobile text-headline-lg-mobile text-on-surface font-black leading-tight uppercase">
-            Convierte la musica en una <span className="text-animated-gradient">batalla de amigos</span>.
+            Convierte la música en una <span className="text-animated-gradient">batalla de amigos</span>.
           </h1>
-          <p className="text-on-surface-variant text-base leading-relaxed px-2">
-            Escucha una playlist, responde antes que el resto, usa sabotajes y gana llegando primero a 40, 70 o 100 puntos.
+          <p className="text-on-surface-variant text-base leading-relaxed px-2 max-w-md mx-auto">
+            Escucha una playlist, responde antes que el resto, usa sabotajes y gana llegando primero a la meta.
           </p>
         </motion.div>
 
@@ -45,14 +57,14 @@ export default function WelcomeScreen() {
           className="flex flex-col gap-3"
         >
           <NeonButton primary={true} onClick={() => navigate('/how-to-play')}>
-            Como se juega
+            Cómo se juega
           </NeonButton>
           <button
             type="button"
             onClick={() => navigate('/role-selection')}
-            className="h-12 rounded-xl border border-white/10 bg-white/5 text-on-surface-variant font-label-caps text-xs tracking-widest hover:bg-white/10 transition-colors"
+            className="h-12 rounded-2xl border border-white/10 bg-white/5 text-on-surface-variant font-label-caps text-xs tracking-[0.22em] hover:bg-white/10 transition-colors"
           >
-            Ya se jugar, entrar
+            Ya sé jugar, entrar
           </button>
         </motion.div>
       </section>

@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from 'framer-motion';
+﻿import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ChaosEconomyBubbles from '../components/ChaosEconomyBubbles';
@@ -233,7 +233,7 @@ export default function LobbyScreen() {
             {gameLocked ? (
               <div className="rounded-xl border border-neon-green/30 bg-neon-green/10 p-4">
                 <p className="text-lg font-black text-white">{GAME_MODES[gameMode]?.name}</p>
-                <p className="mt-1 text-sm text-on-surface-variant">Meta: {targetScore} puntos. Las reglas quedan fijas hasta el ranking final.</p>
+                <p className="mt-1 text-sm text-on-surface-variant">Meta: {targetScore} puntos. La partida sigue con las mismas reglas hasta el final.</p>
               </div>
             ) : (
               <div className="space-y-4">
@@ -313,7 +313,7 @@ export default function LobbyScreen() {
                 />
               ))}
               {!canUseSabotage && (
-                <p className="text-[11px] text-on-surface-variant">Se desbloquean despu?s de la primera ronda.</p>
+                <p className="text-[11px] text-on-surface-variant">Se desbloquean después de la primera ronda.</p>
               )}
             </div>
           </details>
@@ -338,7 +338,7 @@ export default function LobbyScreen() {
                     <img src={player.avatar} alt={player.name} className="w-10 h-10 rounded-full object-cover border border-electric-purple" />
                   ) : (
                     <div className="w-10 h-10 rounded-full flex items-center justify-center text-2xl bg-white/10 border border-white/5 shrink-0">
-                      {player.avatar || '??'}
+                      {player.avatar || '•'}
                     </div>
                   )}
                   <span className="font-body-md font-bold text-white truncate">{player.name}</span>
@@ -383,3 +383,5 @@ export default function LobbyScreen() {
     </motion.main>
   );
 }
+
+

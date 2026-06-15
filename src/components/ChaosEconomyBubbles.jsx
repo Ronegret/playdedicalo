@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+﻿import { useEffect, useRef } from 'react';
 
 export default function ChaosEconomyBubbles() {
   const containerRef = useRef(null);
@@ -44,3 +44,4 @@ export default function ChaosEconomyBubbles() {
 
   return <div ref={containerRef} className="fixed inset-0 pointer-events-none z-0" />;
 }
+

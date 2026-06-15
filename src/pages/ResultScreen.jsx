@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+﻿import { motion } from 'framer-motion';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGameStore } from '../store/useGameStore';
@@ -45,7 +45,7 @@ function TimelineYears({ years = [] }) {
 
 function RankingList({ players, final = false, showTimeline = false }) {
   if (players.length === 0) {
-    return <p className="text-center text-on-surface-variant">Ning?n invitado jug? esta partida.</p>;
+    return <p className="text-center text-on-surface-variant">Nadie jugó esta partida.</p>;
   }
 
   return (
@@ -76,7 +76,7 @@ function RankingList({ players, final = false, showTimeline = false }) {
                   <img src={player.avatar} alt={player.name} className="w-10 h-10 rounded-full object-cover border border-white/10" />
                 ) : (
                   <span className="w-10 h-10 rounded-full bg-black/20 flex items-center justify-center text-xl shrink-0">
-                    {player.avatar || '??'}
+                    {player.avatar || '•'}
                   </span>
                 )}
                 <span className="font-bold font-body-md truncate">{player.name}</span>
@@ -128,7 +128,7 @@ export default function ResultScreen() {
     navigate('/role-selection');
   };
 
-  if (role === 'host' || isFinal) {
+  if (isFinal) {
     return (
       <motion.main
         initial={{ opacity: 0 }}
@@ -152,15 +152,15 @@ export default function ResultScreen() {
               <div className="mb-5 rounded-2xl border border-neon-green/50 bg-neon-green/10 p-5">
                 <p className="font-label-caps text-neon-green text-xs">GANADOR</p>
                 <p className="mt-1 font-headline-lg-mobile text-3xl text-white">{winner.name}</p>
-                <p className="mt-1 text-sm text-on-surface-variant">Llego a {winner.points} puntos.</p>
+                <p className="mt-1 text-sm text-on-surface-variant">Llegó a {winner.points} puntos.</p>
               </div>
             )}
 
             {lastSabotage && (
               <div className="mb-5 rounded-2xl border border-electric-purple/50 bg-electric-purple/10 p-4 text-left">
-                <p className="font-label-caps text-electric-purple text-[10px]">ULTIMO SABOTAJE</p>
+                <p className="font-label-caps text-electric-purple text-[10px]">ÚLTIMO SABOTAJE</p>
                 <p className="mt-1 font-bold">{lastSabotage.name}</p>
-                <p className="text-xs text-on-surface-variant">{lastSabotage.by ? `${lastSabotage.by} lo activo. ` : ''}{lastSabotage.effect}</p>
+                <p className="text-xs text-on-surface-variant">{lastSabotage.by ? `${lastSabotage.by} lo activó. ` : ''}{lastSabotage.effect}</p>
               </div>
             )}
 
@@ -222,7 +222,18 @@ export default function ResultScreen() {
         </div>
 
         <p className="mt-8 text-sm text-on-surface-variant/80 animate-pulse">ESPERANDO AL ANFITRIÓN...</p>
+
+        {role === 'host' && (
+          <button
+            onClick={hostNextRound}
+            className="mt-6 px-8 py-4 bg-neon-green text-black rounded-xl font-label-caps uppercase tracking-widest font-bold border border-white/20 active:scale-95 transition-all w-full"
+          >
+            SIGUIENTE RONDA
+          </button>
+        )}
       </motion.div>
     </motion.main>
   );
 }
+
+

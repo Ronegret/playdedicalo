@@ -1,89 +1,89 @@
-import { create } from 'zustand';
+﻿import { create } from 'zustand';
 
 const DATABASE_URL = 'https://dedicalo-play-trivia-7-default-rtdb.europe-west1.firebasedatabase.app';
 export const DEDICALO_PLAYLISTS = [
   {
     id: 'reggaeton-historia',
     icon: '🔥',
-    name: 'Reggaeton Hits',
-    mood: 'Reggaeton clásico para reconocer hits al instante.',
+    name: 'REGGAETON',
+    mood: 'Clásicos para reconocer al instante.',
     url: 'https://open.spotify.com/playlist/64B6t8la0Rf3JTTaBXiNcm'
   },
   {
     id: 'hits-todos-los-tiempos',
     icon: '🌍',
-    name: 'Hits Globales',
-    mood: 'Hits globales para partidas con todos los gustos.',
+    name: 'HITS',
+    mood: 'Éxitos para todos los gustos.',
     url: 'https://open.spotify.com/playlist/0f3YRJO2HyZTpCLCVxzBt0'
   },
   {
     id: 'rock-latino',
     icon: '🎸',
-    name: 'Rock Latino',
-    mood: 'Guitarras, nostalgia y coros para cantar fuerte.',
+    name: 'ROCK LATINO',
+    mood: 'Guitarras, nostalgia y coros.',
     url: 'https://open.spotify.com/playlist/07iEAd20wfnMh8VfbmovYG'
   },
   {
     id: 'mix-latino',
     icon: '⚡',
-    name: 'Latino Mix',
-    mood: 'Latino actual para rondas rápidas y energía alta.',
+    name: 'MIX LATINO',
+    mood: 'Rondas rápidas y energía alta.',
     url: 'https://open.spotify.com/playlist/2UBikaEIZWV9LOAjE0dBgx'
   },
   {
     id: 'bailable-todos-los-tiempos',
     icon: '💃',
-    name: 'Bailable',
-    mood: 'Fiesta transversal: canciones fáciles de reconocer.',
+    name: 'BAILABLE',
+    mood: 'Fácil de reconocer y bailar.',
     url: 'https://open.spotify.com/playlist/7FnGVaOj5s9JvAUtvZENfC'
   },
   {
     id: 'romanticos',
     icon: '💜',
-    name: 'Románticas',
-    mood: 'Baladas y recuerdos para jugar por artista y época.',
+    name: 'ROMÁNTICAS',
+    mood: 'Baladas y recuerdos.',
     url: 'https://open.spotify.com/playlist/3dmrZtJOYx1naGoLtyHFOk'
   },
   {
     id: 'perreo-clasico',
-    icon: '🕶️',
-    name: 'Perreo Clásico',
-    mood: 'Perreo clásico y reggaeton de memoria colectiva.',
+    icon: '🕺',
+    name: 'PERREO CLÁSICO',
+    mood: 'Perreo clásico de memoria colectiva.',
     url: 'https://open.spotify.com/playlist/2aatYbsZb0ZiY3aQjcVSw2'
   },
   {
     id: 'temazos-espanoles',
     icon: '🇪🇸',
-    name: 'Temazos ES',
-    mood: 'Música española de siempre para rondas nostálgicas.',
+    name: 'TEMAZOS ES',
+    mood: 'Música española de siempre.',
     url: 'https://open.spotify.com/playlist/7bsAMCUlTcMTGzG1RzxWTX'
   },
   {
     id: 'rock-ska-espanolisimo',
     icon: '🎺',
-    name: 'Rock & Ska',
-    mood: 'Rock, ska y clásicos españoles con mucha identidad.',
+    name: 'ROCK Y SKA',
+    mood: 'Rock, ska y clásicos con identidad.',
     url: 'https://open.spotify.com/playlist/6ZcRMfq1UCg0QzC2KkopvV'
   },
   {
     id: 'de-to2',
     icon: '🎲',
-    name: 'De Todo',
-    mood: 'Mezcla abierta para partidas variadas.',
+    name: 'DE TODO',
+    mood: 'Mezcla abierta para cualquier grupo.',
     url: 'https://open.spotify.com/playlist/0Pn8mtBmo8HDfuKiky5tNj'
   },
   {
     id: 'fiestas-en-el-pueblo',
     icon: '🎉',
-    name: 'Fiesta Pueblo',
-    mood: 'Canciones de fiesta para cantar, bailar y reconocer rápido.',
+    name: 'FIESTA PUEBLO',
+    mood: 'Fiesta para cantar y reconocer rápido.',
     url: 'https://open.spotify.com/playlist/5kkHb7jc3WocICRywvY6Yz'
   },
   {
     id: 'just-go',
     icon: '🚀',
-    name: 'Just Go',
-    mood: 'Mezcla directa para partidas con energía y ritmo.',
+    name: 'JUST GO',
+    mood: 'Energía directa y ritmo alto.',
     url: 'https://open.spotify.com/playlist/0yUgOnkSswjzWwNxI2QjNC'
   }
 ];
@@ -92,55 +92,55 @@ export const DEFAULT_SPOTIFY_PLAYLIST_URL = DEDICALO_PLAYLISTS[0].url;
 export const GAME_MODES = {
   pulse: {
     id: 'pulse',
-    name: 'Pulso Dedícalo',
+    name: 'PULSO',
     short: 'Escucha y responde',
-    description: 'El modo principal. Suena un fragmento, se corta la música y todos responden una pregunta clara sobre artista, título, letra, energía o contexto.',
-    rhythm: 'Es el más fácil de explicar: ideal para primeras partidas, grupos nuevos y gente que solo quiere entrar rápido a jugar.'
+    description: 'Suena un fragmento, se corta y todos responden una pregunta clara.',
+    rhythm: 'Ideal para empezar rápido y sin explicar mucho.'
   },
   timeline: {
     id: 'timeline',
-    name: 'Línea del Ritmo',
+    name: 'LÍNEA',
     short: 'Ordena la música',
-    description: 'La partida gira alrededor de épocas, años, modas y momentos musicales. No hace falta saber la fecha exacta: hay que ubicar la canción en la línea correcta.',
-    rhythm: 'Da conversación y risas: perfecto para nostalgia, comparaciones entre generaciones y debates de "esto era de antes o de ahora?".'
+    description: 'Cada ronda suma años a la línea de cada jugador.',
+    rhythm: 'Perfecto para comparar épocas y discutir qué va antes o después.'
   },
   chaos: {
     id: 'chaos',
-    name: 'Remix Salvaje',
+    name: 'REMIX',
     short: 'Música con sabotajes',
-    description: 'La dinámica sigue siendo musical, pero la estrategia pesa más. Los jugadores gastan puntos para bloquear, arriesgar o provocar remontadas.',
-    rhythm: 'Para grupos competitivos: más tensión, más bromas y más posibilidades de que el último le robe la noche al líder.'
+    description: 'La música sigue, pero ahora también mandan los ataques y la estrategia.',
+    rhythm: 'Más tensión, más bromas y más remontadas.'
   }
 };
 
 export const VICTORY_MODES = [
   {
     targetScore: 40,
-    name: 'Hit Express',
+    name: 'RÁPIDA',
     short: 'Rápida',
-    description: 'Gana quien llega primero a 40 puntos. Ideal para una partida corta antes de salir.'
+    description: 'Gana quien llega primero a 40 puntos.'
   },
   {
     targetScore: 70,
-    name: 'Fiesta Principal',
+    name: 'EQUILIBRADA',
     short: 'Equilibrada',
-    description: 'Meta a 70 puntos. Da tiempo a remontadas, sabotajes y cambios de líder.'
+    description: 'Meta de 70 puntos. Da espacio a remontadas y ataques.'
   },
   {
     targetScore: 100,
-    name: 'Sesión Legendaria',
+    name: 'LARGA',
     short: 'Larga',
-    description: 'Meta a 100 puntos. Para grupos grandes o noches donde la música manda.'
+    description: 'Meta de 100 puntos para partidas largas.'
   }
 ];
 
 export const SABOTAGE_OPTIONS = [
   {
     id: 'point_lock',
-    name: 'Silencio al líder',
+    name: 'Bloqueo',
     icon: 'block',
     cost: 5,
-    effect: 'El líder queda bloqueado: si acierta en la próxima vuelta, no gana puntos.',
+    effect: 'El líder queda bloqueado: si acierta, no suma puntos en la siguiente ronda.',
     color: 'red'
   },
   {
@@ -148,23 +148,23 @@ export const SABOTAGE_OPTIONS = [
     name: 'Letra al revés',
     icon: 'sync_alt',
     cost: 4,
-    effect: 'La próxima pregunta aparece escrita al revés para subir la presión.',
+    effect: 'La siguiente pregunta aparece al revés.',
     color: 'purple'
   },
   {
     id: 'shared_prize',
-    name: 'Dueto dividido',
+    name: 'Dueto',
     icon: 'group',
     cost: 4,
-    effect: 'Si otro jugador acierta la próxima, esa persona gana 3 puntos y tú robas 2 por la jugada.',
+    effect: 'Si otro jugador acierta, comparte parte de la recompensa.',
     color: 'green'
   },
   {
     id: 'wild_question',
-    name: 'Cambio de aguja',
+    name: 'Cambio',
     icon: 'shuffle',
     cost: 3,
-    effect: 'La próxima pregunta salta a una categoría sorpresa, aunque el anfitrión haya elegido otro estilo.',
+    effect: 'La siguiente pregunta salta a una categoría sorpresa.',
     color: 'purple'
   }
 ];
@@ -178,9 +178,9 @@ const MUSIC_QUESTIONS = [
   { mode: 'timeline', answerType: 'timeline-placement', type: 'Línea del Ritmo', text: '¿Dónde encaja esta canción en la línea?', timelineYears: [2000], songYear: 2014, options: ['0', '1'], correct: 1 },
   { mode: 'timeline', answerType: 'timeline-placement', type: 'Línea del Ritmo', text: '¿Dónde pondrías este corte?', timelineYears: [1995, 2005], songYear: 2001, options: ['0', '1', '2'], correct: 1 },
   { mode: 'timeline', answerType: 'timeline-placement', type: 'Línea del Ritmo', text: 'Escucha y colócala por año.', timelineYears: [1990, 2000, 2010], songYear: 2020, options: ['0', '1', '2', '3'], correct: 3 },
-  { mode: 'chaos', type: 'Remix Salvaje', text: '¿Qué jugada conviene ahora?', options: ['Guardar puntos', 'Activar sabotaje', 'Cambiar de avatar', 'Salir de la sala'], correct: 1 },
+  { mode: 'chaos', type: 'Remix', text: '¿Qué jugada conviene ahora?', options: ['Guardar puntos', 'Activar sabotaje', 'Cambiar de avatar', 'Salir de la sala'], correct: 1 },
   { mode: 'chaos', type: 'Colaboración', text: 'Si aparece un dueto, ¿qué conviene escuchar primero?', options: ['Quién entra después', 'El volumen del móvil', 'El color del botón', 'La posición del ranking'], correct: 0 },
-  { mode: 'chaos', type: 'Remix Salvaje', text: '¿Qué color anuncia sabotaje?', options: ['Verde', 'Rojo', 'Lila', 'Azul'], correct: 2 }
+  { mode: 'chaos', type: 'Remix', text: '¿Qué color anuncia sabotaje?', options: ['Verde', 'Rojo', 'Lila', 'Azul'], correct: 2 }
 ];
 
 function databasePath(path) {
@@ -512,13 +512,20 @@ export const useGameStore = create((setStore, getStore) => ({
     }
 
     await patchData(`rooms/${pin}`, {
-      phase: 'lobby',
       round: round + 1,
       currentQuestion: null,
       roundAnswers: null,
       revealResults: null,
-      lastSabotage: null
+      lastSabotage: null,
+      phase: 'countdown'
     });
+
+    setTimeout(() => {
+      const state = getStore();
+      if (state.pin === pin && state.round === round + 1 && state.phase === 'countdown') {
+        patchData(`rooms/${pin}`, { phase: 'listen' }).catch((error) => console.error('Error al continuar la ronda:', error));
+      }
+    }, 3000);
   },
 
   hostEndGame: async () => {
@@ -797,3 +804,4 @@ export const useGameStore = create((setStore, getStore) => ({
     setStore({ roomSubscription: subscription });
   }
 }));
+

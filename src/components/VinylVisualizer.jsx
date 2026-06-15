@@ -1,4 +1,4 @@
-export default function VinylVisualizer({ rotating = true, logoSrc, size = 'default' }) {
+﻿export default function VinylVisualizer({ rotating = true, logoSrc, size = 'default' }) {
   const isHero = size === 'hero';
   const isCompact = size === 'compact';
   const shellSize = isHero ? 'w-[360px] h-[360px] md:w-[420px] md:h-[420px]' : isCompact ? 'w-36 h-36 md:w-44 md:h-44' : 'w-64 h-64 md:w-80 md:h-80';
@@ -29,3 +29,4 @@ export default function VinylVisualizer({ rotating = true, logoSrc, size = 'defa
     </div>
   );
 }
+

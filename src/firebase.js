@@ -1,4 +1,4 @@
-import { getApps, initializeApp } from "firebase/app";
+﻿import { getApps, initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
@@ -14,3 +14,4 @@ const firebaseConfig = {
 const app = getApps().find((firebaseApp) => firebaseApp.name === 'dedicalo') || initializeApp(firebaseConfig, 'dedicalo');
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
+

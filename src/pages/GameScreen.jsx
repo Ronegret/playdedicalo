@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from 'framer-motion';
+﻿import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DEDICALO_PLAYLISTS, GAME_MODES, SABOTAGE_OPTIONS, normalizeSpotifyPlaylistUrl, useGameStore } from '../store/useGameStore';
@@ -53,7 +53,7 @@ function SabotageSquares({ options, points, enabled, onUse }) {
 
 function getTimelineSlotLabel(years, index) {
   if (index === 0) return `Antes de ${years[0]}`;
-  if (index === years.length) return `Despu?s de ${years[years.length - 1]}`;
+  if (index === years.length) return `Después de ${years[years.length - 1]}`;
   return `Entre ${years[index - 1]} y ${years[index]}`;
 }
 
@@ -67,8 +67,8 @@ function TimelinePlacementQuestion({ question, playerYears = [], disabled, onPic
       <div className="rounded-3xl border border-neon-green/20 bg-[radial-gradient(circle_at_top,rgba(57,255,20,0.12),rgba(255,255,255,0.04)_42%,rgba(0,0,0,0.24)_100%)] p-4 shadow-[0_0_30px_rgba(57,255,20,0.08)]">
         <div className="flex items-center justify-between gap-3">
           <div>
-            <p className="font-label-caps text-[10px] text-neon-green tracking-widest">TU L?NEA MUSICAL</p>
-            <p className="mt-1 text-sm text-white font-bold">Elige d?nde colocar esta canci?n</p>
+            <p className="font-label-caps text-[10px] text-neon-green tracking-widest">TU LÍNEA MUSICAL</p>
+            <p className="mt-1 text-sm text-white font-bold">Elige dónde colocar esta canción</p>
           </div>
           <span className="rounded-full border border-white/10 bg-black/25 px-3 py-1 text-[10px] font-label-caps text-on-surface-variant">
             {Math.min(years.length, 12)}/12
@@ -99,7 +99,7 @@ function TimelinePlacementQuestion({ question, playerYears = [], disabled, onPic
           </div>
         </div>
         <p className="mt-3 text-xs text-on-surface-variant">
-          Tu l?nea es personal. Coloca la canci?n antes, despu?s o entre tus a?os.
+          Tu línea es personal. Coloca la canción antes, después o entre tus años.
         </p>
       </div>
     </div>
@@ -270,7 +270,7 @@ export default function GameScreen() {
             transition={{ duration: 0.75 }}
             className="w-full max-w-[430px] px-margin-mobile text-center"
           >
-            <p className="font-label-caps text-electric-purple tracking-widest">PREPARA EL OIDO</p>
+            <p className="font-label-caps text-electric-purple tracking-widest">PREPARA EL OÍDO</p>
             <motion.div
               key={countdownValue}
               initial={{ scale: 0.45, opacity: 0 }}
@@ -423,3 +423,5 @@ export default function GameScreen() {
     </div>
   );
 }
+
+

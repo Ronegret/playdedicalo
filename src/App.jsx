@@ -1,4 +1,4 @@
-import { Routes, Route, useLocation } from 'react-router-dom';
+﻿import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 
 import WelcomeScreen from './pages/WelcomeScreen';
@@ -39,3 +39,4 @@ function App() {
 }
 
 export default App;
+

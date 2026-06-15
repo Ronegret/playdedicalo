@@ -1,12 +1,19 @@
 import { motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { onAuthStateChanged, signInWithPopup } from 'firebase/auth';
+import { getRedirectResult, onAuthStateChanged, signInWithPopup, signInWithRedirect } from 'firebase/auth';
 import { DEDICALO_PLAYLISTS, useGameStore } from '../store/useGameStore';
 import { auth, googleProvider } from '../firebase';
 import VinylVisualizer from '../components/VinylVisualizer';
 import NeonButton from '../components/NeonButton';
-import { connectSpotify, explainSpotifyError, getSpotifyDiagnostics, getSpotifyStatus, pauseSpotifyPlayback, startRandomPlaylistTrack } from '../services/spotify';
+import {
+  connectSpotify,
+  explainSpotifyError,
+  getSpotifyDiagnostics,
+  getSpotifyStatus,
+  pauseSpotifyPlayback,
+  startRandomPlaylistTrack
+} from '../services/spotify';
 
 export default function HostSyncScreen() {
   const navigate = useNavigate();
@@ -40,6 +47,20 @@ export default function HostSyncScreen() {
   }, []);
 
   useEffect(() => {
+    getRedirectResult(auth)
+      .then((result) => {
+        if (result?.user) {
+          setGoogleUser(result.user);
+          setAuthStatus('idle');
+          setAuthMessage('');
+        }
+      })
+      .catch((error) => {
+        console.warn('Google redirect result error', error);
+      });
+  }, []);
+
+  useEffect(() => {
     const onFocus = () => setSpotifyStatus(getSpotifyStatus());
     window.addEventListener('focus', onFocus);
     return () => window.removeEventListener('focus', onFocus);
@@ -50,6 +71,12 @@ export default function HostSyncScreen() {
     setAuthMessage('Abriendo Google...');
 
     try {
+      const useRedirect = window.matchMedia('(max-width: 900px)').matches || /FBAN|FBAV|Instagram|wv|WebView/i.test(navigator.userAgent);
+      if (useRedirect) {
+        await signInWithRedirect(auth, googleProvider);
+        return;
+      }
+
       const result = await signInWithPopup(auth, googleProvider);
       setGoogleUser(result.user);
       setAuthStatus('idle');
@@ -58,10 +85,20 @@ export default function HostSyncScreen() {
       console.error('Google popup error', error);
       const messageByCode = {
         'auth/unauthorized-domain': 'No pudimos abrir Google en este dominio. Avisanos y lo dejamos listo.',
-        'auth/operation-not-allowed': 'Google no esta disponible ahora. Prueba otra vez en un momento.',
-        'auth/popup-blocked': 'El navegador bloqueo la ventana. Permite ventanas emergentes para entrar.',
-        'auth/popup-closed-by-user': 'Se cerro Google antes de terminar.'
+        'auth/operation-not-allowed': 'Google no está disponible ahora. Prueba otra vez en un momento.',
+        'auth/popup-blocked': 'El navegador bloqueó la ventana. Vamos a usar la redirección.',
+        'auth/popup-closed-by-user': 'Se cerró Google antes de terminar.'
       };
+
+      if (error.code === 'auth/popup-blocked' || error.code === 'auth/cancelled-popup-request') {
+        try {
+          await signInWithRedirect(auth, googleProvider);
+          return;
+        } catch (redirectError) {
+          console.error('Google redirect error', redirectError);
+        }
+      }
+
       setAuthStatus('error');
       setAuthMessage(messageByCode[error.code] || 'No se pudo abrir Google. Inténtalo de nuevo.');
     }
@@ -117,13 +154,19 @@ export default function HostSyncScreen() {
       initial={{ opacity: 0, x: 50 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -50 }}
-      className="relative z-10 w-full max-w-[430px] mx-auto min-h-screen flex flex-col items-center px-margin-mobile gap-5 pt-20 pb-10 box-border overflow-x-hidden"
+      className="relative z-10 w-full max-w-[430px] mx-auto min-h-screen flex flex-col items-center px-margin-mobile gap-6 pt-20 pb-10 box-border overflow-x-hidden text-center"
     >
-      <header className="fixed top-0 left-0 right-0 z-50 bg-glass-surface backdrop-blur-md border-b border-white/10 flex justify-between items-center px-margin-mobile h-16 box-border">
-        <button onClick={() => navigate('/role-selection')} className="text-on-surface-variant hover:text-white transition-colors flex items-center gap-2 font-label-caps text-xs">
-          <span className="material-symbols-outlined text-sm">arrow_back</span> VOLVER
+      <header className="fixed top-0 left-0 right-0 z-50 bg-background/78 backdrop-blur-xl border-b border-white/8 flex justify-between items-center px-margin-mobile h-16 box-border">
+        <button
+          onClick={() => navigate('/role-selection')}
+          className="text-on-surface-variant hover:text-white transition-colors flex items-center gap-2 font-label-caps text-xs tracking-[0.18em]"
+        >
+          <span className="material-symbols-outlined text-sm">arrow_back</span>
+          VOLVER
         </button>
-        <h1 className="font-headline-xl text-2xl italic tracking-tighter text-electric-purple leading-none select-none">ANFITRIÓN</h1>
+        <h1 className="font-headline-xl text-2xl italic tracking-tighter text-electric-purple leading-none select-none">
+          ANFITRIÓN
+        </h1>
         <div className="w-8 h-8 rounded-full border-2 border-electric-purple overflow-hidden flex items-center justify-center bg-electric-purple/20">
           {googleUser?.photoURL ? (
             <img src={googleUser.photoURL} alt="Avatar" className="w-full h-full object-cover" />
@@ -133,12 +176,16 @@ export default function HostSyncScreen() {
         </div>
       </header>
 
-      <VinylVisualizer rotating={spotifyStatus.connected} />
+      <div className="mt-1">
+        <VinylVisualizer rotating={spotifyStatus.connected} size="compact" logoSrc="/images/icon-app.png" />
+      </div>
 
-      <section className="text-center w-full max-w-sm">
-        <p className="font-label-caps text-neon-green text-xs tracking-widest">CREA SALA</p>
-        <h2 className="font-headline-lg text-3xl font-black mt-2 text-on-surface leading-tight">Tu mandas la música y también juegas</h2>
-        <p className="text-on-surface-variant text-sm mt-3 mb-5 font-body-md leading-relaxed">
+      <section className="w-full max-w-sm flex flex-col items-center">
+        <p className="font-label-caps text-neon-green text-xs tracking-[0.28em]">CREA SALA</p>
+        <h2 className="mt-2 font-headline-lg text-3xl font-black text-on-surface leading-tight">
+          Tú mandas la música y también juegas
+        </h2>
+        <p className="text-on-surface-variant text-sm mt-3 mb-6 font-body-md leading-relaxed">
           Elige una lista, comparte el PIN y responde como todos.
         </p>
 
@@ -153,9 +200,9 @@ export default function HostSyncScreen() {
               {authStatus === 'loading' ? 'CONECTANDO...' : 'ENTRAR CON GOOGLE'}
             </NeonButton>
           ) : (
-            <div className="p-4 rounded-xl border border-neon-green bg-neon-green/10 text-neon-green flex items-center justify-between font-bold text-sm">
-              <span>GOOGLE LISTO</span>
-              <span className="material-symbols-outlined">check_circle</span>
+            <div className="rounded-[1.5rem] border border-vinyl-orange/30 bg-vinyl-orange/10 text-white px-4 py-4 flex items-center justify-center gap-2 font-bold text-sm">
+              <span className="material-symbols-outlined text-vinyl-orange">check_circle</span>
+              GOOGLE LISTO
             </div>
           )}
 
@@ -166,48 +213,55 @@ export default function HostSyncScreen() {
           )}
 
           {googleUser && (
-            <section className="rounded-2xl border border-white/10 bg-white/5 p-4 text-left">
-              <p className="text-xs text-neon-green font-label-caps mb-2">SPOTIFY</p>
-              <div className="flex items-center justify-between gap-3">
+            <section className="rounded-[1.75rem] border border-white/10 bg-surface-container/72 p-4 text-center shadow-[0_18px_50px_rgba(0,0,0,0.2)]">
+              <p className="text-xs text-neon-green font-label-caps mb-2 tracking-[0.22em]">SPOTIFY</p>
+              <div className="flex flex-col items-center gap-3">
                 <div className="min-w-0">
                   <p className="text-sm font-bold text-white">{spotifyStatus.connected ? 'LISTO PARA SONAR' : 'CONECTA TU CUENTA'}</p>
                   <p className="mt-1 text-xs text-on-surface-variant">Solo el anfitrión necesita Spotify Premium.</p>
                 </div>
-                <button
+                <motion.button
                   type="button"
                   onClick={connectSpotify}
-                  className="h-10 px-3 rounded-lg bg-neon-green text-black font-label-caps text-[10px] shrink-0"
+                  whileTap={{ scale: 0.94 }}
+                  whileHover={{ scale: 1.03 }}
+                  className="h-10 px-4 rounded-xl bg-vinyl-orange text-black font-label-caps text-[10px] tracking-[0.2em] shrink-0"
                 >
                   {spotifyStatus.connected ? 'RECONECTAR' : 'CONECTAR'}
-                </button>
+                </motion.button>
               </div>
               {spotifyStatus.connected && (
                 <div className="mt-3 grid grid-cols-2 gap-2">
-                  <button
+                  <motion.button
                     type="button"
                     onClick={handleCheckSpotify}
                     disabled={isTestingSpotify}
-                    className="h-10 rounded-lg border border-neon-green/40 bg-neon-green/10 text-neon-green font-label-caps text-[10px] disabled:opacity-50"
+                    whileTap={{ scale: 0.96 }}
+                    whileHover={{ scale: 1.02 }}
+                    className="h-10 rounded-xl border border-vinyl-orange/40 bg-vinyl-orange/10 text-white font-label-caps text-[10px] tracking-[0.2em] disabled:opacity-50"
                   >
                     {isTestingSpotify ? 'PROBANDO...' : 'PROBAR'}
-                  </button>
-                  <button
+                  </motion.button>
+                  <motion.button
                     type="button"
                     onClick={handleStopSpotifyTest}
-                    className="h-10 rounded-lg border border-white/10 bg-black/15 text-white font-label-caps text-[10px]"
+                    whileTap={{ scale: 0.96 }}
+                    whileHover={{ scale: 1.02 }}
+                    className="h-10 rounded-xl border border-white/10 bg-black/15 text-white font-label-caps text-[10px] tracking-[0.2em]"
                   >
                     PARAR
-                  </button>
+                  </motion.button>
                 </div>
               )}
               {spotifyCheck && (
-                <p className={`mt-3 rounded-xl border px-3 py-2 text-xs leading-relaxed ${
-                  spotifyCheck.type === 'success'
-                    ? 'border-neon-green/40 bg-neon-green/10 text-neon-green'
-                    : spotifyCheck.type === 'error'
-                      ? 'border-intense-red/40 bg-intense-red/10 text-intense-red'
-                      : 'border-white/10 bg-black/15 text-on-surface-variant'
-                }`}
+                <p
+                  className={`mt-3 rounded-xl border px-3 py-2 text-xs leading-relaxed ${
+                    spotifyCheck.type === 'success'
+                      ? 'border-vinyl-orange/40 bg-vinyl-orange/10 text-white'
+                      : spotifyCheck.type === 'error'
+                        ? 'border-intense-red/40 bg-intense-red/10 text-intense-red'
+                        : 'border-white/10 bg-black/15 text-on-surface-variant'
+                  }`}
                 >
                   {spotifyCheck.message}
                 </p>
@@ -216,75 +270,76 @@ export default function HostSyncScreen() {
           )}
 
           {googleUser && (
-            <section className="rounded-2xl border border-white/10 bg-white/5 p-4 text-left">
+            <section className="rounded-[1.75rem] border border-white/10 bg-surface-container/72 p-4 text-center shadow-[0_18px_50px_rgba(0,0,0,0.2)]">
               <div className="flex items-center justify-between gap-3">
-                <div>
-                  <p className="text-xs text-neon-green font-label-caps">ELIGE ESTILO</p>
+                <div className="text-left">
+                  <p className="text-xs text-neon-green font-label-caps tracking-[0.22em]">ELIGE ESTILO</p>
                   <p className="mt-1 text-[11px] text-on-surface-variant">Toca una tarjeta para jugar.</p>
                 </div>
-                <span className="grid h-10 w-10 place-items-center rounded-full border border-neon-green/30 bg-neon-green/10 text-xl">
+                <span className="grid h-10 w-10 place-items-center rounded-full border border-vinyl-orange/30 bg-vinyl-orange/10 text-xl">
                   {selectedCuratedPlaylist.icon}
                 </span>
               </div>
 
-              <div className="mt-4 grid grid-cols-2 gap-2" role="listbox" aria-label="Estilos disponibles">
+              <div className="mt-4 grid grid-cols-2 gap-2 text-center" role="listbox" aria-label="Estilos disponibles">
                 {DEDICALO_PLAYLISTS.map((playlist) => {
                   const isSelected = playlist.id === selectedPlaylist;
 
                   return (
-                    <button
+                    <motion.button
                       key={playlist.id}
                       type="button"
                       role="option"
                       aria-selected={isSelected}
                       onClick={() => setSelectedPlaylist(playlist.id)}
-                      className={`min-h-[74px] rounded-2xl border p-3 text-left transition-all duration-200 ${
+                      whileTap={{ scale: 0.95 }}
+                      whileHover={{ scale: 1.02 }}
+                      className={`min-h-[82px] rounded-[1.4rem] border p-3 text-center transition-all duration-200 ${
                         isSelected
-                          ? 'border-neon-green bg-neon-green/15 shadow-[0_0_22px_rgba(57,255,20,0.18)]'
-                          : 'border-white/10 bg-black/20 hover:border-electric-purple/60 hover:bg-electric-purple/10'
+                          ? 'border-vinyl-orange bg-vinyl-orange/14 shadow-[0_0_22px_rgba(255,122,26,0.18)]'
+                          : 'border-white/10 bg-black/16 hover:border-electric-purple/60 hover:bg-electric-purple/10'
                       }`}
                     >
-                      <span className="flex items-center gap-2">
+                      <span className="flex flex-col items-center justify-center gap-1">
                         <span className="text-lg leading-none">{playlist.icon}</span>
-                        <span className={`font-label-caps text-[11px] leading-tight tracking-wider ${
-                          isSelected ? 'text-neon-green' : 'text-white'
-                        }`}
+                        <span
+                          className={`font-label-caps text-[11px] leading-tight tracking-[0.18em] ${
+                            isSelected ? 'text-white' : 'text-on-surface'
+                          }`}
                         >
                           {playlist.name.toUpperCase()}
                         </span>
                       </span>
                       {isSelected && (
-                        <span className="mt-3 inline-flex items-center gap-1 rounded-full bg-neon-green px-2 py-1 text-[9px] font-black uppercase tracking-widest text-black">
+                        <span className="mt-3 inline-flex items-center gap-1 rounded-full bg-white/15 px-2 py-1 text-[9px] font-black uppercase tracking-[0.2em] text-white justify-center">
                           <span className="material-symbols-outlined text-[12px]">check</span>
                           LISTA
                         </span>
                       )}
-                    </button>
+                    </motion.button>
                   );
                 })}
               </div>
 
-              <div className="mt-3 rounded-xl border border-neon-green/25 bg-neon-green/10 px-3 py-2">
-                <p className="font-label-caps text-[10px] text-neon-green">SELECCIONADO</p>
-                <p className="mt-1 text-sm font-black uppercase tracking-wide text-white">
-                  {selectedCuratedPlaylist.name}
-                </p>
-                <p className="mt-1 text-xs text-on-surface-variant leading-relaxed">
-                  {selectedCuratedPlaylist.mood}
-                </p>
+              <div className="mt-3 rounded-xl border border-vinyl-orange/25 bg-vinyl-orange/10 px-3 py-3 text-center">
+                <p className="font-label-caps text-[10px] text-vinyl-orange tracking-[0.22em]">SELECCIONADO</p>
+                <p className="mt-1 text-sm font-black uppercase tracking-wide text-white">{selectedCuratedPlaylist.name}</p>
+                <p className="mt-1 text-xs text-on-surface-variant leading-relaxed">{selectedCuratedPlaylist.mood}</p>
               </div>
             </section>
           )}
 
           {googleUser && (
-            <button
+            <motion.button
               type="button"
               onClick={handleHostCreate}
               disabled={isCreating || !canCreateRoom}
-              className="mt-6 w-full h-14 bg-glass-surface glass-blur border-2 border-electric-purple/50 rounded-xl flex items-center justify-center text-on-surface font-label-caps text-label-caps uppercase tracking-widest disabled:opacity-50 disabled:cursor-not-allowed hover:bg-electric-purple/10 transition-colors"
+              whileTap={{ scale: 0.96 }}
+              whileHover={{ scale: 1.02 }}
+              className="mt-6 w-full h-14 bg-glass-surface border-2 border-electric-purple/50 rounded-2xl flex items-center justify-center text-white font-label-caps text-sm uppercase tracking-[0.2em] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-electric-purple/10 transition-colors"
             >
               {isCreating ? 'CREANDO...' : !spotifyStatus.connected ? 'CONECTA SPOTIFY' : 'CREAR SALA'}
-            </button>
+            </motion.button>
           )}
         </div>
       </section>

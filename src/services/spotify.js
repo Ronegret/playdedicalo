@@ -1,4 +1,4 @@
-const SPOTIFY_CLIENT_ID = import.meta.env.VITE_SPOTIFY_CLIENT_ID || '8d753e32e5c34713baa3cee821bb85ad';
+﻿const SPOTIFY_CLIENT_ID = import.meta.env.VITE_SPOTIFY_CLIENT_ID || '8d753e32e5c34713baa3cee821bb85ad';
 const TOKEN_KEY = 'dedicalo_spotify_token';
 const VERIFIER_KEY = 'dedicalo_spotify_verifier';
 const TRACK_KEY = 'dedicalo_current_spotify_track';
@@ -491,3 +491,4 @@ export function getCurrentHiddenTrack() {
 export async function pauseSpotifyPlayback() {
   await spotifyFetch('https://api.spotify.com/v1/me/player/pause', { method: 'PUT' });
 }
+

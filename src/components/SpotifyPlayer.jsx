@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+﻿import { motion } from 'framer-motion';
 import { DEDICALO_PLAYLISTS, normalizeSpotifyPlaylistUrl, useGameStore } from '../store/useGameStore';
 
 export default function SpotifyPlayer() {
@@ -17,24 +17,16 @@ export default function SpotifyPlayer() {
     <motion.div
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
-      className="fixed bottom-0 left-0 w-full z-50 bg-black/[0.92] backdrop-blur-md border-t border-white/10"
+      className="fixed bottom-0 left-0 w-full z-50 bg-background/92 backdrop-blur-xl border-t border-white/8"
     >
-      <div className="max-w-[430px] mx-auto px-3 py-3">
-        <div className="flex items-center justify-between gap-3">
-          <div className="min-w-0">
-            <p className="text-[10px] text-neon-green font-label-caps tracking-widest uppercase">ESTILO DE LA PARTIDA</p>
-            <p className="text-xs font-bold uppercase tracking-wide text-white truncate">{activePlaylist.icon} {activePlaylist.name}</p>
-            <p className="mt-1 text-[10px] text-on-surface-variant leading-snug">Se mantiene hasta terminar la meta.</p>
-          </div>
-          <span className="h-8 px-3 rounded-lg bg-neon-green/15 text-neon-green border border-neon-green/40 text-[10px] font-label-caps flex items-center shrink-0">
-            LISTA
-          </span>
-        </div>
-
-        <div className="mt-3 rounded-xl border border-white/10 bg-white/5 px-3 py-2">
-          <p className="text-[10px] text-on-surface-variant leading-snug">{activePlaylist.mood}</p>
+      <div className="max-w-[430px] mx-auto px-4 py-3">
+        <div className="rounded-2xl border border-white/10 bg-surface-container/80 px-4 py-3 text-center shadow-[0_18px_50px_rgba(0,0,0,0.22)]">
+          <p className="text-[10px] text-neon-green font-label-caps tracking-[0.24em] uppercase">ESTILO ACTIVO</p>
+          <p className="mt-1 text-sm font-black uppercase tracking-[0.08em] text-white truncate">{activePlaylist.icon} {activePlaylist.name}</p>
+          <p className="mt-2 text-[11px] text-on-surface-variant leading-snug">{activePlaylist.mood}</p>
         </div>
       </div>
     </motion.div>
   );
 }
+

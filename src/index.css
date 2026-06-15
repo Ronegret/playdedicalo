@@ -10,33 +10,33 @@
 
   body {
     @apply bg-background text-on-background font-body-md;
-    background-color: #0e0e13;
+    background-color: #050816;
     overflow-x: hidden;
   }
 }
 
 @layer utilities {
   .glass-surface {
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(8, 16, 31, 0.62);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
   }
 
   .vinyl-shadow {
-    box-shadow: 0 0 50px rgba(189, 0, 255, 0.2), inset 0 0 20px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 0 55px rgba(255, 122, 26, 0.18), 0 0 90px rgba(255, 79, 216, 0.12), inset 0 0 20px rgba(0, 0, 0, 0.82);
   }
 
   .neon-glow-purple {
-    box-shadow: 0 0 30px rgba(189, 0, 255, 0.3);
+    box-shadow: 0 0 30px rgba(255, 79, 216, 0.34);
   }
 
   .neon-glow-green {
-    box-shadow: 0 0 25px rgba(57, 255, 20, 0.4);
+    box-shadow: 0 0 25px rgba(255, 138, 31, 0.42);
   }
   
   .text-animated-gradient {
-    background: linear-gradient(90deg, #BD00FF, #39FF14, #BD00FF);
+    background: linear-gradient(90deg, #ff7a1a, #ff4fd8, #ffbf4d, #ff7a1a);
     background-size: 200% auto;
     -webkit-background-clip: text;
     background-clip: text;
@@ -63,9 +63,9 @@
 }
 
 .animated-mesh {
-  background: radial-gradient(circle at 20% 30%, rgba(189, 0, 255, 0.15) 0%, transparent 50%),
-              radial-gradient(circle at 80% 70%, rgba(57, 255, 20, 0.1) 0%, transparent 50%),
-              radial-gradient(circle at 50% 50%, rgba(0, 71, 255, 0.05) 0%, transparent 100%);
+  background: radial-gradient(circle at 20% 30%, rgba(255, 122, 26, 0.16) 0%, transparent 48%),
+              radial-gradient(circle at 80% 70%, rgba(255, 79, 216, 0.14) 0%, transparent 48%),
+              radial-gradient(circle at 50% 50%, rgba(63, 120, 255, 0.08) 0%, transparent 100%);
   background-size: 200% 200%;
   animation: mesh-gradient 15s ease infinite;
 }
