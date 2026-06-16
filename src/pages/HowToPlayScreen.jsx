@@ -62,7 +62,7 @@ export default function HowToPlayScreen() {
       initial={{ opacity: 0, y: 18 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -18 }}
-      className="relative z-10 w-full max-w-2xl mx-auto min-h-screen px-margin-mobile pt-20 pb-12"
+      className="relative z-10 w-full max-w-2xl mx-auto min-h-screen px-margin-mobile pt-safe-header pb-24"
     >
       <header className="fixed top-0 left-0 right-0 h-16 z-50 bg-background/80 backdrop-blur-xl border-b border-white/8 flex items-center px-margin-mobile">
         <button

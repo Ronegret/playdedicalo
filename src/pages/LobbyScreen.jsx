@@ -209,7 +209,7 @@ export default function LobbyScreen() {
   const canUseSabotage = role === 'guest' && round > 1;
 
   return (
-    <motion.main className="relative z-10 min-h-screen px-margin-mobile pt-20 pb-28 max-w-lg mx-auto flex flex-col items-center w-full">
+    <motion.main className="relative z-10 min-h-screen px-margin-mobile pt-safe-header pb-28 max-w-lg mx-auto flex flex-col items-center w-full">
       <ChaosEconomyBubbles />
 
       <header className="fixed top-0 left-0 right-0 h-16 bg-surface/85 backdrop-blur-xl border-b border-white/10 flex justify-between items-center px-margin-mobile z-50">

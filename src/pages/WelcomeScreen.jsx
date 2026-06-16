@@ -15,7 +15,7 @@ export default function WelcomeScreen() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, scale: 0.98 }}
       transition={{ duration: 0.4 }}
-      className="relative z-10 w-full h-screen md:min-h-screen md:h-auto overflow-hidden md:overflow-visible flex items-center justify-center px-5 md:px-10 lg:px-20 py-0 md:py-16"
+      className="relative z-10 w-full h-svh md:min-h-screen md:h-auto overflow-hidden md:overflow-visible flex items-center justify-center px-5 md:px-10 lg:px-20 py-0 md:py-16"
     >
       <div className="w-full max-w-[430px] md:max-w-5xl lg:max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-4 md:gap-16 lg:gap-24">
 

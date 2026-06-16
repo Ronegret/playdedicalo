@@ -154,7 +154,7 @@ export default function GuestJoinScreen() {
   };
 
   return (
-    <motion.main className="relative z-10 w-full max-w-[430px] mx-auto min-h-screen px-margin-mobile pt-24 pb-24 text-center">
+    <motion.main className="relative z-10 w-full max-w-[430px] mx-auto min-h-screen px-margin-mobile pt-safe-header pb-28 text-center">
       <header className="fixed top-0 w-full z-50 bg-glass-surface backdrop-blur-md border-b border-white/10 flex items-center justify-between px-margin-mobile h-16 left-0">
         <button onClick={() => navigate('/role-selection')} className="text-on-surface-variant hover:text-white transition-colors flex items-center gap-2 font-label-caps text-xs tracking-[0.18em]">
           <span className="material-symbols-outlined text-xl">arrow_back</span> VOLVER

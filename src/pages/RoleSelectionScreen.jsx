@@ -9,7 +9,7 @@ export default function RoleSelectionScreen() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="relative z-10 w-full max-w-[430px] mx-auto min-h-screen flex flex-col items-center px-margin-mobile pt-20 pb-24 text-center"
+      className="relative z-10 w-full max-w-[430px] mx-auto min-h-screen flex flex-col items-center px-margin-mobile pt-safe-header pb-28 text-center"
     >
       <header className="fixed top-0 left-0 right-0 z-50 h-16 flex items-center justify-between px-margin-mobile bg-background/78 backdrop-blur-xl border-b border-white/8">
         <button

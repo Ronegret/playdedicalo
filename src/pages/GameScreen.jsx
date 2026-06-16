@@ -369,7 +369,7 @@ export default function GameScreen() {
   };
 
   return (
-    <div className={`relative z-10 min-h-screen w-full flex flex-col items-center justify-center pt-16 transition-colors duration-500 ${phase === 'blackout' ? 'bg-black' : 'bg-transparent'}`}>
+    <div className={`relative z-10 min-h-screen w-full flex flex-col items-center justify-center pt-safe-header pb-8 transition-colors duration-500 ${phase === 'blackout' ? 'bg-black' : 'bg-transparent'}`}>
 
       <header className="fixed top-0 left-0 right-0 h-16 flex items-center justify-between px-margin-mobile z-50 bg-surface/60 backdrop-blur-xl border-b border-white/10">
         <button onClick={() => setShowExitConfirm(true)} className="text-on-surface-variant font-label-caps text-xs flex items-center gap-2 active:scale-90 transition-transform">

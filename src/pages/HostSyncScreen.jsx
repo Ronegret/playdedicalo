@@ -158,7 +158,7 @@ export default function HostSyncScreen() {
       initial={{ opacity: 0, x: 50 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -50 }}
-      className="relative z-10 w-full min-h-screen px-4 md:px-8 lg:px-16 pt-20 pb-12"
+      className="relative z-10 w-full min-h-screen px-4 md:px-8 lg:px-16 pt-safe-header pb-28"
     >
       {/* ── Header ── */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-white/8 flex justify-between items-center px-4 md:px-8 h-16">

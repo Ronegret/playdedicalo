@@ -17,6 +17,8 @@
 
   #root {
     overflow-y: auto;
+    /* Extra scroll space so content isn't hidden under iOS home indicator */
+    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 
   body {
@@ -29,6 +31,11 @@
     padding-top: env(safe-area-inset-top, 0px);
     min-height: calc(4rem + env(safe-area-inset-top, 0px));
     height: auto !important;
+  }
+
+  /* Padding-top que acompaña el header dinámico + respiro de 1rem */
+  .pt-safe-header {
+    padding-top: calc(5rem + env(safe-area-inset-top, 0px));
   }
 }
 
