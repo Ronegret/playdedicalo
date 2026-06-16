@@ -160,6 +160,7 @@ export default function LobbyScreen() {
     gameMode,
     targetScore,
     sabotageConfig,
+    lastDisconnectedPlayer,
     hostStartGame,
     setGameSettings,
     guestUseSabotage,
@@ -174,6 +175,7 @@ export default function LobbyScreen() {
   const [linkShared, setLinkShared] = useState(false);
   const [sabotageOpen, setSabotageOpen] = useState(false);
   const [startError, setStartError] = useState('');
+  const [disconnectToast, setDisconnectToast] = useState('');
   const gameLocked = round > 1;
 
   useEffect(() => {
@@ -187,6 +189,14 @@ export default function LobbyScreen() {
       navigate('/role-selection');
     }
   }, [roomError, clearRoomError, navigate]);
+
+  useEffect(() => {
+    if (!lastDisconnectedPlayer) return;
+    setDisconnectToast(lastDisconnectedPlayer);
+    useGameStore.setState({ lastDisconnectedPlayer: null });
+    const t = setTimeout(() => setDisconnectToast(''), 5000);
+    return () => clearTimeout(t);
+  }, [lastDisconnectedPlayer]);
 
   const handleExit = () => {
     setShowExitConfirm(true);
@@ -218,6 +228,26 @@ export default function LobbyScreen() {
   return (
     <motion.main className="relative z-10 min-h-screen px-margin-mobile pt-safe-header pb-28 max-w-lg mx-auto flex flex-col items-center w-full">
       <ChaosEconomyBubbles />
+
+      <AnimatePresence>
+        {disconnectToast && (
+          <motion.div
+            initial={{ y: -80, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -80, opacity: 0 }}
+            transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+            className="fixed top-20 inset-x-0 z-[290] flex justify-center px-5 pointer-events-none"
+          >
+            <div className="rounded-2xl border border-vinyl-orange/50 bg-vinyl-orange/15 backdrop-blur-lg p-3 flex items-center gap-3 max-w-sm w-full">
+              <span className="material-symbols-outlined text-vinyl-orange text-2xl shrink-0">wifi_off</span>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-black text-white">{disconnectToast} se desconectó</p>
+                <p className="text-[10px] text-vinyl-orange/80">Ha sido eliminado de la sala.</p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <header className="fixed top-0 left-0 right-0 h-16 bg-surface/85 backdrop-blur-xl border-b border-white/10 flex justify-between items-center px-margin-mobile z-50">
         <button onClick={handleExit} className="text-on-surface-variant hover:text-white transition-colors flex items-center font-label-caps text-xs gap-2">

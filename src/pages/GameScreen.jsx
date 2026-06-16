@@ -398,6 +398,7 @@ export default function GameScreen() {
     hostTriggerBlackout,
     hostRevealResults,
     hostCancelRound,
+    hostCloseRoom,
     guestAnswer,
     guestUseSabotage,
     guestLeaveRoom,
@@ -410,6 +411,7 @@ export default function GameScreen() {
     traps,
     sharedPrize,
     sabotageConfig,
+    lastDisconnectedPlayer,
     setAudioPlaying,
     roomError,
     clearRoomError
@@ -421,12 +423,21 @@ export default function GameScreen() {
   const [activatedSabotage, setActivatedSabotage] = useState(null);
   const [pendingAttackWarning, setPendingAttackWarning] = useState('');
   const [showExitConfirm, setShowExitConfirm] = useState(false);
+  const [disconnectToast, setDisconnectToast] = useState('');
   const startedSpotifyRoundRef = useRef('');
 
   useEffect(() => {
     if (phase === 'result' || phase === 'final') navigate('/game/result');
     if (phase === 'lobby') navigate('/lobby');
   }, [phase, navigate]);
+
+  useEffect(() => {
+    if (!lastDisconnectedPlayer) return;
+    setDisconnectToast(lastDisconnectedPlayer);
+    useGameStore.setState({ lastDisconnectedPlayer: null });
+    const t = setTimeout(() => setDisconnectToast(''), 5000);
+    return () => clearTimeout(t);
+  }, [lastDisconnectedPlayer]);
 
   useEffect(() => {
     if (roomError) {
@@ -574,6 +585,26 @@ export default function GameScreen() {
             sabotage={activatedSabotage}
             onDismiss={() => setActivatedSabotage(null)}
           />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {disconnectToast && (
+          <motion.div
+            initial={{ y: -80, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -80, opacity: 0 }}
+            transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+            className="fixed top-20 inset-x-0 z-[290] flex justify-center px-5 pointer-events-none"
+          >
+            <div className="rounded-2xl border border-vinyl-orange/50 bg-vinyl-orange/15 backdrop-blur-lg p-3 flex items-center gap-3 max-w-sm w-full">
+              <span className="material-symbols-outlined text-vinyl-orange text-2xl shrink-0">wifi_off</span>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-black text-white">{disconnectToast} se desconectó</p>
+                <p className="text-[10px] text-vinyl-orange/80">Ha sido eliminado de la partida.</p>
+              </div>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
 
@@ -907,14 +938,14 @@ export default function GameScreen() {
               onClick={(e) => e.stopPropagation()}
             >
               <span className="material-symbols-outlined text-vinyl-orange" style={{ fontSize: '2.5rem' }}>
-                {role === 'host' ? 'warning' : 'logout'}
+                {role === 'host' ? 'emoji_events' : 'logout'}
               </span>
               <h3 className="mt-3 font-headline-lg text-xl font-black text-white">
-                {role === 'host' ? '¿Cancelar la ronda?' : '¿Salir de la partida?'}
+                {role === 'host' ? '¿Terminar la partida?' : '¿Salir de la partida?'}
               </h3>
               <p className="mt-2 text-sm text-on-surface-variant">
                 {role === 'host'
-                  ? 'Volverás al lobby. La ronda actual se perderá para todos.'
+                  ? 'Se mostrará el ranking final a todos los jugadores. ¿Estás seguro?'
                   : 'Perderás tu progreso en esta ronda.'}
               </p>
               <div className="mt-5 flex flex-col gap-2">
@@ -922,7 +953,9 @@ export default function GameScreen() {
                   onClick={async () => {
                     setShowExitConfirm(false);
                     if (role === 'host') {
-                      await hostCancelRound();
+                      await pauseSpotifyPlayback().catch(() => {});
+                      hostCloseRoom();
+                      navigate('/role-selection');
                     } else {
                       guestLeaveRoom();
                       navigate('/role-selection');
@@ -930,7 +963,7 @@ export default function GameScreen() {
                   }}
                   className="w-full h-12 rounded-xl bg-intense-red text-white font-label-caps text-sm font-bold active:scale-95 transition-all"
                 >
-                  {role === 'host' ? 'SÍ, CANCELAR RONDA' : 'SÍ, SALIR'}
+                  {role === 'host' ? 'SÍ, TERMINAR PARTIDA' : 'SÍ, SALIR'}
                 </button>
                 <button
                   onClick={() => setShowExitConfirm(false)}

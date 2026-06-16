@@ -1,5 +1,5 @@
 ﻿import { create } from 'zustand';
-import { ref, onValue } from 'firebase/database';
+import { ref, onValue, onDisconnect } from 'firebase/database';
 import { database } from '../firebase';
 
 const DATABASE_URL = 'https://dedicalo-play-trivia-7-default-rtdb.europe-west1.firebasedatabase.app';
@@ -321,6 +321,7 @@ export const useGameStore = create((setStore, getStore) => ({
   timelineYears: [],
   roomSubscription: null,
   sabotageConfig: { enabled: true, types: 'all', allowedIds: [] },
+  lastDisconnectedPlayer: null,
 
   isAudioPlaying: false,
   isAudioMuted: false,
@@ -391,6 +392,9 @@ export const useGameStore = create((setStore, getStore) => ({
 
     try {
       await writeData(`rooms/${newPin}`, roomData);
+      onDisconnect(ref(database, `rooms/${newPin}`))
+        .update({ phase: 'final', currentQuestion: null })
+        .catch(() => {});
       setStore({
         pin: newPin,
         role: 'host',
@@ -677,6 +681,9 @@ export const useGameStore = create((setStore, getStore) => ({
       };
 
       await writeData(`rooms/${cleanPin}/players/${guestId}`, newPlayer);
+      onDisconnect(ref(database, `rooms/${cleanPin}/players/${guestId}`))
+        .remove()
+        .catch(() => {});
       setStore({
         role: 'guest',
         pin: cleanPin,
@@ -921,6 +928,8 @@ export const useGameStore = create((setStore, getStore) => ({
     const existingSubscription = getStore().roomSubscription;
     if (typeof existingSubscription === 'function') existingSubscription();
 
+    let knownPlayerIds = null;
+
     const roomRef = ref(database, `rooms/${pin}`);
     const unsubscribe = onValue(roomRef, (snapshot) => {
       const data = snapshot.val();
@@ -930,9 +939,21 @@ export const useGameStore = create((setStore, getStore) => ({
         if (current.role === 'guest') {
           getStore().guestLeaveRoom();
           setStore({ roomError: 'La sala ha sido cerrada por el anfitrión.' });
+        } else if (current.role === 'host') {
+          setStore({ roomError: null });
         }
         return;
       }
+
+      const newPlayerIds = new Set(Object.keys(data.players || {}));
+      if (knownPlayerIds !== null) {
+        const lostIds = [...knownPlayerIds].filter((id) => !newPlayerIds.has(id));
+        if (lostIds.length > 0) {
+          const lostName = current.players.find((p) => p.id === lostIds[0])?.name || 'Un jugador';
+          setStore({ lastDisconnectedPlayer: lostName });
+        }
+      }
+      knownPlayerIds = newPlayerIds;
 
       const remoteRound = Number(data.round || 1);
       const remotePhase = data.phase || 'lobby';
