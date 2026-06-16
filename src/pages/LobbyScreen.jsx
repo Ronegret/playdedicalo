@@ -143,6 +143,12 @@ function TimelineYears({ years = [] }) {
   );
 }
 
+const SABOTAGE_CONFIG_STYLES = {
+  red: { border: 'border-intense-red/50', bg: 'bg-intense-red/10', text: 'text-intense-red', icon: 'text-intense-red' },
+  green: { border: 'border-neon-green/45', bg: 'bg-neon-green/10', text: 'text-neon-green', icon: 'text-neon-green' },
+  purple: { border: 'border-electric-purple/60', bg: 'bg-electric-purple/12', text: 'text-electric-purple', icon: 'text-electric-purple' }
+};
+
 export default function LobbyScreen() {
   const navigate = useNavigate();
   const {
@@ -153,6 +159,7 @@ export default function LobbyScreen() {
     round,
     gameMode,
     targetScore,
+    sabotageConfig,
     hostStartGame,
     setGameSettings,
     guestUseSabotage,
@@ -385,6 +392,102 @@ export default function LobbyScreen() {
                       />
                     ))}
                   </div>
+                </div>
+
+                <div className="rounded-xl border border-white/10 bg-black/15 p-4">
+                  <div className="flex items-start justify-between gap-3 mb-3">
+                    <div>
+                      <span className="text-sm font-bold text-white">Sabotajes</span>
+                      <p className="text-[11px] text-on-surface-variant mt-0.5 leading-relaxed">
+                        Los sabotajes permiten gastar puntos para atacar al líder. ¡Ideal para las revancha!
+                      </p>
+                    </div>
+                    <InfoDetails title="¿Qué son los sabotajes?">
+                      <p>Son cartas especiales que los jugadores pueden usar mientras suena la música.</p>
+                      <p className="mt-2">Cada sabotaje tiene un coste en puntos. Bien usados, pueden cambiar el resultado de la partida.</p>
+                      <p className="mt-2 text-neon-green">Se desbloquean a partir de la ronda 2.</p>
+                    </InfoDetails>
+                  </div>
+
+                  <div className="grid gap-2 mb-3">
+                    {[
+                      { id: 'none', label: 'Sin sabotajes', desc: 'Juego limpio, solo música y respuestas.', icon: 'block', selected: !sabotageConfig?.enabled },
+                      { id: 'all', label: 'Con todos los sabotajes', desc: 'Más caos, más drama y más revancha.', icon: 'auto_awesome', selected: sabotageConfig?.enabled && sabotageConfig?.types === 'all' },
+                      { id: 'custom', label: 'Solo algunos sabotajes', desc: 'Tú eliges cuáles aparecen en la partida.', icon: 'tune', selected: sabotageConfig?.enabled && sabotageConfig?.types === 'custom' }
+                    ].map((opt) => (
+                      <div
+                        key={opt.id}
+                        className={`rounded-xl border transition-colors ${opt.selected ? 'border-electric-purple/60 bg-electric-purple/10' : 'border-white/10 bg-black/10'}`}
+                      >
+                        <div className="flex items-center gap-3 p-3">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (opt.id === 'none') handleSettingsChange({ sabotageConfig: { enabled: false, types: 'none', allowedIds: [] } });
+                              else if (opt.id === 'all') handleSettingsChange({ sabotageConfig: { enabled: true, types: 'all', allowedIds: [] } });
+                              else handleSettingsChange({ sabotageConfig: { enabled: true, types: 'custom', allowedIds: sabotageConfig?.allowedIds || [] } });
+                            }}
+                            className={`w-6 h-6 rounded-md border flex items-center justify-center shrink-0 ${opt.selected ? 'border-electric-purple bg-electric-purple text-white' : 'border-white/20 bg-white/5 text-transparent'}`}
+                            aria-pressed={opt.selected}
+                          >
+                            <span className="material-symbols-outlined text-base">check</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (opt.id === 'none') handleSettingsChange({ sabotageConfig: { enabled: false, types: 'none', allowedIds: [] } });
+                              else if (opt.id === 'all') handleSettingsChange({ sabotageConfig: { enabled: true, types: 'all', allowedIds: [] } });
+                              else handleSettingsChange({ sabotageConfig: { enabled: true, types: 'custom', allowedIds: sabotageConfig?.allowedIds || [] } });
+                            }}
+                            className="min-w-0 flex-1 text-left"
+                          >
+                            <span className="block text-sm font-bold text-white leading-tight">{opt.label}</span>
+                            <span className="mt-0.5 block text-[11px] text-on-surface-variant">{opt.desc}</span>
+                          </button>
+                          <span className={`material-symbols-outlined text-xl shrink-0 ${opt.selected ? 'text-electric-purple' : 'text-white/20'}`}>{opt.icon}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {sabotageConfig?.enabled && sabotageConfig?.types === 'custom' && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      className="overflow-hidden"
+                    >
+                      <p className="text-[11px] text-on-surface-variant mb-2 font-bold">¿Cuáles habilitas?</p>
+                      <div className="grid gap-1.5">
+                        {SABOTAGE_OPTIONS.map((option) => {
+                          const s = SABOTAGE_CONFIG_STYLES[option.color] || SABOTAGE_CONFIG_STYLES.purple;
+                          const isSelected = sabotageConfig?.allowedIds?.includes(option.id);
+                          return (
+                            <button
+                              key={option.id}
+                              type="button"
+                              onClick={() => {
+                                const current = sabotageConfig?.allowedIds || [];
+                                const next = isSelected
+                                  ? current.filter((id) => id !== option.id)
+                                  : [...current, option.id];
+                                handleSettingsChange({ sabotageConfig: { ...sabotageConfig, allowedIds: next } });
+                              }}
+                              className={`rounded-xl border p-2.5 flex items-center gap-2.5 text-left transition-all active:scale-[0.98] ${isSelected ? `${s.border} ${s.bg}` : 'border-white/10 bg-black/15'}`}
+                            >
+                              <span className={`material-symbols-outlined text-xl shrink-0 ${isSelected ? s.icon : 'text-white/30'}`}>{option.icon}</span>
+                              <div className="flex-1 min-w-0">
+                                <span className={`text-xs font-black leading-tight ${isSelected ? 'text-white' : 'text-white/50'}`}>{option.name}</span>
+                                <span className={`block text-[9px] leading-snug mt-0.5 ${isSelected ? s.text : 'text-white/25'}`}>{option.cost}pts · {option.effect.slice(0, 55)}{option.effect.length > 55 ? '...' : ''}</span>
+                              </div>
+                              <div className={`w-5 h-5 rounded-md border flex items-center justify-center shrink-0 ${isSelected ? s.border : 'border-white/15'}`}>
+                                {isSelected && <span className={`material-symbols-outlined text-sm ${s.text}`}>check</span>}
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </motion.div>
+                  )}
                 </div>
               </div>
             )}

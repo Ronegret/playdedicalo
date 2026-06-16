@@ -359,11 +359,42 @@ export default function ResultScreen() {
           </motion.p>
         </motion.div>
 
+        {/* All players scoreboard */}
+        {players.length > 1 && (
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.75 }}
+            className="mt-6 w-full"
+          >
+            <p className="font-label-caps text-[10px] text-white/35 tracking-widest text-center mb-3">ASÍ VAN TODOS</p>
+            <div className="flex flex-col gap-2">
+              {[...players].sort((a, b) => Number(b.points || 0) - Number(a.points || 0)).map((player, index) => (
+                <div
+                  key={player.id}
+                  className={`flex items-center gap-3 rounded-xl px-3 py-2.5 ${player.id === guestId ? `border ${style.border} bg-white/5` : 'bg-white/5 border border-white/10'}`}
+                >
+                  <span className={`w-7 h-7 rounded-lg text-xs font-black flex items-center justify-center shrink-0 ${index === 0 ? 'bg-neon-green text-black' : 'bg-white/10 text-white'}`}>
+                    {index + 1}
+                  </span>
+                  {player.avatar?.startsWith?.('http') ? (
+                    <img src={player.avatar} alt={player.name} className="w-8 h-8 rounded-full object-cover shrink-0" />
+                  ) : (
+                    <span className="w-8 h-8 rounded-full bg-black/20 flex items-center justify-center text-base shrink-0">{player.avatar || '•'}</span>
+                  )}
+                  <span className="text-sm font-bold text-white truncate flex-1">{player.name}</span>
+                  <span className="text-sm font-black text-neon-green shrink-0">{player.points} pts</span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
         {/* Actions */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.7 }}
+          transition={{ delay: 0.9 }}
           className="mt-6 w-full flex flex-col gap-2"
         >
           {role === 'host' && (
@@ -375,9 +406,10 @@ export default function ResultScreen() {
             </button>
           )}
           {role !== 'host' && (
-            <p className="text-center text-sm text-white/35 animate-pulse py-3 font-label-caps tracking-widest">
-              ESPERANDO AL ANFITRIÓN...
-            </p>
+            <div className="py-4 text-center">
+              <p className="text-sm text-white/50 font-label-caps tracking-widest animate-pulse">ESPERANDO AL ANFITRIÓN...</p>
+              <p className="mt-1 text-xs text-white/25">El anfitrión decide cuándo empieza la siguiente ronda.</p>
+            </div>
           )}
           <button
             onClick={handleShare}

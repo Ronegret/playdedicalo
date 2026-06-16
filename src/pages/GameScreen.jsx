@@ -76,65 +76,182 @@ const SABOTAGE_STYLES = {
   green: 'border-neon-green/50 bg-neon-green/10 text-neon-green'
 };
 
-function SabotageSquares({ options, points, enabled, onUse }) {
-  const [sabOpen, setSabOpen] = useState(false);
+function SabotageActivatedToast({ sabotage, onDismiss }) {
+  useEffect(() => {
+    const t = setTimeout(onDismiss, 4000);
+    return () => clearTimeout(t);
+  }, [onDismiss]);
+
+  const colorClass = SABOTAGE_STYLES[sabotage.color] || SABOTAGE_STYLES.purple;
 
   return (
-    <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-black/25 text-left overflow-hidden">
-      <button
-        type="button"
-        onClick={() => setSabOpen((prev) => !prev)}
-        className="w-full p-3 flex items-center justify-between gap-3"
-      >
-        <div>
-          <p className="font-label-caps text-electric-purple text-[10px] tracking-widest">ATAQUES</p>
-          <p className="text-sm font-bold text-white">Sabotajes mientras suena</p>
-        </div>
+    <motion.div
+      initial={{ y: -120, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      exit={{ y: -120, opacity: 0 }}
+      transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+      className="fixed top-20 inset-x-0 z-[300] flex justify-center px-5 pointer-events-none"
+    >
+      <div className={`rounded-2xl border p-4 flex items-center gap-3 shadow-[0_4px_40px_rgba(0,0,0,0.8)] w-full max-w-sm ${colorClass}`}>
         <motion.span
-          animate={{ rotate: sabOpen ? 180 : 0 }}
-          transition={{ duration: 0.22 }}
-          className="material-symbols-outlined text-electric-purple text-2xl"
+          animate={{ scale: [1, 1.35, 1] }}
+          transition={{ duration: 0.5, ease: 'backOut' }}
+          className="material-symbols-outlined text-3xl shrink-0"
         >
-          expand_more
+          {sabotage.icon}
         </motion.span>
-      </button>
-      <AnimatePresence initial={false}>
-        {sabOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.24, ease: 'easeInOut' }}
-            className="overflow-hidden"
+        <div className="flex-1 min-w-0">
+          <p className="font-label-caps text-[9px] opacity-60">¡SABOTAJE ACTIVADO!</p>
+          <p className="font-black text-white text-base leading-tight">{sabotage.name}</p>
+          <p className="text-[10px] opacity-75 mt-0.5 leading-snug">{sabotage.effect}</p>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+function SabotageSquares({ options, points, enabled, onUse }) {
+  const [sabOpen, setSabOpen] = useState(false);
+  const [pendingOption, setPendingOption] = useState(null);
+
+  const handleCardTap = (option) => {
+    if (!enabled) return;
+    setPendingOption(option);
+  };
+
+  const handleConfirm = () => {
+    if (!pendingOption) return;
+    onUse(pendingOption);
+    setPendingOption(null);
+    setSabOpen(false);
+  };
+
+  return (
+    <>
+      <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-black/25 text-left overflow-hidden">
+        <button
+          type="button"
+          onClick={() => setSabOpen((prev) => !prev)}
+          className="w-full p-3 flex items-center justify-between gap-3"
+        >
+          <div>
+            <p className="font-label-caps text-electric-purple text-[10px] tracking-widest">SABOTAJES</p>
+            <p className="text-sm font-bold text-white">
+              {enabled ? '¡Ataca al líder!' : 'Se activan en la ronda 2'}
+            </p>
+          </div>
+          <motion.span
+            animate={{ rotate: sabOpen ? 180 : 0 }}
+            transition={{ duration: 0.22 }}
+            className="material-symbols-outlined text-electric-purple text-2xl"
           >
-            <div className="px-3 pb-3">
-              <div className="grid grid-cols-3 gap-2">
-                {options.map((option) => {
-                  const canPay = Number(points || 0) >= option.cost;
-                  const canUse = enabled && canPay;
-                  return (
-                    <button
-                      key={option.id}
-                      type="button"
-                      disabled={!canUse}
-                      onClick={() => onUse(option)}
-                      className={`aspect-square rounded-2xl border p-2 flex flex-col items-center justify-center gap-1 transition-transform active:scale-95 disabled:opacity-35 disabled:cursor-not-allowed ${SABOTAGE_STYLES[option.color] || SABOTAGE_STYLES.purple}`}
-                      aria-label={`Usar ${option.name}`}
-                    >
-                      <span className="material-symbols-outlined text-2xl">{option.icon}</span>
-                      <span className="text-[9px] font-label-caps leading-none">{option.cost} pts</span>
-                    </button>
-                  );
-                })}
+            expand_more
+          </motion.span>
+        </button>
+        <AnimatePresence initial={false}>
+          {sabOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.24, ease: 'easeInOut' }}
+              className="overflow-hidden"
+            >
+              <div className="px-3 pb-4">
+                {!enabled ? (
+                  <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-center">
+                    <span className="material-symbols-outlined text-electric-purple" style={{ fontSize: '2.2rem' }}>lock</span>
+                    <p className="mt-2 text-sm font-bold text-white">Todavía no, paciencia 😄</p>
+                    <p className="mt-1 text-xs text-on-surface-variant leading-relaxed">
+                      Los sabotajes se activan en la ronda 2. ¡La siguiente oportunidad es tuya!
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    <div className="grid grid-cols-2 gap-2">
+                      {options.map((option) => {
+                        const canPay = Number(points || 0) >= option.cost;
+                        const colorClass = SABOTAGE_STYLES[option.color] || SABOTAGE_STYLES.purple;
+                        return (
+                          <button
+                            key={option.id}
+                            type="button"
+                            disabled={!canPay}
+                            onClick={() => handleCardTap(option)}
+                            className={`rounded-2xl border p-3 flex flex-col gap-1.5 text-left active:scale-95 transition-transform disabled:opacity-30 disabled:cursor-not-allowed ${colorClass}`}
+                            aria-label={`${option.name} — ${option.cost} puntos`}
+                          >
+                            <div className="flex items-start justify-between gap-1">
+                              <span className="material-symbols-outlined text-2xl">{option.icon}</span>
+                              <span className="rounded-lg border border-current/30 bg-black/20 px-1.5 py-0.5 text-[9px] font-label-caps leading-none shrink-0">{option.cost}pts</span>
+                            </div>
+                            <span className="text-xs font-black text-white leading-tight">{option.name}</span>
+                            <span className="text-[9px] text-current opacity-75 leading-snug line-clamp-2">{option.effect}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                    <p className="mt-2 text-[10px] text-on-surface-variant text-center">
+                      Toca para ver detalles y confirmar. Solo un ataque por ronda.
+                    </p>
+                  </>
+                )}
               </div>
-              <p className="mt-2 text-[11px] text-on-surface-variant leading-snug">
-                {enabled ? 'Toca un cuadrado para preparar el ataque.' : 'Se desbloquean desde la ronda 2.'}
-              </p>
-            </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      <AnimatePresence>
+        {pendingOption && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[250] flex items-end sm:items-center justify-center bg-black/80 backdrop-blur-sm px-4 pb-6 sm:pb-0"
+            onClick={() => setPendingOption(null)}
+          >
+            <motion.div
+              initial={{ y: 40, scale: 0.96 }}
+              animate={{ y: 0, scale: 1 }}
+              exit={{ y: 40, scale: 0.96 }}
+              transition={{ type: 'spring', stiffness: 260, damping: 28 }}
+              className="w-full max-w-sm rounded-2xl border border-white/10 bg-surface-container p-5 shadow-[0_0_50px_rgba(0,0,0,0.8)]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className={`rounded-xl border p-4 mb-4 ${SABOTAGE_STYLES[pendingOption.color] || SABOTAGE_STYLES.purple}`}>
+                <div className="flex items-center gap-3">
+                  <span className="material-symbols-outlined text-3xl shrink-0">{pendingOption.icon}</span>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-label-caps text-[9px] opacity-60">SABOTAJE</p>
+                    <h3 className="text-lg font-black text-white leading-tight">{pendingOption.name}</h3>
+                  </div>
+                  <span className="rounded-xl border border-current/30 bg-black/30 px-3 py-1.5 font-label-caps text-sm font-black shrink-0">
+                    -{pendingOption.cost}pts
+                  </span>
+                </div>
+                <p className="mt-3 text-sm leading-relaxed opacity-85">{pendingOption.effect}</p>
+              </div>
+              <div className="flex flex-col gap-2">
+                <button
+                  onClick={handleConfirm}
+                  className="w-full h-14 rounded-xl bg-electric-purple text-white font-label-caps text-sm font-bold active:scale-95 transition-transform flex items-center justify-center gap-2"
+                >
+                  <span className="material-symbols-outlined text-base">bolt</span>
+                  ACTIVAR SABOTAJE
+                </button>
+                <button
+                  onClick={() => setPendingOption(null)}
+                  className="w-full h-12 rounded-xl bg-white/5 border border-white/10 text-white font-label-caps text-sm font-bold active:scale-95 transition-transform"
+                >
+                  CANCELAR
+                </button>
+              </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </>
   );
 }
 
@@ -213,6 +330,7 @@ export default function GameScreen() {
     players,
     roundAnswers,
     pendingAttacks,
+    sabotageConfig,
     setAudioPlaying,
     roomError,
     clearRoomError
@@ -221,7 +339,8 @@ export default function GameScreen() {
   const [countdownValue, setCountdownValue] = useState(3);
   const [spotifyMessage, setSpotifyMessage] = useState('');
   const [spotifyError, setSpotifyError] = useState(false);
-  const [sabotageMessage, setSabotageMessage] = useState('');
+  const [activatedSabotage, setActivatedSabotage] = useState(null);
+  const [pendingAttackWarning, setPendingAttackWarning] = useState('');
   const [showExitConfirm, setShowExitConfirm] = useState(false);
   const startedSpotifyRoundRef = useRef('');
 
@@ -307,6 +426,12 @@ export default function GameScreen() {
   const ownTimelineYears = getCombinedTimelineYears(ownPlayer);
   const canUseSabotageNow = Boolean(guestId && phase === 'listen' && round > 1 && players.length > 1);
 
+  const availableSabotages = useMemo(() => {
+    if (sabotageConfig && sabotageConfig.enabled === false) return [];
+    if (!sabotageConfig || sabotageConfig.types === 'all' || !sabotageConfig.allowedIds?.length) return SABOTAGE_OPTIONS;
+    return SABOTAGE_OPTIONS.filter((o) => sabotageConfig.allowedIds.includes(o.id));
+  }, [sabotageConfig]);
+
   const containerVariants = {
     hidden: { opacity: 0 },
     show: {
@@ -326,7 +451,7 @@ export default function GameScreen() {
     if (navigator.vibrate) navigator.vibrate(isCorrect ? [30] : [100, 30, 100]);
     const myPending = pendingAttacks?.[guestId];
     if (myPending) {
-      setSabotageMessage(`⚠️ ¡ALERTA! ¡ALERTA! ${myPending.by} tiene un ataque preparado para ti en la próxima ronda.`);
+      setPendingAttackWarning(`¡Ojo! ${myPending.by} tiene un ataque listo para ti en la próxima ronda. ¡Prepárate!`);
     }
   };
 
@@ -354,22 +479,22 @@ export default function GameScreen() {
   };
 
   const handleUseSabotage = async (option) => {
-    setSabotageMessage('');
-    if (!canUseSabotageNow) {
-      setSabotageMessage('Los ataques se activan desde la ronda 2.');
-      return;
-    }
-    if (Number(ownPlayer?.points || 0) < option.cost) {
-      setSabotageMessage('Te faltan puntos para ese ataque.');
-      return;
-    }
-
+    if (!canUseSabotageNow || Number(ownPlayer?.points || 0) < option.cost) return;
     await guestUseSabotage(option.id);
-    setSabotageMessage(`${option.name} preparado.`);
+    setActivatedSabotage(option);
   };
 
   return (
     <div className={`relative z-10 min-h-screen w-full flex flex-col items-center justify-center pt-safe-header pb-8 transition-colors duration-500 ${phase === 'blackout' ? 'bg-black' : 'bg-transparent'}`}>
+
+      <AnimatePresence>
+        {activatedSabotage && (
+          <SabotageActivatedToast
+            sabotage={activatedSabotage}
+            onDismiss={() => setActivatedSabotage(null)}
+          />
+        )}
+      </AnimatePresence>
 
       <header className="fixed top-0 left-0 right-0 h-16 flex items-center justify-between px-margin-mobile z-50 bg-surface/60 backdrop-blur-xl border-b border-white/10">
         <button onClick={() => setShowExitConfirm(true)} className="text-on-surface-variant font-label-caps text-xs flex items-center gap-2 active:scale-90 transition-transform">
@@ -486,20 +611,13 @@ export default function GameScreen() {
               </p>
             )}
 
-            <SabotageSquares
-              options={SABOTAGE_OPTIONS}
-              points={ownPlayer?.points || 0}
-              enabled={canUseSabotageNow}
-              onUse={handleUseSabotage}
-            />
-            {sabotageMessage && (
-              <motion.p
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="max-w-sm rounded-xl border border-electric-purple/40 bg-electric-purple/10 px-3 py-2 text-xs text-electric-purple"
-              >
-                {sabotageMessage}
-              </motion.p>
+            {availableSabotages.length > 0 && (
+              <SabotageSquares
+                options={availableSabotages}
+                points={ownPlayer?.points || 0}
+                enabled={canUseSabotageNow}
+                onUse={handleUseSabotage}
+              />
             )}
 
             <RankingPeek players={players} guestId={guestId} />
@@ -514,7 +632,8 @@ export default function GameScreen() {
             )}
 
             {role === 'host' && (
-              <div className="w-full max-w-xs grid gap-3">
+              <div className="w-full max-w-xs grid gap-3 mt-2 mb-8">
+                <p className="text-center text-xs text-on-surface-variant">Para cuando lo veas claro 👇</p>
                 <motion.button
                   whileTap={{ scale: 0.96 }}
                   onClick={handleHostBlackout}
@@ -626,11 +745,21 @@ export default function GameScreen() {
                   className={`mt-6 rounded-2xl border p-6 text-center ${role === 'host' ? 'border-electric-purple/40 bg-electric-purple/10' : 'border-neon-green/30 bg-neon-green/10'}`}
                 >
                   <span className="material-symbols-outlined text-neon-green" style={{ fontSize: '3.5rem' }}>check_circle</span>
-                  <p className="mt-3 text-white font-bold text-lg">RESPUESTA ENVIADA</p>
+                  <p className="mt-3 text-white font-bold text-lg">¡Respuesta enviada!</p>
                   <p className="mt-1 text-xs text-on-surface-variant">
-                    {role === 'host' ? 'Cuando todos estén listos, revela.' : 'Esperando al anfitrión...'}
+                    {role === 'host' ? 'Cuando todos estén listos, revela los resultados.' : 'Esperando al anfitrión...'}
                   </p>
                 </motion.div>
+                {pendingAttackWarning && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mt-3 w-full rounded-xl border border-vinyl-orange/40 bg-vinyl-orange/10 px-4 py-3 flex items-start gap-3"
+                  >
+                    <span className="material-symbols-outlined text-vinyl-orange text-xl shrink-0 mt-0.5">warning</span>
+                    <p className="text-xs text-vinyl-orange leading-relaxed">{pendingAttackWarning}</p>
+                  </motion.div>
+                )}
                 <div className="mt-3 w-full flex flex-col gap-2">
                   <RankingPeek players={players} guestId={guestId} />
                 </div>

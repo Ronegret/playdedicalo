@@ -320,6 +320,7 @@ export const useGameStore = create((setStore, getStore) => ({
   currentTrack: null,
   timelineYears: [],
   roomSubscription: null,
+  sabotageConfig: { enabled: true, types: 'all', allowedIds: [] },
 
   isAudioPlaying: false,
   isAudioMuted: false,
@@ -337,13 +338,14 @@ export const useGameStore = create((setStore, getStore) => ({
   },
   setRole: (role) => setStore({ role }),
 
-  setGameSettings: async ({ gameMode, targetScore }) => {
+  setGameSettings: async ({ gameMode, targetScore, sabotageConfig }) => {
     const pin = getStore().pin;
     if (getStore().round > 1 || getStore().phase !== 'lobby') return;
     const currentGameMode = getStore().gameMode;
     const nextSettings = {
       gameMode: gameMode || getStore().gameMode,
-      targetScore: Number(targetScore || getStore().targetScore)
+      targetScore: Number(targetScore || getStore().targetScore),
+      sabotageConfig: sabotageConfig !== undefined ? sabotageConfig : getStore().sabotageConfig
     };
     const modeChanged = nextSettings.gameMode !== currentGameMode;
 
@@ -375,7 +377,8 @@ export const useGameStore = create((setStore, getStore) => ({
       round: 1,
       settings: {
         gameMode: getStore().gameMode,
-        targetScore: getStore().targetScore
+        targetScore: getStore().targetScore,
+        sabotageConfig: getStore().sabotageConfig
       },
       players: { [hostId]: hostPlayer },
       audio: {
@@ -682,6 +685,7 @@ export const useGameStore = create((setStore, getStore) => ({
         guestName: newPlayer.name,
         gameMode: room.settings?.gameMode || 'pulse',
         targetScore: Number(room.settings?.targetScore || 70),
+        sabotageConfig: room.settings?.sabotageConfig || { enabled: true, types: 'all', allowedIds: [] },
         lastResultType: null,
         lastPointDelta: 0,
         lastSabotage: null,
@@ -943,6 +947,7 @@ export const useGameStore = create((setStore, getStore) => ({
         round: remoteRound,
         gameMode: data.settings?.gameMode || data.gameMode || 'pulse',
         targetScore: Number(data.settings?.targetScore || data.targetScore || 70),
+        sabotageConfig: data.settings?.sabotageConfig || { enabled: true, types: 'all', allowedIds: [] },
         players: data.players
           ? sortPlayers(Object.values(data.players).map((player) => ({
             ...player,
