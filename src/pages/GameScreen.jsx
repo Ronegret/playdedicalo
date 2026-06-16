@@ -6,7 +6,17 @@ import { createQuestionFromTrack, explainSpotifyError, getCurrentHiddenTrack, pa
 
 const EQUALIZER_BARS = [0.35, 0.58, 0.42, 0.71, 0.49, 0.64, 0.39];
 
-function RankingPeek({ players, guestId }) {
+function getPlayerSabotageIcons(playerId, { pointLocks, shields, pendingAttacks, traps, sharedPrize }) {
+  const icons = [];
+  if (shields?.[playerId]) icons.push({ icon: 'shield', color: 'text-neon-green', label: 'Escudo' });
+  if (pointLocks?.[playerId]) icons.push({ icon: 'block', color: 'text-intense-red', label: 'Bloqueo' });
+  if (traps?.[playerId]) icons.push({ icon: 'crisis_alert', color: 'text-intense-red', label: 'Trampa' });
+  if (pendingAttacks?.[playerId]) icons.push({ icon: 'schedule_send', color: 'text-vinyl-orange', label: 'Ataque en camino' });
+  if (sharedPrize?.buyerId === playerId) icons.push({ icon: 'group', color: 'text-electric-purple', label: 'Dueto activo' });
+  return icons;
+}
+
+function RankingPeek({ players, guestId, sabotageState }) {
   const [rankOpen, setRankOpen] = useState(false);
   if (!players.length) return null;
   const sorted = [...players].sort((a, b) => Number(b.points || 0) - Number(a.points || 0));
@@ -43,12 +53,13 @@ function RankingPeek({ players, guestId }) {
             className="overflow-hidden"
           >
             <div className="px-3 pb-3 flex flex-col gap-2">
-              {sorted.map((player, index) => (
-                <div
-                  key={player.id}
-                  className={`flex items-center justify-between rounded-xl px-3 py-2 ${player.id === guestId ? 'bg-neon-green/10 border border-neon-green/25' : 'bg-white/5'}`}
-                >
-                  <div className="flex items-center gap-2 min-w-0">
+              {sorted.map((player, index) => {
+                const sabIcons = sabotageState ? getPlayerSabotageIcons(player.id, sabotageState) : [];
+                return (
+                  <div
+                    key={player.id}
+                    className={`flex items-center gap-2 rounded-xl px-3 py-2 ${player.id === guestId ? 'bg-neon-green/10 border border-neon-green/25' : 'bg-white/5'}`}
+                  >
                     <span className={`w-6 h-6 rounded-lg text-xs font-black flex items-center justify-center shrink-0 ${index === 0 ? 'bg-neon-green text-black' : 'bg-white/10 text-white'}`}>
                       {index + 1}
                     </span>
@@ -57,15 +68,79 @@ function RankingPeek({ players, guestId }) {
                     ) : (
                       <span className="w-7 h-7 rounded-full bg-black/20 flex items-center justify-center text-sm shrink-0">{player.avatar || '•'}</span>
                     )}
-                    <span className="text-sm font-bold text-white truncate">{player.name}</span>
+                    <span className="text-sm font-bold text-white truncate flex-1">{player.name}</span>
+                    {sabIcons.length > 0 && (
+                      <div className="flex items-center gap-0.5 shrink-0">
+                        {sabIcons.map((si) => (
+                          <span key={si.label} title={si.label} className={`material-symbols-outlined text-base ${si.color}`}>{si.icon}</span>
+                        ))}
+                      </div>
+                    )}
+                    <span className="text-sm font-black text-neon-green shrink-0">{player.points} pts</span>
                   </div>
-                  <span className="text-sm font-black text-neon-green shrink-0">{player.points} pts</span>
-                </div>
-              ))}
+                );
+              })}
+              {sabotageState && sorted.some((p) => getPlayerSabotageIcons(p.id, sabotageState).length > 0) && (
+                <p className="text-[10px] text-on-surface-variant text-center pt-1">
+                  Los íconos muestran sabotajes activos sobre cada jugador.
+                </p>
+              )}
             </div>
           </motion.div>
         )}
       </AnimatePresence>
+    </div>
+  );
+}
+
+function MyStatusCard({ guestId, pointLocks, shields, pendingAttacks, traps, sharedPrize }) {
+  const effects = [];
+
+  if (shields?.[guestId]) effects.push({
+    icon: 'shield', color: 'text-neon-green', border: 'border-neon-green/40', bg: 'bg-neon-green/10',
+    title: '¡Tienes escudo!',
+    desc: 'Estás protegido del próximo ataque que te manden. ¡Bien jugado!'
+  });
+  if (pointLocks?.[guestId]) effects.push({
+    icon: 'block', color: 'text-intense-red', border: 'border-intense-red/40', bg: 'bg-intense-red/10',
+    title: 'Bloqueo de puntos',
+    desc: `${pointLocks[guestId].by} te bloqueó. Si aciertas esta ronda, no sumarás puntos.`
+  });
+  if (traps?.[guestId]) effects.push({
+    icon: 'crisis_alert', color: 'text-intense-red', border: 'border-intense-red/40', bg: 'bg-intense-red/10',
+    title: 'Trampa activada',
+    desc: 'Cuidado: si fallas la respuesta, perderás el doble de puntos.'
+  });
+  if (pendingAttacks?.[guestId]) effects.push({
+    icon: 'schedule_send', color: 'text-vinyl-orange', border: 'border-vinyl-orange/40', bg: 'bg-vinyl-orange/10',
+    title: 'Ataque en camino',
+    desc: `${pendingAttacks[guestId].by} tiene algo preparado para ti en la próxima ronda.`
+  });
+  if (sharedPrize?.buyerId === guestId) effects.push({
+    icon: 'group', color: 'text-electric-purple', border: 'border-electric-purple/40', bg: 'bg-electric-purple/10',
+    title: 'Dueto activo',
+    desc: 'Si el líder acierta esta ronda, tú también recibirás puntos extra.'
+  });
+
+  if (!effects.length) return null;
+
+  return (
+    <div className="w-full max-w-sm space-y-2">
+      <p className="font-label-caps text-[10px] text-on-surface-variant tracking-widest text-center">TU ESTADO ESTA RONDA</p>
+      {effects.map((effect) => (
+        <motion.div
+          key={effect.icon}
+          initial={{ opacity: 0, x: -8 }}
+          animate={{ opacity: 1, x: 0 }}
+          className={`rounded-xl border ${effect.border} ${effect.bg} px-3 py-2.5 flex items-center gap-3`}
+        >
+          <span className={`material-symbols-outlined text-xl shrink-0 ${effect.color}`}>{effect.icon}</span>
+          <div className="flex-1 min-w-0 text-left">
+            <p className={`text-xs font-black leading-tight ${effect.color}`}>{effect.title}</p>
+            <p className="text-[10px] text-on-surface-variant leading-snug mt-0.5">{effect.desc}</p>
+          </div>
+        </motion.div>
+      ))}
     </div>
   );
 }
@@ -330,6 +405,10 @@ export default function GameScreen() {
     players,
     roundAnswers,
     pendingAttacks,
+    pointLocks,
+    shields,
+    traps,
+    sharedPrize,
     sabotageConfig,
     setAudioPlaying,
     roomError,
@@ -431,6 +510,8 @@ export default function GameScreen() {
     if (!sabotageConfig || sabotageConfig.types === 'all' || !sabotageConfig.allowedIds?.length) return SABOTAGE_OPTIONS;
     return SABOTAGE_OPTIONS.filter((o) => sabotageConfig.allowedIds.includes(o.id));
   }, [sabotageConfig]);
+
+  const sabotageState = { pointLocks, shields, pendingAttacks, traps, sharedPrize };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -611,6 +692,17 @@ export default function GameScreen() {
               </p>
             )}
 
+            {role !== 'host' && (
+              <MyStatusCard
+                guestId={guestId}
+                pointLocks={pointLocks}
+                shields={shields}
+                pendingAttacks={pendingAttacks}
+                traps={traps}
+                sharedPrize={sharedPrize}
+              />
+            )}
+
             {availableSabotages.length > 0 && (
               <SabotageSquares
                 options={availableSabotages}
@@ -620,7 +712,7 @@ export default function GameScreen() {
               />
             )}
 
-            <RankingPeek players={players} guestId={guestId} />
+            <RankingPeek players={players} guestId={guestId} sabotageState={sabotageState} />
 
             {gameMode === 'timeline' && (
               <div className="flex items-start gap-2 rounded-xl border border-neon-green/20 bg-neon-green/5 px-3 py-2 max-w-sm text-left">
@@ -761,7 +853,7 @@ export default function GameScreen() {
                   </motion.div>
                 )}
                 <div className="mt-3 w-full flex flex-col gap-2">
-                  <RankingPeek players={players} guestId={guestId} />
+                  <RankingPeek players={players} guestId={guestId} sabotageState={sabotageState} />
                 </div>
               </>
             ) : currentQuestion.answerType === 'timeline-placement' ? (
