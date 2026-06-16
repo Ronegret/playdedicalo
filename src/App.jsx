@@ -6,6 +6,7 @@ import { auth } from './firebase';
 import ShaderBackground from './components/ShaderBackground';
 import ErrorBoundary from './components/ErrorBoundary';
 import OfflineBanner from './components/OfflineBanner';
+import { tryStartBgMusic, useBgMusic } from './hooks/useBgMusic';
 
 const WelcomeScreen = lazy(() => import('./pages/WelcomeScreen'));
 const HowToPlayScreen = lazy(() => import('./pages/HowToPlayScreen'));
@@ -25,9 +26,35 @@ function PageLoader() {
   );
 }
 
+function BgMusicButton() {
+  const { paused, toggle } = useBgMusic();
+  return (
+    <button
+      type="button"
+      onClick={toggle}
+      aria-label={paused ? 'Activar música' : 'Silenciar música'}
+      className="fixed top-3 left-3 z-[600] w-9 h-9 rounded-full bg-black/40 backdrop-blur-md border border-white/12 flex items-center justify-center text-white/70 hover:text-white hover:bg-black/60 active:scale-90 transition-all"
+    >
+      <span className="material-symbols-outlined" style={{ fontSize: '1.1rem' }}>
+        {paused ? 'volume_off' : 'volume_up'}
+      </span>
+    </button>
+  );
+}
+
 function App() {
   const location = useLocation();
   const navigate = useNavigate();
+  // Start bg music on first user interaction (mobile autoplay policy)
+  useEffect(() => {
+    const start = () => tryStartBgMusic();
+    window.addEventListener('click', start, { once: true });
+    window.addEventListener('touchend', start, { once: true });
+    return () => {
+      window.removeEventListener('click', start);
+      window.removeEventListener('touchend', start);
+    };
+  }, []);
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {
@@ -45,6 +72,7 @@ function App() {
   return (
     <ErrorBoundary>
       <OfflineBanner />
+      <BgMusicButton />
       <ShaderBackground />
 
       <Suspense fallback={<PageLoader />}>

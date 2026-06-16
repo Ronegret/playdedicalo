@@ -143,32 +143,48 @@ export const SABOTAGE_OPTIONS = [
     name: 'Bloqueo',
     icon: 'block',
     cost: 5,
-    effect: 'El líder queda bloqueado: si acierta, no suma puntos en la siguiente ronda.',
+    effect: 'El jugador en primer puesto no suma puntos si acierta la próxima ronda.',
     color: 'red'
   },
   {
-    id: 'reverse_lyrics',
-    name: 'Letra al revés',
-    icon: 'sync_alt',
-    cost: 4,
-    effect: 'La siguiente pregunta aparece al revés.',
+    id: 'steal',
+    name: 'El Ladrón',
+    icon: 'remove_circle',
+    cost: 6,
+    effect: 'Roba 7 puntos al instante al jugador en primer puesto.',
+    color: 'red'
+  },
+  {
+    id: 'swap_points',
+    name: 'El Cambio',
+    icon: 'swap_horiz',
+    cost: 8,
+    effect: 'Intercambia tus puntos con los del líder. Puede ser una remontada épica.',
     color: 'purple'
+  },
+  {
+    id: 'shield',
+    name: 'El Escudo',
+    icon: 'shield',
+    cost: 3,
+    effect: 'Bloquea el próximo ataque que recibas este turno o el siguiente.',
+    color: 'green'
   },
   {
     id: 'shared_prize',
     name: 'Dueto',
     icon: 'group',
     cost: 4,
-    effect: 'Si otro jugador acierta, comparte parte de la recompensa.',
+    effect: 'Si el líder acierta la próxima ronda, comparte sus puntos contigo (+2 pts extra para ti).',
     color: 'green'
   },
   {
-    id: 'wild_question',
-    name: 'Cambio',
-    icon: 'shuffle',
-    cost: 3,
-    effect: 'La siguiente pregunta salta a una categoría sorpresa.',
-    color: 'purple'
+    id: 'trap',
+    name: 'La Trampa',
+    icon: 'crisis_alert',
+    cost: 4,
+    effect: 'Si el líder falla la próxima ronda, pierde 6 pts en vez de 3.',
+    color: 'red'
   }
 ];
 
@@ -297,6 +313,9 @@ export const useGameStore = create((setStore, getStore) => ({
   pointLocks: {},
   sharedPrize: null,
   pendingQuestionEffect: null,
+  shields: {},
+  pendingAttacks: {},
+  traps: {},
   roomError: null,
   currentTrack: null,
   timelineYears: [],
@@ -387,6 +406,9 @@ export const useGameStore = create((setStore, getStore) => ({
         pointLocks: {},
         sharedPrize: null,
         pendingQuestionEffect: null,
+        shields: {},
+        pendingAttacks: {},
+        traps: {},
         timelineYears: []
       });
       getStore()._subscribeToRoom(newPin);
@@ -451,6 +473,7 @@ export const useGameStore = create((setStore, getStore) => ({
     const answers = room?.roundAnswers || {};
     const pointLocks = room?.pointLocks || {};
     const sharedPrize = room?.sharedPrize || null;
+    const traps = room?.traps || {};
     const currentQuestion = room?.currentQuestion || {};
     const remoteUpdates = {};
     const revealResults = {};
@@ -459,15 +482,28 @@ export const useGameStore = create((setStore, getStore) => ({
       const answer = answers[player.id];
       const isCorrect = Boolean(answer?.isCorrect);
       const pointLock = pointLocks[player.id] || null;
+      const trap = traps[player.id] || null;
       const isLocked = Boolean(isCorrect && pointLock);
+      const isTrap = Boolean(!isCorrect && trap);
       const sharesWithBuyer = Boolean(isCorrect && sharedPrize?.buyerId && sharedPrize.buyerId !== player.id);
-      const delta = answer ? (isCorrect ? (isLocked ? 0 : sharesWithBuyer ? 3 : 5) : -3) : player.isHost ? 0 : -3;
+      let delta;
+      if (answer) {
+        if (isCorrect) {
+          delta = isLocked ? 0 : sharesWithBuyer ? 3 : 5;
+        } else {
+          delta = isTrap ? -6 : -3;
+        }
+      } else {
+        delta = player.isHost ? 0 : (isTrap ? -6 : -3);
+      }
       const nextPoints = clampPoints(Number(player.points || 0) + delta);
       const sabotage = isLocked
         ? { name: 'Silencio al líder', by: pointLock.by, effect: `${pointLock.by} intentó bloquear tu acierto. Tus puntos quedan en 0 esta ronda.` }
-        : sharesWithBuyer
-          ? { name: 'Dueto dividido', by: sharedPrize.buyerName, effect: `${sharedPrize.buyerName} activó un dueto y compartió tu acierto.` }
-          : null;
+        : isTrap
+          ? { name: 'La Trampa', by: trap.by, effect: `${trap.by} activó una trampa. Pierdes 6 pts por fallar.` }
+          : sharesWithBuyer
+            ? { name: 'Dueto dividido', by: sharedPrize.buyerName, effect: `${sharedPrize.buyerName} activó un dueto y compartió tu acierto.` }
+            : null;
 
       remoteUpdates[`players/${player.id}/points`] = nextPoints;
       revealResults[player.id] = {
@@ -481,6 +517,10 @@ export const useGameStore = create((setStore, getStore) => ({
 
       if (isLocked) {
         remoteUpdates[`pointLocks/${player.id}`] = null;
+      }
+
+      if (isTrap) {
+        remoteUpdates[`traps/${player.id}`] = null;
       }
 
       if (currentQuestion?.answerType === 'timeline-placement' && isCorrect) {
@@ -540,7 +580,19 @@ export const useGameStore = create((setStore, getStore) => ({
       return;
     }
 
+    const room = await readData(`rooms/${pin}`);
+    const patchUpdates = {};
+    Object.entries(room?.pendingAttacks || {}).forEach(([targetId, attack]) => {
+      if (attack.sabotageId === 'point_lock') {
+        patchUpdates[`pointLocks/${targetId}`] = { by: attack.by, byId: attack.byId, round: round + 1 };
+      } else if (attack.sabotageId === 'trap') {
+        patchUpdates[`traps/${targetId}`] = { by: attack.by, byId: attack.byId, round: round + 1 };
+      }
+      patchUpdates[`pendingAttacks/${targetId}`] = null;
+    });
+
     await patchData(`rooms/${pin}`, {
+      ...patchUpdates,
       round: round + 1,
       currentQuestion: null,
       currentTrack: null,
@@ -593,6 +645,9 @@ export const useGameStore = create((setStore, getStore) => ({
       pointLocks: {},
       sharedPrize: null,
       pendingQuestionEffect: null,
+      shields: {},
+      pendingAttacks: {},
+      traps: {},
       timelineYears: [],
       roomSubscription: null
     });
@@ -675,44 +730,111 @@ export const useGameStore = create((setStore, getStore) => ({
 
     const currentPlayers = getStore().players;
     const leader = sortPlayers(currentPlayers).find((playerItem) => playerItem.id !== guestId);
+    const round = getStore().round;
     let playerDelta = -sabotage.cost;
     let remoteUpdates = {};
     let appliedSabotage = { ...sabotage, by: player.name };
+    let localShields = getStore().shields;
+    let localPendingAttacks = getStore().pendingAttacks;
+    let localTraps = getStore().traps;
+    let localPointLocks = getStore().pointLocks;
+    let leaderPointsDelta = 0;
 
-    if (sabotage.id === 'point_lock' && leader && !room?.pointLocks?.[leader.id]) {
-      remoteUpdates[`pointLocks/${leader.id}`] = { by: player.name, byId: guestId, round: getStore().round };
-      appliedSabotage = { ...appliedSabotage, target: leader.name };
-    }
-
-    if ((sabotage.id === 'reverse_lyrics' || sabotage.id === 'wild_question') && !room?.pendingQuestionEffect) {
-      remoteUpdates.pendingQuestionEffect = { id: sabotage.id, by: player.name, byId: guestId };
-    }
-
-    if (sabotage.id === 'shared_prize' && !room?.sharedPrize) {
-      remoteUpdates.sharedPrize = { buyerId: guestId, buyerName: player.name, round: getStore().round };
+    if (sabotage.id === 'steal') {
+      if (leader) {
+        if (room?.shields?.[leader.id]) {
+          remoteUpdates[`shields/${leader.id}`] = null;
+          localShields = { ...localShields, [leader.id]: null };
+          appliedSabotage = { ...appliedSabotage, target: leader.name, blocked: true };
+        } else {
+          const stolenAmount = Math.min(7, Number(leader.points || 0));
+          leaderPointsDelta = -stolenAmount;
+          playerDelta = stolenAmount - sabotage.cost;
+          remoteUpdates[`players/${leader.id}/points`] = clampPoints(Number(leader.points || 0) - stolenAmount);
+          appliedSabotage = { ...appliedSabotage, target: leader.name, deferred: false };
+        }
+      }
+    } else if (sabotage.id === 'swap_points') {
+      if (leader) {
+        if (room?.shields?.[leader.id]) {
+          remoteUpdates[`shields/${leader.id}`] = null;
+          localShields = { ...localShields, [leader.id]: null };
+          appliedSabotage = { ...appliedSabotage, target: leader.name, blocked: true };
+        } else {
+          const leaderPoints = Number(leader.points || 0);
+          const buyerOriginalPoints = Number(player.points || 0);
+          playerDelta = leaderPoints - buyerOriginalPoints - sabotage.cost;
+          remoteUpdates[`players/${leader.id}/points`] = clampPoints(buyerOriginalPoints);
+          leaderPointsDelta = clampPoints(buyerOriginalPoints) - leaderPoints;
+          appliedSabotage = { ...appliedSabotage, target: leader.name, deferred: false };
+        }
+      }
+    } else if (sabotage.id === 'point_lock') {
+      if (leader) {
+        if (room?.shields?.[leader.id]) {
+          remoteUpdates[`shields/${leader.id}`] = null;
+          localShields = { ...localShields, [leader.id]: null };
+          appliedSabotage = { ...appliedSabotage, target: leader.name, blocked: true };
+        } else if (room?.pointLocks?.[leader.id] || room?.pendingAttacks?.[leader.id]) {
+          remoteUpdates[`pendingAttacks/${leader.id}`] = { sabotageId: 'point_lock', by: player.name, byId: guestId, round };
+          localPendingAttacks = { ...localPendingAttacks, [leader.id]: { sabotageId: 'point_lock', by: player.name, byId: guestId, round } };
+          appliedSabotage = { ...appliedSabotage, target: leader.name, deferred: true };
+        } else {
+          remoteUpdates[`pointLocks/${leader.id}`] = { by: player.name, byId: guestId, round };
+          localPointLocks = { ...localPointLocks, [leader.id]: { by: player.name, byId: guestId, round } };
+          appliedSabotage = { ...appliedSabotage, target: leader.name, deferred: true };
+        }
+      }
+    } else if (sabotage.id === 'shield') {
+      if (!room?.shields?.[guestId]) {
+        remoteUpdates[`shields/${guestId}`] = { byId: guestId, round };
+        localShields = { ...localShields, [guestId]: { byId: guestId, round } };
+        appliedSabotage = { ...appliedSabotage, deferred: false };
+      }
+    } else if (sabotage.id === 'shared_prize') {
+      if (!room?.sharedPrize) {
+        remoteUpdates.sharedPrize = { buyerId: guestId, buyerName: player.name, round };
+        appliedSabotage = { ...appliedSabotage, deferred: true };
+      }
+    } else if (sabotage.id === 'trap') {
+      if (leader) {
+        if (room?.shields?.[leader.id]) {
+          remoteUpdates[`shields/${leader.id}`] = null;
+          localShields = { ...localShields, [leader.id]: null };
+          appliedSabotage = { ...appliedSabotage, target: leader.name, blocked: true };
+        } else if (room?.traps?.[leader.id] || room?.pendingAttacks?.[leader.id]) {
+          remoteUpdates[`pendingAttacks/${leader.id}`] = { sabotageId: 'trap', by: player.name, byId: guestId, round };
+          localPendingAttacks = { ...localPendingAttacks, [leader.id]: { sabotageId: 'trap', by: player.name, byId: guestId, round } };
+          appliedSabotage = { ...appliedSabotage, target: leader.name, deferred: true };
+        } else {
+          remoteUpdates[`traps/${leader.id}`] = { by: player.name, byId: guestId, round };
+          localTraps = { ...localTraps, [leader.id]: { by: player.name, byId: guestId, round } };
+          appliedSabotage = { ...appliedSabotage, target: leader.name, deferred: true };
+        }
+      }
     }
 
     const nextPoints = clampPoints(Number(player.points || 0) + playerDelta);
-    remoteUpdates = {
-      ...remoteUpdates,
-      [`players/${guestId}/points`]: nextPoints,
-      lastSabotage: appliedSabotage
-    };
+    remoteUpdates[`players/${guestId}/points`] = nextPoints;
+    remoteUpdates.lastSabotage = appliedSabotage;
 
     await patchData(`rooms/${pin}`, remoteUpdates);
 
     const players = sortPlayers(currentPlayers.map((playerItem) => {
       if (playerItem.id === guestId) return { ...playerItem, points: nextPoints };
+      if (leader && playerItem.id === leader.id && leaderPointsDelta !== 0) {
+        return { ...playerItem, points: clampPoints(Number(playerItem.points || 0) + leaderPointsDelta) };
+      }
       return playerItem;
     }));
 
     setStore({
       players,
-      pointLocks: sabotage.id === 'point_lock' && leader && remoteUpdates[`pointLocks/${leader.id}`]
-        ? { ...getStore().pointLocks, [leader.id]: { by: player.name, byId: guestId, round: getStore().round } }
-        : getStore().pointLocks,
+      pointLocks: localPointLocks,
+      shields: localShields,
+      pendingAttacks: localPendingAttacks,
+      traps: localTraps,
       sharedPrize: remoteUpdates.sharedPrize || getStore().sharedPrize,
-      pendingQuestionEffect: remoteUpdates.pendingQuestionEffect || getStore().pendingQuestionEffect,
       lastSabotage: appliedSabotage,
       lastPointDelta: playerDelta
     });
@@ -750,6 +872,9 @@ export const useGameStore = create((setStore, getStore) => ({
       pointLocks: {},
       sharedPrize: null,
       pendingQuestionEffect: null,
+      shields: {},
+      pendingAttacks: {},
+      traps: {},
       timelineYears: [],
       roomSubscription: null
     });
@@ -832,6 +957,9 @@ export const useGameStore = create((setStore, getStore) => ({
         pointLocks: data.pointLocks || {},
         sharedPrize: data.sharedPrize || null,
         pendingQuestionEffect: data.pendingQuestionEffect || null,
+        shields: data.shields || {},
+        pendingAttacks: data.pendingAttacks || {},
+        traps: data.traps || {},
         timelineYears: data.timelineYears || []
       });
 

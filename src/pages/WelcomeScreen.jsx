@@ -1,11 +1,13 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import NeonButton from '../components/NeonButton';
+import { useBgMusic } from '../hooks/useBgMusic';
 
 const EQ_BARS = [0.4, 0.7, 0.55, 0.9, 0.45, 0.8, 0.6, 0.35, 0.75, 0.5];
 
 export default function WelcomeScreen() {
   const navigate = useNavigate();
+  const { paused: bgPaused, toggle: toggleBg } = useBgMusic();
 
   return (
     <motion.main
@@ -24,11 +26,15 @@ export default function WelcomeScreen() {
           transition={{ delay: 0.05, duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
           className="flex flex-col items-center gap-3 shrink-0"
         >
-          {/* Single vinyl — size formula: responsive on mobile, large on desktop */}
+          {/* Single vinyl — clickable to pause/resume background music */}
           <div
-            className="relative"
+            role="button"
+            tabIndex={0}
+            onClick={toggleBg}
+            onKeyDown={(e) => e.key === 'Enter' && toggleBg()}
+            aria-label={bgPaused ? 'Reanudar música' : 'Pausar música'}
+            className="relative cursor-pointer"
             style={{
-              /* Mobile: min(34vh, screen-minus-padding). Desktop: up to 360px via vh */
               width: 'min(clamp(150px, 34vh, 360px), calc(100vw - 80px))',
               aspectRatio: '1',
             }}
@@ -78,6 +84,13 @@ export default function WelcomeScreen() {
 
             {/* Spindle hole */}
             <div className="absolute rounded-full bg-black" style={{ inset: '47.5%' }} />
+
+            {/* Pause overlay — visible when bg music is paused */}
+            {bgPaused && (
+              <div className="absolute inset-0 rounded-full flex items-center justify-center bg-black/40 backdrop-blur-[2px]">
+                <span className="material-symbols-outlined text-white/90" style={{ fontSize: '3rem' }}>play_arrow</span>
+              </div>
+            )}
           </div>
 
           {/* Mini EQ */}

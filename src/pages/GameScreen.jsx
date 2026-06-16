@@ -108,7 +108,7 @@ function SabotageSquares({ options, points, enabled, onUse }) {
             className="overflow-hidden"
           >
             <div className="px-3 pb-3">
-              <div className="grid grid-cols-4 gap-2">
+              <div className="grid grid-cols-3 gap-2">
                 {options.map((option) => {
                   const canPay = Number(points || 0) >= option.cost;
                   const canUse = enabled && canPay;
@@ -211,6 +211,7 @@ export default function GameScreen() {
     guestId,
     players,
     roundAnswers,
+    pendingAttacks,
     setAudioPlaying,
     roomError,
     clearRoomError
@@ -322,6 +323,10 @@ export default function GameScreen() {
     setAnsweredQuestionKey(questionKey);
     guestAnswer(isCorrect);
     if (navigator.vibrate) navigator.vibrate(isCorrect ? [30] : [100, 30, 100]);
+    const myPending = pendingAttacks?.[guestId];
+    if (myPending) {
+      setSabotageMessage(`⚠️ ¡ALERTA! ¡ALERTA! ${myPending.by} tiene un ataque preparado para ti en la próxima ronda.`);
+    }
   };
 
   const handleHostBlackout = async () => {
