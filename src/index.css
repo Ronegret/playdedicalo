@@ -4,14 +4,31 @@
 
 @layer base {
   html,
+  body,
   #root {
+    height: 100%;
     overflow-x: hidden;
+  }
+
+  html,
+  body {
+    overflow-y: hidden;
+  }
+
+  #root {
+    overflow-y: auto;
   }
 
   body {
     @apply bg-background text-on-background font-body-md;
     background-color: #050816;
-    overflow-x: hidden;
+  }
+
+  /* Todos los headers fijos respetan la muesca/isla del iPhone */
+  header.fixed {
+    padding-top: env(safe-area-inset-top, 0px);
+    min-height: calc(4rem + env(safe-area-inset-top, 0px));
+    height: auto !important;
   }
 }
 

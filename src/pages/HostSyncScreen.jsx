@@ -12,6 +12,7 @@ import {
   getSpotifyDiagnostics,
   getSpotifyStatus,
   pauseSpotifyPlayback,
+  prepareSpotifyPlayback,
   startRandomPlaylistTrack
 } from '../services/spotify';
 
@@ -128,6 +129,8 @@ export default function HostSyncScreen() {
     setIsTestingSpotify(true);
     setSpotifyCheck({ type: 'info', message: 'Conectando con Spotify...' });
     try {
+      // activateElement() debe ejecutarse dentro de la gestura del usuario o móvil bloquea el audio
+      await prepareSpotifyPlayback();
       const diagnostic = await getSpotifyDiagnostics();
       if (!diagnostic.ok) {
         setSpotifyCheck({ type: 'error', message: diagnostic.message });

@@ -1,6 +1,8 @@
-import { lazy, Suspense } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { lazy, Suspense, useEffect } from 'react';
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from './firebase';
 import ShaderBackground from './components/ShaderBackground';
 import ErrorBoundary from './components/ErrorBoundary';
 import OfflineBanner from './components/OfflineBanner';
@@ -25,6 +27,20 @@ function PageLoader() {
 
 function App() {
   const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const dest = localStorage.getItem('auth_redirect_intent');
+        if (dest) {
+          localStorage.removeItem('auth_redirect_intent');
+          navigate(dest);
+        }
+      }
+    });
+    return unsub;
+  }, [navigate]);
 
   return (
     <ErrorBoundary>
