@@ -205,6 +205,7 @@ export default function GameScreen() {
     spotifyPlaylistUrl,
     hostTriggerBlackout,
     hostRevealResults,
+    hostCancelRound,
     guestAnswer,
     guestUseSabotage,
     guestId,
@@ -215,7 +216,6 @@ export default function GameScreen() {
     clearRoomError
   } = useGameStore();
   const [answeredQuestionKey, setAnsweredQuestionKey] = useState(null);
-  const [lastAnswerCorrect, setLastAnswerCorrect] = useState(null);
   const [countdownValue, setCountdownValue] = useState(3);
   const [spotifyMessage, setSpotifyMessage] = useState('');
   const [spotifyError, setSpotifyError] = useState(false);
@@ -319,16 +319,14 @@ export default function GameScreen() {
   };
 
   const handleAnswer = (isCorrect) => {
-    setLastAnswerCorrect(isCorrect);
     setAnsweredQuestionKey(questionKey);
     guestAnswer(isCorrect);
     if (navigator.vibrate) navigator.vibrate(isCorrect ? [30] : [100, 30, 100]);
-    setTimeout(() => setLastAnswerCorrect(null), 900);
   };
 
   const handleHostBlackout = async () => {
     const hiddenTrack = getCurrentHiddenTrack();
-    const spotifyQuestion = hiddenTrack ? createQuestionFromTrack(hiddenTrack, gameMode, round, ownTimelineYears) : null;
+    const spotifyQuestion = hiddenTrack ? await createQuestionFromTrack(hiddenTrack, gameMode, round, ownTimelineYears) : null;
     await pauseSpotifyPlayback().catch((error) => console.warn('No se pudo pausar Spotify:', error));
     setAudioPlaying(false);
     await hostTriggerBlackout(spotifyQuestion, hiddenTrack);
@@ -366,25 +364,6 @@ export default function GameScreen() {
 
   return (
     <div className={`relative z-10 min-h-screen w-full flex flex-col items-center justify-center pt-16 transition-colors duration-500 ${phase === 'blackout' ? 'bg-black' : 'bg-transparent'}`}>
-
-      {/* Answer flash overlay */}
-      <AnimatePresence>
-        {lastAnswerCorrect !== null && (
-          <motion.div
-            key="flash"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
-            className="fixed inset-0 z-[200] pointer-events-none"
-            style={{
-              background: lastAnswerCorrect
-                ? 'radial-gradient(circle at center, rgba(57,255,20,0.45) 0%, rgba(57,255,20,0.1) 60%, transparent 100%)'
-                : 'radial-gradient(circle at center, rgba(255,107,139,0.5) 0%, rgba(255,107,139,0.12) 60%, transparent 100%)'
-            }}
-          />
-        )}
-      </AnimatePresence>
 
       {role === 'host' && (
         <header className="fixed top-0 left-0 right-0 h-16 flex items-center justify-between px-margin-mobile z-50 bg-surface/60 backdrop-blur-xl border-b border-white/10">
@@ -708,7 +687,7 @@ export default function GameScreen() {
               </p>
               <div className="mt-5 flex flex-col gap-2">
                 <button
-                  onClick={() => navigate('/lobby')}
+                  onClick={async () => { setShowExitConfirm(false); await hostCancelRound(); }}
                   className="w-full h-12 rounded-xl bg-intense-red text-white font-label-caps text-sm font-bold active:scale-95 transition-all"
                 >
                   SÍ, CANCELAR RONDA

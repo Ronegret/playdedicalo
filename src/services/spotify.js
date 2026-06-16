@@ -21,6 +21,11 @@ let spotifyDeviceId = null;
 let lastSpotifySdkError = '';
 let catalogPromise = null;
 
+// Tracks which artists have appeared (correct or distractor) since the current game playlist started.
+// Cleared when the active playlist changes (= new game) or when all playlist tracks are exhausted.
+let usedArtistsThisGame = new Set();
+let currentGamePlaylistId = null;
+
 function getRedirectUri() {
   return `${window.location.origin}/spotify/callback`;
 }
@@ -358,6 +363,12 @@ async function getCatalogTracks(playlistId) {
 
 function pickTrackWithoutRepeating(playlistUrl, tracks) {
   const playlistId = getPlaylistId(playlistUrl) || 'default';
+
+  if (playlistId !== currentGamePlaylistId) {
+    currentGamePlaylistId = playlistId;
+    usedArtistsThisGame = new Set();
+  }
+
   const played = readPlayedTracks();
   const alreadyPlayed = new Set(played[playlistId] || []);
   let availableTracks = tracks.filter((track) => !alreadyPlayed.has(track.uri));
@@ -365,6 +376,7 @@ function pickTrackWithoutRepeating(playlistUrl, tracks) {
   if (!availableTracks.length) {
     availableTracks = tracks;
     alreadyPlayed.clear();
+    usedArtistsThisGame = new Set();
   }
 
   const track = availableTracks[Math.floor(Math.random() * availableTracks.length)];
@@ -452,9 +464,31 @@ function shuffleArray(arr) {
   return copy;
 }
 
-function buildArtistQuestion(track, text, type = 'Identidad') {
-  const pool = ARTIST_DISTRACTORS.filter((a) => a !== track.artist);
+async function buildArtistQuestion(track, text, type = 'Identidad') {
+  let pool = [];
+
+  if (currentGamePlaylistId) {
+    try {
+      const catalog = await loadSongCatalog();
+      const genreArtists = catalog
+        .filter((row) => row.playlist_id === currentGamePlaylistId && row.artist_main && row.artist_main !== track.artist)
+        .map((row) => row.artist_main);
+      const unique = [...new Set(genreArtists)];
+      const fresh = unique.filter((a) => !usedArtistsThisGame.has(a));
+      pool = fresh.length >= 3 ? fresh : unique;
+    } catch {
+      // fall through to default
+    }
+  }
+
+  if (pool.length < 3) {
+    pool = ARTIST_DISTRACTORS.filter((a) => a !== track.artist);
+  }
+
   const distractors = shuffleArray(pool).slice(0, 3);
+  usedArtistsThisGame.add(track.artist);
+  distractors.forEach((a) => usedArtistsThisGame.add(a));
+
   const options = shuffleArray([track.artist, ...distractors]);
   return {
     mode: 'pulse',
@@ -496,7 +530,13 @@ function buildDecadeQuestion(track) {
   };
 }
 
-export function createQuestionFromTrack(track, gameMode, round = 1, timelineYears = []) {
+const ARTIST_QUESTION_TEXTS = [
+  ['¿Quién canta principalmente esta canción?', 'Identidad'],
+  ['¿A qué artista pertenece esta voz?', 'Reconoce la voz'],
+  ['¿Quién es el intérprete de esta canción?', 'Intérprete'],
+];
+
+export async function createQuestionFromTrack(track, gameMode, round = 1, timelineYears = []) {
   const year = track.releaseYear || 2016;
 
   if (gameMode === 'timeline') {
@@ -520,14 +560,12 @@ export function createQuestionFromTrack(track, gameMode, round = 1, timelineYear
     return { mode: 'chaos', ...template };
   }
 
-  const candidates = [
-    buildArtistQuestion(track, '¿Quién canta principalmente esta canción?'),
-    buildArtistQuestion(track, '¿A qué artista pertenece esta voz?', 'Reconoce la voz'),
-    buildArtistQuestion(track, '¿Quién es el intérprete de esta canción?', 'Intérprete'),
-    buildYearQuestion(track),
-    buildDecadeQuestion(track)
-  ].filter(Boolean);
+  const [qText, qType] = ARTIST_QUESTION_TEXTS[Math.floor(Math.random() * ARTIST_QUESTION_TEXTS.length)];
+  const artistQ = await buildArtistQuestion(track, qText, qType);
+  const yearQ = buildYearQuestion(track);
+  const decadeQ = buildDecadeQuestion(track);
 
+  const candidates = [artistQ, yearQ, decadeQ].filter(Boolean);
   return candidates[Math.floor(Math.random() * candidates.length)];
 }
 

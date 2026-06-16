@@ -718,6 +718,12 @@ export const useGameStore = create((setStore, getStore) => ({
     });
   },
 
+  hostCancelRound: async () => {
+    const { pin } = getStore();
+    if (!pin) return;
+    await patchData(`rooms/${pin}`, { phase: 'lobby', currentQuestion: null, roundAnswers: null, revealResults: null });
+  },
+
   guestGoToLobby: () => {
     setStore({ phase: 'lobby', lastResultType: null, lastPointDelta: 0, lastSabotage: null });
   },

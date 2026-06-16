@@ -312,14 +312,17 @@ export default function ResultScreen() {
               <p className="mt-1 text-lg font-black text-white leading-tight">{currentTrack.name}</p>
               <p className="text-sm text-white/55 mt-0.5">{currentTrack.artist}</p>
               {currentTrack.releaseYear && (
-                <motion.p
+                <motion.div
                   initial={{ scale: 0.7, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ delay: 0.45, type: 'spring', stiffness: 130 }}
-                  className={`mt-2 text-3xl font-black ${style.text}`}
+                  className="mt-3"
                 >
-                  {currentTrack.releaseYear}
-                </motion.p>
+                  <p className="font-label-caps text-[9px] text-white/35 tracking-widest">AÑO</p>
+                  <p className={`text-7xl font-black leading-none mt-0.5 ${style.text}`}>
+                    {currentTrack.releaseYear}
+                  </p>
+                </motion.div>
               )}
             </>
           ) : (
