@@ -12,11 +12,18 @@ function getAudio() {
   return _audio;
 }
 
-// Called on first user gesture anywhere in the app
+// Called on first user gesture on the welcome screen
 export function tryStartBgMusic() {
   if (_userStarted) return;
   _userStarted = true;
   getAudio().play().catch(() => {});
+}
+
+// Permanently stops music for this session (navigating away from welcome screen)
+export function stopBgMusic() {
+  if (!_audio) return;
+  _audio.pause();
+  _audio.currentTime = 0;
 }
 
 export function useBgMusic() {

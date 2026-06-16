@@ -232,8 +232,23 @@ async function getSpotifyPlayer() {
   return spotifyPlayerPromise;
 }
 
+// Pre-loads SDK and connects the player in the background (no user gesture needed).
+// Call this as early as possible so prepareSpotifyPlayback() is fast when user clicks.
+export async function preWarmSpotifyPlayer() {
+  try {
+    await getSpotifyPlayer();
+    for (let i = 0; i < 20; i++) {
+      if (spotifyDeviceId) return;
+      await new Promise((r) => setTimeout(r, 250));
+    }
+  } catch {
+    // Silent — will retry on user click
+  }
+}
+
 export async function prepareSpotifyPlayback() {
-  const player = await getSpotifyPlayer();
+  const player = await getSpotifyPlayer(); // instant if pre-warmed
+  // activateElement() must be called as close to the user gesture as possible
   if (typeof player.activateElement === 'function') {
     await player.activateElement();
   }

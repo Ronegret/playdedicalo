@@ -208,6 +208,7 @@ export default function GameScreen() {
     hostCancelRound,
     guestAnswer,
     guestUseSabotage,
+    guestLeaveRoom,
     guestId,
     players,
     roundAnswers,
@@ -370,23 +371,22 @@ export default function GameScreen() {
   return (
     <div className={`relative z-10 min-h-screen w-full flex flex-col items-center justify-center pt-16 transition-colors duration-500 ${phase === 'blackout' ? 'bg-black' : 'bg-transparent'}`}>
 
-      {role === 'host' && (
-        <header className="fixed top-0 left-0 right-0 h-16 flex items-center justify-between px-margin-mobile z-50 bg-surface/60 backdrop-blur-xl border-b border-white/10">
-          <button onClick={() => setShowExitConfirm(true)} className="text-on-surface-variant font-label-caps text-xs flex items-center gap-2">
-            <span className="material-symbols-outlined text-xl">arrow_back</span> CANCELAR
-          </button>
-          <div className="text-center">
-            <p className="font-label-caps text-xs text-neon-green">RONDA {round}</p>
-            <p className="font-label-caps text-[10px] text-on-surface-variant">
-              {gameMode === 'timeline' ? 'MODO LÍNEA' : `META ${targetScore} PTS`}
-            </p>
-          </div>
-          <div className="text-right">
-            <p className="font-label-caps text-[10px] text-on-surface-variant">TUS PUNTOS</p>
-            <p className="font-label-caps text-sm font-black text-neon-green">{ownPlayer?.points ?? 0}</p>
-          </div>
-        </header>
-      )}
+      <header className="fixed top-0 left-0 right-0 h-16 flex items-center justify-between px-margin-mobile z-50 bg-surface/60 backdrop-blur-xl border-b border-white/10">
+        <button onClick={() => setShowExitConfirm(true)} className="text-on-surface-variant font-label-caps text-xs flex items-center gap-2 active:scale-90 transition-transform">
+          <span className="material-symbols-outlined text-xl">arrow_back</span>
+          {role === 'host' ? 'CANCELAR' : 'SALIR'}
+        </button>
+        <div className="text-center">
+          <p className="font-label-caps text-xs text-neon-green">RONDA {round}</p>
+          <p className="font-label-caps text-[10px] text-on-surface-variant">
+            {gameMode === 'timeline' ? 'MODO LÍNEA' : `META ${targetScore} PTS`}
+          </p>
+        </div>
+        <div className="text-right">
+          <p className="font-label-caps text-[10px] text-on-surface-variant">MIS PTS</p>
+          <p className="font-label-caps text-sm font-black text-neon-green">{ownPlayer?.points ?? 0}</p>
+        </div>
+      </header>
 
       <AnimatePresence mode="wait">
         {phase === 'countdown' && (
@@ -685,17 +685,31 @@ export default function GameScreen() {
               className="w-full max-w-sm rounded-2xl border border-white/10 bg-surface-container p-6 text-center shadow-[0_0_50px_rgba(0,0,0,0.6)]"
               onClick={(e) => e.stopPropagation()}
             >
-              <span className="material-symbols-outlined text-vinyl-orange" style={{ fontSize: '2.5rem' }}>warning</span>
-              <h3 className="mt-3 font-headline-lg text-xl font-black text-white">¿Cancelar la ronda?</h3>
+              <span className="material-symbols-outlined text-vinyl-orange" style={{ fontSize: '2.5rem' }}>
+                {role === 'host' ? 'warning' : 'logout'}
+              </span>
+              <h3 className="mt-3 font-headline-lg text-xl font-black text-white">
+                {role === 'host' ? '¿Cancelar la ronda?' : '¿Salir de la partida?'}
+              </h3>
               <p className="mt-2 text-sm text-on-surface-variant">
-                Volverás al lobby. La ronda actual se perderá para todos.
+                {role === 'host'
+                  ? 'Volverás al lobby. La ronda actual se perderá para todos.'
+                  : 'Perderás tu progreso en esta ronda.'}
               </p>
               <div className="mt-5 flex flex-col gap-2">
                 <button
-                  onClick={async () => { setShowExitConfirm(false); await hostCancelRound(); }}
+                  onClick={async () => {
+                    setShowExitConfirm(false);
+                    if (role === 'host') {
+                      await hostCancelRound();
+                    } else {
+                      guestLeaveRoom();
+                      navigate('/role-selection');
+                    }
+                  }}
                   className="w-full h-12 rounded-xl bg-intense-red text-white font-label-caps text-sm font-bold active:scale-95 transition-all"
                 >
-                  SÍ, CANCELAR RONDA
+                  {role === 'host' ? 'SÍ, CANCELAR RONDA' : 'SÍ, SALIR'}
                 </button>
                 <button
                   onClick={() => setShowExitConfirm(false)}

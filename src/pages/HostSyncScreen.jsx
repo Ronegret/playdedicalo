@@ -12,6 +12,7 @@ import {
   getSpotifyDiagnostics,
   getSpotifyStatus,
   pauseSpotifyPlayback,
+  preWarmSpotifyPlayer,
   prepareSpotifyPlayback,
   startRandomPlaylistTrack
 } from '../services/spotify';
@@ -73,6 +74,12 @@ export default function HostSyncScreen() {
     window.addEventListener('focus', onFocus);
     return () => window.removeEventListener('focus', onFocus);
   }, []);
+
+  // Pre-warm Spotify SDK so activateElement() fires instantly on user click
+  useEffect(() => {
+    if (!spotifyStatus.connected) return;
+    preWarmSpotifyPlayer();
+  }, [spotifyStatus.connected]);
 
   const handleGoogleLogin = async () => {
     setAuthStatus('loading');
