@@ -193,7 +193,7 @@ export default function HowToPlayScreen() {
       exit={{ opacity: 0, y: -18 }}
       className="relative z-10 w-full min-h-screen px-4 sm:px-6 lg:px-10 pt-safe-header pb-24"
     >
-      <header className="fixed top-0 left-0 right-0 h-16 z-50 bg-background/80 backdrop-blur-xl border-b border-white/8 flex items-center justify-between px-4 sm:px-6">
+      <header className="fixed top-0 left-0 right-0 h-16 z-50 bg-background/80 backdrop-blur-xl border-b border-white/8 flex items-center px-4 sm:px-6">
         <button
           onClick={() => navigate('/')}
           className="text-on-surface-variant hover:text-white transition-colors flex items-center gap-2 font-label-caps text-xs tracking-[0.18em]"
@@ -201,7 +201,6 @@ export default function HowToPlayScreen() {
           <span className="material-symbols-outlined text-xl">arrow_back</span>
           VOLVER
         </button>
-        <img src="/images/logo-horizontal.png" alt="Dedícalo" className="h-8 w-auto object-contain" draggable={false} />
       </header>
 
       <div className="max-w-5xl mx-auto">
