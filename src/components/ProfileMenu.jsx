@@ -33,20 +33,26 @@ export default function ProfileMenu({ user, guestAvatar }) {
 
   const handleLogout = async () => {
     setIsOpen(false);
-    
+
+    localStorage.removeItem('auth_redirect_intent');
+    localStorage.removeItem('auth_redirect_intent_time');
+
     // Cleanup game state based on role
     if (role === 'host') {
       hostCloseRoom();
       resetSpotifyConnection();
+    } else if (role === 'guest') {
+      guestLeaveRoom();
+    }
+
+    if (user) {
       try {
         await signOut(auth);
       } catch (err) {
         console.warn('Error signing out', err);
       }
-    } else if (role === 'guest') {
-      guestLeaveRoom();
     }
-    
+
     navigate('/');
   };
 
