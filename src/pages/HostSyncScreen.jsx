@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getRedirectResult, onAuthStateChanged, signInWithPopup, signInWithRedirect } from 'firebase/auth';
 import { DEDICALO_PLAYLISTS, useGameStore } from '../store/useGameStore';
-import { auth, googleProvider } from '../firebase';
+import { auth, authReady, googleProvider } from '../firebase';
 import VinylVisualizer from '../components/VinylVisualizer';
 import NeonButton from '../components/NeonButton';
 import ProfileMenu from '../components/ProfileMenu';
@@ -69,7 +69,7 @@ export default function HostSyncScreen() {
   }, []);
 
   useEffect(() => {
-    getRedirectResult(auth)
+    authReady.then(() => getRedirectResult(auth))
       .then((result) => {
         if (result?.user) { setGoogleUser(result.user); setAuthStatus('idle'); setAuthMessage(''); }
       })
@@ -104,30 +104,6 @@ export default function HostSyncScreen() {
   const handleGoogleLogin = async () => {
     setAuthStatus('loading');
     setAuthMessage('');
-
-    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-    if (isMobile) {
-      // On mobile, signInWithPopup opens a new tab (iOS Safari blocks real popups).
-      // That new tab can't postMessage back to window.opener, so the original tab
-      // never receives the auth result. Redirect navigates the current tab directly
-      // and is reliable across all mobile browsers.
-      try {
-        localStorage.setItem('auth_redirect_intent', '/host/sync');
-        localStorage.setItem('auth_redirect_intent_time', String(Date.now()));
-        await signInWithRedirect(auth, googleProvider);
-      } catch (err) {
-        setAuthStatus('error');
-        setAuthMessage(
-          err?.code === 'auth/unauthorized-domain'
-            ? 'Este dominio no está autorizado. Contacta al desarrollador.'
-            : `Error al iniciar sesión: ${err.message}`
-        );
-      }
-      return;
-    }
-
-    // Desktop: try popup first (no page navigation, better UX)
     try {
       const result = await signInWithPopup(auth, googleProvider);
       setGoogleUser(result.user);
