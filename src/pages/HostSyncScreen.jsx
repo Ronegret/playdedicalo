@@ -98,20 +98,26 @@ export default function HostSyncScreen() {
   }, [spotifyStatus.connected]);
 
   const handleGoogleLogin = async () => {
+    setAuthStatus('loading');
+    setAuthMessage('');
     try {
       const result = await signInWithPopup(auth, googleProvider);
       setGoogleUser(result.user);
       setAuthStatus('idle');
       setAuthMessage('');
     } catch (error) {
-      const msg = {
-        'auth/unauthorized-domain': 'No pudimos abrir Google en este dominio.',
-        'auth/popup-blocked': 'El navegador bloqueó la ventana. Intentando con redirección...',
-        'auth/popup-closed-by-user': 'Se cerró Google antes de terminar.',
-      };
-      if (error.code === 'auth/popup-blocked' || error.code === 'auth/cancelled-popup-request') {
+      // On mobile, popup-closed-by-user often means the OS dismissed the popup,
+      // not that the user intentionally cancelled — fall back to redirect.
+      const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      const shouldRedirect =
+        error.code === 'auth/popup-blocked' ||
+        error.code === 'auth/cancelled-popup-request' ||
+        (error.code === 'auth/popup-closed-by-user' && isMobile);
+
+      if (shouldRedirect) {
         try {
           localStorage.setItem('auth_redirect_intent', '/host/sync');
+          localStorage.setItem('auth_redirect_intent_time', String(Date.now()));
           await signInWithRedirect(auth, googleProvider);
           return;
         } catch (redirectErr) {
@@ -123,6 +129,11 @@ export default function HostSyncScreen() {
           return;
         }
       }
+      const msg = {
+        'auth/unauthorized-domain': 'No pudimos abrir Google en este dominio.',
+        'auth/popup-blocked': 'El navegador bloqueó la ventana. Intentando con redirección...',
+        'auth/popup-closed-by-user': 'Se cerró Google antes de terminar.',
+      };
       setAuthStatus('error');
       setAuthMessage(msg[error.code] || `Error (${error.code}): ${error.message}`);
     }

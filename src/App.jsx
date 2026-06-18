@@ -50,9 +50,17 @@ function App() {
     const unsub = onAuthStateChanged(auth, (user) => {
       if (user) {
         const dest = localStorage.getItem('auth_redirect_intent');
+        const intentTime = Number(localStorage.getItem('auth_redirect_intent_time') || 0);
+        // Intents older than 10 min are stale (e.g. a redirect that failed and was
+        // never cleaned up). Ignore them so they don't cause unexpected navigation.
+        const isStale = intentTime > 0 && Date.now() - intentTime > 10 * 60 * 1000;
+
         if (dest) {
           localStorage.removeItem('auth_redirect_intent');
-          navigate(dest);
+          localStorage.removeItem('auth_redirect_intent_time');
+          if (!isStale && window.location.pathname !== dest) {
+            navigate(dest);
+          }
         }
       }
     });
