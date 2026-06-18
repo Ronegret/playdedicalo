@@ -7,22 +7,9 @@ import {
 } from "firebase/auth";
 import { getDatabase } from 'firebase/database';
 
-const DEFAULT_AUTH_DOMAIN = "dedicalo-play-trivia-7.firebaseapp.com";
-const CUSTOM_AUTH_DOMAINS = new Set([
-  "play.dedicalo.es",
-  "dedicalo-app.vercel.app",
-]);
-
-function getFirebaseAuthDomain() {
-  if (typeof window === "undefined") return DEFAULT_AUTH_DOMAIN;
-
-  const { hostname } = window.location;
-  return CUSTOM_AUTH_DOMAINS.has(hostname) ? hostname : DEFAULT_AUTH_DOMAIN;
-}
-
 const firebaseConfig = {
   apiKey: "AIzaSyATq2cehDwu43sxouhGnKpIU7to0GwLVKs",
-  authDomain: getFirebaseAuthDomain(),
+  authDomain: "dedicalo-play-trivia-7.firebaseapp.com",
   projectId: "dedicalo-play-trivia-7",
   storageBucket: "dedicalo-play-trivia-7.firebasestorage.app",
   messagingSenderId: "908813466951",

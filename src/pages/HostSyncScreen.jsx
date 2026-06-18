@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getRedirectResult, onAuthStateChanged, signInWithRedirect } from 'firebase/auth';
+import { getRedirectResult, onAuthStateChanged, signInWithPopup, signInWithRedirect } from 'firebase/auth';
 import { DEDICALO_PLAYLISTS, useGameStore } from '../store/useGameStore';
 import { auth, authReady, googleProvider } from '../firebase';
 import VinylVisualizer from '../components/VinylVisualizer';
@@ -123,10 +123,31 @@ export default function HostSyncScreen() {
 
     try {
       await authReady;
-      localStorage.setItem('auth_redirect_intent', '/host/sync');
-      localStorage.setItem('auth_redirect_intent_time', String(Date.now()));
-      await signInWithRedirect(auth, googleProvider);
-    } catch (error) {
+      localStorage.removeItem('auth_redirect_intent');
+      localStorage.removeItem('auth_redirect_intent_time');
+
+      const result = await signInWithPopup(auth, googleProvider);
+      setGoogleUser(result.user);
+      setAuthStatus('idle');
+    } catch (loginError) {
+      let error = loginError;
+      const fallbackToRedirect = [
+        'auth/popup-blocked',
+        'auth/operation-not-supported-in-this-environment',
+        'auth/web-storage-unsupported',
+      ].includes(error.code);
+
+      if (fallbackToRedirect) {
+        try {
+          localStorage.setItem('auth_redirect_intent', '/host/sync');
+          localStorage.setItem('auth_redirect_intent_time', String(Date.now()));
+          await signInWithRedirect(auth, googleProvider);
+          return;
+        } catch (redirectError) {
+          error = redirectError;
+        }
+      }
+
       const msg = {
         'auth/unauthorized-domain': 'No pudimos abrir Google en este dominio.',
         'auth/popup-closed-by-user': 'Se cerró Google antes de terminar. Inténtalo de nuevo.',
