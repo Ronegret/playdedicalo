@@ -27,7 +27,7 @@ export function stopBgMusic() {
 }
 
 export function useBgMusic() {
-  const [paused, setPaused] = useState(true);
+  const [paused, setPaused] = useState(() => getAudio().paused);
 
   useEffect(() => {
     const a = getAudio();
@@ -35,8 +35,6 @@ export function useBgMusic() {
     const onPause = () => setPaused(true);
     a.addEventListener('play', onPlay);
     a.addEventListener('pause', onPause);
-    // Sync initial state in case audio already started
-    setPaused(a.paused);
     return () => {
       a.removeEventListener('play', onPlay);
       a.removeEventListener('pause', onPause);

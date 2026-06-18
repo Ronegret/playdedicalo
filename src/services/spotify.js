@@ -532,14 +532,6 @@ const ARTIST_DISTRACTORS = [
   'Becky G', 'Sebastián Yatra', 'Luis Fonsi', 'Enrique Iglesias'
 ];
 
-const CHAOS_TEMPLATES = [
-  { text: '¿Cuánto cuesta activar "El Ladrón"?', options: ['4 pts', '5 pts', '6 pts', '8 pts'], correct: 2 },
-  { text: '¿Qué sabotaje intercambia tus puntos con los del líder?', options: ['El Escudo', 'La Trampa', 'El Cambio', 'El Ladrón'], correct: 2 },
-  { text: '¿Qué color anuncia un sabotaje en Dedícalo?', options: ['Verde', 'Rojo', 'Lila', 'Azul'], correct: 2 },
-  { text: '¿Qué pasa si el líder está bloqueado y acierta?', options: ['Suma el doble', 'No suma puntos', 'Pierde puntos', 'Elimina el bloqueo'], correct: 1 },
-  { text: '¿Desde qué ronda se pueden usar los sabotajes?', options: ['Desde la ronda 1', 'Desde la ronda 2', 'Desde la ronda 3', 'Solo en el final'], correct: 1 },
-];
-
 function shuffleArray(arr) {
   const copy = [...arr];
   for (let i = copy.length - 1; i > 0; i--) {

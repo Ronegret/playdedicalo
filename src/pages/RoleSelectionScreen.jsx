@@ -1,6 +1,92 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
+function MiniVinyl({ active = false, color = '#ff7a1a', icon = 'play_arrow' }) {
+  return (
+    <div className="relative h-20 w-20 shrink-0">
+      <motion.div
+        animate={{ rotate: 360 }}
+        transition={{ repeat: Infinity, duration: active ? 3.8 : 7, ease: 'linear' }}
+        className="absolute inset-0 rounded-full border border-white/10 bg-[repeating-radial-gradient(circle,#05070c_0_4px,#182235_5px_6px,#05070c_7px_10px)] shadow-[0_14px_34px_rgba(0,0,0,0.45)]"
+      >
+        <div className="absolute inset-0 rounded-full bg-[conic-gradient(from_20deg,transparent_0_30deg,rgba(255,255,255,0.13)_30deg_36deg,transparent_36deg_170deg,rgba(255,255,255,0.08)_170deg_176deg,transparent_176deg_360deg)]" />
+        <div
+          className="absolute inset-[28%] rounded-full border-2 border-black/50"
+          style={{ backgroundColor: color }}
+        />
+        <div className="absolute inset-[45%] rounded-full bg-black" />
+      </motion.div>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <span className="material-symbols-outlined relative z-10 text-black" style={{ fontSize: 22 }}>
+          {icon}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function Equalizer({ color = '#ff7a1a' }) {
+  return (
+    <div className="flex h-8 items-end justify-center gap-1" aria-hidden="true">
+      {[0.35, 0.72, 0.5, 0.92, 0.42, 0.68, 0.55].map((height, index) => (
+        <span
+          key={index}
+          className="eq-bar w-1.5 rounded-full"
+          style={{
+            height: `${height * 100}%`,
+            backgroundColor: color,
+            animationDelay: `${index * 0.08}s`,
+            animationDuration: `${0.85 + index * 0.04}s`
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+function RoleCard({ type, title, text, action, icon, color, glow, onClick }) {
+  return (
+    <motion.button
+      type="button"
+      onClick={onClick}
+      whileHover={{ scale: 1.015, y: -4 }}
+      whileTap={{ scale: 0.97 }}
+      transition={{ type: 'spring', stiffness: 280, damping: 22 }}
+      className="group relative w-full overflow-hidden rounded-[2rem] border border-white/10 bg-surface-container/72 p-5 text-left shadow-[0_24px_70px_rgba(0,0,0,0.22)] backdrop-blur-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-vinyl-orange/70"
+      style={{ boxShadow: `0 0 0 1px ${color}22, 0 24px 70px ${glow}` }}
+    >
+      <div
+        className="absolute -right-16 -top-16 h-44 w-44 rounded-full blur-3xl transition-opacity duration-300 group-hover:opacity-100 opacity-70"
+        style={{ backgroundColor: `${color}28` }}
+      />
+      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-white/16 to-transparent" />
+
+      <div className="relative flex items-center gap-4">
+        <MiniVinyl active color={color} icon={icon} />
+        <div className="min-w-0 flex-1">
+          <p className="font-label-caps text-[10px] tracking-[0.24em]" style={{ color }}>
+            {type}
+          </p>
+          <h2 className="mt-1 text-2xl font-black leading-tight text-white">
+            {title}
+          </h2>
+          <p className="mt-2 text-sm leading-relaxed text-on-surface-variant">
+            {text}
+          </p>
+        </div>
+      </div>
+
+      <div className="relative mt-5 flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-black/18 px-4 py-3">
+        <Equalizer color={color} />
+        <span className="flex items-center gap-2 font-label-caps text-xs tracking-[0.18em] text-white">
+          {action}
+          <span className="material-symbols-outlined text-base" style={{ color }}>arrow_forward</span>
+        </span>
+      </div>
+    </motion.button>
+  );
+}
+
 export default function RoleSelectionScreen() {
   const navigate = useNavigate();
 
@@ -9,92 +95,63 @@ export default function RoleSelectionScreen() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="relative z-10 w-full max-w-[430px] mx-auto min-h-screen flex flex-col items-center px-margin-mobile pt-safe-header pb-28 text-center"
+      className="relative z-10 mx-auto flex min-h-screen w-full max-w-[460px] flex-col items-center px-margin-mobile pb-28 pt-safe-header text-center"
     >
-      <header className="fixed top-0 left-0 right-0 z-50 h-16 flex items-center justify-between px-margin-mobile bg-background/78 backdrop-blur-xl border-b border-white/8">
+      <header className="fixed left-0 right-0 top-0 z-50 flex h-16 items-center justify-between border-b border-white/8 bg-background/78 px-margin-mobile backdrop-blur-xl">
         <button
           onClick={() => navigate('/')}
-          className="text-on-surface-variant hover:text-white transition-colors flex items-center gap-2 font-label-caps text-xs tracking-[0.18em]"
+          className="flex items-center gap-2 font-label-caps text-xs tracking-[0.18em] text-on-surface-variant transition-colors hover:text-white"
         >
           <span className="material-symbols-outlined text-xl">arrow_back</span>
           VOLVER
         </button>
-        <img src="/images/logo-main.png" alt="Dedícalo" className="h-8 w-auto object-contain" />
+        <img src="/images/logo-main.png" alt="Dedícalo" className="h-9 w-auto object-contain drop-shadow-[0_0_18px_rgba(255,122,26,0.18)]" />
         <div className="w-16 opacity-0" />
       </header>
 
-      <section className="w-full flex flex-col items-center gap-3 mb-8">
-        <p className="font-label-caps text-neon-green text-xs tracking-[0.28em]">¿CÓMO ENTRAS?</p>
-        <h1 className="font-headline-lg text-4xl font-black uppercase tracking-tight text-on-surface leading-tight">
-          Elige tu rol
-        </h1>
-        <p className="text-on-surface-variant text-sm leading-relaxed max-w-xs">
-          Todos juegan. El anfitrión crea la sala y también suma puntos.
-        </p>
+      <section className="mb-7 flex w-full flex-col items-center gap-4">
+        <motion.div
+          animate={{ y: [0, -6, 0] }}
+          transition={{ repeat: Infinity, duration: 4.4, ease: 'easeInOut' }}
+          className="relative flex h-24 w-24 items-center justify-center"
+        >
+          <MiniVinyl active color="#ff7a1a" icon="music_note" />
+          <div className="absolute inset-0 rounded-full border border-vinyl-orange/30 ring-expand-anim" />
+        </motion.div>
+
+        <div>
+          <p className="font-label-caps text-xs tracking-[0.28em] text-neon-green">ELIGE CÓMO ENTRAS</p>
+          <h1 className="mt-2 font-headline-lg text-4xl font-black uppercase leading-tight tracking-tight text-on-surface">
+            A jugar
+          </h1>
+          <p className="mx-auto mt-2 max-w-xs text-sm leading-relaxed text-on-surface-variant">
+            Todos participan. El anfitrión pone la música, comparte la sala y también suma puntos.
+          </p>
+        </div>
       </section>
 
-      <section className="flex flex-col gap-4 w-full">
-        {/* Host card — entire card is the button */}
-        <motion.button
-          type="button"
+      <section className="flex w-full flex-col gap-4">
+        <RoleCard
+          type="ANFITRIÓN"
+          title="Crear sala"
+          text="Conecta Google, elige playlist y muestra el PIN para que entren tus amigos."
+          action="CREAR"
+          icon="headphones"
+          color="#ff7a1a"
+          glow="rgba(255,122,26,0.16)"
           onClick={() => navigate('/host/sync')}
-          whileHover={{ scale: 1.02, y: -3 }}
-          whileTap={{ scale: 0.97 }}
-          transition={{ type: 'spring', stiffness: 280, damping: 22 }}
-          className="rounded-[2rem] border border-vinyl-orange/45 bg-gradient-to-br from-vinyl-orange/12 via-transparent to-transparent p-6 text-center relative overflow-hidden w-full"
-          style={{ boxShadow: '0 0 0 1px rgba(255,122,26,0.18), 0 24px 60px rgba(255,122,26,0.14)' }}
-        >
-          <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-48 h-48 bg-vinyl-orange/15 blur-3xl rounded-full pointer-events-none" />
-          <div className="absolute top-3 right-5 text-vinyl-orange/20 text-2xl select-none">♪</div>
-          <div className="absolute bottom-4 left-4 text-vinyl-orange/15 text-xl select-none">♫</div>
+        />
 
-          <div className="relative flex flex-col items-center gap-4">
-            <div className="w-20 h-20 rounded-3xl bg-vinyl-orange/15 border border-vinyl-orange/35 flex items-center justify-center shadow-[0_0_30px_rgba(255,122,26,0.25)]">
-              <span className="material-symbols-outlined text-vinyl-orange" style={{ fontSize: '2.6rem' }}>headphones</span>
-            </div>
-            <div>
-              <h2 className="text-2xl font-black text-white leading-tight">Anfitrión jugador</h2>
-              <p className="text-sm text-on-surface-variant mt-2 leading-relaxed max-w-xs mx-auto">
-                Crea la sala, comparte el PIN con tus amigos y juega en la misma partida.
-              </p>
-            </div>
-            <div className="flex items-center gap-2 text-vinyl-orange font-label-caps text-xs tracking-widest">
-              CREAR SALA
-              <span className="material-symbols-outlined text-sm">arrow_forward</span>
-            </div>
-          </div>
-        </motion.button>
-
-        {/* Guest card — entire card is the button */}
-        <motion.button
-          type="button"
+        <RoleCard
+          type="INVITADO"
+          title="Unirme"
+          text="Escribe el PIN o escanea el QR. Entras directo a la partida."
+          action="ENTRAR"
+          icon="groups"
+          color="#3f78ff"
+          glow="rgba(63,120,255,0.14)"
           onClick={() => navigate('/guest/join')}
-          whileHover={{ scale: 1.02, y: -3 }}
-          whileTap={{ scale: 0.97 }}
-          transition={{ type: 'spring', stiffness: 280, damping: 22 }}
-          className="rounded-[2rem] border border-electric-purple/45 bg-gradient-to-br from-electric-purple/10 via-transparent to-transparent p-6 text-center relative overflow-hidden w-full"
-          style={{ boxShadow: '0 0 0 1px rgba(168,85,247,0.18), 0 24px 60px rgba(168,85,247,0.12)' }}
-        >
-          <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-48 h-48 bg-electric-purple/12 blur-3xl rounded-full pointer-events-none" />
-          <div className="absolute top-3 right-5 text-electric-purple/20 text-2xl select-none">♬</div>
-          <div className="absolute bottom-4 left-4 text-electric-purple/15 text-xl select-none">♩</div>
-
-          <div className="relative flex flex-col items-center gap-4">
-            <div className="w-20 h-20 rounded-3xl bg-electric-purple/12 border border-electric-purple/35 flex items-center justify-center shadow-[0_0_30px_rgba(168,85,247,0.22)]">
-              <span className="material-symbols-outlined text-electric-purple" style={{ fontSize: '2.6rem' }}>person_add</span>
-            </div>
-            <div>
-              <h2 className="text-2xl font-black text-white leading-tight">Invitado</h2>
-              <p className="text-sm text-on-surface-variant mt-2 leading-relaxed max-w-xs mx-auto">
-                Entra con el PIN de 4 dígitos o escanea el QR del anfitrión.
-              </p>
-            </div>
-            <div className="flex items-center gap-2 text-electric-purple font-label-caps text-xs tracking-widest">
-              UNIRME A SALA
-              <span className="material-symbols-outlined text-sm">arrow_forward</span>
-            </div>
-          </div>
-        </motion.button>
+        />
       </section>
     </motion.main>
   );

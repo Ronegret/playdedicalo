@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getRedirectResult, onAuthStateChanged, signInWithPopup, signInWithRedirect } from 'firebase/auth';
+import { getRedirectResult, onAuthStateChanged, signInWithRedirect } from 'firebase/auth';
 import { DEDICALO_PLAYLISTS, useGameStore } from '../store/useGameStore';
 import { auth, authReady, googleProvider } from '../firebase';
 import VinylVisualizer from '../components/VinylVisualizer';
@@ -104,28 +104,13 @@ export default function HostSyncScreen() {
   const handleGoogleLogin = async () => {
     setAuthStatus('loading');
     setAuthMessage('');
+
     try {
-      const result = await signInWithPopup(auth, googleProvider);
-      setGoogleUser(result.user);
-      setAuthStatus('idle');
-      setAuthMessage('');
+      await authReady;
+      localStorage.setItem('auth_redirect_intent', '/host/sync');
+      localStorage.setItem('auth_redirect_intent_time', String(Date.now()));
+      await signInWithRedirect(auth, googleProvider);
     } catch (error) {
-      if (error.code === 'auth/popup-blocked' || error.code === 'auth/cancelled-popup-request') {
-        try {
-          localStorage.setItem('auth_redirect_intent', '/host/sync');
-          localStorage.setItem('auth_redirect_intent_time', String(Date.now()));
-          await signInWithRedirect(auth, googleProvider);
-          return;
-        } catch (redirectErr) {
-          setAuthStatus('error');
-          setAuthMessage(
-            redirectErr?.code === 'auth/unauthorized-domain'
-              ? 'Este dominio no está autorizado. Contacta al desarrollador.'
-              : `Error de redirección: ${redirectErr.message}`
-          );
-          return;
-        }
-      }
       const msg = {
         'auth/unauthorized-domain': 'No pudimos abrir Google en este dominio.',
         'auth/popup-closed-by-user': 'Se cerró Google antes de terminar. Inténtalo de nuevo.',
@@ -134,7 +119,6 @@ export default function HostSyncScreen() {
       setAuthMessage(msg[error.code] || `Error (${error.code}): ${error.message}`);
     }
   };
-
   const handleHostCreate = async () => {
     if (!canCreateRoom || createStartedRef.current) return;
     createStartedRef.current = true;
@@ -192,8 +176,7 @@ export default function HostSyncScreen() {
       exit={{ opacity: 0, x: -50 }}
       className="relative z-10 w-full min-h-screen px-4 md:px-8 lg:px-16 pt-safe-header pb-28"
     >
-      {/* ── Header ── */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-white/8 flex justify-between items-center px-4 md:px-8 h-16">
+            <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-white/8 flex justify-between items-center px-4 md:px-8 h-16">
         <button
           onClick={() => navigate('/role-selection')}
           className="text-on-surface-variant hover:text-white transition-colors flex items-center gap-2 font-label-caps text-xs tracking-[0.18em]"
@@ -207,11 +190,9 @@ export default function HostSyncScreen() {
         {googleUser && <ProfileMenu user={googleUser} />}
       </header>
 
-      {/* ── Page body — responsive 2-col when logged in ── */}
-      <div className={`w-full max-w-6xl mx-auto flex ${googleUser ? 'flex-col md:flex-row md:items-start gap-8 md:gap-10' : 'flex-col items-center'}`}>
+            <div className={`w-full max-w-6xl mx-auto flex ${googleUser ? 'flex-col md:flex-row md:items-start gap-8 md:gap-10' : 'flex-col items-center'}`}>
 
-        {/* ── LEFT: auth + Spotify ── */}
-        <div className={`flex flex-col items-center gap-5 ${googleUser ? 'w-full md:w-80 lg:w-96 md:self-start md:sticky md:top-24' : 'w-full max-w-sm'}`}>
+                <div className={`flex flex-col items-center gap-5 ${googleUser ? 'w-full md:w-80 lg:w-96 md:self-start md:sticky md:top-24' : 'w-full max-w-sm'}`}>
 
           <div className="mt-1">
             <VinylVisualizer rotating={spotifyStatus.connected} size="compact" logoSrc="/images/icon-app.png" />
@@ -229,8 +210,7 @@ export default function HostSyncScreen() {
 
           <div className="w-full flex flex-col gap-3">
 
-            {/* Google */}
-            {!googleUser ? (
+                        {!googleUser ? (
               <NeonButton
                 color="white"
                 onClick={handleGoogleLogin}
@@ -251,8 +231,7 @@ export default function HostSyncScreen() {
               </p>
             )}
 
-            {/* Spotify */}
-            {googleUser && (
+                        {googleUser && (
               <div className="rounded-2xl border border-white/10 bg-surface-container/70 p-5 text-center">
                 <p className="font-label-caps text-neon-green text-[10px] tracking-[0.22em] mb-3">SPOTIFY PREMIUM</p>
 
@@ -277,12 +256,10 @@ export default function HostSyncScreen() {
                   </motion.button>
                 </div>
 
-                {/* Vinyl toggle button — 3D lifted disc */}
-                {spotifyStatus.connected && (
+                                {spotifyStatus.connected && (
                   <div className="flex flex-col items-center gap-3">
                     <div className="relative flex items-center justify-center">
-                      {/* Sombra ambiente debajo del disco — da sensación de flotación */}
-                      <div
+                                            <div
                         className="absolute rounded-full pointer-events-none transition-all duration-500"
                         style={{
                           inset: '-16px',
@@ -320,8 +297,7 @@ export default function HostSyncScreen() {
                           transition: 'box-shadow 0.3s',
                         }}
                       >
-                        {/* Spinning outer ring when playing */}
-                        {isSpotifyPlaying && (
+                                                {isSpotifyPlaying && (
                           <motion.div
                             animate={{ rotate: 360 }}
                             transition={{ repeat: Infinity, duration: 2.5, ease: 'linear' }}
@@ -331,15 +307,13 @@ export default function HostSyncScreen() {
                             }}
                           />
                         )}
-                        {/* Reflejo superior — hace el disco parecer abombado */}
-                        <div
+                                                <div
                           className="absolute inset-0 rounded-full pointer-events-none"
                           style={{
                             background: 'linear-gradient(145deg, rgba(255,255,255,0.08) 0%, transparent 45%)',
                           }}
                         />
-                        {/* Centre label disc */}
-                        <div
+                                                <div
                           className="absolute rounded-full"
                           style={{
                             inset: '28%',
@@ -351,10 +325,8 @@ export default function HostSyncScreen() {
                             transition: 'all 0.3s',
                           }}
                         />
-                        {/* Spindle hole */}
-                        <div className="absolute w-2 h-2 rounded-full bg-black z-10" />
-                        {/* Icon */}
-                        <span
+                                                <div className="absolute w-2 h-2 rounded-full bg-black z-10" />
+                                                <span
                           className="relative z-20 material-symbols-outlined"
                           style={{
                             fontSize: '2rem',
@@ -391,8 +363,7 @@ export default function HostSyncScreen() {
               </div>
             )}
 
-            {/* Create Room */}
-            {googleUser && (
+                        {googleUser && (
               <motion.button
                 type="button"
                 onClick={handleHostCreate}
@@ -411,11 +382,9 @@ export default function HostSyncScreen() {
           </div>
         </div>
 
-        {/* ── RIGHT: Playlist grid ── */}
-        {googleUser && (
+                {googleUser && (
           <div className="flex-1 min-w-0">
-            {/* Section header */}
-            <div className="flex items-center justify-between gap-3 mb-4">
+                        <div className="flex items-center justify-between gap-3 mb-4">
               <div>
                 <p className="font-label-caps text-xs tracking-[0.22em] text-neon-green">ELIGE EL ESTILO</p>
                 <p className="mt-0.5 text-sm text-on-surface-variant">Toca una tarjeta para jugar con esa vibe.</p>
@@ -434,8 +403,7 @@ export default function HostSyncScreen() {
               </div>
             </div>
 
-            {/* Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
               {DEDICALO_PLAYLISTS.map((playlist) => {
                 const meta = PLAYLIST_META[playlist.id] || { icon: 'music_note', color: '#ff7a1a' };
                 const isSelected = playlist.id === selectedPlaylist;
@@ -454,8 +422,7 @@ export default function HostSyncScreen() {
                       boxShadow: isSelected ? `0 0 28px ${meta.color}22, inset 0 0 20px ${meta.color}06` : 'none',
                     }}
                   >
-                    {/* Big icon */}
-                    <span
+                                        <span
                       className="material-symbols-outlined"
                       style={{
                         fontSize: '2.6rem',
@@ -467,8 +434,7 @@ export default function HostSyncScreen() {
                       {meta.icon}
                     </span>
 
-                    {/* Name + mood */}
-                    <div className="mt-2">
+                                        <div className="mt-2">
                       <p
                         className="font-label-caps text-[11px] font-black tracking-[0.14em] leading-snug"
                         style={{ color: isSelected ? '#fff' : 'rgba(255,255,255,0.82)' }}
@@ -480,8 +446,7 @@ export default function HostSyncScreen() {
                       </p>
                     </div>
 
-                    {/* Selected check */}
-                    {isSelected && (
+                                        {isSelected && (
                       <motion.div
                         initial={{ scale: 0, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
@@ -498,8 +463,7 @@ export default function HostSyncScreen() {
               })}
             </div>
 
-            {/* Selected summary bar */}
-            <div
+                        <div
               className="mt-4 rounded-2xl border px-4 py-3 flex items-center gap-3"
               style={{
                 borderColor: `${selectedMeta.color}35`,

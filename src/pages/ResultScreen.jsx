@@ -102,7 +102,7 @@ export default function ResultScreen() {
   const navigate = useNavigate();
   const [shareCopied, setShareCopied] = useState(false);
   const {
-    role, phase, players, round, gameMode, targetScore,
+    role, phase, players, gameMode, targetScore,
     hostNextRound, hostCloseRoom, guestId,
     lastResultType, lastPointDelta, lastSabotage,
     revealResults, currentTrack, roomError, clearRoomError, guestAvatar
@@ -147,7 +147,9 @@ export default function ResultScreen() {
         setShareCopied(true);
         setTimeout(() => setShareCopied(false), 2500);
       }
-    } catch {}
+    } catch {
+      // El usuario canceló el panel de compartir.
+    }
   };
 
   // ── FINAL screen ──

@@ -186,10 +186,15 @@ export default function LobbyScreen() {
 
   useEffect(() => {
     if (!lastDisconnectedPlayer) return;
-    setDisconnectToast(lastDisconnectedPlayer);
-    useGameStore.setState({ lastDisconnectedPlayer: null });
-    const t = setTimeout(() => setDisconnectToast(''), 5000);
-    return () => clearTimeout(t);
+    const showToast = window.setTimeout(() => {
+      setDisconnectToast(lastDisconnectedPlayer);
+      useGameStore.setState({ lastDisconnectedPlayer: null });
+    }, 0);
+    const hideToast = window.setTimeout(() => setDisconnectToast(''), 5000);
+    return () => {
+      window.clearTimeout(showToast);
+      window.clearTimeout(hideToast);
+    };
   }, [lastDisconnectedPlayer]);
 
   const handleExit = () => {
@@ -344,7 +349,9 @@ export default function LobbyScreen() {
                 if (navigator.share) {
                   try {
                     await navigator.share({ title: 'Únete a Dedícalo', text: `Únete a mi sala con PIN ${pin}`, url: shareUrl });
-                  } catch {}
+                  } catch {
+                    // El usuario canceló el panel de compartir.
+                  }
                 } else {
                   navigator.clipboard?.writeText(shareUrl).catch(() => {});
                   setLinkShared(true);
@@ -703,5 +710,4 @@ export default function LobbyScreen() {
     </motion.main>
   );
 }
-
 

@@ -2,7 +2,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DEDICALO_PLAYLISTS, GAME_MODES, SABOTAGE_OPTIONS, getCombinedTimelineYears, normalizeSpotifyPlaylistUrl, useGameStore } from '../store/useGameStore';
-import NeonButton from '../components/NeonButton';
 import ProfileMenu from '../components/ProfileMenu';
 import { auth } from '../firebase';
 import { createQuestionFromTrack, explainSpotifyError, getCurrentHiddenTrack, getSpotifyStatus, pauseSpotifyPlayback, startRandomPlaylistTrack } from '../services/spotify';
@@ -400,7 +399,6 @@ export default function GameScreen() {
     spotifyPlaylistUrl,
     hostTriggerBlackout,
     hostRevealResults,
-    hostCancelRound,
     hostCloseRoom,
     guestAnswer,
     guestUseSabotage,
@@ -452,10 +450,15 @@ export default function GameScreen() {
 
   useEffect(() => {
     if (!lastDisconnectedPlayer) return;
-    setDisconnectToast(lastDisconnectedPlayer);
-    useGameStore.setState({ lastDisconnectedPlayer: null });
-    const t = setTimeout(() => setDisconnectToast(''), 5000);
-    return () => clearTimeout(t);
+    const showToast = window.setTimeout(() => {
+      setDisconnectToast(lastDisconnectedPlayer);
+      useGameStore.setState({ lastDisconnectedPlayer: null });
+    }, 0);
+    const hideToast = window.setTimeout(() => setDisconnectToast(''), 5000);
+    return () => {
+      window.clearTimeout(showToast);
+      window.clearTimeout(hideToast);
+    };
   }, [lastDisconnectedPlayer]);
 
   useEffect(() => {
@@ -483,7 +486,9 @@ export default function GameScreen() {
   }, [phase, round]);
 
   useEffect(() => {
-    if (phase === 'listen') setSpotifyTrackReady(false);
+    if (phase !== 'listen') return undefined;
+    const reset = window.setTimeout(() => setSpotifyTrackReady(false), 0);
+    return () => window.clearTimeout(reset);
   }, [phase, round]);
 
   useEffect(() => {
@@ -592,7 +597,9 @@ export default function GameScreen() {
 
   // Reset blackout lock when phase changes (new round)
   useEffect(() => {
-    if (phase === 'listen') setIsBlackoutPending(false);
+    if (phase !== 'listen') return undefined;
+    const reset = window.setTimeout(() => setIsBlackoutPending(false), 0);
+    return () => window.clearTimeout(reset);
   }, [phase, round]);
 
   const handleSpotifyRetry = () => {
