@@ -69,9 +69,25 @@ export default function HostSyncScreen() {
   }, []);
 
   useEffect(() => {
+    const redirectIntent = localStorage.getItem('auth_redirect_intent');
+    const intentTime = Number(localStorage.getItem('auth_redirect_intent_time') || 0);
+    const hasFreshRedirectIntent = Boolean(redirectIntent) && Date.now() - intentTime < 10 * 60 * 1000;
+
     authReady.then(() => getRedirectResult(auth))
       .then((result) => {
-        if (result?.user) { setGoogleUser(result.user); setAuthStatus('idle'); setAuthMessage(''); }
+        if (result?.user) {
+          setGoogleUser(result.user);
+          setAuthStatus('idle');
+          setAuthMessage('');
+          return;
+        }
+
+        if (hasFreshRedirectIntent && !auth.currentUser) {
+          localStorage.removeItem('auth_redirect_intent');
+          localStorage.removeItem('auth_redirect_intent_time');
+          setAuthStatus('error');
+          setAuthMessage('Google volvió sin completar el acceso. Inténtalo otra vez.');
+        }
       })
       .catch((err) => {
         console.warn('Google redirect result error', err);
@@ -80,7 +96,7 @@ export default function HostSyncScreen() {
         // overwrite an already-valid login state set by onAuthStateChanged.
         if (code === 'auth/unauthorized-domain') {
           setAuthStatus('error');
-          setAuthMessage('Este dominio no está autorizado en Firebase. Contacta al desarrollador.');
+          setAuthMessage('Google no reconoce este dominio todavía. Revisa Firebase y vuelve a intentar.');
         } else if (code === 'auth/account-exists-with-different-credential') {
           setAuthStatus('error');
           setAuthMessage('Ya existe una cuenta con ese correo con otro proveedor.');
