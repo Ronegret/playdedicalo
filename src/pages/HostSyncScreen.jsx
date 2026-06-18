@@ -76,12 +76,16 @@ export default function HostSyncScreen() {
       .catch((err) => {
         console.warn('Google redirect result error', err);
         const code = err?.code || '';
-        const msg = {
-          'auth/unauthorized-domain': 'Este dominio no está autorizado en Firebase. Contacta al desarrollador.',
-          'auth/account-exists-with-different-credential': 'Ya existe una cuenta con ese correo.',
-        };
-        setAuthStatus('error');
-        setAuthMessage(msg[code] || `Error de redirección (${code}): ${err.message}`);
+        // Only surface errors the user must act on — don't let transient errors
+        // overwrite an already-valid login state set by onAuthStateChanged.
+        if (code === 'auth/unauthorized-domain') {
+          setAuthStatus('error');
+          setAuthMessage('Este dominio no está autorizado en Firebase. Contacta al desarrollador.');
+        } else if (code === 'auth/account-exists-with-different-credential') {
+          setAuthStatus('error');
+          setAuthMessage('Ya existe una cuenta con ese correo con otro proveedor.');
+        }
+        // All other errors: log only — onAuthStateChanged will set the correct state.
       });
   }, []);
 
@@ -100,39 +104,55 @@ export default function HostSyncScreen() {
   const handleGoogleLogin = async () => {
     setAuthStatus('loading');
     setAuthMessage('');
+
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+    if (isMobile) {
+      // On mobile, signInWithPopup opens a new tab (iOS Safari blocks real popups).
+      // That new tab can't postMessage back to window.opener, so the original tab
+      // never receives the auth result. Redirect navigates the current tab directly
+      // and is reliable across all mobile browsers.
+      try {
+        localStorage.setItem('auth_redirect_intent', '/host/sync');
+        localStorage.setItem('auth_redirect_intent_time', String(Date.now()));
+        await signInWithRedirect(auth, googleProvider);
+      } catch (err) {
+        setAuthStatus('error');
+        setAuthMessage(
+          err?.code === 'auth/unauthorized-domain'
+            ? 'Este dominio no está autorizado. Contacta al desarrollador.'
+            : `Error al iniciar sesión: ${err.message}`
+        );
+      }
+      return;
+    }
+
+    // Desktop: try popup first (no page navigation, better UX)
     try {
       const result = await signInWithPopup(auth, googleProvider);
       setGoogleUser(result.user);
       setAuthStatus('idle');
       setAuthMessage('');
     } catch (error) {
-      // On mobile, popup-closed-by-user often means the OS dismissed the popup,
-      // not that the user intentionally cancelled — fall back to redirect.
-      const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-      const shouldRedirect =
-        error.code === 'auth/popup-blocked' ||
-        error.code === 'auth/cancelled-popup-request' ||
-        (error.code === 'auth/popup-closed-by-user' && isMobile);
-
-      if (shouldRedirect) {
+      if (error.code === 'auth/popup-blocked' || error.code === 'auth/cancelled-popup-request') {
         try {
           localStorage.setItem('auth_redirect_intent', '/host/sync');
           localStorage.setItem('auth_redirect_intent_time', String(Date.now()));
           await signInWithRedirect(auth, googleProvider);
           return;
         } catch (redirectErr) {
-          const redirectMsg = redirectErr?.code === 'auth/unauthorized-domain'
-            ? 'Este dominio no está autorizado. Contacta al desarrollador.'
-            : `Error de redirección: ${redirectErr.message}`;
           setAuthStatus('error');
-          setAuthMessage(redirectMsg);
+          setAuthMessage(
+            redirectErr?.code === 'auth/unauthorized-domain'
+              ? 'Este dominio no está autorizado. Contacta al desarrollador.'
+              : `Error de redirección: ${redirectErr.message}`
+          );
           return;
         }
       }
       const msg = {
         'auth/unauthorized-domain': 'No pudimos abrir Google en este dominio.',
-        'auth/popup-blocked': 'El navegador bloqueó la ventana. Intentando con redirección...',
-        'auth/popup-closed-by-user': 'Se cerró Google antes de terminar.',
+        'auth/popup-closed-by-user': 'Se cerró Google antes de terminar. Inténtalo de nuevo.',
       };
       setAuthStatus('error');
       setAuthMessage(msg[error.code] || `Error (${error.code}): ${error.message}`);
