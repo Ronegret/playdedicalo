@@ -81,7 +81,7 @@ export default function HostSyncScreen() {
           'auth/account-exists-with-different-credential': 'Ya existe una cuenta con ese correo.',
         };
         setAuthStatus('error');
-        setAuthMessage(msg[code] || 'No se pudo completar el inicio de sesión con Google. Inténtalo de nuevo.');
+        setAuthMessage(msg[code] || `Error de redirección (${code}): ${err.message}`);
       });
   }, []);
 
@@ -98,16 +98,7 @@ export default function HostSyncScreen() {
   }, [spotifyStatus.connected]);
 
   const handleGoogleLogin = async () => {
-    setAuthStatus('loading');
-    setAuthMessage('Abriendo Google...');
     try {
-      const useRedirect = window.matchMedia('(max-width: 900px)').matches
-        || /FBAN|FBAV|Instagram|wv|WebView/i.test(navigator.userAgent);
-      if (useRedirect) {
-        localStorage.setItem('auth_redirect_intent', '/host/sync');
-        await signInWithRedirect(auth, googleProvider);
-        return;
-      }
       const result = await signInWithPopup(auth, googleProvider);
       setGoogleUser(result.user);
       setAuthStatus('idle');
@@ -126,14 +117,14 @@ export default function HostSyncScreen() {
         } catch (redirectErr) {
           const redirectMsg = redirectErr?.code === 'auth/unauthorized-domain'
             ? 'Este dominio no está autorizado. Contacta al desarrollador.'
-            : 'No se pudo iniciar la redirección a Google.';
+            : `Error de redirección: ${redirectErr.message}`;
           setAuthStatus('error');
           setAuthMessage(redirectMsg);
           return;
         }
       }
       setAuthStatus('error');
-      setAuthMessage(msg[error.code] || 'No se pudo abrir Google. Inténtalo de nuevo.');
+      setAuthMessage(msg[error.code] || `Error (${error.code}): ${error.message}`);
     }
   };
 
