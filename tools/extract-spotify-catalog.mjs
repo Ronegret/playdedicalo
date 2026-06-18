@@ -208,16 +208,26 @@ async function getAccessToken() {
     }
     if (savedToken?.refresh_token) {
       const env = parseEnv(await fs.readFile('.env', 'utf8'));
-      const refreshed = await requestSpotifyToken({
-        grant_type: 'refresh_token',
-        refresh_token: savedToken.refresh_token,
-        client_id: env.VITE_SPOTIFY_CLIENT_ID
-      });
-      const nextToken = saveUserToken({ ...refreshed, refresh_token: refreshed.refresh_token || savedToken.refresh_token });
-      return nextToken.access_token;
+      try {
+        const refreshed = await requestSpotifyToken({
+          grant_type: 'refresh_token',
+          refresh_token: savedToken.refresh_token,
+          client_id: env.VITE_SPOTIFY_CLIENT_ID
+        });
+        const nextToken = await saveUserToken({ ...refreshed, refresh_token: refreshed.refresh_token || savedToken.refresh_token });
+        return nextToken.access_token;
+      } catch (error) {
+        if (error.message.includes('invalid_grant')) {
+          console.warn('El token de actualización ha expirado o es inválido (invalid_grant). Eliminando archivo de token...');
+          await fs.rm(USER_TOKEN_PATH, { force: true });
+        }
+        throw error;
+      }
     }
-  } catch {
-    // No saved user token yet.
+  } catch (err) {
+    if (err.code !== 'ENOENT' && !err.message.includes('invalid_grant')) {
+      console.warn('Error leyendo o refrescando el token de usuario:', err.message);
+    }
   }
 
   const env = parseEnv(await fs.readFile('.env', 'utf8'));

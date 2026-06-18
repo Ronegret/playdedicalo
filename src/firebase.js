@@ -1,4 +1,4 @@
-﻿import { getApps, initializeApp } from "firebase/app";
+import { getApps, initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
@@ -11,7 +11,7 @@ const firebaseConfig = {
   databaseURL: "https://dedicalo-play-trivia-7-default-rtdb.europe-west1.firebasedatabase.app"
 };
 
-const app = getApps().find((firebaseApp) => firebaseApp.name === 'dedicalo') || initializeApp(firebaseConfig, 'dedicalo');
+const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
 

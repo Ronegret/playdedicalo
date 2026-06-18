@@ -6,6 +6,7 @@ import { DEDICALO_PLAYLISTS, useGameStore } from '../store/useGameStore';
 import { auth, googleProvider } from '../firebase';
 import VinylVisualizer from '../components/VinylVisualizer';
 import NeonButton from '../components/NeonButton';
+import ProfileMenu from '../components/ProfileMenu';
 import {
   connectSpotify,
   explainSpotifyError,
@@ -175,11 +176,7 @@ export default function HostSyncScreen() {
         <h1 className="font-headline-xl text-2xl italic tracking-tighter text-electric-purple select-none">
           ANFITRIÓN
         </h1>
-        <div className="w-8 h-8 rounded-full border-2 border-electric-purple overflow-hidden flex items-center justify-center bg-electric-purple/20">
-          {googleUser?.photoURL
-            ? <img src={googleUser.photoURL} alt="Avatar" className="w-full h-full object-cover" />
-            : <span className="material-symbols-outlined text-sm text-electric-purple">headphones</span>}
-        </div>
+        {googleUser && <ProfileMenu user={googleUser} />}
       </header>
 
       {/* ── Page body — responsive 2-col when logged in ── */}

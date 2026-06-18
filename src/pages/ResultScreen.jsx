@@ -2,6 +2,8 @@ import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TIMELINE_GOAL_YEARS, getCombinedTimelineYears, useGameStore } from '../store/useGameStore';
+import ProfileMenu from '../components/ProfileMenu';
+import { auth } from '../firebase';
 
 const RESULT_STYLES = {
   success: {
@@ -103,7 +105,7 @@ export default function ResultScreen() {
     role, phase, players, round, gameMode, targetScore,
     hostNextRound, hostCloseRoom, guestId,
     lastResultType, lastPointDelta, lastSabotage,
-    revealResults, currentTrack, roomError, clearRoomError
+    revealResults, currentTrack, roomError, clearRoomError, guestAvatar
   } = useGameStore();
 
   const guestReveal = revealResults?.[guestId] || null;
@@ -158,6 +160,9 @@ export default function ResultScreen() {
         style={{ overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' }}
       >
         <div className="min-h-full max-w-lg mx-auto flex flex-col items-center px-5 py-8">
+          <div className="absolute top-4 right-4 z-[100]">
+            <ProfileMenu user={role === 'host' ? auth.currentUser : null} guestAvatar={role === 'guest' ? guestAvatar : null} />
+          </div>
           <motion.div
             initial={{ scale: 0.92, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
@@ -249,9 +254,12 @@ export default function ResultScreen() {
 
       {/* Scrollable content */}
       <div
-        className="relative z-10 flex flex-col w-full max-w-lg mx-auto px-4 pt-5 pb-5 overflow-y-auto flex-1"
+        className="relative z-10 flex flex-col w-full max-w-lg mx-auto px-4 pt-14 pb-5 overflow-y-auto flex-1"
         style={{ overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' }}
       >
+        <div className="absolute top-4 right-4 z-[100]">
+          <ProfileMenu user={role === 'host' ? auth.currentUser : null} guestAvatar={role === 'guest' ? guestAvatar : null} />
+        </div>
 
         {/* ① Resultado personal — banner compacto */}
         <motion.div

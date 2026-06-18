@@ -686,11 +686,6 @@ export async function createQuestionFromTrack(track, gameMode, round = 1, timeli
     };
   }
 
-  if (gameMode === 'chaos') {
-    const template = CHAOS_TEMPLATES[Math.floor(Math.random() * CHAOS_TEMPLATES.length)];
-    return { mode: 'chaos', ...template };
-  }
-
   // Pulse mode: pick question type from the cycle, fall back if unavailable.
   const [qText, qType] = ARTIST_QUESTION_TEXTS[Math.floor(Math.random() * ARTIST_QUESTION_TEXTS.length)];
 

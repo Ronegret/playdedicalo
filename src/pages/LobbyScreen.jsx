@@ -1,9 +1,11 @@
-﻿import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ChaosEconomyBubbles from '../components/ChaosEconomyBubbles';
 import { GAME_MODES, SABOTAGE_OPTIONS, TIMELINE_GOAL_YEARS, VICTORY_MODES, getCombinedTimelineYears, useGameStore } from '../store/useGameStore';
 import { explainSpotifyError, prepareSpotifyPlayback } from '../services/spotify';
+import ProfileMenu from '../components/ProfileMenu';
+import { auth } from '../firebase';
 
 function InfoDetails({ title, children }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -158,7 +160,8 @@ export default function LobbyScreen() {
     guestLeaveRoom,
     hostCloseRoom,
     roomError,
-    clearRoomError
+    clearRoomError,
+    guestAvatar
   } = useGameStore();
   const [showQR, setShowQR] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
@@ -245,7 +248,7 @@ export default function LobbyScreen() {
           <span className="material-symbols-outlined text-xl">arrow_back</span> SALIR
         </button>
         <img src="/images/logo-main.png" alt="Dedícalo" className="h-8 w-auto object-contain" />
-        <div className="w-8 h-8 opacity-0" />
+        <ProfileMenu user={role === 'host' ? auth.currentUser : null} guestAvatar={role === 'guest' ? guestAvatar : null} />
       </header>
 
       {/* Host vinyl hero */}

@@ -2,6 +2,9 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DEDICALO_PLAYLISTS, GAME_MODES, SABOTAGE_OPTIONS, getCombinedTimelineYears, normalizeSpotifyPlaylistUrl, useGameStore } from '../store/useGameStore';
+import NeonButton from '../components/NeonButton';
+import ProfileMenu from '../components/ProfileMenu';
+import { auth } from '../firebase';
 import { createQuestionFromTrack, explainSpotifyError, getCurrentHiddenTrack, getSpotifyStatus, pauseSpotifyPlayback, startRandomPlaylistTrack } from '../services/spotify';
 
 const EQUALIZER_BARS = [0.35, 0.58, 0.42, 0.71, 0.49, 0.64, 0.39];
@@ -414,7 +417,8 @@ export default function GameScreen() {
     lastDisconnectedPlayer,
     setAudioPlaying,
     roomError,
-    clearRoomError
+    clearRoomError,
+    guestAvatar
   } = useGameStore();
   const [answeredQuestionKey, setAnsweredQuestionKey] = useState(null);
   const [countdownValue, setCountdownValue] = useState(3);
@@ -655,9 +659,12 @@ export default function GameScreen() {
             {gameMode === 'timeline' ? 'MODO LÍNEA' : `META ${targetScore} PTS`}
           </p>
         </div>
-        <div className="text-right">
-          <p className="font-label-caps text-[10px] text-on-surface-variant">MIS PTS</p>
-          <p className="font-label-caps text-sm font-black text-neon-green">{ownPlayer?.points ?? 0}</p>
+        <div className="flex items-center gap-3 text-right">
+          <div>
+            <p className="font-label-caps text-[10px] text-on-surface-variant">MIS PTS</p>
+            <p className="font-label-caps text-sm font-black text-neon-green">{ownPlayer?.points ?? 0}</p>
+          </div>
+          <ProfileMenu user={role === 'host' ? auth.currentUser : null} guestAvatar={role === 'guest' ? guestAvatar : null} />
         </div>
       </header>
 
