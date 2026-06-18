@@ -20,8 +20,18 @@ const SpotifyCallbackScreen = lazy(() => import('./pages/SpotifyCallbackScreen')
 
 function PageLoader() {
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-surface">
-      <div className="w-14 h-14 rounded-full border-2 border-neon-green/30 ring-expand-anim" />
+    <div className="fixed inset-0 z-[999] flex flex-col items-center justify-center gap-5 bg-background px-6 text-center">
+      <div className="relative flex h-28 w-28 items-center justify-center">
+        <div className="absolute inset-0 rounded-full border border-vinyl-orange/25 ring-expand-anim" />
+        <div className="absolute inset-3 rounded-full bg-[repeating-radial-gradient(circle,#05070c_0_4px,#172033_5px_6px,#05070c_7px_10px)] vinyl-spin shadow-[0_18px_42px_rgba(0,0,0,0.45)]" />
+        <div className="relative z-10 flex h-14 w-14 items-center justify-center overflow-hidden rounded-full bg-white p-1.5">
+          <img src="/images/icon-app.png" alt="Dedícalo" className="h-full w-full object-contain" />
+        </div>
+      </div>
+      <div>
+        <p className="font-label-caps text-xs tracking-[0.28em] text-neon-green">CARGANDO</p>
+        <p className="mt-2 text-sm font-bold text-on-surface">Preparando la sala musical...</p>
+      </div>
     </div>
   );
 }
