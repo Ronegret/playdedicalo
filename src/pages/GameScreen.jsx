@@ -423,6 +423,7 @@ export default function GameScreen() {
   const [answeredQuestionKey, setAnsweredQuestionKey] = useState(null);
   const [countdownValue, setCountdownValue] = useState(3);
   const [spotifyMessage, setSpotifyMessage] = useState('');
+  const [spotifyTrackReady, setSpotifyTrackReady] = useState(false);
   const [spotifyError, setSpotifyError] = useState(false);
   const [spotifyNeedsReconnect, setSpotifyNeedsReconnect] = useState(false);
   const [activatedSabotage, setActivatedSabotage] = useState(null);
@@ -482,6 +483,10 @@ export default function GameScreen() {
   }, [phase, round]);
 
   useEffect(() => {
+    if (phase === 'listen') setSpotifyTrackReady(false);
+  }, [phase, round]);
+
+  useEffect(() => {
     if (role !== 'host' || phase !== 'listen') return;
 
     const playKey = `${round}-${spotifyPlaylistUrl}`;
@@ -501,6 +506,7 @@ export default function GameScreen() {
           setSpotifyMessage('Música sonando. Para cuando quieras.');
           setSpotifyError(false);
           setAudioPlaying(true);
+          setSpotifyTrackReady(true);
         }
       })
       .catch((error) => {
@@ -803,13 +809,13 @@ export default function GameScreen() {
               <div className="w-full max-w-xs grid gap-3 mt-2 mb-8">
                 <p className="text-center text-xs text-on-surface-variant">Para cuando lo veas claro 👇</p>
                 <motion.button
-                  whileTap={{ scale: isBlackoutPending ? 1 : 0.96 }}
+                  whileTap={{ scale: (isBlackoutPending || !spotifyTrackReady) ? 1 : 0.96 }}
                   onClick={handleHostBlackout}
-                  disabled={isBlackoutPending}
+                  disabled={isBlackoutPending || !spotifyTrackReady}
                   className="w-full h-20 bg-intense-red hover:bg-red-600 text-white font-headline-lg-mobile text-3xl rounded-2xl shadow-[0_0_30px_rgba(255,107,139,0.45)] transition-colors font-black border-2 border-white/15 relative overflow-hidden disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
-                  {isBlackoutPending ? 'PARANDO...' : 'PARAR MÚSICA'}
+                  {isBlackoutPending ? 'PARANDO...' : !spotifyTrackReady ? 'CARGANDO...' : 'PARAR MÚSICA'}
                 </motion.button>
               </div>
             )}

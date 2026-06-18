@@ -23,7 +23,7 @@ const PLAYLIST_META = {
   'hits-todos-los-tiempos': { icon: 'public',                color: '#00c8ff' },
   'rock-latino':            { icon: 'electric_bolt',         color: '#ffd000' },
   'mix-latino':             { icon: 'shuffle',               color: '#aa44ff' },
-  'bailable':               { icon: 'nightlife',             color: '#ff44aa' },
+  'bailable-todos-los-tiempos': { icon: 'nightlife',           color: '#ff44aa' },
   'romanticos':             { icon: 'favorite',              color: '#ff4466' },
   'perreo-clasico':         { icon: 'local_fire_department', color: '#ff2222' },
   'temazos-espanoles':      { icon: 'stadium',               color: '#ffaa00' },
@@ -57,7 +57,13 @@ export default function HostSyncScreen() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) { setGoogleUser(user); setAuthStatus('idle'); setAuthMessage(''); }
+      if (user) {
+        setGoogleUser(user);
+        setAuthStatus('idle');
+        setAuthMessage('');
+      } else {
+        setGoogleUser(null);
+      }
     });
     return unsubscribe;
   }, []);
@@ -67,7 +73,16 @@ export default function HostSyncScreen() {
       .then((result) => {
         if (result?.user) { setGoogleUser(result.user); setAuthStatus('idle'); setAuthMessage(''); }
       })
-      .catch((err) => console.warn('Google redirect result error', err));
+      .catch((err) => {
+        console.warn('Google redirect result error', err);
+        const code = err?.code || '';
+        const msg = {
+          'auth/unauthorized-domain': 'Este dominio no está autorizado en Firebase. Contacta al desarrollador.',
+          'auth/account-exists-with-different-credential': 'Ya existe una cuenta con ese correo.',
+        };
+        setAuthStatus('error');
+        setAuthMessage(msg[code] || 'No se pudo completar el inicio de sesión con Google. Inténtalo de nuevo.');
+      });
   }, []);
 
   useEffect(() => {
@@ -88,7 +103,11 @@ export default function HostSyncScreen() {
     try {
       const useRedirect = window.matchMedia('(max-width: 900px)').matches
         || /FBAN|FBAV|Instagram|wv|WebView/i.test(navigator.userAgent);
-      if (useRedirect) { await signInWithRedirect(auth, googleProvider); return; }
+      if (useRedirect) {
+        localStorage.setItem('auth_redirect_intent', '/host/sync');
+        await signInWithRedirect(auth, googleProvider);
+        return;
+      }
       const result = await signInWithPopup(auth, googleProvider);
       setGoogleUser(result.user);
       setAuthStatus('idle');
@@ -96,11 +115,22 @@ export default function HostSyncScreen() {
     } catch (error) {
       const msg = {
         'auth/unauthorized-domain': 'No pudimos abrir Google en este dominio.',
-        'auth/popup-blocked': 'El navegador bloqueó la ventana. Usando redirección...',
+        'auth/popup-blocked': 'El navegador bloqueó la ventana. Intentando con redirección...',
         'auth/popup-closed-by-user': 'Se cerró Google antes de terminar.',
       };
       if (error.code === 'auth/popup-blocked' || error.code === 'auth/cancelled-popup-request') {
-        try { await signInWithRedirect(auth, googleProvider); return; } catch {}
+        try {
+          localStorage.setItem('auth_redirect_intent', '/host/sync');
+          await signInWithRedirect(auth, googleProvider);
+          return;
+        } catch (redirectErr) {
+          const redirectMsg = redirectErr?.code === 'auth/unauthorized-domain'
+            ? 'Este dominio no está autorizado. Contacta al desarrollador.'
+            : 'No se pudo iniciar la redirección a Google.';
+          setAuthStatus('error');
+          setAuthMessage(redirectMsg);
+          return;
+        }
       }
       setAuthStatus('error');
       setAuthMessage(msg[error.code] || 'No se pudo abrir Google. Inténtalo de nuevo.');
