@@ -6,8 +6,8 @@ import { TIMELINE_GOAL_YEARS, getCombinedTimelineYears, useGameStore } from '../
 const RESULT_STYLES = {
   success: {
     bgColor: '#071a07',
-    glowColor: 'rgba(57,255,20,0.45)',
-    colorOverlay: 'rgba(57,255,20,0.07)',
+    glowColor: 'rgba(57,255,20,0.4)',
+    colorOverlay: 'rgba(57,255,20,0.06)',
     border: 'border-neon-green',
     borderHex: '#39ff14',
     text: 'text-neon-green',
@@ -17,36 +17,36 @@ const RESULT_STYLES = {
   },
   fail: {
     bgColor: '#1a0707',
-    glowColor: 'rgba(255,45,45,0.45)',
-    colorOverlay: 'rgba(255,45,45,0.09)',
+    glowColor: 'rgba(255,45,45,0.4)',
+    colorOverlay: 'rgba(255,45,45,0.08)',
     border: 'border-intense-red',
     borderHex: '#ff2d2d',
     text: 'text-intense-red',
     icon: 'cancel',
-    title: 'FALLASTE LA\nCANCIÓN',
+    title: 'FALLASTE',
     copy: 'Pierdes puntos, pero la siguiente ronda puede cambiarlo todo.'
   },
   sabotage: {
     bgColor: '#0d0717',
-    glowColor: 'rgba(168,85,247,0.45)',
-    colorOverlay: 'rgba(168,85,247,0.09)',
+    glowColor: 'rgba(168,85,247,0.4)',
+    colorOverlay: 'rgba(168,85,247,0.08)',
     border: 'border-electric-purple',
     borderHex: '#a855f7',
     text: 'text-electric-purple',
     icon: 'auto_awesome',
-    title: 'SABOTAJE\nACTIVADO',
-    copy: 'Alguien jugó una carta. La partida entra en modo caos.'
+    title: 'SABOTAJE',
+    copy: 'Alguien jugó una carta.'
   }
 };
 
 function TimelineYears({ years = [] }) {
   return (
-    <div className="mt-3 flex flex-wrap items-center gap-1.5 pl-12">
-      <span className="font-label-caps text-[10px] text-on-surface-variant">
-        Línea {Math.min(years.length, TIMELINE_GOAL_YEARS)}/{TIMELINE_GOAL_YEARS}
+    <div className="mt-2 flex flex-wrap items-center gap-1 pl-9">
+      <span className="font-label-caps text-[9px] text-on-surface-variant">
+        {Math.min(years.length, TIMELINE_GOAL_YEARS)}/{TIMELINE_GOAL_YEARS}
       </span>
       {years.slice(0, TIMELINE_GOAL_YEARS).map((year) => (
-        <span key={year} className="rounded-lg border border-neon-green/30 bg-neon-green/10 px-2 py-1 text-[10px] font-black text-neon-green">
+        <span key={year} className="rounded border border-neon-green/30 bg-neon-green/10 px-1.5 py-0.5 text-[9px] font-black text-neon-green">
           {year}
         </span>
       ))}
@@ -55,44 +55,38 @@ function TimelineYears({ years = [] }) {
 }
 
 function RankingList({ players, final = false, showTimeline = false }) {
-  if (!players.length) {
-    return <p className="text-center text-on-surface-variant">Nadie jugó esta partida.</p>;
-  }
-
+  if (!players.length) return null;
   return (
-    <div className="flex flex-col gap-3 w-full">
+    <div className="flex flex-col gap-2 w-full">
       {players.map((player, index) => {
         const medalClass = index === 0
           ? 'bg-neon-green text-black'
-          : index === 1
-            ? 'bg-white/20 text-white'
-            : index === 2
-              ? 'bg-electric-purple/30 text-white'
+          : index === 1 ? 'bg-white/20 text-white'
+            : index === 2 ? 'bg-electric-purple/30 text-white'
               : 'bg-black/20 text-on-surface-variant';
-
         return (
           <motion.div
             key={player.id}
-            initial={{ opacity: 0, y: 12 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.05 }}
-            className={`p-4 rounded-xl border ${final && index === 0 ? 'bg-neon-green/10 border-neon-green/50' : 'bg-white/5 border-white/10'}`}
+            transition={{ delay: index * 0.04 }}
+            className={`p-3 rounded-xl border ${final && index === 0 ? 'bg-neon-green/10 border-neon-green/50' : 'bg-white/5 border-white/10'}`}
           >
-            <div className="flex justify-between items-center gap-4">
-              <div className="flex items-center gap-3 min-w-0">
-                <span className={`w-9 h-9 rounded-xl flex items-center justify-center font-black ${medalClass}`}>
+            <div className="flex justify-between items-center gap-3">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <span className={`w-8 h-8 rounded-xl flex items-center justify-center font-black text-sm shrink-0 ${medalClass}`}>
                   {index + 1}
                 </span>
                 {player.avatar?.startsWith?.('http') ? (
-                  <img src={player.avatar} alt={player.name} className="w-10 h-10 rounded-full object-cover border border-white/10" />
+                  <img src={player.avatar} alt={player.name} className="w-8 h-8 rounded-full object-cover border border-white/10 shrink-0" />
                 ) : (
-                  <span className="w-10 h-10 rounded-full bg-black/20 flex items-center justify-center text-xl shrink-0">
+                  <span className="w-8 h-8 rounded-full bg-black/20 flex items-center justify-center text-lg shrink-0">
                     {player.avatar || '•'}
                   </span>
                 )}
-                <span className="font-bold font-body-md truncate">{player.name}</span>
+                <span className="font-bold text-sm truncate">{player.name}</span>
               </div>
-              <span className="font-stats-xl text-neon-green shrink-0">{player.points} PTS</span>
+              <span className="font-black text-sm text-neon-green shrink-0">{player.points} pts</span>
             </div>
             {showTimeline && <TimelineYears years={getCombinedTimelineYears(player)} />}
           </motion.div>
@@ -122,6 +116,8 @@ export default function ResultScreen() {
   const pointDelta = guestReveal?.delta ?? lastPointDelta;
   const sabotage = guestReveal?.sabotage || lastSabotage;
   const style = RESULT_STYLES[resultType];
+  const deltaColor = pointDelta > 0 ? 'text-neon-green' : pointDelta < 0 ? 'text-intense-red' : 'text-white/30';
+  const deltaLabel = pointDelta > 0 ? `+${pointDelta}` : pointDelta !== 0 ? String(pointDelta) : null;
 
   useEffect(() => {
     if (phase === 'lobby') navigate('/lobby');
@@ -158,9 +154,10 @@ export default function ResultScreen() {
       <motion.main
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="fixed inset-0 z-50 overflow-y-auto bg-surface text-white px-margin-mobile py-10"
+        className="fixed inset-0 z-50 overflow-y-auto bg-surface text-white"
+        style={{ overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' }}
       >
-        <div className="min-h-full max-w-lg mx-auto flex flex-col items-center justify-center">
+        <div className="min-h-full max-w-lg mx-auto flex flex-col items-center px-5 py-8">
           <motion.div
             initial={{ scale: 0.92, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
@@ -169,21 +166,21 @@ export default function ResultScreen() {
             <p className="font-label-caps text-electric-purple tracking-widest text-xs">
               {gameMode === 'timeline' ? `META ${TIMELINE_GOAL_YEARS} AÑOS` : `META ${targetScore} PUNTOS`}
             </p>
-            <h1 className="font-headline-lg text-4xl font-black mt-2 mb-6">RANKING FINAL</h1>
+            <h1 className="font-headline-lg text-3xl font-black mt-1 mb-4">RANKING FINAL</h1>
 
             {winner && (
-              <div className="mb-5 rounded-2xl border border-neon-green/50 bg-neon-green/10 p-5">
+              <div className="mb-4 rounded-2xl border border-neon-green/50 bg-neon-green/10 p-4">
                 <p className="font-label-caps text-neon-green text-xs">GANADOR</p>
-                <p className="mt-1 font-headline-lg-mobile text-3xl text-white">{winner.name}</p>
-                <p className="mt-1 text-sm text-on-surface-variant">Llegó a {winner.points} puntos.</p>
+                <p className="mt-0.5 font-headline-lg-mobile text-2xl text-white">{winner.name}</p>
+                <p className="mt-0.5 text-sm text-on-surface-variant">{winner.points} puntos finales</p>
               </div>
             )}
 
             {lastSabotage && (
-              <div className="mb-5 rounded-2xl border border-electric-purple/50 bg-electric-purple/10 p-4 text-left">
+              <div className="mb-4 rounded-2xl border border-electric-purple/50 bg-electric-purple/10 p-3 text-left">
                 <p className="font-label-caps text-electric-purple text-[10px]">ÚLTIMO SABOTAJE</p>
-                <p className="mt-1 font-bold">{lastSabotage.name}</p>
-                <p className="text-xs text-on-surface-variant">
+                <p className="mt-0.5 font-bold text-sm">{lastSabotage.name}</p>
+                <p className="text-xs text-on-surface-variant leading-snug">
                   {lastSabotage.by ? `${lastSabotage.by} lo activó. ` : ''}{lastSabotage.effect}
                 </p>
               </div>
@@ -191,38 +188,39 @@ export default function ResultScreen() {
 
             <RankingList players={players} final showTimeline={gameMode === 'timeline'} />
 
-            {role === 'host' && (
+            <div className="mt-5 flex flex-col gap-2">
+              {role === 'host' && (
+                <button
+                  onClick={handleFinish}
+                  className="w-full h-12 rounded-xl bg-primary text-white font-label-caps text-sm uppercase font-bold border border-white/20 active:scale-95 transition-all"
+                >
+                  CERRAR SALA
+                </button>
+              )}
               <button
-                onClick={handleFinish}
-                className="mt-8 w-full h-14 rounded-xl bg-primary text-white font-label-caps uppercase tracking-widest font-bold border border-white/20 active:scale-95 transition-all"
+                onClick={handleShare}
+                className="w-full h-10 rounded-xl border border-white/15 bg-white/5 text-white font-label-caps text-xs font-bold active:scale-95 transition-all flex items-center justify-center gap-2"
               >
-                CERRAR SALA
+                <span className="material-symbols-outlined text-base">share</span>
+                {shareCopied ? 'COPIADO' : 'COMPARTIR RESULTADO'}
               </button>
-            )}
-            <button
-              onClick={handleShare}
-              className="mt-3 w-full h-11 rounded-xl border border-white/15 bg-white/5 text-white font-label-caps text-xs font-bold active:scale-95 transition-all flex items-center justify-center gap-2"
-            >
-              <span className="material-symbols-outlined text-lg">share</span>
-              {shareCopied ? 'COPIADO' : 'COMPARTIR RESULTADO'}
-            </button>
-            {role !== 'host' && (
-              <button
-                onClick={() => navigate('/role-selection')}
-                className="mt-3 w-full h-14 rounded-xl font-label-caps uppercase tracking-widest font-bold border border-white/20 bg-white/5 text-white active:scale-95 transition-all"
-              >
-                SALIR
-              </button>
-            )}
+              {role !== 'host' && (
+                <button
+                  onClick={() => navigate('/role-selection')}
+                  className="w-full h-12 rounded-xl font-label-caps uppercase text-sm font-bold border border-white/20 bg-white/5 text-white active:scale-95 transition-all"
+                >
+                  SALIR
+                </button>
+              )}
+            </div>
           </motion.div>
         </div>
       </motion.main>
     );
   }
 
-  // ── NON-FINAL — diseño centrado, título grande ──
-  const deltaColor = pointDelta > 0 ? 'text-neon-green' : pointDelta < 0 ? 'text-intense-red' : 'text-white/30';
-  const deltaLabel = pointDelta > 0 ? `+${pointDelta}` : pointDelta !== 0 ? String(pointDelta) : '—';
+  // ── NON-FINAL screen — diseño compacto ──
+  const sortedPlayers = [...players].sort((a, b) => Number(b.points || 0) - Number(a.points || 0));
 
   return (
     <motion.main
@@ -234,153 +232,149 @@ export default function ResultScreen() {
       {/* Blurred album art backdrop */}
       {currentTrack?.albumImage && (
         <div
-          className="absolute inset-0 opacity-25 pointer-events-none"
+          className="absolute inset-0 opacity-20 pointer-events-none"
           style={{
             backgroundImage: `url(${currentTrack.albumImage})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
-            filter: 'blur(50px) saturate(1.4)',
-            transform: 'scale(1.15)',
+            filter: 'blur(40px) saturate(1.4)',
+            transform: 'scale(1.1)',
           }}
         />
       )}
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{ background: `linear-gradient(180deg, ${style.colorOverlay} 0%, rgba(0,0,0,0.6) 100%)` }}
+        style={{ background: `linear-gradient(180deg, ${style.colorOverlay} 0%, rgba(0,0,0,0.65) 100%)` }}
       />
 
-      {/* Content */}
-      <div className="relative z-10 flex flex-col items-center w-full px-5 pt-8 pb-8 overflow-y-auto flex-1 text-center">
+      {/* Scrollable content */}
+      <div
+        className="relative z-10 flex flex-col w-full max-w-lg mx-auto px-4 pt-5 pb-5 overflow-y-auto flex-1"
+        style={{ overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' }}
+      >
 
-        {/* BIG title + icon */}
+        {/* ① Resultado personal — banner compacto */}
         <motion.div
-          initial={{ y: -20, opacity: 0 }}
+          initial={{ y: -14, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ type: 'spring', stiffness: 140, damping: 18 }}
-          className="flex flex-col items-center gap-1 mb-5"
+          transition={{ type: 'spring', stiffness: 150, damping: 18 }}
+          className={`rounded-2xl border ${style.border} bg-black/30 backdrop-blur-sm p-3 flex items-center gap-3`}
         >
           <motion.span
-            animate={{ scale: [1, 1.12, 1] }}
-            transition={{ delay: 0.3, duration: 0.5, ease: 'easeOut' }}
-            className={`material-symbols-outlined ${style.text}`}
-            style={{ fontSize: '3.8rem' }}
+            animate={{ scale: [1, 1.18, 1] }}
+            transition={{ delay: 0.2, duration: 0.4, ease: 'backOut' }}
+            className={`material-symbols-outlined ${style.text} shrink-0`}
+            style={{ fontSize: '2.2rem' }}
           >
             {style.icon}
           </motion.span>
-          <h1
-            className={`font-headline-lg font-black leading-tight whitespace-pre-line ${style.text}`}
-            style={{ fontSize: 'clamp(2rem, 9vw, 2.5rem)' }}
-          >
-            {style.title}
-          </h1>
-          {sabotage && (
-            <p className="mt-1 text-xs text-white/50 max-w-[260px] leading-snug">{sabotage.effect}</p>
-          )}
+          <div className="flex-1 min-w-0">
+            <h1 className={`font-headline-lg font-black leading-none ${style.text}`} style={{ fontSize: '1.25rem' }}>
+              {style.title}
+            </h1>
+            {sabotage && (
+              <p className="text-[10px] text-white/50 mt-0.5 leading-snug">{sabotage.effect}</p>
+            )}
+          </div>
+          <div className="text-right shrink-0">
+            <p className="font-label-caps text-[9px] text-white/35">MIS PTS</p>
+            <motion.p
+              initial={{ scale: 0.5, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.25, type: 'spring', stiffness: 140 }}
+              className={`font-black leading-none ${style.text}`}
+              style={{ fontSize: '2.2rem' }}
+            >
+              {guestPoints}
+            </motion.p>
+            {deltaLabel && (
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4 }}
+                className={`text-xs font-black ${deltaColor}`}
+              >
+                {deltaLabel}
+              </motion.p>
+            )}
+          </div>
         </motion.div>
 
-        {/* Album art — Spotify card */}
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.1, type: 'spring', stiffness: 120, damping: 16 }}
-          className="rounded-2xl overflow-hidden flex-shrink-0"
-          style={{
-            width: 'min(190px, 50vw)',
-            aspectRatio: '1',
-            boxShadow: `0 16px 60px ${style.glowColor}`,
-          }}
-        >
-          {currentTrack?.albumImage ? (
-            <img src={currentTrack.albumImage} alt={currentTrack.name || 'Canción'} className="w-full h-full object-cover" />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center bg-black/40">
-              <span className={`material-symbols-outlined ${style.text}`} style={{ fontSize: '5rem' }}>{style.icon}</span>
-            </div>
-          )}
-        </motion.div>
-
-        {/* Song info */}
+        {/* ② Canción revelada — horizontal compacto */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="mt-4"
+          transition={{ delay: 0.12 }}
+          className="mt-2.5 rounded-2xl border border-white/10 bg-black/30 backdrop-blur-sm p-3 flex items-center gap-3"
         >
-          {currentTrack ? (
-            <>
-              <p className="font-label-caps text-[10px] text-white/35 tracking-widest">LA CANCIÓN ERA</p>
-              <p className="mt-1 text-lg font-black text-white leading-tight">{currentTrack.name}</p>
-              <p className="text-sm text-white/55 mt-0.5">{currentTrack.artist}</p>
-              {currentTrack.releaseYear && (
-                <motion.div
-                  initial={{ scale: 0.7, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ delay: 0.45, type: 'spring', stiffness: 130 }}
-                  className="mt-3"
-                >
-                  <p className="font-label-caps text-[9px] text-white/35 tracking-widest">AÑO</p>
-                  <p className={`text-7xl font-black leading-none mt-0.5 ${style.text}`}>
-                    {currentTrack.releaseYear}
-                  </p>
-                </motion.div>
-              )}
-            </>
-          ) : (
-            <p className="text-white/50 text-sm max-w-[260px]">{style.copy}</p>
-          )}
+          <div
+            className="rounded-xl overflow-hidden shrink-0"
+            style={{ width: 72, height: 72, boxShadow: `0 6px 24px ${style.glowColor}` }}
+          >
+            {currentTrack?.albumImage ? (
+              <img src={currentTrack.albumImage} alt={currentTrack.name || 'Canción'} className="w-full h-full object-cover" />
+            ) : (
+              <div className="w-full h-full bg-black/40 flex items-center justify-center">
+                <span className={`material-symbols-outlined ${style.text}`} style={{ fontSize: '2rem' }}>{style.icon}</span>
+              </div>
+            )}
+          </div>
+          <div className="flex-1 min-w-0 text-left">
+            <p className="font-label-caps text-[9px] text-white/35 tracking-widest">LA CANCIÓN ERA</p>
+            <p className="mt-0.5 font-black text-white text-sm leading-tight line-clamp-2">
+              {currentTrack?.name || style.copy}
+            </p>
+            {currentTrack?.artist && (
+              <p className="text-xs text-white/50 mt-0.5 truncate">{currentTrack.artist}</p>
+            )}
+            {currentTrack?.releaseYear && (
+              <motion.div
+                initial={{ scale: 0.6, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: 0.38, type: 'spring', stiffness: 140 }}
+                className="mt-1 flex items-baseline gap-1.5"
+              >
+                <span className="font-label-caps text-[9px] text-white/30">AÑO</span>
+                <span className={`font-black text-2xl leading-none ${style.text}`}>
+                  {currentTrack.releaseYear}
+                </span>
+              </motion.div>
+            )}
+          </div>
         </motion.div>
 
-        {/* Divider */}
-        <div className="mt-5 w-12 h-px bg-white/15" />
-
-        {/* Points — centrado */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.3, type: 'spring' }}
-          className="mt-5"
-        >
-          <p className="font-label-caps text-[10px] text-white/35 tracking-widest">TUS PUNTOS</p>
-          <motion.p
-            initial={{ scale: 0.4, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.5, type: 'spring', stiffness: 130 }}
-            className={`text-7xl font-black leading-none mt-1 ${style.text}`}
-          >
-            {guestPoints}
-          </motion.p>
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.65 }}
-            className={`mt-2 text-xl font-black ${deltaColor}`}
-          >
-            {deltaLabel !== '—' ? `${deltaLabel} esta ronda` : 'Sin cambio'}
-          </motion.p>
-        </motion.div>
-
-        {/* All players scoreboard */}
-        {players.length > 1 && (
+        {/* ③ Cómo van todos */}
+        {sortedPlayers.length > 1 && (
           <motion.div
-            initial={{ opacity: 0, y: 12 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.75 }}
-            className="mt-6 w-full"
+            transition={{ delay: 0.28 }}
+            className="mt-2.5"
           >
-            <p className="font-label-caps text-[10px] text-white/35 tracking-widest text-center mb-3">ASÍ VAN TODOS</p>
-            <div className="flex flex-col gap-2">
-              {[...players].sort((a, b) => Number(b.points || 0) - Number(a.points || 0)).map((player, index) => (
+            <p className="font-label-caps text-[9px] text-white/30 tracking-widest text-center mb-2">
+              ASÍ VAN TODOS
+            </p>
+            <div className="flex flex-col gap-1.5">
+              {sortedPlayers.map((player, index) => (
                 <div
                   key={player.id}
-                  className={`flex items-center gap-3 rounded-xl px-3 py-2.5 ${player.id === guestId ? `border ${style.border} bg-white/5` : 'bg-white/5 border border-white/10'}`}
+                  className={`flex items-center gap-2 rounded-xl px-2.5 py-2 ${
+                    player.id === guestId
+                      ? `border ${style.border} bg-white/5`
+                      : 'bg-white/5 border border-white/8'
+                  }`}
                 >
-                  <span className={`w-7 h-7 rounded-lg text-xs font-black flex items-center justify-center shrink-0 ${index === 0 ? 'bg-neon-green text-black' : 'bg-white/10 text-white'}`}>
+                  <span className={`w-6 h-6 rounded-lg text-[10px] font-black flex items-center justify-center shrink-0 ${
+                    index === 0 ? 'bg-neon-green text-black' : 'bg-white/10 text-white'
+                  }`}>
                     {index + 1}
                   </span>
                   {player.avatar?.startsWith?.('http') ? (
-                    <img src={player.avatar} alt={player.name} className="w-8 h-8 rounded-full object-cover shrink-0" />
+                    <img src={player.avatar} alt={player.name} className="w-7 h-7 rounded-full object-cover shrink-0" />
                   ) : (
-                    <span className="w-8 h-8 rounded-full bg-black/20 flex items-center justify-center text-base shrink-0">{player.avatar || '•'}</span>
+                    <span className="w-7 h-7 rounded-full bg-black/20 flex items-center justify-center text-sm shrink-0">
+                      {player.avatar || '•'}
+                    </span>
                   )}
                   <span className="text-sm font-bold text-white truncate flex-1">{player.name}</span>
                   <span className="text-sm font-black text-neon-green shrink-0">{player.points} pts</span>
@@ -390,32 +384,32 @@ export default function ResultScreen() {
           </motion.div>
         )}
 
-        {/* Actions */}
+        {/* ④ Acciones */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.9 }}
-          className="mt-6 w-full flex flex-col gap-2"
+          transition={{ delay: 0.42 }}
+          className="mt-3 flex flex-col gap-2"
         >
-          {role === 'host' && (
+          {role === 'host' ? (
             <button
               onClick={hostNextRound}
-              className="w-full h-14 rounded-xl bg-neon-green text-black font-label-caps text-sm font-bold active:scale-95 transition-transform"
+              className="w-full h-12 rounded-xl bg-neon-green text-black font-label-caps text-sm font-bold active:scale-95 transition-transform"
             >
               SIGUIENTE RONDA
             </button>
-          )}
-          {role !== 'host' && (
-            <div className="py-4 text-center">
-              <p className="text-sm text-white/50 font-label-caps tracking-widest animate-pulse">ESPERANDO AL ANFITRIÓN...</p>
-              <p className="mt-1 text-xs text-white/25">El anfitrión decide cuándo empieza la siguiente ronda.</p>
+          ) : (
+            <div className="py-3 rounded-xl border border-white/10 bg-white/5 text-center">
+              <p className="text-xs text-white/45 font-label-caps tracking-widest animate-pulse">
+                ESPERANDO AL ANFITRIÓN...
+              </p>
             </div>
           )}
           <button
             onClick={handleShare}
-            className="w-full h-11 rounded-xl border border-white/12 bg-white/5 text-white font-label-caps text-xs font-bold active:scale-95 transition-all flex items-center justify-center gap-2"
+            className="w-full h-10 rounded-xl border border-white/12 bg-white/5 text-white font-label-caps text-xs font-bold active:scale-95 transition-all flex items-center justify-center gap-2"
           >
-            <span className="material-symbols-outlined text-lg">share</span>
+            <span className="material-symbols-outlined text-base">share</span>
             {shareCopied ? 'COPIADO' : 'COMPARTIR'}
           </button>
         </motion.div>

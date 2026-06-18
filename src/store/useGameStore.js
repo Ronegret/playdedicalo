@@ -188,18 +188,20 @@ export const SABOTAGE_OPTIONS = [
   }
 ];
 
+// These questions are fallbacks shown only when no Spotify track is available.
+// All answers must be objectively correct for any song/situation.
 const MUSIC_QUESTIONS = [
-  { mode: 'pulse', type: 'Letra incompleta', text: "Completa la letra: 'Yo te lo...'", options: ['Dije', 'Juro', 'Dedícalo', 'Doy'], correct: 2 },
-  { mode: 'pulse', type: 'Identidad', text: '¿Cómo se llama el artista principal?', options: ['Bad Bunny', 'Rauw Alejandro', 'El artista sorpresa', 'Feid'], correct: 2 },
-  { mode: 'pulse', type: 'Título exacto', text: '¿Qué palabra aparece en el título?', options: ['Noche', 'Corazón', 'Dedícalo', 'Perreo'], correct: 2 },
-  { mode: 'pulse', type: 'Colaboración', text: '¿Qué papel tiene la voz invitada en esta canción?', options: ['Coro principal', 'Verso invitado', 'Intro hablada', 'No hay invitado'], correct: 1 },
-  { mode: 'pulse', type: 'Cultura pop', text: '¿Dónde sonaría mejor esta canción?', options: ['Final de fiesta', 'Escena triste', 'Entrenamiento', 'Créditos finales'], correct: 0 },
+  { mode: 'pulse', type: 'Trivia', text: '¿Cuántos puntos se ganan al acertar una respuesta?', options: ['+3 pts', '+4 pts', '+5 pts', '+7 pts'], correct: 2 },
+  { mode: 'pulse', type: 'Trivia', text: '¿Cuántos puntos se pierden al fallar?', options: ['-1 pts', '-2 pts', '-3 pts', '-5 pts'], correct: 2 },
+  { mode: 'pulse', type: 'Trivia', text: '¿Cuántos sabotajes distintos hay en Dedícalo?', options: ['3', '4', '5', '6'], correct: 3 },
+  { mode: 'pulse', type: 'Trivia', text: '¿Desde qué ronda se desbloquean los sabotajes?', options: ['Ronda 1', 'Ronda 2', 'Ronda 3', 'Ronda 4'], correct: 1 },
+  { mode: 'pulse', type: 'Trivia', text: '¿Cuántos modos de juego tiene Dedícalo?', options: ['1', '2', '3', '4'], correct: 2 },
   { mode: 'timeline', answerType: 'timeline-placement', type: 'Línea del Ritmo', text: '¿Dónde encaja esta canción en la línea?', timelineYears: [2000], songYear: 2014, options: ['0', '1'], correct: 1 },
   { mode: 'timeline', answerType: 'timeline-placement', type: 'Línea del Ritmo', text: '¿Dónde pondrías esta canción?', timelineYears: [1995, 2005], songYear: 2001, options: ['0', '1', '2'], correct: 1 },
   { mode: 'timeline', answerType: 'timeline-placement', type: 'Línea del Ritmo', text: 'Escucha y colócala por año.', timelineYears: [1990, 2000, 2010], songYear: 2020, options: ['0', '1', '2', '3'], correct: 3 },
-  { mode: 'chaos', type: 'Remix', text: '¿Qué jugada conviene ahora?', options: ['Guardar puntos', 'Activar sabotaje', 'Cambiar de avatar', 'Salir de la sala'], correct: 1 },
-  { mode: 'chaos', type: 'Colaboración', text: 'Si aparece un dueto, ¿qué conviene escuchar primero?', options: ['Quién entra después', 'El volumen del móvil', 'El color del botón', 'La posición del ranking'], correct: 0 },
-  { mode: 'chaos', type: 'Remix', text: '¿Qué color anuncia sabotaje?', options: ['Verde', 'Rojo', 'Lila', 'Azul'], correct: 2 }
+  { mode: 'chaos', type: 'Trivia', text: '¿Qué color indica un sabotaje activo en Dedícalo?', options: ['Verde', 'Rojo', 'Lila', 'Azul'], correct: 2 },
+  { mode: 'chaos', type: 'Trivia', text: '¿Qué pasa si el líder tiene escudo y lo atacas?', options: ['Pierde puntos igual', 'El escudo absorbe el ataque', 'Robas sus puntos', 'El ataque pasa igual'], correct: 1 },
+  { mode: 'chaos', type: 'Trivia', text: '¿Cuánto cuesta el sabotaje más barato de todos?', options: ['1 pt', '2 pts', '3 pts', '4 pts'], correct: 2 }
 ];
 
 function databasePath(path) {
@@ -666,6 +668,10 @@ export const useGameStore = create((setStore, getStore) => ({
 
     if (!room) {
       throw new Error('PIN incorrecto o sala no existe.');
+    }
+
+    if (room.phase && room.phase !== 'lobby') {
+      throw new Error('La partida ya comenzó. Pide al anfitrión que abra una nueva sala.');
     }
 
     try {

@@ -99,7 +99,7 @@ function VictoryCard({ mode, selected, onSelect }) {
   );
 }
 
-function SabotageCard({ option, canUse, onUse }) {
+function SabotageCard({ option }) {
   const colorClass = option.color === 'green'
     ? 'border-neon-green/40 text-neon-green'
     : option.color === 'red'
@@ -109,18 +109,10 @@ function SabotageCard({ option, canUse, onUse }) {
   return (
     <div className={`rounded-xl border bg-white/5 ${colorClass}`}>
       <div className="flex items-center gap-3 p-3">
-        <button
-          type="button"
-          onClick={() => canUse && onUse(option.id)}
-          disabled={!canUse}
-          className={`w-6 h-6 rounded-md border flex items-center justify-center shrink-0 ${canUse ? 'border-current bg-black/15 text-current' : 'border-white/15 text-transparent opacity-50'}`}
-          aria-label={`Activar ${option.name}`}
-        >
-          <span className="material-symbols-outlined text-base">check</span>
-        </button>
+        <span className="material-symbols-outlined text-4xl shrink-0">{option.icon}</span>
         <div className="min-w-0 flex-1">
           <h3 className="text-sm font-bold text-white leading-tight">{option.name}</h3>
-          <p className="mt-1 font-label-caps text-[10px] text-current">{option.cost} pts</p>
+          <p className="mt-0.5 font-label-caps text-[10px] text-current">{option.cost} pts</p>
         </div>
         <InfoDetails title={option.name}>
           <p>{option.effect}</p>
@@ -163,7 +155,6 @@ export default function LobbyScreen() {
     lastDisconnectedPlayer,
     hostStartGame,
     setGameSettings,
-    guestUseSabotage,
     guestLeaveRoom,
     hostCloseRoom,
     roomError,
@@ -474,7 +465,7 @@ export default function LobbyScreen() {
                             <span className="block text-sm font-bold text-white leading-tight">{opt.label}</span>
                             <span className="mt-0.5 block text-[11px] text-on-surface-variant">{opt.desc}</span>
                           </button>
-                          <span className={`material-symbols-outlined text-xl shrink-0 ${opt.selected ? 'text-electric-purple' : 'text-white/20'}`}>{opt.icon}</span>
+                          <span className={`material-symbols-outlined text-2xl shrink-0 ${opt.selected ? 'text-electric-purple' : 'text-white/20'}`}>{opt.icon}</span>
                         </div>
                       </div>
                     ))}
@@ -504,7 +495,7 @@ export default function LobbyScreen() {
                               }}
                               className={`rounded-xl border p-2.5 flex items-center gap-2.5 text-left transition-all active:scale-[0.98] ${isSelected ? `${s.border} ${s.bg}` : 'border-white/10 bg-black/15'}`}
                             >
-                              <span className={`material-symbols-outlined text-xl shrink-0 ${isSelected ? s.icon : 'text-white/30'}`}>{option.icon}</span>
+                              <span className={`material-symbols-outlined text-3xl shrink-0 ${isSelected ? s.icon : 'text-white/30'}`}>{option.icon}</span>
                               <div className="flex-1 min-w-0">
                                 <span className={`text-xs font-black leading-tight ${isSelected ? 'text-white' : 'text-white/50'}`}>{option.name}</span>
                                 <span className={`block text-[9px] leading-snug mt-0.5 ${isSelected ? s.text : 'text-white/25'}`}>{option.cost}pts · {option.effect.slice(0, 55)}{option.effect.length > 55 ? '...' : ''}</span>
@@ -522,9 +513,14 @@ export default function LobbyScreen() {
               </div>
             )}
 
+            {players.length < 2 && (
+              <p className="mt-4 rounded-xl border border-vinyl-orange/30 bg-vinyl-orange/8 px-3 py-2 text-xs text-vinyl-orange/90 text-center">
+                Comparte el PIN para que se unan jugadores. Puedes empezar cuando estés listo.
+              </p>
+            )}
             <button
               onClick={handleHostStartGame}
-              className="mt-5 w-full h-12 bg-neon-green text-black font-label-caps text-label-caps rounded-xl transition-all flex items-center justify-center gap-2 font-bold active:scale-95"
+              className="mt-3 w-full h-12 bg-neon-green text-black font-label-caps text-label-caps rounded-xl transition-all flex items-center justify-center gap-2 font-bold active:scale-95"
             >
               <span className="material-symbols-outlined">play_arrow</span>
               INICIAR RONDA
@@ -543,7 +539,7 @@ export default function LobbyScreen() {
           </div>
         )}
 
-        {role === 'guest' && (
+        {role === 'guest' && sabotageConfig?.enabled !== false && (
           <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md text-left overflow-hidden">
             <button
               type="button"
@@ -572,12 +568,13 @@ export default function LobbyScreen() {
                   className="overflow-hidden"
                 >
                   <div className="px-4 pb-4 grid gap-2">
-                    {SABOTAGE_OPTIONS.map((option) => (
+                    {(sabotageConfig?.types === 'custom' && sabotageConfig?.allowedIds?.length > 0
+                      ? SABOTAGE_OPTIONS.filter((o) => sabotageConfig.allowedIds.includes(o.id))
+                      : SABOTAGE_OPTIONS
+                    ).map((option) => (
                       <SabotageCard
                         key={option.id}
                         option={option}
-                        canUse={canUseSabotage}
-                        onUse={guestUseSabotage}
                       />
                     ))}
                     {!canUseSabotage && (

@@ -1,4 +1,4 @@
-﻿const SPOTIFY_CLIENT_ID = import.meta.env.VITE_SPOTIFY_CLIENT_ID || '8d753e32e5c34713baa3cee821bb85ad';
+const SPOTIFY_CLIENT_ID = import.meta.env.VITE_SPOTIFY_CLIENT_ID || '8d753e32e5c34713baa3cee821bb85ad';
 const TOKEN_KEY = 'dedicalo_spotify_token';
 const VERIFIER_KEY = 'dedicalo_spotify_verifier';
 const TRACK_KEY = 'dedicalo_current_spotify_track';
@@ -20,6 +20,7 @@ let spotifyPlayerPromise = null;
 let spotifyDeviceId = null;
 let lastSpotifySdkError = '';
 let catalogPromise = null;
+let tokenRefreshPromise = null;
 
 // Tracks which artists have appeared (correct or distractor) since the current game playlist started.
 // Cleared when the active playlist changes (= new game) or when all playlist tracks are exhausted.
@@ -76,10 +77,31 @@ async function requestToken(body) {
 
   if (!response.ok) {
     const text = await response.text();
+    let isInvalidGrant = false;
+    try {
+      const data = JSON.parse(text);
+      if (data.error === 'invalid_grant') {
+        isInvalidGrant = true;
+      }
+    } catch {
+      if (text.includes('invalid_grant')) {
+        isInvalidGrant = true;
+      }
+    }
+
+    if (isInvalidGrant) {
+      window.localStorage.removeItem(TOKEN_KEY);
+    }
     throw new Error(`Spotify token error ${response.status}: ${text}`);
   }
 
   return saveToken(await response.json());
+}
+
+export function resetSpotifyConnection() {
+  window.localStorage.removeItem(TOKEN_KEY);
+  spotifyPlayerPromise = null;
+  spotifyDeviceId = null;
 }
 
 export function getSpotifyStatus() {
@@ -127,17 +149,24 @@ export async function getSpotifyAccessToken() {
   if (Date.now() < Number(token.expires_at || 0)) return token.access_token;
   if (!token.refresh_token) throw new Error('La sesión de Spotify expiró. Vuelve a conectar Spotify.');
 
-  const refreshed = await requestToken({
-    grant_type: 'refresh_token',
-    refresh_token: token.refresh_token,
-    client_id: SPOTIFY_CLIENT_ID
-  });
-
-  if (!refreshed.refresh_token) {
-    refreshed.refresh_token = token.refresh_token;
-    saveToken(refreshed);
+  // Deduplicate concurrent refresh calls — only one in-flight at a time.
+  if (!tokenRefreshPromise) {
+    tokenRefreshPromise = requestToken({
+      grant_type: 'refresh_token',
+      refresh_token: token.refresh_token,
+      client_id: SPOTIFY_CLIENT_ID
+    }).then((refreshed) => {
+      if (!refreshed.refresh_token) {
+        refreshed.refresh_token = token.refresh_token;
+        saveToken(refreshed);
+      }
+      return refreshed;
+    }).finally(() => {
+      tokenRefreshPromise = null;
+    });
   }
 
+  const refreshed = await tokenRefreshPromise;
   return refreshed.access_token;
 }
 
@@ -154,6 +183,13 @@ async function spotifyFetch(url, options = {}) {
 
   if (!response.ok && response.status !== 204) {
     const text = await response.text();
+    if (response.status === 401) {
+      // Access token rejected — discard it and reset the player so the next
+      // connectSpotify() starts fresh instead of reusing a broken session.
+      window.localStorage.removeItem(TOKEN_KEY);
+      spotifyPlayerPromise = null;
+      spotifyDeviceId = null;
+    }
     throw new Error(`Spotify error ${response.status}: ${text}`);
   }
 
@@ -192,7 +228,19 @@ async function getSpotifyPlayer() {
     await loadSpotifySdk();
     const player = new window.Spotify.Player({
       name: PLAYER_NAME,
-      getOAuthToken: async (callback) => callback(await getSpotifyAccessToken()),
+      getOAuthToken: async (callback) => {
+        try {
+          callback(await getSpotifyAccessToken());
+        } catch {
+          // Refresh failed (e.g. invalid_grant after 6-month token expiry).
+          // Reset module state so the next connectSpotify() starts fresh,
+          // then disconnect this player so it doesn't compete with the new one.
+          spotifyPlayerPromise = null;
+          spotifyDeviceId = null;
+          try { player.disconnect(); } catch { /* ignore */ }
+          // Do not call callback — SDK will emit authentication_error.
+        }
+      },
       volume: 0.75
     });
 
@@ -294,6 +342,7 @@ export async function getSpotifyDiagnostics() {
 
 export function explainSpotifyError(error) {
   const message = String(error?.message || error || '');
+  if (message.includes('invalid_grant')) return 'La conexión con Spotify expiró o fue revocada. Pulsa Reconectar para iniciar sesión de nuevo.';
   if (message.includes('403')) return 'Spotify no dejó iniciar la música. Revisa que la cuenta sea Premium y vuelve a conectar.';
   if (message.includes('404')) return 'No encontramos donde reproducir. Pulsa Conectar Spotify y luego Probar.';
   if (message.includes('401')) return 'La sesión de Spotify expiró. Pulsa Reconectar.';
@@ -301,18 +350,39 @@ export function explainSpotifyError(error) {
   return message || 'Spotify no pudo iniciar la reproducción.';
 }
 
+async function waitForDevice(ms = 250, maxAttempts = 20) {
+  for (let i = 0; i < maxAttempts; i += 1) {
+    if (spotifyDeviceId) return true;
+    await new Promise((resolve) => window.setTimeout(resolve, ms));
+  }
+  return false;
+}
+
 async function ensureSpotifyDevice() {
+  const player = await getSpotifyPlayer();
+
+  if (await waitForDevice()) {
+    await spotifyFetch('https://api.spotify.com/v1/me/player', {
+      method: 'PUT',
+      body: JSON.stringify({ device_ids: [spotifyDeviceId], play: false })
+    });
+    return spotifyDeviceId;
+  }
+
+  // Device didn't appear — SDK may have disconnected mid-session.
+  // Disconnect cleanly, reset state, and reconnect once before giving up.
+  try { player.disconnect(); } catch { /* ignore */ }
+  spotifyPlayerPromise = null;
+  spotifyDeviceId = null;
+
   await getSpotifyPlayer();
 
-  for (let attempt = 0; attempt < 20; attempt += 1) {
-    if (spotifyDeviceId) {
-      await spotifyFetch('https://api.spotify.com/v1/me/player', {
-        method: 'PUT',
-        body: JSON.stringify({ device_ids: [spotifyDeviceId], play: false })
-      });
-      return spotifyDeviceId;
-    }
-    await new Promise((resolve) => window.setTimeout(resolve, 250));
+  if (await waitForDevice()) {
+    await spotifyFetch('https://api.spotify.com/v1/me/player', {
+      method: 'PUT',
+      body: JSON.stringify({ device_ids: [spotifyDeviceId], play: false })
+    });
+    return spotifyDeviceId;
   }
 
   throw new Error('Spotify no entregó un dispositivo de reproducción. Revisa Premium y prueba de nuevo.');
@@ -463,8 +533,8 @@ const ARTIST_DISTRACTORS = [
 ];
 
 const CHAOS_TEMPLATES = [
-  { text: '¿Qué jugada conviene después de escuchar esta canción?', options: ['Guardar puntos', 'Activar sabotaje', 'Arriesgar respuesta', 'Cambiar playlist'], correct: 2 },
-  { text: '¿Cuál es el mejor momento para activar un sabotaje?', options: ['Al inicio de la canción', 'Mientras suena', 'Justo al cortarla', 'En el resultado'], correct: 1 },
+  { text: '¿Cuánto cuesta activar "El Ladrón"?', options: ['4 pts', '5 pts', '6 pts', '8 pts'], correct: 2 },
+  { text: '¿Qué sabotaje intercambia tus puntos con los del líder?', options: ['El Escudo', 'La Trampa', 'El Cambio', 'El Ladrón'], correct: 2 },
   { text: '¿Qué color anuncia un sabotaje en Dedícalo?', options: ['Verde', 'Rojo', 'Lila', 'Azul'], correct: 2 },
   { text: '¿Qué pasa si el líder está bloqueado y acierta?', options: ['Suma el doble', 'No suma puntos', 'Pierde puntos', 'Elimina el bloqueo'], correct: 1 },
   { text: '¿Desde qué ronda se pueden usar los sabotajes?', options: ['Desde la ronda 1', 'Desde la ronda 2', 'Desde la ronda 3', 'Solo en el final'], correct: 1 },
@@ -514,15 +584,22 @@ async function buildArtistQuestion(track, text, type = 'Identidad') {
   };
 }
 
+const YEAR_QUESTION_TEXTS = [
+  '¿En qué año salió esta canción?',
+  '¿De qué año es este temazo?',
+  '¿Cuándo se lanzó esta canción?',
+];
+
 function buildYearQuestion(track) {
   if (!track.releaseYear) return null;
   const year = track.releaseYear;
   const offsets = shuffleArray([-6, -4, -2, 2, 4, 6, 8, -8]).slice(0, 3);
   const options = shuffleArray([String(year), ...offsets.map((off) => String(year + off))]);
+  const text = YEAR_QUESTION_TEXTS[Math.floor(Math.random() * YEAR_QUESTION_TEXTS.length)];
   return {
     mode: 'pulse',
     type: 'Año',
-    text: '¿En qué año salió esta canción?',
+    text,
     options,
     correct: options.indexOf(String(year))
   };
@@ -545,11 +622,50 @@ function buildDecadeQuestion(track) {
   };
 }
 
+const SONG_QUESTION_TEXTS = [
+  '¿Cuál es el título de esta canción?',
+  '¿Cómo se llama esta canción?',
+  '¿Cuál es el nombre de este tema?',
+];
+
+async function buildSongNameQuestion(track) {
+  if (!track.name) return null;
+
+  let pool = [];
+  if (currentGamePlaylistId) {
+    try {
+      const catalog = await loadSongCatalog();
+      const others = catalog
+        .filter((row) => row.playlist_id === currentGamePlaylistId && row.title && row.title !== track.name)
+        .map((row) => row.title);
+      pool = [...new Set(others)];
+    } catch { /* fall through to null */ }
+  }
+
+  if (pool.length < 3) return null;
+
+  const distractors = shuffleArray(pool).slice(0, 3);
+  const options = shuffleArray([track.name, ...distractors]);
+  const text = SONG_QUESTION_TEXTS[Math.floor(Math.random() * SONG_QUESTION_TEXTS.length)];
+  return {
+    mode: 'pulse',
+    type: 'Canción',
+    text,
+    options,
+    correct: options.indexOf(track.name)
+  };
+}
+
 const ARTIST_QUESTION_TEXTS = [
   ['¿Quién canta principalmente esta canción?', 'Identidad'],
   ['¿A qué artista pertenece esta voz?', 'Reconoce la voz'],
   ['¿Quién es el intérprete de esta canción?', 'Intérprete'],
+  ['¿Quién firma este temazo?', 'Artista'],
 ];
+
+// Structured cycle: guarantees variety across rounds.
+// Falls back to the next available type if the preferred one can't be built.
+const PULSE_CYCLE = ['artist', 'song', 'year', 'artist', 'decade', 'song', 'year', 'artist'];
 
 export async function createQuestionFromTrack(track, gameMode, round = 1, timelineYears = []) {
   const year = track.releaseYear || 2016;
@@ -575,13 +691,29 @@ export async function createQuestionFromTrack(track, gameMode, round = 1, timeli
     return { mode: 'chaos', ...template };
   }
 
+  // Pulse mode: pick question type from the cycle, fall back if unavailable.
   const [qText, qType] = ARTIST_QUESTION_TEXTS[Math.floor(Math.random() * ARTIST_QUESTION_TEXTS.length)];
-  const artistQ = await buildArtistQuestion(track, qText, qType);
-  const yearQ = buildYearQuestion(track);
-  const decadeQ = buildDecadeQuestion(track);
 
-  const candidates = [artistQ, yearQ, decadeQ].filter(Boolean);
-  return candidates[Math.floor(Math.random() * candidates.length)];
+  const build = async (type) => {
+    if (type === 'artist') return buildArtistQuestion(track, qText, qType);
+    if (type === 'song')   return buildSongNameQuestion(track);
+    if (type === 'year')   return buildYearQuestion(track);
+    if (type === 'decade') return buildDecadeQuestion(track);
+    return null;
+  };
+
+  const preferred = PULSE_CYCLE[(round - 1) % PULSE_CYCLE.length];
+  const q = await build(preferred);
+  if (q) return q;
+
+  // Fallback: try remaining types in a sensible priority order.
+  const fallbacks = ['artist', 'song', 'year', 'decade'].filter((t) => t !== preferred);
+  for (const type of fallbacks) {
+    const fallback = await build(type);
+    if (fallback) return fallback;
+  }
+
+  return buildArtistQuestion(track, qText, qType);
 }
 
 export async function startRandomPlaylistTrack(playlistUrl) {

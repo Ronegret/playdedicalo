@@ -148,6 +148,9 @@ export default function HostSyncScreen() {
       setSpotifyCheck({ type: 'success', message: '¡Suena! Toca el botón para parar.' });
     } catch (error) {
       setSpotifyCheck({ type: 'error', message: explainSpotifyError(error) });
+      // Refresh connection state — if invalid_grant occurred, the token was
+      // discarded and the UI must reflect "not connected" immediately.
+      setSpotifyStatus(getSpotifyStatus());
     } finally {
       setIsTestingSpotify(false);
     }
@@ -249,55 +252,95 @@ export default function HostSyncScreen() {
                   </motion.button>
                 </div>
 
-                {/* Single CD/vinyl toggle button */}
+                {/* Vinyl toggle button — 3D lifted disc */}
                 {spotifyStatus.connected && (
                   <div className="flex flex-col items-center gap-3">
-                    <motion.button
-                      type="button"
-                      onClick={handleToggleSpotify}
-                      disabled={isTestingSpotify}
-                      whileTap={{ scale: 0.9 }}
-                      whileHover={{ scale: 1.06 }}
-                      aria-label={isSpotifyPlaying ? 'Parar música de prueba' : 'Probar música'}
-                      className="relative w-24 h-24 rounded-full flex items-center justify-center disabled:opacity-50"
-                      style={{
-                        background: 'repeating-radial-gradient(circle, #060606 0 3px, #111 4px 5px, #060606 6px 9px)',
-                        boxShadow: isSpotifyPlaying
-                          ? `0 0 0 2px #ff7a1a55, 0 0 36px #ff7a1a55`
-                          : `0 0 0 2px rgba(255,255,255,0.08), 0 8px 28px rgba(0,0,0,0.7)`,
-                      }}
-                    >
-                      {/* Spinning outer ring when playing */}
-                      {isSpotifyPlaying && (
-                        <motion.div
-                          animate={{ rotate: 360 }}
-                          transition={{ repeat: Infinity, duration: 2.5, ease: 'linear' }}
-                          className="absolute inset-0 rounded-full"
-                          style={{
-                            background: 'conic-gradient(from 0deg, transparent 0%, rgba(255,122,26,0.25) 8%, rgba(255,122,26,0.06) 16%, transparent 24%)',
-                          }}
-                        />
-                      )}
-                      {/* Centre label disc */}
+                    <div className="relative flex items-center justify-center">
+                      {/* Sombra ambiente debajo del disco — da sensación de flotación */}
                       <div
-                        className="absolute rounded-full flex items-center justify-center"
+                        className="absolute rounded-full pointer-events-none transition-all duration-500"
                         style={{
-                          inset: '28%',
-                          background: isSpotifyPlaying ? '#ff7a1a' : 'rgba(255,122,26,0.15)',
-                          border: `2px solid ${isSpotifyPlaying ? '#ff7a1a' : 'rgba(255,122,26,0.35)'}`,
-                          transition: 'background 0.3s, border-color 0.3s',
+                          inset: '-16px',
+                          background: isSpotifyPlaying
+                            ? 'radial-gradient(circle, rgba(255,122,26,0.35) 0%, transparent 65%)'
+                            : 'radial-gradient(circle, rgba(0,0,0,0.55) 0%, transparent 65%)',
+                          filter: 'blur(12px)',
+                          transform: 'translateY(8px)',
                         }}
                       />
-                      {/* Spindle hole */}
-                      <div className="absolute w-2 h-2 rounded-full bg-black z-10" />
-                      {/* Icon overlay */}
-                      <span
-                        className="relative z-20 material-symbols-outlined"
-                        style={{ fontSize: '2rem', color: isSpotifyPlaying ? '#000' : '#ff7a1a' }}
+                      <motion.button
+                        type="button"
+                        onClick={handleToggleSpotify}
+                        disabled={isTestingSpotify}
+                        whileHover={!isTestingSpotify ? { scale: 1.06, y: -2 } : {}}
+                        whileTap={!isTestingSpotify ? { scale: 0.95, y: 5 } : {}}
+                        aria-label={isSpotifyPlaying ? 'Parar música de prueba' : 'Probar música'}
+                        className="relative w-24 h-24 rounded-full flex items-center justify-center disabled:opacity-50 select-none"
+                        style={{
+                          background: 'repeating-radial-gradient(circle, #060606 0 3px, #111 4px 5px, #060606 6px 9px)',
+                          boxShadow: isSpotifyPlaying
+                            ? [
+                                '0 0 0 2px #ff7a1a66',
+                                '0 0 28px #ff7a1a66',
+                                '0 6px 0 #1a0800',
+                                '0 10px 30px rgba(0,0,0,0.9)',
+                                'inset 0 1px 0 rgba(255,255,255,0.07)',
+                              ].join(', ')
+                            : [
+                                '0 0 0 1px rgba(255,255,255,0.07)',
+                                '0 6px 0 #050505',
+                                '0 10px 30px rgba(0,0,0,0.9)',
+                                'inset 0 1px 0 rgba(255,255,255,0.05)',
+                              ].join(', '),
+                          transition: 'box-shadow 0.3s',
+                        }}
                       >
-                        {isTestingSpotify ? 'hourglass_empty' : isSpotifyPlaying ? 'pause' : 'play_arrow'}
-                      </span>
-                    </motion.button>
+                        {/* Spinning outer ring when playing */}
+                        {isSpotifyPlaying && (
+                          <motion.div
+                            animate={{ rotate: 360 }}
+                            transition={{ repeat: Infinity, duration: 2.5, ease: 'linear' }}
+                            className="absolute inset-0 rounded-full pointer-events-none"
+                            style={{
+                              background: 'conic-gradient(from 0deg, transparent 0%, rgba(255,122,26,0.25) 8%, rgba(255,122,26,0.06) 16%, transparent 24%)',
+                            }}
+                          />
+                        )}
+                        {/* Reflejo superior — hace el disco parecer abombado */}
+                        <div
+                          className="absolute inset-0 rounded-full pointer-events-none"
+                          style={{
+                            background: 'linear-gradient(145deg, rgba(255,255,255,0.08) 0%, transparent 45%)',
+                          }}
+                        />
+                        {/* Centre label disc */}
+                        <div
+                          className="absolute rounded-full"
+                          style={{
+                            inset: '28%',
+                            background: isSpotifyPlaying ? '#ff7a1a' : 'rgba(255,122,26,0.15)',
+                            border: `2px solid ${isSpotifyPlaying ? '#ff9a40' : 'rgba(255,122,26,0.35)'}`,
+                            boxShadow: isSpotifyPlaying
+                              ? '0 0 10px rgba(255,122,26,0.8), inset 0 1px 0 rgba(255,255,255,0.3)'
+                              : 'inset 0 1px 0 rgba(255,255,255,0.08)',
+                            transition: 'all 0.3s',
+                          }}
+                        />
+                        {/* Spindle hole */}
+                        <div className="absolute w-2 h-2 rounded-full bg-black z-10" />
+                        {/* Icon */}
+                        <span
+                          className="relative z-20 material-symbols-outlined"
+                          style={{
+                            fontSize: '2rem',
+                            color: isSpotifyPlaying ? '#000' : '#ff7a1a',
+                            textShadow: isSpotifyPlaying ? 'none' : '0 0 12px rgba(255,122,26,0.5)',
+                          }}
+                        >
+                          {isTestingSpotify ? 'hourglass_empty' : isSpotifyPlaying ? 'pause' : 'play_arrow'}
+                        </span>
+                      </motion.button>
+                    </div>
 
                     <p className="font-label-caps text-[10px] text-on-surface-variant tracking-[0.2em]">
                       {isTestingSpotify

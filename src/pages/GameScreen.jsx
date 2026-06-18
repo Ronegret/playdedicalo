@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DEDICALO_PLAYLISTS, GAME_MODES, SABOTAGE_OPTIONS, getCombinedTimelineYears, normalizeSpotifyPlaylistUrl, useGameStore } from '../store/useGameStore';
-import { createQuestionFromTrack, explainSpotifyError, getCurrentHiddenTrack, pauseSpotifyPlayback, startRandomPlaylistTrack } from '../services/spotify';
+import { createQuestionFromTrack, explainSpotifyError, getCurrentHiddenTrack, getSpotifyStatus, pauseSpotifyPlayback, startRandomPlaylistTrack } from '../services/spotify';
 
 const EQUALIZER_BARS = [0.35, 0.58, 0.42, 0.71, 0.49, 0.64, 0.39];
 
@@ -72,7 +72,7 @@ function RankingPeek({ players, guestId, sabotageState }) {
                     {sabIcons.length > 0 && (
                       <div className="flex items-center gap-0.5 shrink-0">
                         {sabIcons.map((si) => (
-                          <span key={si.label} title={si.label} className={`material-symbols-outlined text-base ${si.color}`}>{si.icon}</span>
+                          <span key={si.label} title={si.label} className={`material-symbols-outlined text-xl ${si.color}`}>{si.icon}</span>
                         ))}
                       </div>
                     )}
@@ -134,7 +134,7 @@ function MyStatusCard({ guestId, pointLocks, shields, pendingAttacks, traps, sha
           animate={{ opacity: 1, x: 0 }}
           className={`rounded-xl border ${effect.border} ${effect.bg} px-3 py-2.5 flex items-center gap-3`}
         >
-          <span className={`material-symbols-outlined text-xl shrink-0 ${effect.color}`}>{effect.icon}</span>
+          <span className={`material-symbols-outlined text-3xl shrink-0 ${effect.color}`}>{effect.icon}</span>
           <div className="flex-1 min-w-0 text-left">
             <p className={`text-xs font-black leading-tight ${effect.color}`}>{effect.title}</p>
             <p className="text-[10px] text-on-surface-variant leading-snug mt-0.5">{effect.desc}</p>
@@ -171,7 +171,7 @@ function SabotageActivatedToast({ sabotage, onDismiss }) {
         <motion.span
           animate={{ scale: [1, 1.35, 1] }}
           transition={{ duration: 0.5, ease: 'backOut' }}
-          className="material-symbols-outlined text-3xl shrink-0"
+          className="material-symbols-outlined text-5xl shrink-0"
         >
           {sabotage.icon}
         </motion.span>
@@ -257,7 +257,7 @@ function SabotageSquares({ options, points, enabled, onUse }) {
                             aria-label={`${option.name} — ${option.cost} puntos`}
                           >
                             <div className="flex items-start justify-between gap-1">
-                              <span className="material-symbols-outlined text-2xl">{option.icon}</span>
+                              <span className="material-symbols-outlined text-4xl">{option.icon}</span>
                               <span className="rounded-lg border border-current/30 bg-black/20 px-1.5 py-0.5 text-[9px] font-label-caps leading-none shrink-0">{option.cost}pts</span>
                             </div>
                             <span className="text-xs font-black text-white leading-tight">{option.name}</span>
@@ -296,7 +296,7 @@ function SabotageSquares({ options, points, enabled, onUse }) {
             >
               <div className={`rounded-xl border p-4 mb-4 ${SABOTAGE_STYLES[pendingOption.color] || SABOTAGE_STYLES.purple}`}>
                 <div className="flex items-center gap-3">
-                  <span className="material-symbols-outlined text-3xl shrink-0">{pendingOption.icon}</span>
+                  <span className="material-symbols-outlined text-5xl shrink-0">{pendingOption.icon}</span>
                   <div className="flex-1 min-w-0">
                     <p className="font-label-caps text-[9px] opacity-60">SABOTAJE</p>
                     <h3 className="text-lg font-black text-white leading-tight">{pendingOption.name}</h3>
@@ -420,11 +420,25 @@ export default function GameScreen() {
   const [countdownValue, setCountdownValue] = useState(3);
   const [spotifyMessage, setSpotifyMessage] = useState('');
   const [spotifyError, setSpotifyError] = useState(false);
+  const [spotifyNeedsReconnect, setSpotifyNeedsReconnect] = useState(false);
   const [activatedSabotage, setActivatedSabotage] = useState(null);
   const [pendingAttackWarning, setPendingAttackWarning] = useState('');
   const [showExitConfirm, setShowExitConfirm] = useState(false);
   const [disconnectToast, setDisconnectToast] = useState('');
+  const [revealError, setRevealError] = useState('');
+  const [isBlackoutPending, setIsBlackoutPending] = useState(false);
   const startedSpotifyRoundRef = useRef('');
+  const roleRef = useRef(role);
+  useEffect(() => { roleRef.current = role; }, [role]);
+
+  // Pause music on unmount (browser back button or any non-graceful exit)
+  useEffect(() => {
+    return () => {
+      if (roleRef.current === 'host') {
+        pauseSpotifyPlayback().catch(() => {});
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (phase === 'result' || phase === 'final') navigate('/game/result');
@@ -476,6 +490,7 @@ export default function GameScreen() {
     }, 0);
 
     setSpotifyError(false);
+    setSpotifyNeedsReconnect(false);
     startRandomPlaylistTrack(spotifyPlaylistUrl)
       .then(() => {
         if (!cancelled) {
@@ -489,6 +504,7 @@ export default function GameScreen() {
         if (!cancelled) {
           setSpotifyMessage(explainSpotifyError(error));
           setSpotifyError(true);
+          setSpotifyNeedsReconnect(!getSpotifyStatus().connected);
           setAudioPlaying(false);
         }
       });
@@ -548,15 +564,34 @@ export default function GameScreen() {
   };
 
   const handleHostBlackout = async () => {
-    const hiddenTrack = getCurrentHiddenTrack();
-    const spotifyQuestion = hiddenTrack ? await createQuestionFromTrack(hiddenTrack, gameMode, round, ownTimelineYears) : null;
-    await pauseSpotifyPlayback().catch((error) => console.warn('No se pudo pausar Spotify:', error));
-    setAudioPlaying(false);
-    await hostTriggerBlackout(spotifyQuestion, hiddenTrack);
+    if (isBlackoutPending) return;
+    setIsBlackoutPending(true);
+    try {
+      const hiddenTrack = getCurrentHiddenTrack();
+      const spotifyQuestion = hiddenTrack
+        ? await createQuestionFromTrack(hiddenTrack, gameMode, round, ownTimelineYears)
+        : null;
+      await pauseSpotifyPlayback().catch((error) => console.warn('No se pudo pausar Spotify:', error));
+      setAudioPlaying(false);
+      await hostTriggerBlackout(spotifyQuestion, hiddenTrack);
+    } catch (error) {
+      console.error('Error al activar blackout:', error);
+      setIsBlackoutPending(false);
+    }
   };
 
+  // Reset blackout lock when phase changes (new round)
+  useEffect(() => {
+    if (phase === 'listen') setIsBlackoutPending(false);
+  }, [phase, round]);
+
   const handleSpotifyRetry = () => {
+    if (spotifyNeedsReconnect) {
+      navigate('/host/sync');
+      return;
+    }
     setSpotifyError(false);
+    setSpotifyNeedsReconnect(false);
     setSpotifyMessage('Reintentando...');
     startRandomPlaylistTrack(spotifyPlaylistUrl)
       .then(() => {
@@ -566,6 +601,7 @@ export default function GameScreen() {
       .catch((error) => {
         setSpotifyMessage(explainSpotifyError(error));
         setSpotifyError(true);
+        setSpotifyNeedsReconnect(!getSpotifyStatus().connected);
         setAudioPlaying(false);
       });
   };
@@ -712,8 +748,10 @@ export default function GameScreen() {
                     onClick={handleSpotifyRetry}
                     className="flex items-center gap-2 px-4 py-2 rounded-xl border border-vinyl-orange/50 bg-vinyl-orange/15 text-vinyl-orange font-label-caps text-xs font-bold active:scale-95 transition-all"
                   >
-                    <span className="material-symbols-outlined text-sm">refresh</span>
-                    REINTENTAR SPOTIFY
+                    <span className="material-symbols-outlined text-sm">
+                      {spotifyNeedsReconnect ? 'login' : 'refresh'}
+                    </span>
+                    {spotifyNeedsReconnect ? 'RECONECTAR SPOTIFY' : 'REINTENTAR SPOTIFY'}
                   </button>
                 )}
               </div>
@@ -758,12 +796,13 @@ export default function GameScreen() {
               <div className="w-full max-w-xs grid gap-3 mt-2 mb-8">
                 <p className="text-center text-xs text-on-surface-variant">Para cuando lo veas claro 👇</p>
                 <motion.button
-                  whileTap={{ scale: 0.96 }}
+                  whileTap={{ scale: isBlackoutPending ? 1 : 0.96 }}
                   onClick={handleHostBlackout}
-                  className="w-full h-20 bg-intense-red hover:bg-red-600 text-white font-headline-lg-mobile text-3xl rounded-2xl shadow-[0_0_30px_rgba(255,107,139,0.45)] transition-colors font-black border-2 border-white/15 relative overflow-hidden"
+                  disabled={isBlackoutPending}
+                  className="w-full h-20 bg-intense-red hover:bg-red-600 text-white font-headline-lg-mobile text-3xl rounded-2xl shadow-[0_0_30px_rgba(255,107,139,0.45)] transition-colors font-black border-2 border-white/15 relative overflow-hidden disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
-                  PARAR MÚSICA
+                  {isBlackoutPending ? 'PARANDO...' : 'PARAR MÚSICA'}
                 </motion.button>
               </div>
             )}
@@ -851,12 +890,23 @@ export default function GameScreen() {
                 )}
                 <button
                   type="button"
-                  onClick={hostRevealResults}
+                  onClick={async () => {
+                    setRevealError('');
+                    try {
+                      await hostRevealResults();
+                    } catch (error) {
+                      console.error('Error al revelar resultados:', error);
+                      setRevealError('No se pudieron revelar los resultados. Inténtalo de nuevo.');
+                    }
+                  }}
                   disabled={!hasAnswered}
                   className="mt-4 w-full h-14 rounded-xl bg-neon-green text-black font-label-caps text-sm font-bold active:scale-95 transition-transform disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   REVELAR RESULTADOS
                 </button>
+                {revealError && (
+                  <p className="mt-2 text-xs text-intense-red text-center">{revealError}</p>
+                )}
               </div>
             )}
 
