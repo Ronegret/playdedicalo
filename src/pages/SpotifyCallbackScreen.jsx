@@ -28,7 +28,7 @@ export default function SpotifyCallbackScreen() {
       })
       .catch((spotifyError) => {
         console.error(spotifyError);
-        setMessage('No se pudo conectar Spotify. Revisa la configuración de Redirect URI.');
+        setMessage('No pudimos conectar Spotify. Vuelve atrás y toca Conectar otra vez.');
       });
   }, [navigate]);
 
@@ -42,4 +42,3 @@ export default function SpotifyCallbackScreen() {
     </main>
   );
 }
-

@@ -1,4 +1,4 @@
-const CACHE = 'dedicalo-v1';
+const CACHE = 'dedicalo-v4';
 const PRECACHE = ['/index.html', '/manifest.json', '/images/icon-app.png', '/images/logo-main.png', '/dedi.mp3'];
 
 self.addEventListener('install', (e) => {

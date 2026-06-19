@@ -96,7 +96,7 @@ export default function HostSyncScreen() {
         // overwrite an already-valid login state set by onAuthStateChanged.
         if (code === 'auth/unauthorized-domain') {
           setAuthStatus('error');
-          setAuthMessage('Google no reconoce este dominio todavía. Revisa Firebase y vuelve a intentar.');
+          setAuthMessage('Google todavía no permite entrar desde este dominio. Avísanos y vuelve a intentarlo.');
         } else if (code === 'auth/account-exists-with-different-credential') {
           setAuthStatus('error');
           setAuthMessage('Ya existe una cuenta con ese correo con otro proveedor.');
@@ -149,11 +149,11 @@ export default function HostSyncScreen() {
       }
 
       const msg = {
-        'auth/unauthorized-domain': 'No pudimos abrir Google en este dominio.',
+        'auth/unauthorized-domain': 'Google todavía no permite entrar desde este dominio.',
         'auth/popup-closed-by-user': 'Se cerró Google antes de terminar. Inténtalo de nuevo.',
       };
       setAuthStatus('error');
-      setAuthMessage(msg[error.code] || `Error (${error.code}): ${error.message}`);
+      setAuthMessage(msg[error.code] || 'No pudimos entrar con Google. Inténtalo de nuevo.');
     }
   };
   const handleHostCreate = async () => {

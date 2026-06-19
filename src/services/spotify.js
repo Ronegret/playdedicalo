@@ -342,12 +342,15 @@ export async function getSpotifyDiagnostics() {
 
 export function explainSpotifyError(error) {
   const message = String(error?.message || error || '');
-  if (message.includes('invalid_grant')) return 'La conexión con Spotify expiró o fue revocada. Pulsa Reconectar para iniciar sesión de nuevo.';
-  if (message.includes('403')) return 'Spotify no dejó iniciar la música. Revisa que la cuenta sea Premium y vuelve a conectar.';
-  if (message.includes('404')) return 'No encontramos donde reproducir. Pulsa Conectar Spotify y luego Probar.';
+  if (message.includes('invalid_grant')) return 'La conexión con Spotify expiró. Pulsa Reconectar e inicia sesión otra vez.';
+  if (message.includes('403')) return 'Spotify necesita una cuenta Premium para sonar dentro del juego.';
+  if (message.includes('404')) return 'No encontramos un dispositivo de reproducción. Pulsa Probar sonido otra vez.';
   if (message.includes('401')) return 'La sesión de Spotify expiró. Pulsa Reconectar.';
-  if (lastSpotifySdkError) return lastSpotifySdkError;
-  return message || 'Spotify no pudo iniciar la reproducción.';
+  if (message.includes('429')) return 'Spotify recibió demasiados intentos. Espera unos segundos y vuelve a probar.';
+  if (message.includes('Premium')) return message;
+  if (message.includes('bloqueó') || message.includes('bloqueo')) return 'El navegador bloqueó el audio. Toca el vinilo de play una vez más.';
+  if (lastSpotifySdkError) return 'Spotify no pudo sonar ahora. Revisa tu cuenta Premium y prueba otra vez.';
+  return 'Spotify no pudo iniciar la música. Revisa tu conexión y vuelve a probar.';
 }
 
 async function waitForDevice(ms = 250, maxAttempts = 20) {

@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NeonButton from '../components/NeonButton';
+import SupportButton from '../components/SupportButton';
 import { useBgMusic } from '../hooks/useBgMusic';
 
 const EQ_BARS = [0.4, 0.7, 0.55, 0.9, 0.45, 0.8, 0.6, 0.35, 0.75, 0.5];
@@ -29,7 +30,7 @@ export default function WelcomeScreen() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, scale: 0.98 }}
       transition={{ duration: 0.4 }}
-      className="relative z-10 w-full h-svh md:min-h-screen md:h-auto overflow-hidden flex items-center justify-center px-5 md:px-10 lg:px-20 py-0 md:py-16"
+      className="relative z-10 flex min-h-svh w-full items-center justify-center overflow-x-hidden px-5 py-8 md:min-h-screen md:px-10 md:py-16 lg:px-20"
     >
       <div className="w-full max-w-[430px] md:max-w-5xl lg:max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-4 md:gap-16 lg:gap-24">
 
@@ -199,6 +200,7 @@ export default function WelcomeScreen() {
                 Instalar app
               </button>
             )}
+            <SupportButton compact />
           </motion.div>
         </div>
 

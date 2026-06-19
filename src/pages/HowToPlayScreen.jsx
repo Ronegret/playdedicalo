@@ -1,13 +1,20 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import NeonButton from '../components/NeonButton';
+import SupportButton from '../components/SupportButton';
 import { SABOTAGE_OPTIONS, TIMELINE_GOAL_YEARS, VICTORY_MODES } from '../store/useGameStore';
 
 const QUICK_FLOW = [
-  { icon: 'person_add', title: '1. Crea o entra', text: 'El anfitrión crea la sala. Los demás entran con PIN o QR.' },
-  { icon: 'album', title: '2. Suena la música', text: 'La canción se escucha, pero el título no se muestra.' },
-  { icon: 'front_hand', title: '3. Se corta y responden', text: 'El anfitrión para la música y todos votan desde su móvil.' },
-  { icon: 'emoji_events', title: '4. Suman y siguen', text: 'La partida continúa hasta que alguien llega a la meta.' },
+  { icon: 'person_add', title: 'Sala', text: 'El anfitrión crea la sala. Los demás entran con PIN o QR.' },
+  { icon: 'album', title: 'Música', text: 'Suena una canción oculta. Nadie ve el título.' },
+  { icon: 'front_hand', title: 'Voto', text: 'El anfitrión corta la música y todos responden.' },
+  { icon: 'emoji_events', title: 'Meta', text: 'La partida sigue hasta que alguien gana.' },
+];
+
+const GOLDEN_RULES = [
+  ['El anfitrión también juega', 'Controla la música, pero responde y suma puntos como todos.'],
+  ['La canción siempre va oculta', 'No se muestra título ni artista antes de revelar el resultado.'],
+  ['La partida no cambia a mitad', 'El estilo, modo y meta se eligen al crear sala y se mantienen hasta el final.'],
 ];
 
 const HOST_STEPS = [
@@ -34,11 +41,11 @@ const SPOTIFY_STEPS = [
 ];
 
 const ROUND_FLOW = [
-  { icon: 'play_arrow', title: 'Play', text: 'Empieza una canción aleatoria del estilo elegido.' },
-  { icon: 'casino', title: 'Ataques', text: 'En Caos DJ puedes usar sabotajes mientras suena la música.' },
-  { icon: 'pause', title: 'Pausa', text: 'El anfitrión corta la música y aparece la pregunta.' },
-  { icon: 'how_to_vote', title: 'Voto', text: 'Todos responden, incluido el anfitrión.' },
-  { icon: 'celebration', title: 'Resultado', text: 'Pantalla verde si aciertas, roja si fallas y lila si recibes sabotaje.' },
+  { icon: 'play_arrow', title: '1. Suena', text: 'Empieza una canción aleatoria del estilo elegido.' },
+  { icon: 'casino', title: '2. Ataca', text: 'En Caos DJ puedes usar sabotajes mientras suena.' },
+  { icon: 'pause', title: '3. Corta', text: 'El anfitrión pausa la música y aparece la pregunta.' },
+  { icon: 'how_to_vote', title: '4. Vota', text: 'Todos responden desde su móvil.' },
+  { icon: 'celebration', title: '5. Revela', text: 'Verde si aciertas, rojo si fallas, lila si hay sabotaje.' },
 ];
 
 const POINT_RULES = [
@@ -218,7 +225,7 @@ export default function HowToPlayScreen() {
               Aprende rápido. Que empiece la fiesta.
             </h1>
             <p className="mt-4 text-sm sm:text-base leading-relaxed text-on-surface-variant max-w-2xl">
-              Dedícalo es un party game musical: una canción suena, el anfitrión la corta, todos responden y la partida sigue hasta que alguien gana.
+              Una canción suena, el anfitrión la corta, todos responden y la sala explota con el resultado. Verde, rojo o lila. Así de simple.
             </p>
             <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3">
               {QUICK_FLOW.map((item) => (
@@ -230,6 +237,25 @@ export default function HowToPlayScreen() {
               ))}
             </div>
           </div>
+        </section>
+
+        <section className="mt-4 grid gap-3 sm:grid-cols-3">
+          {GOLDEN_RULES.map(([title, text], index) => (
+            <motion.article
+              key={title}
+              variants={fadeUp}
+              initial="hidden"
+              animate="show"
+              transition={{ delay: index * 0.04 }}
+              className="rounded-2xl border border-vinyl-orange/20 bg-vinyl-orange/10 p-4 text-center"
+            >
+              <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-vinyl-orange/15 text-vinyl-orange">
+                <span className="material-symbols-outlined text-xl">{index === 0 ? 'sports_esports' : index === 1 ? 'visibility_off' : 'lock'}</span>
+              </span>
+              <h2 className="mt-3 text-sm font-black text-white">{title}</h2>
+              <p className="mt-1 text-xs leading-relaxed text-on-surface-variant">{text}</p>
+            </motion.article>
+          ))}
         </section>
 
         <section className="mt-6 grid gap-3 sm:grid-cols-3">
@@ -474,6 +500,14 @@ export default function HowToPlayScreen() {
           <NeonButton color="white" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
             Volver arriba
           </NeonButton>
+        </div>
+
+        <div className="mt-4 rounded-2xl border border-white/10 bg-black/20 p-4 text-center">
+          <p className="text-sm font-black text-white">¿Te gusta Dedícalo?</p>
+          <p className="mx-auto mt-1 max-w-md text-xs leading-relaxed text-on-surface-variant">
+            Tu apoyo ayuda a mejorar playlists, servidores, diseño y nuevas formas de juego.
+          </p>
+          <SupportButton compact className="mt-3 w-full sm:w-auto" />
         </div>
       </div>
     </motion.main>

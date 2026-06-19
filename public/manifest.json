@@ -2,13 +2,17 @@
   "name": "Dedícalo Play",
   "short_name": "Dedícalo",
   "description": "Party game musical — adivina canciones, sabotea a tus amigos y gana.",
-  "start_url": "/",
+  "id": "/",
+  "start_url": "/?source=pwa",
+  "scope": "/",
   "display": "standalone",
+  "display_override": ["standalone", "fullscreen"],
   "background_color": "#0a0a0a",
-  "theme_color": "#0a0a0a",
+  "theme_color": "#071025",
   "orientation": "portrait-primary",
   "categories": ["games", "entertainment"],
   "lang": "es",
+  "dir": "ltr",
   "icons": [
     {
       "src": "/images/icon-app.png",
@@ -21,6 +25,29 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Crear sala",
+      "short_name": "Crear",
+      "description": "Entrar como anfitrión",
+      "url": "/host/sync",
+      "icons": [{ "src": "/images/icon-app.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Unirme a sala",
+      "short_name": "Unirme",
+      "description": "Entrar con PIN o QR",
+      "url": "/guest/join",
+      "icons": [{ "src": "/images/icon-app.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Cómo se juega",
+      "short_name": "Manual",
+      "description": "Ver reglas y modos de juego",
+      "url": "/how-to-play",
+      "icons": [{ "src": "/images/icon-app.png", "sizes": "192x192", "type": "image/png" }]
     }
   ]
 }
