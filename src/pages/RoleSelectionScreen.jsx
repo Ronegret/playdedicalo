@@ -44,7 +44,7 @@ function Equalizer({ color = '#ff7a1a' }) {
   );
 }
 
-function CassetteLogoHero() {
+function AlbumTrackHero() {
   const bars = [0.35, 0.72, 0.48, 0.92, 0.58, 0.82, 0.42, 0.68, 0.52];
 
   return (
@@ -56,36 +56,58 @@ function CassetteLogoHero() {
       aria-label="Logo Dedícalo"
     >
       <div className="absolute -inset-6 rounded-full bg-vinyl-orange/20 blur-3xl" />
-      <div className="absolute -left-8 top-10 h-20 w-20 rounded-full border border-vinyl-orange/25 ring-expand-anim" />
-      <div className="absolute -right-6 bottom-5 h-16 w-16 rounded-full border border-electric-purple/25 ring-expand-anim" style={{ animationDelay: '0.8s' }} />
+      <div className="absolute -left-8 top-12 h-20 w-20 rounded-full border border-vinyl-orange/25 ring-expand-anim" />
+      <div className="absolute -right-6 bottom-8 h-16 w-16 rounded-full border border-electric-purple/25 ring-expand-anim" style={{ animationDelay: '0.8s' }} />
 
-      <div className="relative overflow-hidden rounded-[2rem] border border-white/12 bg-[#071025]/88 px-5 py-5 shadow-[0_24px_70px_rgba(0,0,0,0.38),0_0_42px_rgba(255,122,26,0.18)]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,122,26,0.28),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(63,120,255,0.22),transparent_36%)]" />
-        <div className="absolute left-5 right-5 top-4 h-1 rounded-full bg-gradient-to-r from-vinyl-orange via-electric-purple to-deep-blue opacity-80" />
+      <div className="relative overflow-hidden rounded-[2rem] border border-white/12 bg-[#071025]/90 p-4 shadow-[0_24px_70px_rgba(0,0,0,0.38),0_0_42px_rgba(255,122,26,0.18)]">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,122,26,0.26),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(63,120,255,0.24),transparent_38%)]" />
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-vinyl-orange/80 to-transparent" />
 
-        <div className="relative flex items-center justify-between gap-4">
-          {[0, 1].map((reel) => (
-            <motion.div
-              key={reel}
-              animate={{ rotate: 360 }}
-              transition={{ repeat: Infinity, duration: 5.5 + reel, ease: 'linear' }}
-              className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-white/12 bg-[repeating-radial-gradient(circle,#05070c_0_4px,#182235_5px_6px,#05070c_7px_10px)] shadow-[inset_0_0_18px_rgba(0,0,0,0.7)] sm:h-16 sm:w-16"
-            >
-              <div className="h-7 w-7 rounded-full border-4 border-vinyl-orange/80 bg-black/60" />
-            </motion.div>
-          ))}
-
-          <div className="relative mx-auto flex min-h-[104px] flex-1 items-center justify-center rounded-2xl border border-white/10 bg-white px-3 py-3 shadow-[0_0_0_5px_rgba(0,0,0,0.36),0_0_35px_rgba(255,122,26,0.35)]">
+        <div className="relative grid grid-cols-[112px_1fr] items-center gap-4">
+          <motion.div
+            animate={{ y: [0, -4, 0] }}
+            transition={{ repeat: Infinity, duration: 4.4, ease: 'easeInOut' }}
+            className="relative aspect-square overflow-hidden rounded-3xl border border-white/12 bg-white p-2 shadow-[0_0_0_5px_rgba(0,0,0,0.35),0_0_35px_rgba(255,122,26,0.34)]"
+          >
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,122,26,0.10),transparent_45%)]" />
             <img
               src="/images/logo-main.png"
               alt="Dedícalo"
-              className="h-auto w-full max-w-[230px] object-contain drop-shadow-[0_8px_12px_rgba(0,0,0,0.28)]"
+              className="relative h-full w-full object-contain drop-shadow-[0_8px_12px_rgba(0,0,0,0.28)]"
               draggable={false}
             />
+          </motion.div>
+
+          <div className="relative min-w-0 text-left">
+            <p className="font-label-caps text-[10px] tracking-[0.24em] text-neon-green">NOW PLAYING</p>
+            <h2 className="mt-1 text-2xl font-black uppercase leading-none text-white">Dedícalo Play</h2>
+            <p className="mt-1 text-xs leading-snug text-on-surface-variant">Party game musical</p>
+
+            <div className="mt-4 flex items-center gap-3">
+              <motion.div
+                whileTap={{ scale: 0.92 }}
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-vinyl-orange text-black shadow-[0_8px_0_rgba(83,28,0,0.85),0_0_22px_rgba(255,122,26,0.45)]"
+              >
+                <span className="material-symbols-outlined text-2xl">play_arrow</span>
+              </motion.div>
+              <div className="min-w-0 flex-1">
+                <div className="h-2 overflow-hidden rounded-full bg-white/10">
+                  <motion.div
+                    animate={{ width: ['18%', '78%', '18%'] }}
+                    transition={{ repeat: Infinity, duration: 3.5, ease: 'easeInOut' }}
+                    className="h-full rounded-full bg-gradient-to-r from-vinyl-orange via-electric-purple to-deep-blue"
+                  />
+                </div>
+                <div className="mt-1 flex justify-between font-label-caps text-[8px] tracking-[0.14em] text-white/35">
+                  <span>00:07</span>
+                  <span>03:33</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="relative mt-4 flex items-end justify-center gap-1.5">
+        <div className="relative mt-5 flex items-end justify-center gap-1.5">
           {bars.map((height, index) => (
             <span
               key={`${height}-${index}`}
@@ -101,10 +123,10 @@ function CassetteLogoHero() {
           ))}
         </div>
 
-        <div className="relative mt-3 flex items-center justify-center gap-2">
+        <div className="relative mt-3 flex items-center justify-center gap-2 rounded-full border border-white/10 bg-black/20 px-3 py-2">
           <span className="h-1.5 w-1.5 rounded-full bg-neon-green shadow-[0_0_12px_rgba(57,255,20,0.8)]" />
           <p className="font-label-caps text-[10px] tracking-[0.24em] text-white/60">
-            LISTO PARA SONAR
+            ELIGE TU ROL Y SUBE EL VOLUMEN
           </p>
         </div>
       </div>
@@ -177,7 +199,7 @@ export default function RoleSelectionScreen() {
       </header>
 
       <section className="mb-7 flex w-full flex-col items-center gap-5">
-        <CassetteLogoHero />
+        <AlbumTrackHero />
 
         <div>
           <p className="font-label-caps text-xs tracking-[0.28em] text-neon-green">ELIGE CÓMO ENTRAS</p>
