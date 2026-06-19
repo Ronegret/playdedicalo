@@ -44,6 +44,74 @@ function Equalizer({ color = '#ff7a1a' }) {
   );
 }
 
+function CassetteLogoHero() {
+  const bars = [0.35, 0.72, 0.48, 0.92, 0.58, 0.82, 0.42, 0.68, 0.52];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16, scale: 0.96 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ type: 'spring', stiffness: 120, damping: 16 }}
+      className="relative w-full max-w-[360px]"
+      aria-label="Logo Dedícalo"
+    >
+      <div className="absolute -inset-6 rounded-full bg-vinyl-orange/20 blur-3xl" />
+      <div className="absolute -left-8 top-10 h-20 w-20 rounded-full border border-vinyl-orange/25 ring-expand-anim" />
+      <div className="absolute -right-6 bottom-5 h-16 w-16 rounded-full border border-electric-purple/25 ring-expand-anim" style={{ animationDelay: '0.8s' }} />
+
+      <div className="relative overflow-hidden rounded-[2rem] border border-white/12 bg-[#071025]/88 px-5 py-5 shadow-[0_24px_70px_rgba(0,0,0,0.38),0_0_42px_rgba(255,122,26,0.18)]">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,122,26,0.28),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(63,120,255,0.22),transparent_36%)]" />
+        <div className="absolute left-5 right-5 top-4 h-1 rounded-full bg-gradient-to-r from-vinyl-orange via-electric-purple to-deep-blue opacity-80" />
+
+        <div className="relative flex items-center justify-between gap-4">
+          {[0, 1].map((reel) => (
+            <motion.div
+              key={reel}
+              animate={{ rotate: 360 }}
+              transition={{ repeat: Infinity, duration: 5.5 + reel, ease: 'linear' }}
+              className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-white/12 bg-[repeating-radial-gradient(circle,#05070c_0_4px,#182235_5px_6px,#05070c_7px_10px)] shadow-[inset_0_0_18px_rgba(0,0,0,0.7)] sm:h-16 sm:w-16"
+            >
+              <div className="h-7 w-7 rounded-full border-4 border-vinyl-orange/80 bg-black/60" />
+            </motion.div>
+          ))}
+
+          <div className="relative mx-auto flex min-h-[104px] flex-1 items-center justify-center rounded-2xl border border-white/10 bg-white px-3 py-3 shadow-[0_0_0_5px_rgba(0,0,0,0.36),0_0_35px_rgba(255,122,26,0.35)]">
+            <img
+              src="/images/logo-main.png"
+              alt="Dedícalo"
+              className="h-auto w-full max-w-[230px] object-contain drop-shadow-[0_8px_12px_rgba(0,0,0,0.28)]"
+              draggable={false}
+            />
+          </div>
+        </div>
+
+        <div className="relative mt-4 flex items-end justify-center gap-1.5">
+          {bars.map((height, index) => (
+            <span
+              key={`${height}-${index}`}
+              className="eq-bar w-2 rounded-full"
+              style={{
+                height: `${18 + height * 34}px`,
+                background: index % 3 === 0 ? '#ff7a1a' : index % 3 === 1 ? '#a855f7' : '#3f78ff',
+                animationDelay: `${index * 0.07}s`,
+                animationDuration: `${0.7 + index * 0.04}s`,
+                boxShadow: '0 0 16px rgba(255,122,26,0.22)'
+              }}
+            />
+          ))}
+        </div>
+
+        <div className="relative mt-3 flex items-center justify-center gap-2">
+          <span className="h-1.5 w-1.5 rounded-full bg-neon-green shadow-[0_0_12px_rgba(57,255,20,0.8)]" />
+          <p className="font-label-caps text-[10px] tracking-[0.24em] text-white/60">
+            LISTO PARA SONAR
+          </p>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
 function RoleCard({ type, title, text, action, icon, color, glow, onClick }) {
   return (
     <motion.button
@@ -105,19 +173,11 @@ export default function RoleSelectionScreen() {
           <span className="material-symbols-outlined text-xl">arrow_back</span>
           VOLVER
         </button>
-        <img src="/images/logo-main.png" alt="Dedícalo" className="h-9 w-auto object-contain drop-shadow-[0_0_18px_rgba(255,122,26,0.18)]" />
-        <div className="w-16 opacity-0" />
+        <div className="w-16 opacity-0" aria-hidden="true" />
       </header>
 
-      <section className="mb-7 flex w-full flex-col items-center gap-4">
-        <motion.div
-          animate={{ y: [0, -6, 0] }}
-          transition={{ repeat: Infinity, duration: 4.4, ease: 'easeInOut' }}
-          className="relative flex h-24 w-24 items-center justify-center"
-        >
-          <MiniVinyl active color="#ff7a1a" icon="music_note" />
-          <div className="absolute inset-0 rounded-full border border-vinyl-orange/30 ring-expand-anim" />
-        </motion.div>
+      <section className="mb-7 flex w-full flex-col items-center gap-5">
+        <CassetteLogoHero />
 
         <div>
           <p className="font-label-caps text-xs tracking-[0.28em] text-neon-green">ELIGE CÓMO ENTRAS</p>
