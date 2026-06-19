@@ -509,9 +509,9 @@ export default function HowToPlayScreen() {
 
         <div className="mt-5 rounded-2xl border border-white/10 bg-white/[0.035] p-4 text-center">
           <p className="text-xs font-label-caps tracking-[0.18em] text-on-surface-variant">Opcional</p>
-          <p className="mt-1 text-sm font-black text-white">Apoya al creador</p>
+          <p className="mt-1 text-sm font-black text-white">Apoya al creador y propone tu playlist</p>
           <p className="mx-auto mt-1 max-w-md text-xs leading-relaxed text-on-surface-variant">
-            Si Dedícalo te saca una buena partida, puedes ayudar a mantener playlists, servidores y nuevas mejoras.
+            Si quieres que revisemos una playlist propia para futuras partidas, apoya el proyecto y envía el enlace.
           </p>
           <div className="mt-3 grid gap-2 sm:grid-cols-2">
             <SupportButton compact className="w-full border-white/10 bg-black/20 text-white/85" />
@@ -528,7 +528,7 @@ export default function HowToPlayScreen() {
             </button>
           </div>
           <p className="mx-auto mt-3 max-w-md text-[11px] leading-relaxed text-on-surface-variant">
-            ¿Quieres que revisemos tu playlist? Apoya el proyecto y manda el enlace a dedicalo.es@gmail.com para incluirla en futuras listas.
+            El envío no aparece al instante en el juego: se revisa para cuidar calidad, años, canciones repetidas y estilo.
           </p>
         </div>
       </div>

@@ -1,5 +1,5 @@
 export const DONATION_URL = import.meta.env.VITE_BIZUM_DONATION_URL || import.meta.env.VITE_DONATION_URL || '';
-export const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL || 'rodrigo.negrete.aros@gmail.com';
+export const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL || 'dedicalo.es@gmail.com';
 export const PLAYLIST_REQUEST_EMAIL = import.meta.env.VITE_PLAYLIST_REQUEST_EMAIL || 'dedicalo.es@gmail.com';
 
 export function getSupportUrl() {
