@@ -30,7 +30,7 @@ export default function WelcomeScreen() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, scale: 0.98 }}
       transition={{ duration: 0.4 }}
-      className="relative z-10 flex min-h-svh w-full items-center justify-center overflow-x-hidden px-5 py-8 md:min-h-screen md:px-10 md:py-16 lg:px-20"
+      className="relative z-10 flex min-h-svh w-full flex-col items-center justify-center overflow-x-hidden px-5 py-8 md:min-h-screen md:px-10 md:py-16 lg:px-20"
     >
       <div className="w-full max-w-[430px] md:max-w-5xl lg:max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-4 md:gap-16 lg:gap-24">
 
@@ -200,11 +200,22 @@ export default function WelcomeScreen() {
                 Instalar app
               </button>
             )}
-            <SupportButton compact />
           </motion.div>
         </div>
 
       </div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.75, duration: 0.45 }}
+        className="mt-5 w-full max-w-xs md:absolute md:bottom-6 md:left-1/2 md:mt-0 md:-translate-x-1/2"
+      >
+        <SupportButton compact className="w-full bg-black/20 backdrop-blur-md" />
+        <p className="mt-2 text-center text-[10px] leading-snug text-on-surface-variant">
+          Aporta para nuevas playlists, servidores y mejoras del juego.
+        </p>
+      </motion.div>
     </motion.main>
   );
 }
