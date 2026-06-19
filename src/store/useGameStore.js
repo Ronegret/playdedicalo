@@ -95,24 +95,24 @@ export const DEFAULT_SPOTIFY_PLAYLIST_URL = DEDICALO_PLAYLISTS[0].url;
 export const GAME_MODES = {
   pulse: {
     id: 'pulse',
-    name: 'PULSO',
-    short: 'Escucha y responde',
-    description: 'Suena un fragmento, se corta y todos responden una pregunta clara.',
-    rhythm: 'Ideal para empezar rápido y sin explicar mucho.'
+    name: 'CORTE MAESTRO',
+    short: 'Escucha, corta y responde',
+    description: 'La música suena, el anfitrión la corta y todos responden antes que el resto.',
+    rhythm: 'Directo, rápido y perfecto para calentar la sala desde la primera canción.'
   },
   timeline: {
     id: 'timeline',
-    name: 'LÍNEA',
-    short: 'Ordena la música',
-    description: `Cada jugador tiene un año base distinto y gana quien completa primero ${TIMELINE_GOAL_YEARS} años en su línea.`,
-    rhythm: `Perfecto para comparar épocas y construir una línea de ${TIMELINE_GOAL_YEARS} años.`
+    name: 'AÑOS LOCOS',
+    short: 'Ordena canciones por año',
+    description: `Cada jugador arma su propia ruta musical y gana quien completa primero ${TIMELINE_GOAL_YEARS} años.`,
+    rhythm: 'Memoria, intuición y nostalgia: coloca cada canción donde crees que pertenece.'
   },
   chaos: {
     id: 'chaos',
-    name: 'REMIX',
-    short: 'Música con sabotajes',
-    description: 'La música sigue, pero ahora también mandan los ataques y la estrategia.',
-    rhythm: 'Más tensión, más bromas y más remontadas.'
+    name: 'CAOS DJ',
+    short: 'Preguntas con sabotajes',
+    description: 'La música sigue, respondes y además puedes gastar puntos para mover la partida.',
+    rhythm: 'El modo más picante: ataques, escudos, robos y remontadas.'
   }
 };
 
@@ -121,19 +121,19 @@ export const VICTORY_MODES = [
     targetScore: 70,
     name: 'RÁPIDA',
     short: 'Rápida',
-    description: 'Disponible para Pulso y Remix. Gana quien llega primero a 70 puntos.'
+    description: 'Disponible para Corte Maestro y Caos DJ. Gana quien llega primero a 70 puntos.'
   },
   {
     targetScore: 120,
     name: 'EQUILIBRADA',
     short: 'Equilibrada',
-    description: 'Disponible para Pulso y Remix. Meta de 120 puntos con más remontadas.'
+    description: 'Disponible para Corte Maestro y Caos DJ. Meta de 120 puntos con más remontadas.'
   },
   {
     targetScore: 200,
     name: 'LARGA',
     short: 'Larga',
-    description: 'Disponible para Pulso y Remix. Meta de 200 puntos para partidas largas.'
+    description: 'Disponible para Corte Maestro y Caos DJ. Meta de 200 puntos para partidas largas.'
   }
 ];
 
@@ -196,9 +196,9 @@ const MUSIC_QUESTIONS = [
   { mode: 'pulse', type: 'Trivia', text: '¿Cuántos sabotajes distintos hay en Dedícalo?', options: ['3', '4', '5', '6'], correct: 3 },
   { mode: 'pulse', type: 'Trivia', text: '¿Desde qué ronda se desbloquean los sabotajes?', options: ['Ronda 1', 'Ronda 2', 'Ronda 3', 'Ronda 4'], correct: 1 },
   { mode: 'pulse', type: 'Trivia', text: '¿Cuántos modos de juego tiene Dedícalo?', options: ['1', '2', '3', '4'], correct: 2 },
-  { mode: 'timeline', answerType: 'timeline-placement', type: 'Línea del Ritmo', text: '¿Dónde encaja esta canción en la línea?', timelineYears: [2000], songYear: 2014, options: ['0', '1'], correct: 1 },
-  { mode: 'timeline', answerType: 'timeline-placement', type: 'Línea del Ritmo', text: '¿Dónde pondrías esta canción?', timelineYears: [1995, 2005], songYear: 2001, options: ['0', '1', '2'], correct: 1 },
-  { mode: 'timeline', answerType: 'timeline-placement', type: 'Línea del Ritmo', text: 'Escucha y colócala por año.', timelineYears: [1990, 2000, 2010], songYear: 2020, options: ['0', '1', '2', '3'], correct: 3 },
+  { mode: 'timeline', answerType: 'timeline-placement', type: 'Años Locos', text: '¿Dónde encaja esta canción en tu ruta de años?', timelineYears: [2000], songYear: 2014, options: ['0', '1'], correct: 1 },
+  { mode: 'timeline', answerType: 'timeline-placement', type: 'Años Locos', text: '¿Dónde pondrías esta canción?', timelineYears: [1995, 2005], songYear: 2001, options: ['0', '1', '2'], correct: 1 },
+  { mode: 'timeline', answerType: 'timeline-placement', type: 'Años Locos', text: 'Escucha y colócala por año.', timelineYears: [1990, 2000, 2010], songYear: 2020, options: ['0', '1', '2', '3'], correct: 3 },
   { mode: 'chaos', type: 'Trivia', text: '¿Qué color indica un sabotaje activo en Dedícalo?', options: ['Verde', 'Rojo', 'Lila', 'Azul'], correct: 2 },
   { mode: 'chaos', type: 'Trivia', text: '¿Qué pasa si el líder tiene escudo y lo atacas?', options: ['Pierde puntos igual', 'El escudo absorbe el ataque', 'Robas sus puntos', 'El ataque pasa igual'], correct: 1 },
   { mode: 'chaos', type: 'Trivia', text: '¿Cuánto cuesta el sabotaje más barato de todos?', options: ['1 pt', '2 pts', '3 pts', '4 pts'], correct: 2 }
@@ -1009,4 +1009,3 @@ export const useGameStore = create((setStore, getStore) => ({
     setStore({ roomSubscription: unsubscribe });
   }
 }));
-

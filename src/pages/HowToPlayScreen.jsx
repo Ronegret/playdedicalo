@@ -35,7 +35,7 @@ const SPOTIFY_STEPS = [
 
 const ROUND_FLOW = [
   { icon: 'play_arrow', title: 'Play', text: 'Empieza una canción aleatoria del estilo elegido.' },
-  { icon: 'casino', title: 'Ataques', text: 'En Remix puedes usar sabotajes mientras suena la música.' },
+  { icon: 'casino', title: 'Ataques', text: 'En Caos DJ puedes usar sabotajes mientras suena la música.' },
   { icon: 'pause', title: 'Pausa', text: 'El anfitrión corta la música y aparece la pregunta.' },
   { icon: 'how_to_vote', title: 'Voto', text: 'Todos responden, incluido el anfitrión.' },
   { icon: 'celebration', title: 'Resultado', text: 'Pantalla verde si aciertas, roja si fallas y lila si recibes sabotaje.' },
@@ -87,23 +87,23 @@ const MODES = [
   {
     icon: 'bolt',
     color: '#ff7a1a',
-    title: 'Pulso',
+    title: 'Corte Maestro',
     goal: `Meta de ${VICTORY_MODES.map((mode) => mode.targetScore).join(', ')} puntos`,
-    text: 'Escucha un fragmento, responde rápido y suma puntos. Es el modo más directo para empezar.'
+    text: 'La canción suena, el anfitrión la corta y todos responden. Rápido, simple y con tensión desde el primer corte.'
   },
   {
     icon: 'timeline',
     color: '#a855f7',
-    title: 'Línea',
+    title: 'Años Locos',
     goal: `${TIMELINE_GOAL_YEARS} años para ganar`,
-    text: 'Cada jugador tiene su propia línea de años. Coloca cada canción antes, después o entre los años que ya tengas.'
+    text: 'Cada jugador arma su propia ruta musical. Coloca cada canción antes, después o entre los años que ya tengas.'
   },
   {
     icon: 'auto_awesome',
     color: '#39ff14',
-    title: 'Remix',
+    title: 'Caos DJ',
     goal: `Meta de ${VICTORY_MODES.map((mode) => mode.targetScore).join(', ')} puntos`,
-    text: 'Como Pulso, pero con sabotajes. Aquí gana quien sabe responder y también jugar con estrategia.'
+    text: 'Como Corte Maestro, pero con sabotajes. Aquí gana quien responde bien y también sabe jugar con estrategia.'
   },
 ];
 
@@ -111,9 +111,9 @@ const FAQ = [
   ['¿El anfitrión también juega?', 'Sí. El anfitrión controla la música, pero responde y suma puntos igual que todos.'],
   ['¿Todos necesitan Spotify Premium?', 'No. Solo el anfitrión necesita conectar Spotify Premium. Los invitados solo escuchan el sonido del lugar.'],
   ['¿Se ve la canción que está sonando?', 'No. La canción debe permanecer oculta para todos, incluido el anfitrión.'],
-  ['¿Cuándo termina la partida?', 'Pulso y Remix terminan cuando alguien llega a la meta de puntos. Línea termina cuando alguien completa su línea de 12 años.'],
+  ['¿Cuándo termina la partida?', 'Corte Maestro y Caos DJ terminan cuando alguien llega a la meta de puntos. Años Locos termina cuando alguien completa su ruta de 12 años.'],
   ['¿Puedo cambiar de estilo a mitad de partida?', 'No. El estilo se elige al crear la sala y se mantiene hasta terminar la partida.'],
-  ['¿Qué pasa si fallo?', 'Pierdes 3 puntos. Si aciertas, ganas 5 puntos. En Remix algunos sabotajes pueden cambiar el resultado.'],
+  ['¿Qué pasa si fallo?', 'Pierdes 3 puntos. Si aciertas, ganas 5 puntos. En Caos DJ algunos sabotajes pueden cambiar el resultado.'],
   ['¿Cuándo gasto puntos en sabotajes?', 'Los puntos se descuentan al usar el sabotaje. Si no tienes suficientes puntos, no puedes activarlo.'],
   ['¿Qué pasa cuando ya voté?', 'Tu pantalla queda esperando. Cuando el anfitrión revela, verás verde, rojo o lila según lo que ocurrió.'],
   ['¿Qué hago si Spotify no suena?', 'Reconecta Spotify, verifica que la cuenta sea Premium, sube el volumen del dispositivo y vuelve a probar sonido antes de crear la sala.'],
@@ -215,7 +215,7 @@ export default function HowToPlayScreen() {
           <div className="relative p-5 sm:p-8 lg:p-10 max-w-3xl">
             <p className="font-label-caps text-neon-green text-xs tracking-[0.25em]">MANUAL DE JUEGO</p>
             <h1 className="mt-3 font-headline-lg text-4xl sm:text-6xl text-white font-black leading-[0.95]">
-              Todo lo que necesitas saber para jugar.
+              Aprende rápido. Que empiece la fiesta.
             </h1>
             <p className="mt-4 text-sm sm:text-base leading-relaxed text-on-surface-variant max-w-2xl">
               Dedícalo es un party game musical: una canción suena, el anfitrión la corta, todos responden y la partida sigue hasta que alguien gana.
@@ -318,15 +318,15 @@ export default function HowToPlayScreen() {
 
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
               <div className="rounded-2xl border border-vinyl-orange/30 bg-vinyl-orange/10 p-4">
-                <p className="text-sm font-black text-white">Pulso y Remix</p>
+                <p className="text-sm font-black text-white">Corte Maestro y Caos DJ</p>
                 <p className="mt-1 text-xs leading-relaxed text-on-surface-variant">
                   Gana quien llega primero a la meta elegida por el anfitrión: {VICTORY_MODES.map((mode) => mode.targetScore).join(', ')} puntos.
                 </p>
               </div>
               <div className="rounded-2xl border border-electric-purple/35 bg-electric-purple/10 p-4">
-                <p className="text-sm font-black text-white">Línea</p>
+                <p className="text-sm font-black text-white">Años Locos</p>
                 <p className="mt-1 text-xs leading-relaxed text-on-surface-variant">
-                  Los puntos ayudan al ranking, pero la victoria principal es completar {TIMELINE_GOAL_YEARS} años en tu propia línea musical.
+                  Los puntos ayudan al ranking, pero la victoria principal es completar {TIMELINE_GOAL_YEARS} años en tu propia ruta musical.
                 </p>
               </div>
             </div>
@@ -364,8 +364,8 @@ export default function HowToPlayScreen() {
 
           <ManualSection
             icon="timeline"
-            title="Cómo se juega Línea"
-            subtitle="Cada jugador construye su propia línea musical por años."
+            title="Cómo se juega Años Locos"
+            subtitle="Cada jugador construye su propia ruta musical por años."
           >
             <div className="mt-4 rounded-2xl border border-electric-purple/40 bg-electric-purple/10 p-4">
               <p className="text-sm font-black text-white">Ejemplo visual</p>
@@ -384,14 +384,14 @@ export default function HowToPlayScreen() {
                 ))}
               </div>
               <p className="mt-3 text-xs leading-relaxed text-on-surface-variant">
-                Si crees que la canción salió entre 2006 y 2019, tocas ese espacio. Si aciertas, ese año entra en tu línea. Gana quien complete {TIMELINE_GOAL_YEARS} años.
+                Si crees que la canción salió entre 2006 y 2019, tocas ese espacio. Si aciertas, ese año entra en tu ruta. Gana quien complete {TIMELINE_GOAL_YEARS} años.
               </p>
             </div>
           </ManualSection>
 
           <ManualSection
             icon="casino"
-            title="Sabotajes en Remix"
+            title="Sabotajes en Caos DJ"
             subtitle="Ataques con coste de puntos. Úsalos antes de que el anfitrión pare la canción."
           >
             <div className="mt-4 rounded-2xl border border-electric-purple/35 bg-electric-purple/10 p-4">

@@ -127,7 +127,7 @@ function SabotageCard({ option }) {
 function TimelineYears({ years = [] }) {
   return (
     <div className="mt-3 flex flex-wrap items-center gap-1.5 pl-9">
-      <span className="font-label-caps text-[10px] text-on-surface-variant">Línea {Math.min(years.length, TIMELINE_GOAL_YEARS)}/{TIMELINE_GOAL_YEARS}</span>
+      <span className="font-label-caps text-[10px] text-on-surface-variant">Años {Math.min(years.length, TIMELINE_GOAL_YEARS)}/{TIMELINE_GOAL_YEARS}</span>
       {years.slice(0, TIMELINE_GOAL_YEARS).map((year) => (
         <span key={year} className="rounded-lg border border-neon-green/30 bg-neon-green/10 px-2 py-1 text-[10px] font-black text-neon-green">
           {year}
@@ -375,7 +375,7 @@ export default function LobbyScreen() {
                 <p className="text-lg font-black text-white">{GAME_MODES[gameMode]?.name}</p>
                 <p className="mt-1 text-sm text-on-surface-variant">
                   {gameMode === 'timeline'
-                    ? `Meta de Línea: ${TIMELINE_GOAL_YEARS} años. Cada jugador arranca con un año base distinto.`
+                    ? `Meta de Años Locos: ${TIMELINE_GOAL_YEARS} años. Cada jugador arranca con un año base distinto.`
                     : `Meta: ${targetScore} puntos. La partida sigue con las mismas reglas hasta el final.`}
                 </p>
               </div>
@@ -383,7 +383,7 @@ export default function LobbyScreen() {
               <div className="space-y-4">
                 {gameMode === 'timeline' ? (
                   <div className="rounded-xl border border-vinyl-orange/30 bg-vinyl-orange/10 p-4 text-left">
-                    <p className="font-label-caps text-[10px] text-vinyl-orange tracking-[0.2em]">META DE LÍNEA</p>
+                    <p className="font-label-caps text-[10px] text-vinyl-orange tracking-[0.2em]">META DE AÑOS LOCOS</p>
                     <h3 className="mt-1 text-lg font-black text-white">{TIMELINE_GOAL_YEARS} años</h3>
                     <p className="mt-1 text-sm text-on-surface-variant">
                       Cada jugador arranca con un año base distinto y va completando su línea hasta llegar a la meta.
@@ -710,4 +710,3 @@ export default function LobbyScreen() {
     </motion.main>
   );
 }
-

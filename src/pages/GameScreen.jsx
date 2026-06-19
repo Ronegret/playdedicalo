@@ -348,7 +348,7 @@ function TimelinePlacementQuestion({ question, playerYears = [], disabled, onPic
       <div className="rounded-3xl border border-neon-green/20 bg-[radial-gradient(circle_at_top,rgba(57,255,20,0.12),rgba(255,255,255,0.04)_42%,rgba(0,0,0,0.24)_100%)] p-4 shadow-[0_0_30px_rgba(57,255,20,0.08)]">
         <div className="flex items-center justify-between gap-3">
           <div>
-            <p className="font-label-caps text-[10px] text-neon-green tracking-widest">TU LÍNEA MUSICAL</p>
+            <p className="font-label-caps text-[10px] text-neon-green tracking-widest">TU RUTA DE AÑOS</p>
             <p className="mt-1 text-sm text-white font-bold">Elige dónde colocar esta canción</p>
           </div>
           <span className="rounded-full border border-white/10 bg-black/25 px-3 py-1 text-[10px] font-label-caps text-on-surface-variant">
@@ -380,7 +380,7 @@ function TimelinePlacementQuestion({ question, playerYears = [], disabled, onPic
           </div>
         </div>
         <p className="mt-3 text-xs text-on-surface-variant">
-          Tu línea es personal. Coloca la canción antes, después o entre tus años.
+          Tu ruta es personal. Coloca la canción antes, después o entre tus años.
         </p>
       </div>
     </div>
@@ -669,7 +669,7 @@ export default function GameScreen() {
         <div className="text-center">
           <p className="font-label-caps text-xs text-neon-green">RONDA {round}</p>
           <p className="font-label-caps text-[10px] text-on-surface-variant">
-            {gameMode === 'timeline' ? 'MODO LÍNEA' : `META ${targetScore} PTS`}
+            {gameMode === 'timeline' ? 'AÑOS LOCOS' : `META ${targetScore} PTS`}
           </p>
         </div>
         <div className="flex items-center gap-3 text-right">
@@ -807,7 +807,7 @@ export default function GameScreen() {
               <div className="flex items-start gap-2 rounded-xl border border-neon-green/20 bg-neon-green/5 px-3 py-2 max-w-sm text-left">
                 <span className="material-symbols-outlined text-neon-green text-sm shrink-0 mt-px">timeline</span>
                 <p className="text-xs text-on-surface-variant leading-snug">
-                  Modo Línea: escucha el año y prepárate para colocarla en tu línea musical.
+                  Años Locos: escucha el año y prepárate para colocar la canción en tu ruta.
                 </p>
               </div>
             )}

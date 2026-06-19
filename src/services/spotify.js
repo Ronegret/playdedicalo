@@ -669,8 +669,8 @@ export async function createQuestionFromTrack(track, gameMode, round = 1, timeli
     return {
       mode: 'timeline',
       answerType: 'timeline-placement',
-      type: 'Línea del Ritmo',
-      text: '¿Dónde encaja esta canción en la línea?',
+      type: 'Años Locos',
+      text: '¿Dónde encaja esta canción en tu ruta de años?',
       timelineYears: roundTimelineYears,
       songYear: year,
       options: Array.from({ length: roundTimelineYears.length + 1 }, (_, index) => String(index)),
@@ -728,4 +728,3 @@ export function getCurrentHiddenTrack() {
 export async function pauseSpotifyPlayback() {
   await spotifyFetch('https://api.spotify.com/v1/me/player/pause', { method: 'PUT' });
 }
-
