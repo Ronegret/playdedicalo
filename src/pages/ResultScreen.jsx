@@ -118,6 +118,9 @@ export default function ResultScreen() {
   const pointDelta = guestReveal?.delta ?? lastPointDelta;
   const sabotage = guestReveal?.sabotage || lastSabotage;
   const style = RESULT_STYLES[resultType];
+  const isSuccess = resultType === 'success';
+  const isFail = resultType === 'fail';
+  const resultWord = sabotage ? 'SABOTAJE' : isSuccess ? 'CORRECTO' : isFail ? 'FALLASTE' : style.title;
   const deltaColor = pointDelta > 0 ? 'text-neon-green' : pointDelta < 0 ? 'text-intense-red' : 'text-white/30';
   const deltaLabel = pointDelta > 0 ? `+${pointDelta}` : pointDelta !== 0 ? String(pointDelta) : null;
 
@@ -251,61 +254,126 @@ export default function ResultScreen() {
       )}
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{ background: `linear-gradient(180deg, ${style.colorOverlay} 0%, rgba(0,0,0,0.65) 100%)` }}
+        style={{
+          background: [
+            `radial-gradient(circle at 50% 12%, ${style.glowColor} 0%, transparent 34%)`,
+            `linear-gradient(180deg, ${style.colorOverlay} 0%, rgba(0,0,0,0.72) 100%)`
+          ].join(',')
+        }}
       />
+      <motion.div
+        aria-hidden="true"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 0.22, scale: [1, 1.04, 1] }}
+        transition={{ repeat: Infinity, duration: 2.2, ease: 'easeInOut' }}
+        className="absolute inset-x-0 top-12 mx-auto h-80 w-80 rounded-full pointer-events-none"
+        style={{
+          border: `2px solid ${style.borderHex}`,
+          boxShadow: `0 0 90px ${style.glowColor}, inset 0 0 60px ${style.glowColor}`,
+        }}
+      />
+      <div className="absolute inset-x-0 bottom-0 h-28 pointer-events-none opacity-30">
+        <div className="mx-auto flex h-full max-w-lg items-end justify-center gap-1.5 px-6">
+          {[28, 56, 36, 78, 48, 90, 42, 68, 34, 72, 50, 84, 38].map((height, index) => (
+            <motion.span
+              key={`${height}-${index}`}
+              animate={{ height: [`${height * 0.45}%`, `${height}%`, `${height * 0.55}%`] }}
+              transition={{ repeat: Infinity, duration: 0.55 + index * 0.035, delay: index * 0.025 }}
+              className="w-3 rounded-t-full"
+              style={{ backgroundColor: style.borderHex, boxShadow: `0 0 18px ${style.glowColor}` }}
+            />
+          ))}
+        </div>
+      </div>
 
       {/* Scrollable content */}
       <div
-        className="relative z-10 flex flex-col w-full max-w-lg mx-auto px-4 pt-14 pb-5 overflow-y-auto flex-1"
+        className="relative z-10 flex flex-col w-full max-w-lg mx-auto px-4 pt-12 pb-5 overflow-y-auto flex-1"
         style={{ overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' }}
       >
         <div className="absolute top-4 right-4 z-[100]">
           <ProfileMenu user={role === 'host' ? auth.currentUser : null} guestAvatar={role === 'guest' ? guestAvatar : null} />
         </div>
 
-        {/* ① Resultado personal — banner compacto */}
+        {/* ① Resultado personal — pantalla protagonista */}
         <motion.div
-          initial={{ y: -14, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
+          initial={{ y: -18, opacity: 0, scale: 0.96 }}
+          animate={{ y: 0, opacity: 1, scale: 1 }}
           transition={{ type: 'spring', stiffness: 150, damping: 18 }}
-          className={`rounded-2xl border ${style.border} bg-black/30 backdrop-blur-sm p-3 flex items-center gap-3`}
+          className={`relative overflow-hidden rounded-[2rem] border ${style.border} bg-black/35 backdrop-blur-sm px-5 py-7 text-center shadow-[0_20px_80px_rgba(0,0,0,0.45)]`}
+          style={{ boxShadow: `0 18px 80px rgba(0,0,0,0.45), 0 0 70px ${style.glowColor}` }}
         >
-          <motion.span
-            animate={{ scale: [1, 1.18, 1] }}
-            transition={{ delay: 0.2, duration: 0.4, ease: 'backOut' }}
-            className={`material-symbols-outlined ${style.text} shrink-0`}
-            style={{ fontSize: '2.2rem' }}
+          <div
+            className="absolute inset-0 pointer-events-none opacity-35"
+            style={{
+              background: `repeating-linear-gradient(90deg, transparent 0 14px, ${style.borderHex}22 14px 16px)`,
+            }}
+          />
+          <motion.div
+            initial={{ rotate: -18, scale: 0.6, opacity: 0 }}
+            animate={{ rotate: 0, scale: 1, opacity: 1 }}
+            transition={{ delay: 0.08, type: 'spring', stiffness: 160, damping: 15 }}
+            className="relative mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-[repeating-radial-gradient(circle,#050505_0_4px,#171717_5px_7px,#050505_8px_12px)]"
+            style={{ border: `3px solid ${style.borderHex}`, boxShadow: `0 0 45px ${style.glowColor}` }}
           >
-            {style.icon}
-          </motion.span>
-          <div className="flex-1 min-w-0">
-            <h1 className={`font-headline-lg font-black leading-none ${style.text}`} style={{ fontSize: '1.25rem' }}>
-              {style.title}
-            </h1>
-            {sabotage && (
-              <p className="text-[10px] text-white/50 mt-0.5 leading-snug">{sabotage.effect}</p>
-            )}
-          </div>
-          <div className="text-right shrink-0">
-            <p className="font-label-caps text-[9px] text-white/35">MIS PTS</p>
-            <motion.p
-              initial={{ scale: 0.5, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.25, type: 'spring', stiffness: 140 }}
-              className={`font-black leading-none ${style.text}`}
-              style={{ fontSize: '2.2rem' }}
+            <motion.span
+              animate={{ scale: [1, 1.22, 1] }}
+              transition={{ repeat: Infinity, duration: 1.5, ease: 'easeInOut' }}
+              className={`material-symbols-outlined ${style.text}`}
+              style={{ fontSize: '3.4rem' }}
             >
-              {guestPoints}
-            </motion.p>
-            {deltaLabel && (
+              {style.icon}
+            </motion.span>
+          </motion.div>
+
+          <p className="relative mt-5 font-label-caps text-[11px] tracking-[0.28em] text-white/55">RESULTADO</p>
+          <motion.h1
+            initial={{ letterSpacing: '0.04em', scale: 0.92 }}
+            animate={{ letterSpacing: '0.02em', scale: 1 }}
+            transition={{ delay: 0.16, type: 'spring', stiffness: 160, damping: 14 }}
+            className={`relative mt-1 font-headline-lg font-black leading-none ${style.text}`}
+            style={{ fontSize: 'clamp(3.2rem, 16vw, 5.5rem)', textShadow: `0 0 34px ${style.glowColor}` }}
+          >
+            {resultWord}
+          </motion.h1>
+
+          <div className="relative mt-5 flex items-end justify-center gap-4">
+            <div>
+              <p className="font-label-caps text-[10px] text-white/45">TUS PUNTOS</p>
               <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.4 }}
-                className={`text-xs font-black ${deltaColor}`}
+                initial={{ y: 12, scale: 0.75, opacity: 0 }}
+                animate={{ y: 0, scale: 1, opacity: 1 }}
+                transition={{ delay: 0.22, type: 'spring', stiffness: 150 }}
+                className={`font-stats-xl font-black leading-none ${style.text}`}
+                style={{ fontSize: '4.5rem' }}
+              >
+                {guestPoints}
+              </motion.p>
+            </div>
+            {deltaLabel && (
+              <motion.div
+                initial={{ y: 18, opacity: 0, rotate: 8 }}
+                animate={{ y: 0, opacity: 1, rotate: 0 }}
+                transition={{ delay: 0.35, type: 'spring', stiffness: 140 }}
+                className={`mb-3 rounded-2xl border border-current/30 bg-black/30 px-4 py-2 text-3xl font-black ${deltaColor}`}
               >
                 {deltaLabel}
-              </motion.p>
+              </motion.div>
+            )}
+          </div>
+
+          <div className="relative mt-4 mx-auto max-w-sm">
+            {sabotage && (
+              <div className="rounded-2xl border border-electric-purple/45 bg-electric-purple/15 px-4 py-3">
+                <p className="font-label-caps text-[10px] text-electric-purple">SABOTAJE RECIBIDO</p>
+                <p className="mt-1 text-sm font-black text-white">{sabotage.name}</p>
+                <p className="mt-1 text-xs leading-relaxed text-white/70">
+                  {sabotage.by ? `${sabotage.by} lo activó. ` : ''}{sabotage.effect}
+                </p>
+              </div>
+            )}
+            {!sabotage && (
+              <p className="text-sm leading-relaxed text-white/70">{style.copy}</p>
             )}
           </div>
         </motion.div>
@@ -404,7 +472,7 @@ export default function ResultScreen() {
           {role === 'host' ? (
             <button
               onClick={hostNextRound}
-              className="w-full h-12 rounded-xl bg-neon-green text-black font-label-caps text-sm font-bold active:scale-95 transition-transform"
+              className="w-full h-14 rounded-2xl bg-neon-green text-black font-label-caps text-sm font-bold active:scale-95 transition-transform shadow-[0_8px_0_rgba(16,85,0,0.95),0_0_28px_rgba(57,255,20,0.3)]"
             >
               SIGUIENTE RONDA
             </button>

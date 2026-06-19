@@ -722,10 +722,10 @@ export default function GameScreen() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="flex flex-col items-center gap-6 w-full max-w-[430px] px-5 text-center"
+            className={`flex flex-col items-center gap-4 w-full max-w-[430px] px-5 text-center ${role === 'host' ? 'pb-32' : ''}`}
           >
             {/* Vinyl listen circle */}
-            <div className="relative w-72 h-72 flex items-center justify-center">
+            <div className="relative w-60 h-60 sm:w-72 sm:h-72 flex items-center justify-center">
               {[0, 0.8, 1.6].map((delay) => (
                 <div
                   key={delay}
@@ -733,12 +733,12 @@ export default function GameScreen() {
                   style={{ animationDelay: `${delay}s` }}
                 />
               ))}
-              <div className="w-64 h-64 rounded-full border-4 border-neon-green flex items-center justify-center shadow-[0_0_50px_rgba(57,255,20,0.35),inset_0_0_30px_rgba(0,0,0,0.6)] bg-black/30 relative">
+              <div className="w-52 h-52 sm:w-64 sm:h-64 rounded-full border-4 border-neon-green flex items-center justify-center shadow-[0_0_50px_rgba(57,255,20,0.35),inset_0_0_30px_rgba(0,0,0,0.6)] bg-black/30 relative">
                 <div className="absolute inset-6 rounded-full border border-white/10" />
                 <div className="absolute inset-12 rounded-full border border-white/5" />
                 <div className="relative z-10 text-center">
                   <p className="font-label-caps text-[10px] text-electric-purple tracking-widest">{mode.name}</p>
-                  <span className="block mt-2 font-headline-lg-mobile text-4xl text-neon-green font-black tracking-widest drop-shadow-[0_0_18px_rgba(57,255,20,0.6)]">
+                  <span className="block mt-2 font-headline-lg-mobile text-3xl sm:text-4xl text-neon-green font-black tracking-widest drop-shadow-[0_0_18px_rgba(57,255,20,0.6)]">
                     {role === 'host' ? 'SONANDO' : 'ESCUCHA'}
                   </span>
                   <p className="mt-2 font-label-caps text-[9px] text-white/50 tracking-widest">
@@ -749,7 +749,7 @@ export default function GameScreen() {
             </div>
 
             {/* Equalizer */}
-            <div className="flex gap-2 items-end h-14">
+            <div className="flex gap-2 items-end h-10 sm:h-14">
               {EQUALIZER_BARS.map((duration, index) => (
                 <motion.div
                   key={`${duration}-${index}`}
@@ -813,15 +813,17 @@ export default function GameScreen() {
             )}
 
             {role === 'host' && (
-              <div className="w-full max-w-xs grid gap-3 mt-2 mb-8">
+              <div className="fixed bottom-5 left-4 right-4 z-40 grid gap-2 mx-auto max-w-sm md:relative md:bottom-auto md:left-auto md:right-auto md:z-auto md:w-full md:max-w-xs md:mt-2 md:mb-8">
                 <p className="text-center text-xs text-on-surface-variant">Para cuando lo veas claro 👇</p>
                 <motion.button
-                  whileTap={{ scale: (isBlackoutPending || !spotifyTrackReady) ? 1 : 0.96 }}
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: (isBlackoutPending || !spotifyTrackReady) ? 1 : 0.94, y: 4 }}
                   onClick={handleHostBlackout}
                   disabled={isBlackoutPending || !spotifyTrackReady}
-                  className="w-full h-20 bg-intense-red hover:bg-red-600 text-white font-headline-lg-mobile text-3xl rounded-2xl shadow-[0_0_30px_rgba(255,107,139,0.45)] transition-colors font-black border-2 border-white/15 relative overflow-hidden disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="w-full h-16 bg-intense-red hover:bg-red-600 text-white font-headline-lg-mobile text-2xl rounded-2xl shadow-[0_10px_0_rgba(90,0,18,0.95),0_0_34px_rgba(255,107,139,0.55)] transition-colors font-black border-2 border-white/15 relative overflow-hidden disabled:opacity-60 disabled:cursor-not-allowed disabled:shadow-[0_6px_0_rgba(90,0,18,0.65),0_0_20px_rgba(255,107,139,0.25)]"
                 >
                   <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
+                  <div className="absolute inset-x-0 bottom-0 h-1/2 bg-black/10 pointer-events-none" />
                   {isBlackoutPending ? 'PARANDO...' : !spotifyTrackReady ? 'CARGANDO...' : 'PARAR MÚSICA'}
                 </motion.button>
               </div>
