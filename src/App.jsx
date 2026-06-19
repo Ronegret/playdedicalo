@@ -51,9 +51,9 @@ function App() {
     };
   }, []);
 
-  // Stop music permanently when navigating away from welcome screen
+  // Keep the intro track available on the first two entry screens.
   useEffect(() => {
-    if (location.pathname !== '/') stopBgMusic();
+    if (!['/', '/role-selection'].includes(location.pathname)) stopBgMusic();
   }, [location.pathname]);
 
   useEffect(() => {

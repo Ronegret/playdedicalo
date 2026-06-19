@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { useBgMusic } from '../hooks/useBgMusic';
 
 function MiniVinyl({ active = false, color = '#ff7a1a', icon = 'play_arrow' }) {
   return (
@@ -44,7 +45,7 @@ function Equalizer({ color = '#ff7a1a' }) {
   );
 }
 
-function AlbumTrackHero() {
+function AlbumTrackHero({ paused, onToggle }) {
   const bars = [0.35, 0.72, 0.48, 0.92, 0.58, 0.82, 0.42, 0.68, 0.52];
 
   return (
@@ -84,17 +85,20 @@ function AlbumTrackHero() {
             <p className="mt-1 text-xs leading-snug text-on-surface-variant">Party game musical</p>
 
             <div className="mt-4 flex items-center gap-3">
-              <motion.div
+              <motion.button
+                type="button"
+                onClick={onToggle}
                 whileTap={{ scale: 0.92 }}
-                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-vinyl-orange text-black shadow-[0_8px_0_rgba(83,28,0,0.85),0_0_22px_rgba(255,122,26,0.45)]"
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-vinyl-orange text-black shadow-[0_8px_0_rgba(83,28,0,0.85),0_0_22px_rgba(255,122,26,0.45)] active:translate-y-1 active:shadow-[0_4px_0_rgba(83,28,0,0.85),0_0_18px_rgba(255,122,26,0.38)] transition-all"
+                aria-label={paused ? 'Reproducir canción de Dedícalo' : 'Pausar canción de Dedícalo'}
               >
-                <span className="material-symbols-outlined text-2xl">play_arrow</span>
-              </motion.div>
+                <span className="material-symbols-outlined text-2xl">{paused ? 'play_arrow' : 'pause'}</span>
+              </motion.button>
               <div className="min-w-0 flex-1">
                 <div className="h-2 overflow-hidden rounded-full bg-white/10">
                   <motion.div
-                    animate={{ width: ['18%', '78%', '18%'] }}
-                    transition={{ repeat: Infinity, duration: 3.5, ease: 'easeInOut' }}
+                    animate={paused ? { width: '18%' } : { width: ['18%', '78%', '18%'] }}
+                    transition={paused ? { duration: 0.2 } : { repeat: Infinity, duration: 3.5, ease: 'easeInOut' }}
                     className="h-full rounded-full bg-gradient-to-r from-vinyl-orange via-electric-purple to-deep-blue"
                   />
                 </div>
@@ -116,7 +120,8 @@ function AlbumTrackHero() {
                 height: `${18 + height * 34}px`,
                 background: index % 3 === 0 ? '#ff7a1a' : index % 3 === 1 ? '#a855f7' : '#3f78ff',
                 animationDelay: `${index * 0.07}s`,
-                animationDuration: `${0.7 + index * 0.04}s`,
+                animationDuration: paused ? '0s' : `${0.7 + index * 0.04}s`,
+                opacity: paused ? 0.32 : 1,
                 boxShadow: '0 0 16px rgba(255,122,26,0.22)'
               }}
             />
@@ -126,7 +131,7 @@ function AlbumTrackHero() {
         <div className="relative mt-3 flex items-center justify-center gap-2 rounded-full border border-white/10 bg-black/20 px-3 py-2">
           <span className="h-1.5 w-1.5 rounded-full bg-neon-green shadow-[0_0_12px_rgba(57,255,20,0.8)]" />
           <p className="font-label-caps text-[10px] tracking-[0.24em] text-white/60">
-            ELIGE TU ROL Y SUBE EL VOLUMEN
+            {paused ? 'TOCA PLAY PARA ESCUCHAR' : 'SONANDO · TOCA PARA PAUSAR'}
           </p>
         </div>
       </div>
@@ -179,6 +184,7 @@ function RoleCard({ type, title, text, action, icon, color, glow, onClick }) {
 
 export default function RoleSelectionScreen() {
   const navigate = useNavigate();
+  const { paused: bgPaused, toggle: toggleBg } = useBgMusic();
 
   return (
     <motion.main
@@ -199,7 +205,7 @@ export default function RoleSelectionScreen() {
       </header>
 
       <section className="mb-7 flex w-full flex-col items-center gap-5">
-        <AlbumTrackHero />
+        <AlbumTrackHero paused={bgPaused} onToggle={toggleBg} />
 
         <div>
           <p className="font-label-caps text-xs tracking-[0.28em] text-neon-green">ELIGE CÓMO ENTRAS</p>
