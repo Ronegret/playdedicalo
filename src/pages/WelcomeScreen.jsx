@@ -84,20 +84,17 @@ export default function WelcomeScreen() {
             <div
               className="absolute rounded-full bg-white overflow-hidden flex items-center justify-center"
               style={{
-                inset: '18%',
-                boxShadow: '0 0 0 4px rgba(0,0,0,0.55), 0 0 36px rgba(255,122,26,0.45)',
+                inset: '12%',
+                boxShadow: '0 0 0 6px rgba(0,0,0,0.62), 0 0 0 9px rgba(255,122,26,0.28), 0 0 48px rgba(255,122,26,0.58)',
               }}
             >
               <img
                 src="/images/logo-main.png"
                 alt="Dedícalo"
-                className="w-[78%] h-[78%] object-contain"
+                className="w-[92%] h-[92%] object-contain drop-shadow-[0_6px_10px_rgba(0,0,0,0.28)]"
                 draggable={false}
               />
             </div>
-
-            {/* Spindle hole */}
-            <div className="absolute rounded-full bg-black" style={{ inset: '47.5%' }} />
 
             {/* Pause overlay — visible when bg music is paused */}
             {bgPaused && (

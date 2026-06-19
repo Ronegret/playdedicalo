@@ -2,7 +2,7 @@
   const isHero = size === 'hero';
   const isCompact = size === 'compact';
   const shellSize = isHero ? 'w-[360px] h-[360px] md:w-[420px] md:h-[420px]' : isCompact ? 'w-36 h-36 md:w-44 md:h-44' : 'w-64 h-64 md:w-80 md:h-80';
-  const labelSize = isHero ? 'w-36 h-36 md:w-44 md:h-44' : isCompact ? 'w-16 h-16 md:w-20 md:h-20' : 'w-28 h-28 md:w-36 md:h-36';
+  const labelSize = isHero ? 'w-44 h-44 md:w-52 md:h-52' : isCompact ? 'w-24 h-24 md:w-28 md:h-28' : 'w-36 h-36 md:w-44 md:h-44';
   const spotifyLabelSize = isHero ? 'w-40 h-40 md:w-48 md:h-48' : isCompact ? 'w-20 h-20 md:w-24 md:h-24' : 'w-32 h-32 md:w-40 md:h-40';
   const discShadow = isHero ? 'shadow-[0_12px_34px_rgba(0,0,0,0.35)]' : 'shadow-[0_0_40px_rgba(0,0,0,0.8)]';
 
@@ -15,8 +15,8 @@
       </div>
 
       {logoSrc ? (
-        <div className={`relative z-10 ${labelSize} bg-white rounded-full p-2 flex items-center justify-center overflow-hidden animate-pulse`}>
-          <img alt="Dedícalo Logo" className="w-full h-full object-contain" src={logoSrc} />
+        <div className={`relative z-10 ${labelSize} bg-white rounded-full p-2 flex items-center justify-center overflow-hidden shadow-[0_0_0_5px_rgba(0,0,0,0.58),0_0_0_8px_rgba(255,122,26,0.22),0_0_38px_rgba(255,122,26,0.5)]`}>
+          <img alt="Dedícalo Logo" className="w-[94%] h-[94%] object-contain drop-shadow-[0_5px_8px_rgba(0,0,0,0.28)]" src={logoSrc} />
         </div>
       ) : (
         <div className={`relative z-10 ${spotifyLabelSize} rounded-full bg-surface-container-high neon-glow-purple border-4 border-electric-purple flex items-center justify-center`}>

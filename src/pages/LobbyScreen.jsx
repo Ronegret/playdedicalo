@@ -282,11 +282,10 @@ export default function LobbyScreen() {
             {/* Logo label */}
             <div
               className="absolute rounded-full bg-white overflow-hidden flex items-center justify-center"
-              style={{ inset: '20%', boxShadow: '0 0 0 3px rgba(0,0,0,0.5), 0 0 20px rgba(255,122,26,0.4)' }}
+              style={{ inset: '13%', boxShadow: '0 0 0 5px rgba(0,0,0,0.6), 0 0 0 8px rgba(255,122,26,0.22), 0 0 34px rgba(255,122,26,0.5)' }}
             >
-              <img src="/images/logo-main.png" alt="Dedícalo" className="w-[78%] h-[78%] object-contain" draggable={false} />
+              <img src="/images/logo-main.png" alt="Dedícalo" className="w-[92%] h-[92%] object-contain drop-shadow-[0_5px_8px_rgba(0,0,0,0.28)]" draggable={false} />
             </div>
-            <div className="absolute rounded-full bg-black" style={{ inset: '47.5%' }} />
           </div>
           {/* Mini EQ under vinyl */}
           <div className="flex items-end gap-[3px] h-5 mt-1 opacity-60">

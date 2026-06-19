@@ -103,10 +103,11 @@ export default function ResultScreen() {
   const [shareCopied, setShareCopied] = useState(false);
   const {
     role, phase, players, gameMode, targetScore,
-    hostNextRound, hostCloseRoom, guestId,
+    hostNextRound, hostCloseRoom, guestLeaveRoom, guestId,
     lastResultType, lastPointDelta, lastSabotage,
     revealResults, currentTrack, roomError, clearRoomError, guestAvatar
   } = useGameStore();
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
 
   const guestReveal = revealResults?.[guestId] || null;
   const guestPoints = guestReveal?.points ?? players.find((p) => p.id === guestId)?.points ?? 10;
@@ -135,6 +136,7 @@ export default function ResultScreen() {
 
   const handleFinish = () => {
     if (role === 'host') hostCloseRoom();
+    if (role === 'guest') guestLeaveRoom();
     navigate('/role-selection');
   };
 
@@ -165,6 +167,14 @@ export default function ResultScreen() {
         style={{ overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' }}
       >
         <div className="min-h-full max-w-lg mx-auto flex flex-col items-center px-5 py-8">
+          <button
+            type="button"
+            onClick={handleFinish}
+            className="absolute top-4 left-4 z-[100] h-10 rounded-xl border border-white/12 bg-black/35 px-3 text-white/75 font-label-caps text-[11px] tracking-[0.16em] flex items-center gap-1.5 active:scale-95 transition-all"
+          >
+            <span className="material-symbols-outlined text-base">arrow_back</span>
+            {role === 'host' ? 'CERRAR' : 'SALIR'}
+          </button>
           <div className="absolute top-4 right-4 z-[100]">
             <ProfileMenu user={role === 'host' ? auth.currentUser : null} guestAvatar={role === 'guest' ? guestAvatar : null} />
           </div>
@@ -216,7 +226,7 @@ export default function ResultScreen() {
               </button>
               {role !== 'host' && (
                 <button
-                  onClick={() => navigate('/role-selection')}
+                  onClick={handleFinish}
                   className="w-full h-12 rounded-xl font-label-caps uppercase text-sm font-bold border border-white/20 bg-white/5 text-white active:scale-95 transition-all"
                 >
                   SALIR
@@ -291,6 +301,15 @@ export default function ResultScreen() {
         className="relative z-10 flex flex-col w-full max-w-lg mx-auto px-4 pt-12 pb-5 overflow-y-auto flex-1"
         style={{ overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' }}
       >
+        <button
+          type="button"
+          onClick={() => setShowExitConfirm(true)}
+          className="absolute top-4 left-4 z-[100] h-10 rounded-xl border border-white/12 bg-black/35 px-3 text-white/75 font-label-caps text-[11px] tracking-[0.16em] flex items-center gap-1.5 active:scale-95 transition-all"
+        >
+          <span className="material-symbols-outlined text-base">arrow_back</span>
+          {role === 'host' ? 'CERRAR' : 'SALIR'}
+        </button>
+
         <div className="absolute top-4 right-4 z-[100]">
           <ProfileMenu user={role === 'host' ? auth.currentUser : null} guestAvatar={role === 'guest' ? guestAvatar : null} />
         </div>
@@ -331,8 +350,12 @@ export default function ResultScreen() {
             initial={{ letterSpacing: '0.04em', scale: 0.92 }}
             animate={{ letterSpacing: '0.02em', scale: 1 }}
             transition={{ delay: 0.16, type: 'spring', stiffness: 160, damping: 14 }}
-            className={`relative mt-1 font-headline-lg font-black leading-none ${style.text}`}
-            style={{ fontSize: 'clamp(3.2rem, 16vw, 5.5rem)', textShadow: `0 0 34px ${style.glowColor}` }}
+            className={`relative mx-auto mt-1 max-w-full px-1 font-headline-lg font-black leading-[0.88] ${style.text}`}
+            style={{
+              fontSize: 'clamp(2.55rem, 13vw, 5.2rem)',
+              textShadow: `0 0 34px ${style.glowColor}`,
+              overflowWrap: 'anywhere'
+            }}
           >
             {resultWord}
           </motion.h1>
@@ -491,6 +514,53 @@ export default function ResultScreen() {
             {shareCopied ? 'COPIADO' : 'COMPARTIR'}
           </button>
         </motion.div>
+
+        {showExitConfirm && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[220] flex items-end justify-center bg-black/80 px-4 pb-4 backdrop-blur-sm sm:items-center sm:pb-0"
+            onClick={() => setShowExitConfirm(false)}
+          >
+            <motion.div
+              initial={{ y: 32, scale: 0.96 }}
+              animate={{ y: 0, scale: 1 }}
+              exit={{ y: 32, scale: 0.96 }}
+              transition={{ type: 'spring', stiffness: 260, damping: 26 }}
+              className="w-full max-w-sm rounded-2xl border border-white/10 bg-surface-container p-5 text-center shadow-[0_0_50px_rgba(0,0,0,0.6)]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <span className="material-symbols-outlined text-vinyl-orange" style={{ fontSize: '2.4rem' }}>
+                {role === 'host' ? 'emoji_events' : 'logout'}
+              </span>
+              <h3 className="mt-3 font-headline-lg text-xl font-black text-white">
+                {role === 'host' ? '¿Cerrar la partida?' : '¿Salir de la partida?'}
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-on-surface-variant">
+                {role === 'host'
+                  ? 'Se cerrará la sala y todos volverán al inicio.'
+                  : 'Saldrás de la sala y perderás tu lugar en la partida.'}
+              </p>
+              <div className="mt-5 flex flex-col gap-2">
+                <button
+                  type="button"
+                  onClick={handleFinish}
+                  className="h-12 rounded-xl bg-intense-red text-white font-label-caps text-sm font-bold active:scale-95 transition-all"
+                >
+                  {role === 'host' ? 'SÍ, CERRAR' : 'SÍ, SALIR'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowExitConfirm(false)}
+                  className="h-12 rounded-xl border border-white/10 bg-white/5 text-white font-label-caps text-sm font-bold active:scale-95 transition-all"
+                >
+                  SEGUIR JUGANDO
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
 
       </div>
     </motion.main>
