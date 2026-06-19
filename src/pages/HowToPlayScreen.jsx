@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import NeonButton from '../components/NeonButton';
 import SupportButton from '../components/SupportButton';
+import { getPlaylistRequestUrl } from '../config/support';
 import { SABOTAGE_OPTIONS, TIMELINE_GOAL_YEARS, VICTORY_MODES } from '../store/useGameStore';
 
 const QUICK_FLOW = [
@@ -192,6 +193,10 @@ function StepList({ items }) {
 
 export default function HowToPlayScreen() {
   const navigate = useNavigate();
+
+  const openPlaylistRequest = () => {
+    window.open(getPlaylistRequestUrl(), '_blank', 'noopener,noreferrer');
+  };
 
   return (
     <motion.main
@@ -502,12 +507,29 @@ export default function HowToPlayScreen() {
           </NeonButton>
         </div>
 
-        <div className="mt-4 rounded-2xl border border-white/10 bg-black/20 p-4 text-center">
-          <p className="text-sm font-black text-white">¿Te gusta Dedícalo?</p>
+        <div className="mt-5 rounded-2xl border border-white/10 bg-white/[0.035] p-4 text-center">
+          <p className="text-xs font-label-caps tracking-[0.18em] text-on-surface-variant">Opcional</p>
+          <p className="mt-1 text-sm font-black text-white">Apoya al creador</p>
           <p className="mx-auto mt-1 max-w-md text-xs leading-relaxed text-on-surface-variant">
-            Tu apoyo ayuda a mejorar playlists, servidores, diseño y nuevas formas de juego.
+            Si Dedícalo te saca una buena partida, puedes ayudar a mantener playlists, servidores y nuevas mejoras.
           </p>
-          <SupportButton compact className="mt-3 w-full sm:w-auto" />
+          <div className="mt-3 grid gap-2 sm:grid-cols-2">
+            <SupportButton compact className="w-full border-white/10 bg-black/20 text-white/85" />
+            <button
+              type="button"
+              onClick={openPlaylistRequest}
+              className="group relative h-11 overflow-hidden rounded-2xl border border-white/10 bg-black/20 px-4 text-xs text-white/85 active:scale-95 transition-all"
+            >
+              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+              <span className="relative flex items-center justify-center gap-2 font-label-caps tracking-[0.16em]">
+                <span className="material-symbols-outlined text-vinyl-orange text-base">playlist_add</span>
+                Enviar playlist
+              </span>
+            </button>
+          </div>
+          <p className="mx-auto mt-3 max-w-md text-[11px] leading-relaxed text-on-surface-variant">
+            ¿Quieres que revisemos tu playlist? Apoya el proyecto y manda el enlace a dedicalo.es@gmail.com para incluirla en futuras listas.
+          </p>
         </div>
       </div>
     </motion.main>

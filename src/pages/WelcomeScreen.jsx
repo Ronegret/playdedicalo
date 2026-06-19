@@ -2,7 +2,6 @@ import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NeonButton from '../components/NeonButton';
-import SupportButton from '../components/SupportButton';
 import { useBgMusic } from '../hooks/useBgMusic';
 
 const EQ_BARS = [0.4, 0.7, 0.55, 0.9, 0.45, 0.8, 0.6, 0.35, 0.75, 0.5];
@@ -204,18 +203,6 @@ export default function WelcomeScreen() {
         </div>
 
       </div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.75, duration: 0.45 }}
-        className="mt-5 w-full max-w-xs md:absolute md:bottom-6 md:left-1/2 md:mt-0 md:-translate-x-1/2"
-      >
-        <SupportButton compact className="w-full bg-black/20 backdrop-blur-md" />
-        <p className="mt-2 text-center text-[10px] leading-snug text-on-surface-variant">
-          Aporta para nuevas playlists, servidores y mejoras del juego.
-        </p>
-      </motion.div>
     </motion.main>
   );
 }
