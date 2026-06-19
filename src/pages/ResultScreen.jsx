@@ -352,9 +352,10 @@ export default function ResultScreen() {
             transition={{ delay: 0.16, type: 'spring', stiffness: 160, damping: 14 }}
             className={`relative mx-auto mt-1 max-w-full px-1 font-headline-lg font-black leading-[0.88] ${style.text}`}
             style={{
-              fontSize: 'clamp(2.55rem, 13vw, 5.2rem)',
+              fontSize: 'clamp(2.05rem, 11.5vw, 5rem)',
+              letterSpacing: '0.01em',
               textShadow: `0 0 34px ${style.glowColor}`,
-              overflowWrap: 'anywhere'
+              whiteSpace: 'nowrap'
             }}
           >
             {resultWord}
