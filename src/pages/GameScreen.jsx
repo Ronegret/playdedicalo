@@ -1,24 +1,15 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { DEDICALO_PLAYLISTS, GAME_MODES, SABOTAGE_OPTIONS, getCombinedTimelineYears, normalizeSpotifyPlaylistUrl, useGameStore } from '../store/useGameStore';
+import { DEDICALO_PLAYLISTS, GAME_MODES, getCombinedTimelineYears, getEligibleBingoIndices, normalizeSpotifyPlaylistUrl, useGameStore } from '../store/useGameStore';
 import ProfileMenu from '../components/ProfileMenu';
+import BingoCard from '../components/BingoCard';
 import { auth } from '../firebase';
-import { createQuestionFromTrack, explainSpotifyError, getCurrentHiddenTrack, getSpotifyStatus, pauseSpotifyPlayback, startRandomPlaylistTrack } from '../services/spotify';
+import { createQuestionFromTrack, explainSpotifyError, getCurrentHiddenTrack, getSpotifyStatus, getTrackStyleInfo, pauseSpotifyPlayback, startRandomPlaylistTrack } from '../services/spotify';
 
 const EQUALIZER_BARS = [0.35, 0.58, 0.42, 0.71, 0.49, 0.64, 0.39];
 
-function getPlayerSabotageIcons(playerId, { pointLocks, shields, pendingAttacks, traps, sharedPrize }) {
-  const icons = [];
-  if (shields?.[playerId]) icons.push({ icon: 'shield', color: 'text-neon-green', label: 'Escudo' });
-  if (pointLocks?.[playerId]) icons.push({ icon: 'block', color: 'text-intense-red', label: 'Bloqueo' });
-  if (traps?.[playerId]) icons.push({ icon: 'crisis_alert', color: 'text-intense-red', label: 'Trampa' });
-  if (pendingAttacks?.[playerId]) icons.push({ icon: 'schedule_send', color: 'text-vinyl-orange', label: 'Ataque en camino' });
-  if (sharedPrize?.buyerId === playerId) icons.push({ icon: 'group', color: 'text-electric-purple', label: 'Dueto activo' });
-  return icons;
-}
-
-function RankingPeek({ players, guestId, sabotageState }) {
+function RankingPeek({ players, guestId }) {
   const [rankOpen, setRankOpen] = useState(false);
   if (!players.length) return null;
   const sorted = [...players].sort((a, b) => Number(b.points || 0) - Number(a.points || 0));
@@ -55,38 +46,23 @@ function RankingPeek({ players, guestId, sabotageState }) {
             className="overflow-hidden"
           >
             <div className="px-3 pb-3 flex flex-col gap-2">
-              {sorted.map((player, index) => {
-                const sabIcons = sabotageState ? getPlayerSabotageIcons(player.id, sabotageState) : [];
-                return (
-                  <div
-                    key={player.id}
-                    className={`flex items-center gap-2 rounded-xl px-3 py-2 ${player.id === guestId ? 'bg-neon-green/10 border border-neon-green/25' : 'bg-white/5'}`}
-                  >
-                    <span className={`w-6 h-6 rounded-lg text-xs font-black flex items-center justify-center shrink-0 ${index === 0 ? 'bg-neon-green text-black' : 'bg-white/10 text-white'}`}>
-                      {index + 1}
-                    </span>
-                    {player.avatar?.startsWith?.('http') ? (
-                      <img src={player.avatar} alt={player.name} className="w-7 h-7 rounded-full object-cover shrink-0" />
-                    ) : (
-                      <span className="w-7 h-7 rounded-full bg-black/20 flex items-center justify-center text-sm shrink-0">{player.avatar || '•'}</span>
-                    )}
-                    <span className="text-sm font-bold text-white truncate flex-1">{player.name}</span>
-                    {sabIcons.length > 0 && (
-                      <div className="flex items-center gap-0.5 shrink-0">
-                        {sabIcons.map((si) => (
-                          <span key={si.label} title={si.label} className={`material-symbols-outlined text-xl ${si.color}`}>{si.icon}</span>
-                        ))}
-                      </div>
-                    )}
-                    <span className="text-sm font-black text-neon-green shrink-0">{player.points} pts</span>
-                  </div>
-                );
-              })}
-              {sabotageState && sorted.some((p) => getPlayerSabotageIcons(p.id, sabotageState).length > 0) && (
-                <p className="text-[10px] text-on-surface-variant text-center pt-1">
-                  Los íconos muestran sabotajes activos sobre cada jugador.
-                </p>
-              )}
+              {sorted.map((player, index) => (
+                <div
+                  key={player.id}
+                  className={`flex items-center gap-2 rounded-xl px-3 py-2 ${player.id === guestId ? 'bg-neon-green/10 border border-neon-green/25' : 'bg-white/5'}`}
+                >
+                  <span className={`w-6 h-6 rounded-lg text-xs font-black flex items-center justify-center shrink-0 ${index === 0 ? 'bg-neon-green text-black' : 'bg-white/10 text-white'}`}>
+                    {index + 1}
+                  </span>
+                  {player.avatar?.startsWith?.('http') ? (
+                    <img src={player.avatar} alt={player.name} className="w-7 h-7 rounded-full object-cover shrink-0" />
+                  ) : (
+                    <span className="w-7 h-7 rounded-full bg-black/20 flex items-center justify-center text-sm shrink-0">{player.avatar || '•'}</span>
+                  )}
+                  <span className="text-sm font-bold text-white truncate flex-1">{player.name}</span>
+                  <span className="text-sm font-black text-neon-green shrink-0">{player.points} pts</span>
+                </div>
+              ))}
             </div>
           </motion.div>
         )}
@@ -95,240 +71,112 @@ function RankingPeek({ players, guestId, sabotageState }) {
   );
 }
 
-function MyStatusCard({ guestId, pointLocks, shields, pendingAttacks, traps, sharedPrize }) {
-  const effects = [];
-
-  if (shields?.[guestId]) effects.push({
-    icon: 'shield', color: 'text-neon-green', border: 'border-neon-green/40', bg: 'bg-neon-green/10',
-    title: '¡Tienes escudo!',
-    desc: 'Estás protegido del próximo ataque que te manden. ¡Bien jugado!'
-  });
-  if (pointLocks?.[guestId]) effects.push({
-    icon: 'block', color: 'text-intense-red', border: 'border-intense-red/40', bg: 'bg-intense-red/10',
-    title: 'Bloqueo de puntos',
-    desc: `${pointLocks[guestId].by} te bloqueó. Si aciertas esta ronda, no sumarás puntos.`
-  });
-  if (traps?.[guestId]) effects.push({
-    icon: 'crisis_alert', color: 'text-intense-red', border: 'border-intense-red/40', bg: 'bg-intense-red/10',
-    title: 'Trampa activada',
-    desc: 'Cuidado: si fallas la respuesta, perderás el doble de puntos.'
-  });
-  if (pendingAttacks?.[guestId]) effects.push({
-    icon: 'schedule_send', color: 'text-vinyl-orange', border: 'border-vinyl-orange/40', bg: 'bg-vinyl-orange/10',
-    title: 'Ataque en camino',
-    desc: `${pendingAttacks[guestId].by} tiene algo preparado para ti en la próxima ronda.`
-  });
-  if (sharedPrize?.buyerId === guestId) effects.push({
-    icon: 'group', color: 'text-electric-purple', border: 'border-electric-purple/40', bg: 'bg-electric-purple/10',
-    title: 'Dueto activo',
-    desc: 'Si el líder acierta esta ronda, tú también recibirás puntos extra.'
-  });
-
-  if (!effects.length) return null;
-
+function BingoRankRow({ player, index, isMe }) {
+  const { missingForLine, missingForFullCard, hasLine } = player.bingoProgress;
   return (
-    <div className="w-full max-w-sm space-y-2">
-      <p className="font-label-caps text-[10px] text-on-surface-variant tracking-widest text-center">TU ESTADO ESTA RONDA</p>
-      {effects.map((effect) => (
-        <motion.div
-          key={effect.icon}
-          initial={{ opacity: 0, x: -8 }}
-          animate={{ opacity: 1, x: 0 }}
-          className={`rounded-xl border ${effect.border} ${effect.bg} px-3 py-2.5 flex items-center gap-3`}
-        >
-          <span className={`material-symbols-outlined text-3xl shrink-0 ${effect.color}`}>{effect.icon}</span>
-          <div className="flex-1 min-w-0 text-left">
-            <p className={`text-xs font-black leading-tight ${effect.color}`}>{effect.title}</p>
-            <p className="text-[10px] text-on-surface-variant leading-snug mt-0.5">{effect.desc}</p>
-          </div>
-        </motion.div>
-      ))}
+    <div className={`flex items-center gap-2 rounded-xl px-3 py-2 ${isMe ? 'bg-neon-green/10 border border-neon-green/25' : 'bg-white/5'}`}>
+      <span className={`w-6 h-6 rounded-lg text-xs font-black flex items-center justify-center shrink-0 ${index === 0 ? 'bg-neon-green text-black' : 'bg-white/10 text-white'}`}>
+        {index + 1}
+      </span>
+      {player.avatar?.startsWith?.('http') ? (
+        <img src={player.avatar} alt={player.name} className="w-7 h-7 rounded-full object-cover shrink-0" />
+      ) : (
+        <span className="w-7 h-7 rounded-full bg-black/20 flex items-center justify-center text-sm shrink-0">{player.avatar || '•'}</span>
+      )}
+      <span className="text-sm font-bold text-white truncate flex-1">{player.name}</span>
+      <span className="text-[10px] font-black text-neon-green shrink-0 text-right whitespace-nowrap">
+        {hasLine ? `LÍNEA · faltan ${missingForFullCard}` : `Faltan ${missingForLine}`}
+      </span>
     </div>
   );
 }
 
-const SABOTAGE_STYLES = {
-  red: 'border-intense-red/60 bg-intense-red/10 text-intense-red',
-  purple: 'border-electric-purple/60 bg-electric-purple/15 text-electric-purple',
-  green: 'border-neon-green/50 bg-neon-green/10 text-neon-green'
-};
+function BingoRankingTicker({ ranking, guestId }) {
+  const [open, setOpen] = useState(false);
+  if (!ranking.length) return null;
 
-function SabotageActivatedToast({ sabotage, onDismiss }) {
-  useEffect(() => {
-    const t = setTimeout(onDismiss, 4000);
-    return () => clearTimeout(t);
-  }, [onDismiss]);
-
-  const colorClass = SABOTAGE_STYLES[sabotage.color] || SABOTAGE_STYLES.purple;
+  const top = ranking.slice(0, 3);
+  const myIndex = ranking.findIndex((p) => p.id === guestId);
+  const myEntry = myIndex > -1 ? ranking[myIndex] : null;
+  const amInTop = myIndex > -1 && myIndex < 3;
 
   return (
-    <motion.div
-      initial={{ y: -120, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      exit={{ y: -120, opacity: 0 }}
-      transition={{ type: 'spring', stiffness: 200, damping: 20 }}
-      className="fixed top-20 inset-x-0 z-[300] flex justify-center px-5 pointer-events-none"
-    >
-      <div className={`rounded-2xl border p-4 flex items-center gap-3 shadow-[0_4px_40px_rgba(0,0,0,0.8)] w-full max-w-sm ${colorClass}`}>
-        <motion.span
-          animate={{ scale: [1, 1.35, 1] }}
-          transition={{ duration: 0.5, ease: 'backOut' }}
-          className="material-symbols-outlined text-5xl shrink-0"
-        >
-          {sabotage.icon}
-        </motion.span>
-        <div className="flex-1 min-w-0">
-          <p className="font-label-caps text-[9px] opacity-60">¡SABOTAJE ACTIVADO!</p>
-          <p className="font-black text-white text-base leading-tight">{sabotage.name}</p>
-          <p className="text-[10px] opacity-75 mt-0.5 leading-snug">{sabotage.effect}</p>
+    <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-black/25 text-left overflow-hidden">
+      <button
+        type="button"
+        onClick={() => setOpen((prev) => !prev)}
+        className="w-full p-3 flex items-center justify-between gap-3"
+      >
+        <div>
+          <p className="font-label-caps text-neon-green text-[10px] tracking-widest">RANKING EN VIVO</p>
+          <p className="text-sm font-bold text-white">
+            {myEntry ? `Te faltan ${myEntry.bingoProgress.missingForLine} para LÍNEA` : 'Ver ranking'}
+          </p>
         </div>
-      </div>
-    </motion.div>
-  );
-}
-
-function SabotageSquares({ options, points, enabled, onUse }) {
-  const [sabOpen, setSabOpen] = useState(false);
-  const [pendingOption, setPendingOption] = useState(null);
-
-  const handleCardTap = (option) => {
-    if (!enabled) return;
-    setPendingOption(option);
-  };
-
-  const handleConfirm = () => {
-    if (!pendingOption) return;
-    onUse(pendingOption);
-    setPendingOption(null);
-    setSabOpen(false);
-  };
-
-  return (
-    <>
-      <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-black/25 text-left overflow-hidden">
-        <button
-          type="button"
-          onClick={() => setSabOpen((prev) => !prev)}
-          className="w-full p-3 flex items-center justify-between gap-3"
+        <motion.span
+          animate={{ rotate: open ? 180 : 0 }}
+          transition={{ duration: 0.22 }}
+          className="material-symbols-outlined text-neon-green text-2xl"
         >
-          <div>
-            <p className="font-label-caps text-electric-purple text-[10px] tracking-widest">SABOTAJES</p>
-            <p className="text-sm font-bold text-white">
-              {enabled ? '¡Ataca al líder!' : 'Se activan en la ronda 2'}
-            </p>
-          </div>
-          <motion.span
-            animate={{ rotate: sabOpen ? 180 : 0 }}
-            transition={{ duration: 0.22 }}
-            className="material-symbols-outlined text-electric-purple text-2xl"
-          >
-            expand_more
-          </motion.span>
-        </button>
-        <AnimatePresence initial={false}>
-          {sabOpen && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.24, ease: 'easeInOut' }}
-              className="overflow-hidden"
-            >
-              <div className="px-3 pb-4">
-                {!enabled ? (
-                  <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-center">
-                    <span className="material-symbols-outlined text-electric-purple" style={{ fontSize: '2.2rem' }}>lock</span>
-                    <p className="mt-2 text-sm font-bold text-white">Todavía no, paciencia 😄</p>
-                    <p className="mt-1 text-xs text-on-surface-variant leading-relaxed">
-                      Los sabotajes se activan en la ronda 2. ¡La siguiente oportunidad es tuya!
-                    </p>
-                  </div>
-                ) : (
-                  <>
-                    <div className="grid grid-cols-2 gap-2">
-                      {options.map((option) => {
-                        const canPay = Number(points || 0) >= option.cost;
-                        const colorClass = SABOTAGE_STYLES[option.color] || SABOTAGE_STYLES.purple;
-                        return (
-                          <button
-                            key={option.id}
-                            type="button"
-                            disabled={!canPay}
-                            onClick={() => handleCardTap(option)}
-                            className={`rounded-2xl border p-3 flex flex-col gap-1.5 text-left active:scale-95 transition-transform disabled:opacity-30 disabled:cursor-not-allowed ${colorClass}`}
-                            aria-label={`${option.name} — ${option.cost} puntos`}
-                          >
-                            <div className="flex items-start justify-between gap-1">
-                              <span className="material-symbols-outlined text-4xl">{option.icon}</span>
-                              <span className="rounded-lg border border-current/30 bg-black/20 px-1.5 py-0.5 text-[9px] font-label-caps leading-none shrink-0">{option.cost}pts</span>
-                            </div>
-                            <span className="text-xs font-black text-white leading-tight">{option.name}</span>
-                            <span className="text-[9px] text-current opacity-75 leading-snug line-clamp-2">{option.effect}</span>
-                          </button>
-                        );
-                      })}
-                    </div>
-                    <p className="mt-2 text-[10px] text-on-surface-variant text-center">
-                      Toca para ver detalles y confirmar. Solo un ataque por ronda.
-                    </p>
-                  </>
-                )}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
-      <AnimatePresence>
-        {pendingOption && (
+          expand_more
+        </motion.span>
+      </button>
+      <AnimatePresence initial={false}>
+        {open && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[250] flex items-end sm:items-center justify-center bg-black/80 backdrop-blur-sm px-4 pb-6 sm:pb-0"
-            onClick={() => setPendingOption(null)}
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.24, ease: 'easeInOut' }}
+            className="overflow-hidden"
           >
-            <motion.div
-              initial={{ y: 40, scale: 0.96 }}
-              animate={{ y: 0, scale: 1 }}
-              exit={{ y: 40, scale: 0.96 }}
-              transition={{ type: 'spring', stiffness: 260, damping: 28 }}
-              className="w-full max-w-sm rounded-2xl border border-white/10 bg-surface-container p-5 shadow-[0_0_50px_rgba(0,0,0,0.8)]"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className={`rounded-xl border p-4 mb-4 ${SABOTAGE_STYLES[pendingOption.color] || SABOTAGE_STYLES.purple}`}>
-                <div className="flex items-center gap-3">
-                  <span className="material-symbols-outlined text-5xl shrink-0">{pendingOption.icon}</span>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-label-caps text-[9px] opacity-60">SABOTAJE</p>
-                    <h3 className="text-lg font-black text-white leading-tight">{pendingOption.name}</h3>
-                  </div>
-                  <span className="rounded-xl border border-current/30 bg-black/30 px-3 py-1.5 font-label-caps text-sm font-black shrink-0">
-                    -{pendingOption.cost}pts
-                  </span>
-                </div>
-                <p className="mt-3 text-sm leading-relaxed opacity-85">{pendingOption.effect}</p>
-              </div>
-              <div className="flex flex-col gap-2">
-                <button
-                  onClick={handleConfirm}
-                  className="w-full h-14 rounded-xl bg-electric-purple text-white font-label-caps text-sm font-bold active:scale-95 transition-transform flex items-center justify-center gap-2"
-                >
-                  <span className="material-symbols-outlined text-base">bolt</span>
-                  ACTIVAR SABOTAJE
-                </button>
-                <button
-                  onClick={() => setPendingOption(null)}
-                  className="w-full h-12 rounded-xl bg-white/5 border border-white/10 text-white font-label-caps text-sm font-bold active:scale-95 transition-transform"
-                >
-                  CANCELAR
-                </button>
-              </div>
-            </motion.div>
+            <div className="px-3 pb-3 flex flex-col gap-2">
+              {top.map((player, index) => (
+                <BingoRankRow key={player.id} player={player} index={index} isMe={player.id === guestId} />
+              ))}
+              {!amInTop && myEntry && (
+                <>
+                  <div className="h-px bg-white/10 my-1" />
+                  <BingoRankRow player={myEntry} index={myIndex} isMe />
+                </>
+              )}
+              <p className="text-[10px] text-on-surface-variant text-center pt-1">
+                El ranking se ordena por casillas que faltan, sin puntos.
+              </p>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </>
+    </div>
+  );
+}
+
+function BingoLineToast({ onDismiss }) {
+  useEffect(() => {
+    const t = setTimeout(onDismiss, 2200);
+    return () => clearTimeout(t);
+  }, [onDismiss]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.7 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.8 }}
+      transition={{ type: 'spring', stiffness: 220, damping: 18 }}
+      className="fixed inset-0 z-[300] flex items-center justify-center pointer-events-none px-6"
+    >
+      <div className="relative text-center">
+        {[0, 0.4, 0.8].map((delay) => (
+          <div
+            key={delay}
+            className="absolute inset-[-30%] rounded-full border-2 border-chaos-gold/40 ring-expand-anim"
+            style={{ animationDelay: `${delay}s` }}
+          />
+        ))}
+        <p className="relative font-headline-lg text-6xl font-black text-chaos-gold drop-shadow-[0_0_30px_rgba(255,191,77,0.7)]">¡LÍNEA!</p>
+        <p className="relative mt-2 font-label-caps text-sm text-white">Sigue marcando para el BINGO completo</p>
+      </div>
+    </motion.div>
   );
 }
 
@@ -400,18 +248,15 @@ export default function GameScreen() {
     hostTriggerBlackout,
     hostRevealResults,
     hostCloseRoom,
+    hostPlayNextBingoTrack,
+    guestMarkBingoCell,
     guestAnswer,
-    guestUseSabotage,
     guestLeaveRoom,
     guestId,
     players,
     roundAnswers,
-    pendingAttacks,
-    pointLocks,
-    shields,
-    traps,
-    sharedPrize,
-    sabotageConfig,
+    playedTracks,
+    getBingoRanking,
     lastDisconnectedPlayer,
     setAudioPlaying,
     roomError,
@@ -424,8 +269,9 @@ export default function GameScreen() {
   const [spotifyTrackReady, setSpotifyTrackReady] = useState(false);
   const [spotifyError, setSpotifyError] = useState(false);
   const [spotifyNeedsReconnect, setSpotifyNeedsReconnect] = useState(false);
-  const [activatedSabotage, setActivatedSabotage] = useState(null);
-  const [pendingAttackWarning, setPendingAttackWarning] = useState('');
+  const [isBingoTrackLoading, setIsBingoTrackLoading] = useState(false);
+  const [seenBingoLines, setSeenBingoLines] = useState([]);
+  const [lineToastVisible, setLineToastVisible] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
   const [disconnectToast, setDisconnectToast] = useState('');
   const [revealError, setRevealError] = useState('');
@@ -491,8 +337,10 @@ export default function GameScreen() {
     return () => window.clearTimeout(reset);
   }, [phase, round]);
 
+  // Bingo Musical maneja su propia reproducción canción a canción vía botón del host,
+  // así que no participa del autoplay-por-ronda que usan Pulso y Años Locos.
   useEffect(() => {
-    if (role !== 'host' || phase !== 'listen') return;
+    if (role !== 'host' || phase !== 'listen' || gameMode === 'bingo') return;
 
     const playKey = `${round}-${spotifyPlaylistUrl}`;
     if (startedSpotifyRoundRef.current === playKey) return;
@@ -528,7 +376,7 @@ export default function GameScreen() {
       cancelled = true;
       window.clearTimeout(preparingTimeout);
     };
-  }, [role, phase, round, spotifyPlaylistUrl, setAudioPlaying]);
+  }, [role, phase, round, gameMode, spotifyPlaylistUrl, setAudioPlaying]);
 
   const questionKey = useMemo(() => {
     if (!currentQuestion) return '';
@@ -545,15 +393,21 @@ export default function GameScreen() {
   ));
   const ownPlayer = players.find((player) => player.id === guestId);
   const ownTimelineYears = getCombinedTimelineYears(ownPlayer);
-  const canUseSabotageNow = Boolean(guestId && phase === 'listen' && round > 1 && players.length > 1);
 
-  const availableSabotages = useMemo(() => {
-    if (sabotageConfig && sabotageConfig.enabled === false) return [];
-    if (!sabotageConfig || sabotageConfig.types === 'all' || !sabotageConfig.allowedIds?.length) return SABOTAGE_OPTIONS;
-    return SABOTAGE_OPTIONS.filter((o) => sabotageConfig.allowedIds.includes(o.id));
-  }, [sabotageConfig]);
-
-  const sabotageState = { pointLocks, shields, pendingAttacks, traps, sharedPrize };
+  const playedTracksList = useMemo(() => Object.values(playedTracks || {}), [playedTracks]);
+  const ownBingoCard = useMemo(() => ownPlayer?.bingoCard || [], [ownPlayer]);
+  const ownBingoMarked = ownPlayer?.bingoMarked || [];
+  const eligibleBingoIndices = useMemo(
+    () => getEligibleBingoIndices(ownBingoCard, playedTracksList),
+    [ownBingoCard, playedTracksList]
+  );
+  // getBingoRanking() reads players from the store closure, not from a prop,
+  // so `players` must stay in the deps even though eslint can't see that link.
+  const bingoRanking = useMemo(
+    () => (gameMode === 'bingo' ? getBingoRanking() : []),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [gameMode, players, getBingoRanking]
+  );
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -572,10 +426,6 @@ export default function GameScreen() {
     setAnsweredQuestionKey(questionKey);
     guestAnswer(isCorrect);
     if (navigator.vibrate) navigator.vibrate(isCorrect ? [30] : [100, 30, 100]);
-    const myPending = pendingAttacks?.[guestId];
-    if (myPending) {
-      setPendingAttackWarning(`¡Ojo! ${myPending.by} tiene un ataque listo para ti en la próxima ronda. ¡Prepárate!`);
-    }
   };
 
   const handleHostBlackout = async () => {
@@ -623,21 +473,43 @@ export default function GameScreen() {
       });
   };
 
-  const handleUseSabotage = async (option) => {
-    if (!canUseSabotageNow || Number(ownPlayer?.points || 0) < option.cost) return;
-    await guestUseSabotage(option.id);
-    setActivatedSabotage(option);
+  const handleBingoNextTrack = async () => {
+    if (isBingoTrackLoading) return;
+    setIsBingoTrackLoading(true);
+    setSpotifyError(false);
+    try {
+      const track = await startRandomPlaylistTrack(spotifyPlaylistUrl);
+      setAudioPlaying(true);
+      setSpotifyMessage('Sonando ahora.');
+      const styleInfo = await getTrackStyleInfo(track).catch(() => null);
+      await hostPlayNextBingoTrack({ ...track, ...styleInfo });
+    } catch (error) {
+      console.error('Error al reproducir la siguiente canción de Bingo:', error);
+      setSpotifyMessage(explainSpotifyError(error));
+      setSpotifyError(true);
+      setSpotifyNeedsReconnect(!getSpotifyStatus().connected);
+      setAudioPlaying(false);
+    } finally {
+      setIsBingoTrackLoading(false);
+    }
   };
+
+  const handleMarkBingoCell = async (cellIndex) => {
+    const progress = await guestMarkBingoCell(cellIndex);
+    if (progress?.hasLine && !seenBingoLines.includes(progress.bestLineIndex)) {
+      setSeenBingoLines((prev) => [...prev, progress.bestLineIndex]);
+      setLineToastVisible(true);
+    }
+  };
+
+  const bingoSongsPlayed = playedTracksList.length;
 
   return (
     <div className={`relative z-10 min-h-screen w-full flex flex-col items-center justify-center pt-safe-header pb-8 transition-colors duration-500 ${phase === 'blackout' ? 'bg-black' : 'bg-transparent'}`}>
 
       <AnimatePresence>
-        {activatedSabotage && (
-          <SabotageActivatedToast
-            sabotage={activatedSabotage}
-            onDismiss={() => setActivatedSabotage(null)}
-          />
+        {lineToastVisible && (
+          <BingoLineToast onDismiss={() => setLineToastVisible(false)} />
         )}
       </AnimatePresence>
 
@@ -667,16 +539,20 @@ export default function GameScreen() {
           {role === 'host' ? 'CANCELAR' : 'SALIR'}
         </button>
         <div className="text-center">
-          <p className="font-label-caps text-xs text-neon-green">RONDA {round}</p>
+          <p className="font-label-caps text-xs text-neon-green">
+            {gameMode === 'bingo' ? `CANCIÓN ${bingoSongsPlayed}` : `RONDA ${round}`}
+          </p>
           <p className="font-label-caps text-[10px] text-on-surface-variant">
-            {gameMode === 'timeline' ? 'AÑOS LOCOS' : `META ${targetScore} PTS`}
+            {gameMode === 'timeline' ? 'AÑOS LOCOS' : gameMode === 'bingo' ? 'BINGO MUSICAL' : `META ${targetScore} PTS`}
           </p>
         </div>
         <div className="flex items-center gap-3 text-right">
-          <div>
-            <p className="font-label-caps text-[10px] text-on-surface-variant">MIS PTS</p>
-            <p className="font-label-caps text-sm font-black text-neon-green">{ownPlayer?.points ?? 0}</p>
-          </div>
+          {gameMode !== 'bingo' && (
+            <div>
+              <p className="font-label-caps text-[10px] text-on-surface-variant">MIS PTS</p>
+              <p className="font-label-caps text-sm font-black text-neon-green">{ownPlayer?.points ?? 0}</p>
+            </div>
+          )}
           <ProfileMenu user={role === 'host' ? auth.currentUser : null} guestAvatar={role === 'guest' ? guestAvatar : null} />
         </div>
       </header>
@@ -716,7 +592,78 @@ export default function GameScreen() {
           </motion.div>
         )}
 
-        {phase === 'listen' && (
+        {phase === 'listen' && gameMode === 'bingo' && role !== 'host' && (
+          <motion.div
+            key="bingo-guest"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="flex flex-col items-center gap-4 w-full max-w-[430px] px-5 text-center"
+          >
+            <p className="font-label-caps text-electric-purple text-xs tracking-widest">TU CARTÓN</p>
+            <BingoCard
+              card={ownBingoCard}
+              marked={ownBingoMarked}
+              eligibleIndices={eligibleBingoIndices}
+              onMarkCell={handleMarkBingoCell}
+            />
+            <p className="text-xs text-on-surface-variant max-w-xs">
+              Las casillas verdes ya pueden marcarse. Las moradas son sociales: márcalas si las viste pasar.
+            </p>
+            <BingoRankingTicker ranking={bingoRanking} guestId={guestId} />
+          </motion.div>
+        )}
+
+        {phase === 'listen' && gameMode === 'bingo' && role === 'host' && (
+          <motion.div
+            key="bingo-host"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="flex flex-col items-center gap-4 w-full max-w-[430px] px-5 text-center pb-32"
+          >
+            <p className="font-label-caps text-electric-purple text-xs tracking-widest">BINGO MUSICAL</p>
+            <div className="w-full rounded-2xl border border-neon-green/30 bg-neon-green/5 p-6">
+              <span className="material-symbols-outlined text-neon-green text-5xl">graphic_eq</span>
+              <p className="mt-2 text-white font-black text-xl">
+                {bingoSongsPlayed === 0 ? 'Listo para empezar' : 'Sonando ahora'}
+              </p>
+              <p className="text-xs text-on-surface-variant mt-1">
+                {spotifyMessage || 'Pulsa el botón para reproducir la primera canción.'}
+              </p>
+            </div>
+            <p className="font-label-caps text-[11px] text-on-surface-variant">
+              CANCIONES REPRODUCIDAS: {bingoSongsPlayed}
+            </p>
+            {spotifyError && (
+              <button
+                onClick={handleSpotifyRetry}
+                className="flex items-center gap-2 px-4 py-2 rounded-xl border border-vinyl-orange/50 bg-vinyl-orange/15 text-vinyl-orange font-label-caps text-xs font-bold active:scale-95 transition-all"
+              >
+                <span className="material-symbols-outlined text-sm">
+                  {spotifyNeedsReconnect ? 'login' : 'refresh'}
+                </span>
+                {spotifyNeedsReconnect ? 'RECONECTAR SPOTIFY' : 'REINTENTAR SPOTIFY'}
+              </button>
+            )}
+            <BingoRankingTicker ranking={bingoRanking} guestId={guestId} />
+            <div className="fixed bottom-5 left-4 right-4 z-40 grid gap-2 mx-auto max-w-sm md:relative md:bottom-auto md:left-auto md:right-auto md:z-auto md:w-full md:max-w-xs md:mt-2 md:mb-8">
+              <p className="text-center text-xs text-on-surface-variant">Cuando todos estén listos 👇</p>
+              <motion.button
+                whileHover={{ y: -2 }}
+                whileTap={{ scale: isBingoTrackLoading ? 1 : 0.94, y: 4 }}
+                onClick={handleBingoNextTrack}
+                disabled={isBingoTrackLoading}
+                className="w-full h-16 bg-neon-green hover:bg-green-400 text-black font-headline-lg-mobile text-xl rounded-2xl shadow-[0_10px_0_rgba(13,70,3,0.95),0_0_34px_rgba(57,255,20,0.45)] transition-colors font-black border-2 border-white/15 relative overflow-hidden disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
+                {isBingoTrackLoading ? 'CARGANDO...' : 'SIGUIENTE CANCIÓN'}
+              </motion.button>
+            </div>
+          </motion.div>
+        )}
+
+        {phase === 'listen' && gameMode !== 'bingo' && (
           <motion.div
             key="listen"
             initial={{ opacity: 0 }}
@@ -781,27 +728,7 @@ export default function GameScreen() {
               </p>
             )}
 
-            {role !== 'host' && (
-              <MyStatusCard
-                guestId={guestId}
-                pointLocks={pointLocks}
-                shields={shields}
-                pendingAttacks={pendingAttacks}
-                traps={traps}
-                sharedPrize={sharedPrize}
-              />
-            )}
-
-            {availableSabotages.length > 0 && (
-              <SabotageSquares
-                options={availableSabotages}
-                points={ownPlayer?.points || 0}
-                enabled={canUseSabotageNow}
-                onUse={handleUseSabotage}
-              />
-            )}
-
-            <RankingPeek players={players} guestId={guestId} sabotageState={sabotageState} />
+            <RankingPeek players={players} guestId={guestId} />
 
             {gameMode === 'timeline' && (
               <div className="flex items-start gap-2 rounded-xl border border-neon-green/20 bg-neon-green/5 px-3 py-2 max-w-sm text-left">
@@ -945,18 +872,8 @@ export default function GameScreen() {
                     {role === 'host' ? 'Cuando todos estén listos, revela los resultados.' : 'Esperando al anfitrión...'}
                   </p>
                 </motion.div>
-                {pendingAttackWarning && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="mt-3 w-full rounded-xl border border-vinyl-orange/40 bg-vinyl-orange/10 px-4 py-3 flex items-start gap-3"
-                  >
-                    <span className="material-symbols-outlined text-vinyl-orange text-xl shrink-0 mt-0.5">warning</span>
-                    <p className="text-xs text-vinyl-orange leading-relaxed">{pendingAttackWarning}</p>
-                  </motion.div>
-                )}
                 <div className="mt-3 w-full flex flex-col gap-2">
-                  <RankingPeek players={players} guestId={guestId} sabotageState={sabotageState} />
+                  <RankingPeek players={players} guestId={guestId} />
                 </div>
               </>
             ) : currentQuestion.answerType === 'timeline-placement' ? (

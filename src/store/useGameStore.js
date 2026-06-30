@@ -1,4 +1,4 @@
-﻿import { create } from 'zustand';
+import { create } from 'zustand';
 import { ref, onValue, onDisconnect } from 'firebase/database';
 import { database } from '../firebase';
 
@@ -107,12 +107,12 @@ export const GAME_MODES = {
     description: `Cada jugador arma su propia ruta musical y gana quien completa primero ${TIMELINE_GOAL_YEARS} años.`,
     rhythm: 'Memoria, intuición y nostalgia: coloca cada canción donde crees que pertenece.'
   },
-  chaos: {
-    id: 'chaos',
-    name: 'CAOS DJ',
-    short: 'Preguntas con sabotajes',
-    description: 'La música sigue, respondes y además puedes gastar puntos para mover la partida.',
-    rhythm: 'El modo más picante: ataques, escudos, robos y remontadas.'
+  bingo: {
+    id: 'bingo',
+    name: 'BINGO MUSICAL',
+    short: 'Marca tu cartón mientras suena',
+    description: 'Cada jugador tiene un cartón con casillas musicales y casillas de fiesta. Márcalas cuando ocurran y compite por cantar ¡LÍNEA! y ¡BINGO!',
+    rhythm: 'Sin turnos ni esperas: todos juegan a la vez mientras la música no para. Ideal para grupos grandes.'
   }
 };
 
@@ -121,70 +121,19 @@ export const VICTORY_MODES = [
     targetScore: 70,
     name: 'RÁPIDA',
     short: 'Rápida',
-    description: 'Disponible para Corte Maestro y Caos DJ. Gana quien llega primero a 70 puntos.'
+    description: 'Disponible para Corte Maestro. Gana quien llega primero a 70 puntos.'
   },
   {
     targetScore: 120,
     name: 'EQUILIBRADA',
     short: 'Equilibrada',
-    description: 'Disponible para Corte Maestro y Caos DJ. Meta de 120 puntos con más remontadas.'
+    description: 'Disponible para Corte Maestro. Meta de 120 puntos con más remontadas.'
   },
   {
     targetScore: 200,
     name: 'LARGA',
     short: 'Larga',
-    description: 'Disponible para Corte Maestro y Caos DJ. Meta de 200 puntos para partidas largas.'
-  }
-];
-
-export const SABOTAGE_OPTIONS = [
-  {
-    id: 'point_lock',
-    name: 'Bloqueo',
-    icon: 'block',
-    cost: 5,
-    effect: 'El jugador en primer puesto no suma puntos si acierta la próxima ronda.',
-    color: 'red'
-  },
-  {
-    id: 'steal',
-    name: 'El Ladrón',
-    icon: 'remove_circle',
-    cost: 6,
-    effect: 'Roba 7 puntos al instante al jugador en primer puesto.',
-    color: 'red'
-  },
-  {
-    id: 'swap_points',
-    name: 'El Cambio',
-    icon: 'swap_horiz',
-    cost: 8,
-    effect: 'Intercambia tus puntos con los del líder. Puede ser una remontada épica.',
-    color: 'purple'
-  },
-  {
-    id: 'shield',
-    name: 'El Escudo',
-    icon: 'shield',
-    cost: 3,
-    effect: 'Bloquea el próximo ataque que recibas este turno o el siguiente.',
-    color: 'green'
-  },
-  {
-    id: 'shared_prize',
-    name: 'Dueto',
-    icon: 'group',
-    cost: 4,
-    effect: 'Si el líder acierta la próxima ronda, comparte sus puntos contigo (+2 pts extra para ti).',
-    color: 'green'
-  },
-  {
-    id: 'trap',
-    name: 'La Trampa',
-    icon: 'crisis_alert',
-    cost: 4,
-    effect: 'Si el líder falla la próxima ronda, pierde 6 pts en vez de 3.',
-    color: 'red'
+    description: 'Disponible para Corte Maestro. Meta de 200 puntos para partidas largas.'
   }
 ];
 
@@ -193,16 +142,213 @@ export const SABOTAGE_OPTIONS = [
 const MUSIC_QUESTIONS = [
   { mode: 'pulse', type: 'Trivia', text: '¿Cuántos puntos se ganan al acertar una respuesta?', options: ['+3 pts', '+4 pts', '+5 pts', '+7 pts'], correct: 2 },
   { mode: 'pulse', type: 'Trivia', text: '¿Cuántos puntos se pierden al fallar?', options: ['-1 pts', '-2 pts', '-3 pts', '-5 pts'], correct: 2 },
-  { mode: 'pulse', type: 'Trivia', text: '¿Cuántos sabotajes distintos hay en Dedícalo?', options: ['3', '4', '5', '6'], correct: 3 },
-  { mode: 'pulse', type: 'Trivia', text: '¿Desde qué ronda se desbloquean los sabotajes?', options: ['Ronda 1', 'Ronda 2', 'Ronda 3', 'Ronda 4'], correct: 1 },
+  { mode: 'pulse', type: 'Trivia', text: '¿Cómo se llama el modo de cartones musicales de Dedícalo?', options: ['Caos DJ', 'Bingo Musical', 'Años Locos', 'Corte Maestro'], correct: 1 },
+  { mode: 'pulse', type: 'Trivia', text: '¿Qué necesita el anfitrión para reproducir música en Dedícalo?', options: ['Spotify Premium', 'Una radio', 'Un micrófono', 'Nada'], correct: 0 },
   { mode: 'pulse', type: 'Trivia', text: '¿Cuántos modos de juego tiene Dedícalo?', options: ['1', '2', '3', '4'], correct: 2 },
   { mode: 'timeline', answerType: 'timeline-placement', type: 'Años Locos', text: '¿Dónde encaja esta canción en tu ruta de años?', timelineYears: [2000], songYear: 2014, options: ['0', '1'], correct: 1 },
   { mode: 'timeline', answerType: 'timeline-placement', type: 'Años Locos', text: '¿Dónde pondrías esta canción?', timelineYears: [1995, 2005], songYear: 2001, options: ['0', '1', '2'], correct: 1 },
-  { mode: 'timeline', answerType: 'timeline-placement', type: 'Años Locos', text: 'Escucha y colócala por año.', timelineYears: [1990, 2000, 2010], songYear: 2020, options: ['0', '1', '2', '3'], correct: 3 },
-  { mode: 'chaos', type: 'Trivia', text: '¿Qué color indica un sabotaje activo en Dedícalo?', options: ['Verde', 'Rojo', 'Lila', 'Azul'], correct: 2 },
-  { mode: 'chaos', type: 'Trivia', text: '¿Qué pasa si el líder tiene escudo y lo atacas?', options: ['Pierde puntos igual', 'El escudo absorbe el ataque', 'Robas sus puntos', 'El ataque pasa igual'], correct: 1 },
-  { mode: 'chaos', type: 'Trivia', text: '¿Cuánto cuesta el sabotaje más barato de todos?', options: ['1 pt', '2 pts', '3 pts', '4 pts'], correct: 2 }
+  { mode: 'timeline', answerType: 'timeline-placement', type: 'Años Locos', text: 'Escucha y colócala por año.', timelineYears: [1990, 2000, 2010], songYear: 2020, options: ['0', '1', '2', '3'], correct: 3 }
 ];
+
+// ---------------------------------------------------------------------------
+// Bingo Musical — modelo de cartón, banco de casillas sociales y ranking en vivo
+// ---------------------------------------------------------------------------
+
+export const BINGO_GRID_SIZE = 25;
+export const BINGO_FREE_INDEX = 12;
+const BINGO_CELLS_NEEDED = BINGO_GRID_SIZE - 1;
+const BINGO_REAL_RATIO = 0.7;
+
+// 5 filas + 5 columnas + 2 diagonales del cartón 5x5.
+export const BINGO_WINNING_LINES = [
+  [0, 1, 2, 3, 4], [5, 6, 7, 8, 9], [10, 11, 12, 13, 14], [15, 16, 17, 18, 19], [20, 21, 22, 23, 24],
+  [0, 5, 10, 15, 20], [1, 6, 11, 16, 21], [2, 7, 12, 17, 22], [3, 8, 13, 18, 23], [4, 9, 14, 19, 24],
+  [0, 6, 12, 18, 24], [4, 8, 12, 16, 20]
+];
+
+// Banco de casillas "sociales" estilo Bingo Hipster: se marcan por honor, sin verificación.
+export const BINGO_SOCIAL_PROMPTS = [
+  'Alguien grita "¡ESTA ES MI CANCIÓN!"',
+  'Alguien canta el coro completo de pie',
+  'Dos personas bailan la misma coreografía sin ponerse de acuerdo',
+  'Alguien hace playback con el micrófono de la mano',
+  'Se forma un círculo de baile espontáneo',
+  'Alguien pide "súbele el volumen"',
+  'Alguien confiesa que esta canción le recuerda a un ex',
+  'Alguien canta en un idioma que no domina',
+  'Suena una canción que nadie reconoce y todos fingen que sí',
+  'Alguien hace un brindis sin que nadie se lo pida',
+  'Dos personas cantan la misma frase a destiempo',
+  'Alguien intenta el paso de baile de la canción y falla',
+  'Se arma una batalla de aire-guitarra',
+  'Alguien dice "esta canción es un GOL"',
+  'Alguien busca la letra en el celular a mitad de la canción',
+  'El anfitrión canta más fuerte que nadie',
+  'Alguien pide la siguiente canción antes de que termine esta',
+  'Se forma un coro improvisado de 3 o más personas',
+  'Alguien hace una entrada triunfal a la pista de baile',
+  'Alguien graba una historia para redes sociales',
+  'Dos personas se abrazan al sonar la canción',
+  'Alguien tararea la canción anterior por error',
+  'Se escucha un "¡otra, otra!" al terminar una canción',
+  'Alguien baila con un objeto como si fuera pareja',
+  'Alguien dedica la canción en voz alta a otra persona',
+  'Se forma una fila conga espontánea',
+  'Alguien hace los coros "a capela" sin que se lo pidan',
+  'Alguien adivina el año de la canción antes de que termine'
+];
+
+function shuffleArray(items = []) {
+  const copy = [...items];
+  for (let i = copy.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
+function buildRealBingoCellPool(tracks = [], styles = []) {
+  const pool = [];
+  const seenKeys = new Set();
+
+  const artistCounts = {};
+  tracks.forEach((track) => {
+    if (track?.artist) artistCounts[track.artist] = (artistCounts[track.artist] || 0) + 1;
+  });
+  Object.entries(artistCounts)
+    .filter(([, count]) => count >= 2)
+    .forEach(([artist]) => {
+      const key = `artist:${artist}`;
+      if (seenKeys.has(key)) return;
+      seenKeys.add(key);
+      pool.push({ kind: 'real', matchType: 'artist', matchValue: artist, label: `Suena algo de ${artist}` });
+    });
+
+  shuffleArray(tracks).forEach((track) => {
+    if (!track?.name) return;
+    const key = `title:${track.name}`;
+    if (seenKeys.has(key)) return;
+    seenKeys.add(key);
+    pool.push({ kind: 'real', matchType: 'title', matchValue: track.name, label: `Suena "${track.name}"` });
+  });
+
+  const decades = new Set();
+  tracks.forEach((track) => {
+    if (track?.releaseYear) decades.add(Math.floor(Number(track.releaseYear) / 10) * 10);
+  });
+  decades.forEach((decade) => {
+    const key = `decade:${decade}`;
+    if (seenKeys.has(key)) return;
+    seenKeys.add(key);
+    pool.push({ kind: 'real', matchType: 'decade', matchValue: String(decade), label: `Suena algo de los años ${decade}` });
+  });
+
+  styles.forEach(({ style, styleSlug } = {}) => {
+    if (!styleSlug) return;
+    const key = `style:${styleSlug}`;
+    if (seenKeys.has(key)) return;
+    seenKeys.add(key);
+    pool.push({ kind: 'real', matchType: 'style', matchValue: styleSlug, label: `Suena algo de ${style || styleSlug}` });
+  });
+
+  return shuffleArray(pool);
+}
+
+// Genera el cartón de un jugador (25 celdas, índice BINGO_FREE_INDEX = libre).
+// tracks/styles vienen de la playlist real del host (services/spotify.js) para que
+// las casillas "reales" correspondan a canciones que sí van a sonar en la partida.
+export function generateBingoCard(seedKey, tracks = [], styles = []) {
+  const realPool = buildRealBingoCellPool(tracks, styles);
+  const realCount = Math.min(realPool.length, Math.round(BINGO_CELLS_NEEDED * BINGO_REAL_RATIO));
+  const socialCount = BINGO_CELLS_NEEDED - realCount;
+
+  const realCells = realPool.slice(0, realCount);
+  const socialPool = shuffleArray(BINGO_SOCIAL_PROMPTS);
+  const socialCells = [];
+
+  // Si la playlist no entrega suficientes casillas reales, se rellena con casillas
+  // sociales (repitiendo el banco si hace falta) para que el cartón nunca quede incompleto.
+  for (let i = 0; i < socialCount + (BINGO_CELLS_NEEDED - realCells.length - socialCount); i += 1) {
+    const label = socialPool[i % socialPool.length];
+    socialCells.push({ kind: 'social', label });
+  }
+
+  const combined = shuffleArray([...realCells, ...socialCells]).slice(0, BINGO_CELLS_NEEDED);
+
+  const cells = [];
+  let cursor = 0;
+  for (let i = 0; i < BINGO_GRID_SIZE; i += 1) {
+    if (i === BINGO_FREE_INDEX) {
+      cells.push({ id: `${seedKey}_free`, kind: 'free', label: 'DEDÍCALO' });
+    } else {
+      cells.push({ id: `${seedKey}_${i}`, ...combined[cursor] });
+      cursor += 1;
+    }
+  }
+  return cells;
+}
+
+// Casillas reales que ya pueden marcarse según el historial de canciones reproducidas.
+export function getEligibleBingoIndices(card = [], playedTracks = []) {
+  const eligible = new Set();
+  card.forEach((cell, index) => {
+    if (!cell || cell.kind !== 'real') return;
+    const matches = playedTracks.some((track) => {
+      if (!track) return false;
+      if (cell.matchType === 'artist') {
+        return String(track.artist || '').toLowerCase().includes(String(cell.matchValue).toLowerCase());
+      }
+      if (cell.matchType === 'title') {
+        return String(track.name || '').toLowerCase() === String(cell.matchValue).toLowerCase();
+      }
+      if (cell.matchType === 'decade') {
+        return Math.floor(Number(track.releaseYear || 0) / 10) * 10 === Number(cell.matchValue);
+      }
+      if (cell.matchType === 'style') {
+        return track.styleSlug === cell.matchValue;
+      }
+      return false;
+    });
+    if (matches) eligible.add(index);
+  });
+  return eligible;
+}
+
+// Progreso de un cartón: casillas que faltan para la mejor línea y para el cartón completo.
+export function getBingoProgress(marked = []) {
+  let missingForLine = BINGO_GRID_SIZE;
+  let bestLineIndex = -1;
+  BINGO_WINNING_LINES.forEach((line, lineIndex) => {
+    const missing = line.filter((cellIndex) => !marked[cellIndex]).length;
+    if (missing < missingForLine) {
+      missingForLine = missing;
+      bestLineIndex = lineIndex;
+    }
+  });
+  let missingForFullCard = 0;
+  for (let i = 0; i < BINGO_GRID_SIZE; i += 1) {
+    if (!marked[i]) missingForFullCard += 1;
+  }
+  return {
+    missingForLine,
+    bestLineIndex,
+    missingForFullCard,
+    hasLine: missingForLine === 0,
+    hasBingo: missingForFullCard === 0
+  };
+}
+
+// Ranking del Bingo: NO usa puntos, solo cercanía a Línea y a Cartón completo.
+function computeBingoRanking(players = []) {
+  return [...players]
+    .map((player) => ({ ...player, bingoProgress: getBingoProgress(player.bingoMarked || []) }))
+    .sort((a, b) => {
+      if (a.bingoProgress.missingForLine !== b.bingoProgress.missingForLine) {
+        return a.bingoProgress.missingForLine - b.bingoProgress.missingForLine;
+      }
+      return a.bingoProgress.missingForFullCard - b.bingoProgress.missingForFullCard;
+    });
+}
 
 function databasePath(path) {
   return `${DATABASE_URL}/${path}.json`;
@@ -291,8 +437,12 @@ export function getCombinedTimelineYears(player) {
   return normalizeTimelineYears([baseYear, ...(p.timelineYears || [])]);
 }
 
-function reverseReadableText(text) {
-  return String(text || '').split('').reverse().join('');
+// Etiqueta corta de progreso de Bingo para listas compactas (ej. Lobby).
+export function getBingoProgressLabel(player) {
+  if (!player?.bingoMarked) return null;
+  const { missingForLine, missingForFullCard, hasLine } = getBingoProgress(player.bingoMarked);
+  if (hasLine) return `¡LÍNEA! Faltan ${missingForFullCard} para Bingo`;
+  return `Faltan ${missingForLine} para Línea`;
 }
 
 export const useGameStore = create((setStore, getStore) => ({
@@ -309,21 +459,17 @@ export const useGameStore = create((setStore, getStore) => ({
   guestName: null,
   lastResultType: null,
   lastPointDelta: 0,
-  lastSabotage: null,
   roundAnswers: {},
   revealResults: {},
-  pointLocks: {},
-  sharedPrize: null,
-  pendingQuestionEffect: null,
-  shields: {},
-  pendingAttacks: {},
-  traps: {},
   roomError: null,
   currentTrack: null,
   timelineYears: [],
   roomSubscription: null,
-  sabotageConfig: { enabled: true, types: 'all', allowedIds: [] },
   lastDisconnectedPlayer: null,
+
+  // Bingo Musical
+  playedTracks: {},
+  bingoWinnerId: null,
 
   isAudioPlaying: false,
   isAudioMuted: false,
@@ -341,14 +487,13 @@ export const useGameStore = create((setStore, getStore) => ({
   },
   setRole: (role) => setStore({ role }),
 
-  setGameSettings: async ({ gameMode, targetScore, sabotageConfig }) => {
+  setGameSettings: async ({ gameMode, targetScore }) => {
     const pin = getStore().pin;
     if (getStore().round > 1 || getStore().phase !== 'lobby') return;
     const currentGameMode = getStore().gameMode;
     const nextSettings = {
       gameMode: gameMode || getStore().gameMode,
-      targetScore: Number(targetScore || getStore().targetScore),
-      sabotageConfig: sabotageConfig !== undefined ? sabotageConfig : getStore().sabotageConfig
+      targetScore: Number(targetScore || getStore().targetScore)
     };
     const modeChanged = nextSettings.gameMode !== currentGameMode;
 
@@ -380,8 +525,7 @@ export const useGameStore = create((setStore, getStore) => ({
       round: 1,
       settings: {
         gameMode: getStore().gameMode,
-        targetScore: getStore().targetScore,
-        sabotageConfig: getStore().sabotageConfig
+        targetScore: getStore().targetScore
       },
       players: { [hostId]: hostPlayer },
       audio: {
@@ -409,16 +553,11 @@ export const useGameStore = create((setStore, getStore) => ({
         spotifyPlaylistUrl: roomData.audio.playlistUrl,
         lastResultType: null,
         lastPointDelta: 0,
-        lastSabotage: null,
         roundAnswers: {},
         revealResults: {},
-        pointLocks: {},
-        sharedPrize: null,
-        pendingQuestionEffect: null,
-        shields: {},
-        pendingAttacks: {},
-        traps: {},
-        timelineYears: []
+        timelineYears: [],
+        playedTracks: {},
+        bingoWinnerId: null
       });
       getStore()._subscribeToRoom(newPin);
     } catch (error) {
@@ -427,9 +566,20 @@ export const useGameStore = create((setStore, getStore) => ({
     }
   },
 
-  hostStartGame: async () => {
-    const { pin } = getStore();
+  hostStartGame: async ({ bingoTracks, bingoStyles } = {}) => {
+    const { pin, gameMode, players } = getStore();
     if (!pin) return;
+
+    if (gameMode === 'bingo') {
+      const cardUpdates = {};
+      players.forEach((player) => {
+        const card = generateBingoCard(player.id, bingoTracks || [], bingoStyles || []);
+        cardUpdates[`players/${player.id}/bingoCard`] = card;
+        cardUpdates[`players/${player.id}/bingoMarked`] = card.map((cell) => cell.kind === 'free');
+      });
+      await patchData(`rooms/${pin}`, { ...cardUpdates, playedTracks: null, bingoWinnerId: null });
+      setStore({ playedTracks: {}, bingoWinnerId: null });
+    }
 
     await patchData(`rooms/${pin}`, { phase: 'countdown', currentQuestion: null });
 
@@ -441,31 +591,84 @@ export const useGameStore = create((setStore, getStore) => ({
     }, 3000);
   },
 
+  // Bingo Musical: el host reproduce canciones en bucle (sin fase blackout). Cada canción
+  // reproducida queda anotada en playedTracks para que todos los cartones la evalúen.
+  hostPlayNextBingoTrack: async (track) => {
+    const { pin } = getStore();
+    if (!pin || !track) return;
+
+    const key = `t${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+    const entry = {
+      uri: track.uri || null,
+      name: track.name || null,
+      artist: track.artist || null,
+      releaseYear: track.releaseYear || null,
+      style: track.style || null,
+      styleSlug: track.styleSlug || null,
+      playedAt: Date.now()
+    };
+
+    await patchData(`rooms/${pin}`, {
+      [`playedTracks/${key}`]: entry,
+      currentTrack: {
+        name: track.name || null,
+        artist: track.artist || null,
+        releaseYear: track.releaseYear || null,
+        albumImage: track.albumImage || null
+      }
+    });
+  },
+
+  guestMarkBingoCell: async (cellIndex) => {
+    const { pin, guestId, players } = getStore();
+    if (!pin || !guestId) return null;
+    const player = players.find((p) => p.id === guestId);
+    if (!player) return null;
+
+    const marked = [...(player.bingoMarked || [])];
+    if (marked[cellIndex]) return null;
+    marked[cellIndex] = true;
+
+    await patchData(`rooms/${pin}/players/${guestId}`, { bingoMarked: marked });
+    setStore({
+      players: players.map((p) => (p.id === guestId ? { ...p, bingoMarked: marked } : p))
+    });
+
+    const progress = getBingoProgress(marked);
+    if (progress.hasBingo) {
+      await getStore().claimBingoWin();
+    }
+    return progress;
+  },
+
+  claimBingoWin: async () => {
+    const { pin, guestId } = getStore();
+    if (!pin || !guestId) return;
+
+    const room = await readData(`rooms/${pin}`);
+    if (room?.bingoWinnerId) return;
+
+    await Promise.all([
+      patchData(`rooms/${pin}`, { bingoWinnerId: guestId, phase: 'final' }),
+      patchData(`rooms/${pin}/audio`, { isPlaying: false })
+    ]);
+  },
+
+  getBingoRanking: () => computeBingoRanking(getStore().players),
+
   hostTriggerBlackout: async (questionOverride = null, trackInfo = null) => {
     const { pin, gameMode } = getStore();
     if (!pin) return;
 
-    const room = await readData(`rooms/${pin}`);
-    const pendingEffect = room?.pendingQuestionEffect || null;
-    const forceWildQuestion = pendingEffect?.id === 'wild_question';
-    const pool = forceWildQuestion ? MUSIC_QUESTIONS : MUSIC_QUESTIONS.filter((question) => question.mode === gameMode);
+    const pool = MUSIC_QUESTIONS.filter((question) => question.mode === gameMode);
     const questions = pool.length ? pool : MUSIC_QUESTIONS;
-    const baseQuestion = questions[Math.floor(Math.random() * questions.length)];
-    const questionBase = questionOverride || baseQuestion;
-    const question = pendingEffect?.id === 'reverse_lyrics'
-      ? {
-        ...questionBase,
-        text: reverseReadableText(questionBase.text),
-        type: `${questionBase.type} al revés`
-      }
-      : questionBase;
+    const question = questionOverride || questions[Math.floor(Math.random() * questions.length)];
 
     await Promise.all([
       patchData(`rooms/${pin}`, {
         phase: 'blackout',
         currentQuestion: question,
         currentTrack: trackInfo || null,
-        pendingQuestionEffect: null,
         roundAnswers: null,
         revealResults: null
       }),
@@ -480,9 +683,6 @@ export const useGameStore = create((setStore, getStore) => ({
     const room = await readData(`rooms/${pin}`);
     const playersById = room?.players || {};
     const answers = room?.roundAnswers || {};
-    const pointLocks = room?.pointLocks || {};
-    const sharedPrize = room?.sharedPrize || null;
-    const traps = room?.traps || {};
     const currentQuestion = room?.currentQuestion || {};
     const remoteUpdates = {};
     const revealResults = {};
@@ -490,47 +690,17 @@ export const useGameStore = create((setStore, getStore) => ({
     Object.values(playersById).forEach((player) => {
       const answer = answers[player.id];
       const isCorrect = Boolean(answer?.isCorrect);
-      const pointLock = pointLocks[player.id] || null;
-      const trap = traps[player.id] || null;
-      const isLocked = Boolean(isCorrect && pointLock);
-      const isTrap = Boolean(!isCorrect && trap);
-      const sharesWithBuyer = Boolean(isCorrect && sharedPrize?.buyerId && sharedPrize.buyerId !== player.id);
-      let delta;
-      if (answer) {
-        if (isCorrect) {
-          delta = isLocked ? 0 : sharesWithBuyer ? 3 : 5;
-        } else {
-          delta = isTrap ? -6 : -3;
-        }
-      } else {
-        delta = player.isHost ? 0 : (isTrap ? -6 : -3);
-      }
+      const delta = answer ? (isCorrect ? 5 : -3) : (player.isHost ? 0 : -3);
       const nextPoints = clampPoints(Number(player.points || 0) + delta);
-      const sabotage = isLocked
-        ? { name: 'Silencio al líder', by: pointLock.by, effect: `${pointLock.by} intentó bloquear tu acierto. Tus puntos quedan en 0 esta ronda.` }
-        : isTrap
-          ? { name: 'La Trampa', by: trap.by, effect: `${trap.by} activó una trampa. Pierdes 6 pts por fallar.` }
-          : sharesWithBuyer
-            ? { name: 'Dueto dividido', by: sharedPrize.buyerName, effect: `${sharedPrize.buyerName} activó un dueto y compartió tu acierto.` }
-            : null;
 
       remoteUpdates[`players/${player.id}/points`] = nextPoints;
       revealResults[player.id] = {
-        resultType: sabotage ? 'sabotage' : isCorrect ? 'success' : 'fail',
+        resultType: isCorrect ? 'success' : 'fail',
         isCorrect,
         answered: Boolean(answer),
         delta,
-        points: nextPoints,
-        sabotage
+        points: nextPoints
       };
-
-      if (isLocked) {
-        remoteUpdates[`pointLocks/${player.id}`] = null;
-      }
-
-      if (isTrap) {
-        remoteUpdates[`traps/${player.id}`] = null;
-      }
 
       if (currentQuestion?.answerType === 'timeline-placement' && isCorrect) {
         remoteUpdates[`players/${player.id}/timelineYears`] = normalizeTimelineYears([
@@ -540,21 +710,7 @@ export const useGameStore = create((setStore, getStore) => ({
       }
     });
 
-    if (sharedPrize?.buyerId && playersById[sharedPrize.buyerId]) {
-      const buyer = playersById[sharedPrize.buyerId];
-      const buyerNextPoints = clampPoints(Number(remoteUpdates[`players/${buyer.id}/points`] ?? buyer.points ?? 0) + 2);
-      remoteUpdates[`players/${buyer.id}/points`] = buyerNextPoints;
-      revealResults[buyer.id] = {
-        ...(revealResults[buyer.id] || {}),
-        resultType: 'sabotage',
-        delta: Number(revealResults[buyer.id]?.delta || 0) + 2,
-        points: buyerNextPoints,
-        sabotage: { name: 'Dueto dividido', by: buyer.name, effect: 'Tu sabotaje sumó 2 puntos por compartir un acierto.' }
-      };
-      remoteUpdates.sharedPrize = null;
-    }
-
-      const nextPlayers = sortPlayers(Object.values(playersById).map((player) => ({
+    const nextPlayers = sortPlayers(Object.values(playersById).map((player) => ({
       ...player,
       points: remoteUpdates[`players/${player.id}/points`] ?? player.points,
       timelineYears: remoteUpdates[`players/${player.id}/timelineYears`] ?? normalizeTimelineYears(player.timelineYears || [])
@@ -564,7 +720,6 @@ export const useGameStore = create((setStore, getStore) => ({
     const winner = gameMode === 'timeline' ? null : findWinner(nextPlayers, targetScore);
     remoteUpdates.phase = timelineComplete ? 'final' : (winner ? 'final' : 'result');
     remoteUpdates.revealResults = revealResults;
-    remoteUpdates.lastSabotage = Object.values(revealResults).find((result) => result.sabotage)?.sabotage || null;
     remoteUpdates.currentQuestion = (winner || timelineComplete) ? null : room.currentQuestion || null;
 
     await patchData(`rooms/${pin}`, remoteUpdates);
@@ -575,8 +730,7 @@ export const useGameStore = create((setStore, getStore) => ({
       players: nextPlayers,
       revealResults,
       lastResultType: ownResult?.resultType || getStore().lastResultType,
-      lastPointDelta: ownResult?.delta || 0,
-      lastSabotage: ownResult?.sabotage || remoteUpdates.lastSabotage
+      lastPointDelta: ownResult?.delta || 0
     });
   },
 
@@ -589,25 +743,12 @@ export const useGameStore = create((setStore, getStore) => ({
       return;
     }
 
-    const room = await readData(`rooms/${pin}`);
-    const patchUpdates = {};
-    Object.entries(room?.pendingAttacks || {}).forEach(([targetId, attack]) => {
-      if (attack.sabotageId === 'point_lock') {
-        patchUpdates[`pointLocks/${targetId}`] = { by: attack.by, byId: attack.byId, round: round + 1 };
-      } else if (attack.sabotageId === 'trap') {
-        patchUpdates[`traps/${targetId}`] = { by: attack.by, byId: attack.byId, round: round + 1 };
-      }
-      patchUpdates[`pendingAttacks/${targetId}`] = null;
-    });
-
     await patchData(`rooms/${pin}`, {
-      ...patchUpdates,
       round: round + 1,
       currentQuestion: null,
       currentTrack: null,
       roundAnswers: null,
       revealResults: null,
-      lastSabotage: null,
       phase: 'countdown'
     });
 
@@ -648,16 +789,11 @@ export const useGameStore = create((setStore, getStore) => ({
       currentTrack: null,
       lastResultType: null,
       lastPointDelta: 0,
-      lastSabotage: null,
       roundAnswers: {},
       revealResults: {},
-      pointLocks: {},
-      sharedPrize: null,
-      pendingQuestionEffect: null,
-      shields: {},
-      pendingAttacks: {},
-      traps: {},
       timelineYears: [],
+      playedTracks: {},
+      bingoWinnerId: null,
       roomSubscription: null
     });
   },
@@ -698,14 +834,11 @@ export const useGameStore = create((setStore, getStore) => ({
         guestName: newPlayer.name,
         gameMode: room.settings?.gameMode || 'pulse',
         targetScore: Number(room.settings?.targetScore || 70),
-        sabotageConfig: room.settings?.sabotageConfig || { enabled: true, types: 'all', allowedIds: [] },
         lastResultType: null,
         lastPointDelta: 0,
-        lastSabotage: null,
-        pointLocks: room.pointLocks || {},
-        sharedPrize: room.sharedPrize || null,
-        pendingQuestionEffect: room.pendingQuestionEffect || null,
-        timelineYears: room.timelineYears || []
+        timelineYears: room.timelineYears || [],
+        playedTracks: room.playedTracks || {},
+        bingoWinnerId: room.bingoWinnerId || null
       });
       getStore()._subscribeToRoom(cleanPin);
     } catch (error) {
@@ -733,130 +866,6 @@ export const useGameStore = create((setStore, getStore) => ({
     });
   },
 
-  guestUseSabotage: async (sabotageId) => {
-    const { pin, guestId } = getStore();
-    const sabotage = SABOTAGE_OPTIONS.find((option) => option.id === sabotageId);
-    if (!pin || !guestId || !sabotage) return;
-
-    const room = await readData(`rooms/${pin}`);
-    const player = await readData(`rooms/${pin}/players/${guestId}`);
-    if (!player || Number(player.points || 0) < sabotage.cost) {
-      setStore({ lastResultType: 'sabotage', lastSabotage: { ...sabotage, blocked: true }, lastPointDelta: 0 });
-      return;
-    }
-
-    const currentPlayers = getStore().players;
-    const leader = sortPlayers(currentPlayers).find((playerItem) => playerItem.id !== guestId);
-    const round = getStore().round;
-    let playerDelta = -sabotage.cost;
-    let remoteUpdates = {};
-    let appliedSabotage = { ...sabotage, by: player.name };
-    let localShields = getStore().shields;
-    let localPendingAttacks = getStore().pendingAttacks;
-    let localTraps = getStore().traps;
-    let localPointLocks = getStore().pointLocks;
-    let leaderPointsDelta = 0;
-
-    if (sabotage.id === 'steal') {
-      if (leader) {
-        if (room?.shields?.[leader.id]) {
-          remoteUpdates[`shields/${leader.id}`] = null;
-          localShields = { ...localShields, [leader.id]: null };
-          appliedSabotage = { ...appliedSabotage, target: leader.name, blocked: true };
-        } else {
-          const stolenAmount = Math.min(7, Number(leader.points || 0));
-          leaderPointsDelta = -stolenAmount;
-          playerDelta = stolenAmount - sabotage.cost;
-          remoteUpdates[`players/${leader.id}/points`] = clampPoints(Number(leader.points || 0) - stolenAmount);
-          appliedSabotage = { ...appliedSabotage, target: leader.name, deferred: false };
-        }
-      }
-    } else if (sabotage.id === 'swap_points') {
-      if (leader) {
-        if (room?.shields?.[leader.id]) {
-          remoteUpdates[`shields/${leader.id}`] = null;
-          localShields = { ...localShields, [leader.id]: null };
-          appliedSabotage = { ...appliedSabotage, target: leader.name, blocked: true };
-        } else {
-          const leaderPoints = Number(leader.points || 0);
-          const buyerOriginalPoints = Number(player.points || 0);
-          playerDelta = leaderPoints - buyerOriginalPoints - sabotage.cost;
-          remoteUpdates[`players/${leader.id}/points`] = clampPoints(buyerOriginalPoints);
-          leaderPointsDelta = clampPoints(buyerOriginalPoints) - leaderPoints;
-          appliedSabotage = { ...appliedSabotage, target: leader.name, deferred: false };
-        }
-      }
-    } else if (sabotage.id === 'point_lock') {
-      if (leader) {
-        if (room?.shields?.[leader.id]) {
-          remoteUpdates[`shields/${leader.id}`] = null;
-          localShields = { ...localShields, [leader.id]: null };
-          appliedSabotage = { ...appliedSabotage, target: leader.name, blocked: true };
-        } else if (room?.pointLocks?.[leader.id] || room?.pendingAttacks?.[leader.id]) {
-          remoteUpdates[`pendingAttacks/${leader.id}`] = { sabotageId: 'point_lock', by: player.name, byId: guestId, round };
-          localPendingAttacks = { ...localPendingAttacks, [leader.id]: { sabotageId: 'point_lock', by: player.name, byId: guestId, round } };
-          appliedSabotage = { ...appliedSabotage, target: leader.name, deferred: true };
-        } else {
-          remoteUpdates[`pointLocks/${leader.id}`] = { by: player.name, byId: guestId, round };
-          localPointLocks = { ...localPointLocks, [leader.id]: { by: player.name, byId: guestId, round } };
-          appliedSabotage = { ...appliedSabotage, target: leader.name, deferred: true };
-        }
-      }
-    } else if (sabotage.id === 'shield') {
-      if (!room?.shields?.[guestId]) {
-        remoteUpdates[`shields/${guestId}`] = { byId: guestId, round };
-        localShields = { ...localShields, [guestId]: { byId: guestId, round } };
-        appliedSabotage = { ...appliedSabotage, deferred: false };
-      }
-    } else if (sabotage.id === 'shared_prize') {
-      if (!room?.sharedPrize) {
-        remoteUpdates.sharedPrize = { buyerId: guestId, buyerName: player.name, round };
-        appliedSabotage = { ...appliedSabotage, deferred: true };
-      }
-    } else if (sabotage.id === 'trap') {
-      if (leader) {
-        if (room?.shields?.[leader.id]) {
-          remoteUpdates[`shields/${leader.id}`] = null;
-          localShields = { ...localShields, [leader.id]: null };
-          appliedSabotage = { ...appliedSabotage, target: leader.name, blocked: true };
-        } else if (room?.traps?.[leader.id] || room?.pendingAttacks?.[leader.id]) {
-          remoteUpdates[`pendingAttacks/${leader.id}`] = { sabotageId: 'trap', by: player.name, byId: guestId, round };
-          localPendingAttacks = { ...localPendingAttacks, [leader.id]: { sabotageId: 'trap', by: player.name, byId: guestId, round } };
-          appliedSabotage = { ...appliedSabotage, target: leader.name, deferred: true };
-        } else {
-          remoteUpdates[`traps/${leader.id}`] = { by: player.name, byId: guestId, round };
-          localTraps = { ...localTraps, [leader.id]: { by: player.name, byId: guestId, round } };
-          appliedSabotage = { ...appliedSabotage, target: leader.name, deferred: true };
-        }
-      }
-    }
-
-    const nextPoints = clampPoints(Number(player.points || 0) + playerDelta);
-    remoteUpdates[`players/${guestId}/points`] = nextPoints;
-    remoteUpdates.lastSabotage = appliedSabotage;
-
-    await patchData(`rooms/${pin}`, remoteUpdates);
-
-    const players = sortPlayers(currentPlayers.map((playerItem) => {
-      if (playerItem.id === guestId) return { ...playerItem, points: nextPoints };
-      if (leader && playerItem.id === leader.id && leaderPointsDelta !== 0) {
-        return { ...playerItem, points: clampPoints(Number(playerItem.points || 0) + leaderPointsDelta) };
-      }
-      return playerItem;
-    }));
-
-    setStore({
-      players,
-      pointLocks: localPointLocks,
-      shields: localShields,
-      pendingAttacks: localPendingAttacks,
-      traps: localTraps,
-      sharedPrize: remoteUpdates.sharedPrize || getStore().sharedPrize,
-      lastSabotage: appliedSabotage,
-      lastPointDelta: playerDelta
-    });
-  },
-
   hostCancelRound: async () => {
     const { pin } = getStore();
     if (!pin) return;
@@ -864,7 +873,7 @@ export const useGameStore = create((setStore, getStore) => ({
   },
 
   guestGoToLobby: () => {
-    setStore({ phase: 'lobby', lastResultType: null, lastPointDelta: 0, lastSabotage: null });
+    setStore({ phase: 'lobby', lastResultType: null, lastPointDelta: 0 });
   },
 
   guestLeaveRoom: () => {
@@ -883,16 +892,11 @@ export const useGameStore = create((setStore, getStore) => ({
       currentTrack: null,
       lastResultType: null,
       lastPointDelta: 0,
-      lastSabotage: null,
       roundAnswers: {},
       revealResults: {},
-      pointLocks: {},
-      sharedPrize: null,
-      pendingQuestionEffect: null,
-      shields: {},
-      pendingAttacks: {},
-      traps: {},
       timelineYears: [],
+      playedTracks: {},
+      bingoWinnerId: null,
       roomSubscription: null
     });
   },
@@ -974,7 +978,6 @@ export const useGameStore = create((setStore, getStore) => ({
         round: remoteRound,
         gameMode: data.settings?.gameMode || data.gameMode || 'pulse',
         targetScore: Number(data.settings?.targetScore || data.targetScore || 70),
-        sabotageConfig: data.settings?.sabotageConfig || { enabled: true, types: 'all', allowedIds: [] },
         players: data.players
           ? sortPlayers(Object.values(data.players).map((player) => ({
             ...player,
@@ -985,14 +988,9 @@ export const useGameStore = create((setStore, getStore) => ({
         currentTrack: data.currentTrack || null,
         roundAnswers: data.roundAnswers || {},
         revealResults: data.revealResults || {},
-        lastSabotage: data.lastSabotage || getStore().lastSabotage,
-        pointLocks: data.pointLocks || {},
-        sharedPrize: data.sharedPrize || null,
-        pendingQuestionEffect: data.pendingQuestionEffect || null,
-        shields: data.shields || {},
-        pendingAttacks: data.pendingAttacks || {},
-        traps: data.traps || {},
-        timelineYears: data.timelineYears || []
+        timelineYears: data.timelineYears || [],
+        playedTracks: data.playedTracks || {},
+        bingoWinnerId: data.bingoWinnerId || null
       });
 
       if (data.audio) {

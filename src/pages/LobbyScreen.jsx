@@ -1,9 +1,9 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ChaosEconomyBubbles from '../components/ChaosEconomyBubbles';
-import { GAME_MODES, SABOTAGE_OPTIONS, TIMELINE_GOAL_YEARS, VICTORY_MODES, getCombinedTimelineYears, useGameStore } from '../store/useGameStore';
-import { explainSpotifyError, prepareSpotifyPlayback } from '../services/spotify';
+import MusicNotesBubbles from '../components/MusicNotesBubbles';
+import { GAME_MODES, TIMELINE_GOAL_YEARS, VICTORY_MODES, getBingoProgressLabel, getCombinedTimelineYears, useGameStore } from '../store/useGameStore';
+import { explainSpotifyError, getPlaylistStyles, getPlaylistTracks, prepareSpotifyPlayback } from '../services/spotify';
 import ProfileMenu from '../components/ProfileMenu';
 import { auth } from '../firebase';
 
@@ -101,29 +101,6 @@ function VictoryCard({ mode, selected, onSelect }) {
   );
 }
 
-function SabotageCard({ option }) {
-  const colorClass = option.color === 'green'
-    ? 'border-neon-green/40 text-neon-green'
-    : option.color === 'red'
-      ? 'border-intense-red/50 text-intense-red'
-      : 'border-electric-purple/60 text-electric-purple';
-
-  return (
-    <div className={`rounded-xl border bg-white/5 ${colorClass}`}>
-      <div className="flex items-center gap-3 p-3">
-        <span className="material-symbols-outlined text-4xl shrink-0">{option.icon}</span>
-        <div className="min-w-0 flex-1">
-          <h3 className="text-sm font-bold text-white leading-tight">{option.name}</h3>
-          <p className="mt-0.5 font-label-caps text-[10px] text-current">{option.cost} pts</p>
-        </div>
-        <InfoDetails title={option.name}>
-          <p>{option.effect}</p>
-        </InfoDetails>
-      </div>
-    </div>
-  );
-}
-
 function TimelineYears({ years = [] }) {
   return (
     <div className="mt-3 flex flex-wrap items-center gap-1.5 pl-9">
@@ -137,11 +114,16 @@ function TimelineYears({ years = [] }) {
   );
 }
 
-const SABOTAGE_CONFIG_STYLES = {
-  red: { border: 'border-intense-red/50', bg: 'bg-intense-red/10', text: 'text-intense-red', icon: 'text-intense-red' },
-  green: { border: 'border-neon-green/45', bg: 'bg-neon-green/10', text: 'text-neon-green', icon: 'text-neon-green' },
-  purple: { border: 'border-electric-purple/60', bg: 'bg-electric-purple/12', text: 'text-electric-purple', icon: 'text-electric-purple' }
-};
+function BingoProgressBadge({ player }) {
+  const label = getBingoProgressLabel(player);
+  if (!label) return null;
+  return (
+    <div className="mt-3 flex items-center gap-1.5 pl-9">
+      <span className="material-symbols-outlined text-neon-green text-sm">grid_view</span>
+      <span className="font-label-caps text-[10px] text-neon-green">{label}</span>
+    </div>
+  );
+}
 
 export default function LobbyScreen() {
   const navigate = useNavigate();
@@ -153,7 +135,7 @@ export default function LobbyScreen() {
     round,
     gameMode,
     targetScore,
-    sabotageConfig,
+    spotifyPlaylistUrl,
     lastDisconnectedPlayer,
     hostStartGame,
     setGameSettings,
@@ -167,7 +149,6 @@ export default function LobbyScreen() {
   const [showExitConfirm, setShowExitConfirm] = useState(false);
   const [pinCopied, setPinCopied] = useState(false);
   const [linkShared, setLinkShared] = useState(false);
-  const [sabotageOpen, setSabotageOpen] = useState(false);
   const [startError, setStartError] = useState('');
   const [disconnectToast, setDisconnectToast] = useState('');
   const gameLocked = round > 1;
@@ -215,18 +196,24 @@ export default function LobbyScreen() {
     setStartError('');
     try {
       await prepareSpotifyPlayback();
-      await hostStartGame();
+      if (gameMode === 'bingo') {
+        const [tracks, styles] = await Promise.all([
+          getPlaylistTracks(spotifyPlaylistUrl),
+          getPlaylistStyles(spotifyPlaylistUrl)
+        ]);
+        await hostStartGame({ bingoTracks: tracks, bingoStyles: styles });
+      } else {
+        await hostStartGame();
+      }
     } catch (error) {
       console.error(error);
       setStartError(explainSpotifyError(error));
     }
   };
 
-  const canUseSabotage = role === 'guest' && round > 1;
-
   return (
     <motion.main className="relative z-10 min-h-screen px-margin-mobile pt-safe-header pb-28 max-w-lg mx-auto flex flex-col items-center w-full">
-      <ChaosEconomyBubbles />
+      <MusicNotesBubbles />
 
       <AnimatePresence>
         {disconnectToast && (
@@ -375,7 +362,9 @@ export default function LobbyScreen() {
                 <p className="mt-1 text-sm text-on-surface-variant">
                   {gameMode === 'timeline'
                     ? `Meta de Años Locos: ${TIMELINE_GOAL_YEARS} años. Cada jugador arranca con un año base distinto.`
-                    : `Meta: ${targetScore} puntos. La partida sigue con las mismas reglas hasta el final.`}
+                    : gameMode === 'bingo'
+                      ? 'Gana quien complete su cartón primero. Sin meta de puntos: todo es cuestión de Línea y Bingo.'
+                      : `Meta: ${targetScore} puntos. La partida sigue con las mismas reglas hasta el final.`}
                 </p>
               </div>
             ) : (
@@ -386,6 +375,14 @@ export default function LobbyScreen() {
                     <h3 className="mt-1 text-lg font-black text-white">{TIMELINE_GOAL_YEARS} años</h3>
                     <p className="mt-1 text-sm text-on-surface-variant">
                       Cada jugador arranca con un año base distinto y va completando su línea hasta llegar a la meta.
+                    </p>
+                  </div>
+                ) : gameMode === 'bingo' ? (
+                  <div className="rounded-xl border border-neon-green/30 bg-neon-green/10 p-4 text-left">
+                    <p className="font-label-caps text-[10px] text-neon-green tracking-[0.2em]">SIN META DE PUNTOS</p>
+                    <h3 className="mt-1 text-lg font-black text-white">Línea o Cartón completo</h3>
+                    <p className="mt-1 text-sm text-on-surface-variant">
+                      Cada jugador recibe un cartón de 24 casillas + 1 libre. Gana quien marque primero todo el cartón.
                     </p>
                   </div>
                 ) : (
@@ -423,102 +420,6 @@ export default function LobbyScreen() {
                     ))}
                   </div>
                 </div>
-
-                <div className="rounded-xl border border-white/10 bg-black/15 p-4">
-                  <div className="flex items-start justify-between gap-3 mb-3">
-                    <div>
-                      <span className="text-sm font-bold text-white">Sabotajes</span>
-                      <p className="text-[11px] text-on-surface-variant mt-0.5 leading-relaxed">
-                        Los sabotajes permiten gastar puntos para atacar al líder. ¡Ideal para las revancha!
-                      </p>
-                    </div>
-                    <InfoDetails title="¿Qué son los sabotajes?">
-                      <p>Son cartas especiales que los jugadores pueden usar mientras suena la música.</p>
-                      <p className="mt-2">Cada sabotaje tiene un coste en puntos. Bien usados, pueden cambiar el resultado de la partida.</p>
-                      <p className="mt-2 text-neon-green">Se desbloquean a partir de la ronda 2.</p>
-                    </InfoDetails>
-                  </div>
-
-                  <div className="grid gap-2 mb-3">
-                    {[
-                      { id: 'none', label: 'Sin sabotajes', desc: 'Juego limpio, solo música y respuestas.', icon: 'block', selected: !sabotageConfig?.enabled },
-                      { id: 'all', label: 'Con todos los sabotajes', desc: 'Más caos, más drama y más revancha.', icon: 'auto_awesome', selected: sabotageConfig?.enabled && sabotageConfig?.types === 'all' },
-                      { id: 'custom', label: 'Solo algunos sabotajes', desc: 'Tú eliges cuáles aparecen en la partida.', icon: 'tune', selected: sabotageConfig?.enabled && sabotageConfig?.types === 'custom' }
-                    ].map((opt) => (
-                      <div
-                        key={opt.id}
-                        className={`rounded-xl border transition-colors ${opt.selected ? 'border-electric-purple/60 bg-electric-purple/10' : 'border-white/10 bg-black/10'}`}
-                      >
-                        <div className="flex items-center gap-3 p-3">
-                          <button
-                            type="button"
-                            onClick={() => {
-                              if (opt.id === 'none') handleSettingsChange({ sabotageConfig: { enabled: false, types: 'none', allowedIds: [] } });
-                              else if (opt.id === 'all') handleSettingsChange({ sabotageConfig: { enabled: true, types: 'all', allowedIds: [] } });
-                              else handleSettingsChange({ sabotageConfig: { enabled: true, types: 'custom', allowedIds: sabotageConfig?.allowedIds || [] } });
-                            }}
-                            className={`w-6 h-6 rounded-md border flex items-center justify-center shrink-0 ${opt.selected ? 'border-electric-purple bg-electric-purple text-white' : 'border-white/20 bg-white/5 text-transparent'}`}
-                            aria-pressed={opt.selected}
-                          >
-                            <span className="material-symbols-outlined text-base">check</span>
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              if (opt.id === 'none') handleSettingsChange({ sabotageConfig: { enabled: false, types: 'none', allowedIds: [] } });
-                              else if (opt.id === 'all') handleSettingsChange({ sabotageConfig: { enabled: true, types: 'all', allowedIds: [] } });
-                              else handleSettingsChange({ sabotageConfig: { enabled: true, types: 'custom', allowedIds: sabotageConfig?.allowedIds || [] } });
-                            }}
-                            className="min-w-0 flex-1 text-left"
-                          >
-                            <span className="block text-sm font-bold text-white leading-tight">{opt.label}</span>
-                            <span className="mt-0.5 block text-[11px] text-on-surface-variant">{opt.desc}</span>
-                          </button>
-                          <span className={`material-symbols-outlined text-2xl shrink-0 ${opt.selected ? 'text-electric-purple' : 'text-white/20'}`}>{opt.icon}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {sabotageConfig?.enabled && sabotageConfig?.types === 'custom' && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      className="overflow-hidden"
-                    >
-                      <p className="text-[11px] text-on-surface-variant mb-2 font-bold">¿Cuáles habilitas?</p>
-                      <div className="grid gap-1.5">
-                        {SABOTAGE_OPTIONS.map((option) => {
-                          const s = SABOTAGE_CONFIG_STYLES[option.color] || SABOTAGE_CONFIG_STYLES.purple;
-                          const isSelected = sabotageConfig?.allowedIds?.includes(option.id);
-                          return (
-                            <button
-                              key={option.id}
-                              type="button"
-                              onClick={() => {
-                                const current = sabotageConfig?.allowedIds || [];
-                                const next = isSelected
-                                  ? current.filter((id) => id !== option.id)
-                                  : [...current, option.id];
-                                handleSettingsChange({ sabotageConfig: { ...sabotageConfig, allowedIds: next } });
-                              }}
-                              className={`rounded-xl border p-2.5 flex items-center gap-2.5 text-left transition-all active:scale-[0.98] ${isSelected ? `${s.border} ${s.bg}` : 'border-white/10 bg-black/15'}`}
-                            >
-                              <span className={`material-symbols-outlined text-3xl shrink-0 ${isSelected ? s.icon : 'text-white/30'}`}>{option.icon}</span>
-                              <div className="flex-1 min-w-0">
-                                <span className={`text-xs font-black leading-tight ${isSelected ? 'text-white' : 'text-white/50'}`}>{option.name}</span>
-                                <span className={`block text-[9px] leading-snug mt-0.5 ${isSelected ? s.text : 'text-white/25'}`}>{option.cost}pts · {option.effect.slice(0, 55)}{option.effect.length > 55 ? '...' : ''}</span>
-                              </div>
-                              <div className={`w-5 h-5 rounded-md border flex items-center justify-center shrink-0 ${isSelected ? s.border : 'border-white/15'}`}>
-                                {isSelected && <span className={`material-symbols-outlined text-sm ${s.text}`}>check</span>}
-                              </div>
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </motion.div>
-                  )}
-                </div>
               </div>
             )}
 
@@ -545,54 +446,6 @@ export default function LobbyScreen() {
         {role !== 'host' && (
           <div className="w-full h-12 bg-white/5 text-on-surface-variant font-label-caps text-label-caps rounded-xl flex items-center justify-center border border-white/10">
             ESPERANDO AL ANFITRIÓN...
-          </div>
-        )}
-
-        {role === 'guest' && sabotageConfig?.enabled !== false && (
-          <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md text-left overflow-hidden">
-            <button
-              type="button"
-              onClick={() => setSabotageOpen((prev) => !prev)}
-              className="w-full p-4 flex items-center justify-between gap-3"
-            >
-              <div>
-                <p className="font-label-caps text-electric-purple text-xs">SABOTAJES</p>
-                <h2 className="text-base font-bold text-white">Opciones de esta ronda</h2>
-              </div>
-              <motion.span
-                animate={{ rotate: sabotageOpen ? 180 : 0 }}
-                transition={{ duration: 0.22 }}
-                className="material-symbols-outlined text-electric-purple text-2xl"
-              >
-                expand_more
-              </motion.span>
-            </button>
-            <AnimatePresence initial={false}>
-              {sabotageOpen && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.24, ease: 'easeInOut' }}
-                  className="overflow-hidden"
-                >
-                  <div className="px-4 pb-4 grid gap-2">
-                    {(sabotageConfig?.types === 'custom' && sabotageConfig?.allowedIds?.length > 0
-                      ? SABOTAGE_OPTIONS.filter((o) => sabotageConfig.allowedIds.includes(o.id))
-                      : SABOTAGE_OPTIONS
-                    ).map((option) => (
-                      <SabotageCard
-                        key={option.id}
-                        option={option}
-                      />
-                    ))}
-                    {!canUseSabotage && (
-                      <p className="text-[11px] text-on-surface-variant">Se desbloquean después de la primera ronda.</p>
-                    )}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
           </div>
         )}
       </section>
@@ -626,12 +479,15 @@ export default function LobbyScreen() {
                   )}
                   <span className="font-body-md font-bold text-white truncate">{player.name}</span>
                 </div>
-                <div className="text-right shrink-0">
-                  <span className="font-black text-neon-green drop-shadow-[0_0_8px_rgba(57,255,20,0.4)]">{player.points}</span>
-                  <span className="text-xs ml-1 text-on-surface-variant">PTS</span>
-                </div>
+                {gameMode !== 'bingo' && (
+                  <div className="text-right shrink-0">
+                    <span className="font-black text-neon-green drop-shadow-[0_0_8px_rgba(57,255,20,0.4)]">{player.points}</span>
+                    <span className="text-xs ml-1 text-on-surface-variant">PTS</span>
+                  </div>
+                )}
               </div>
               {gameMode === 'timeline' && <TimelineYears years={getCombinedTimelineYears(player)} />}
+              {gameMode === 'bingo' && gameLocked && <BingoProgressBadge player={player} />}
             </motion.div>
           ))}
         </div>

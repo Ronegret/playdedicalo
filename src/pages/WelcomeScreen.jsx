@@ -150,7 +150,7 @@ export default function WelcomeScreen() {
               <span className="text-animated-gradient">la habías jugado</span>
             </h1>
             <p className="text-sm md:text-base text-on-surface-variant leading-relaxed">
-              Adivina canciones, sabotea a tus amigos y gana llegando primero a la meta.
+              Adivina canciones, arma tu ruta de años o marca tu cartón de Bingo Musical. Gana llegando primero a la meta.
             </p>
           </motion.div>
 
@@ -163,7 +163,7 @@ export default function WelcomeScreen() {
           >
             {[
               ['3', 'modos de juego'],
-              ['4', 'sabotajes'],
+              ['24', 'casillas bingo'],
               ['+5', 'por acierto'],
             ].map(([val, label]) => (
               <div key={label}>

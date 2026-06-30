@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TIMELINE_GOAL_YEARS, getCombinedTimelineYears, useGameStore } from '../store/useGameStore';
 import ProfileMenu from '../components/ProfileMenu';
@@ -27,19 +27,65 @@ const RESULT_STYLES = {
     icon: 'cancel',
     title: 'FALLASTE',
     copy: 'Pierdes puntos, pero la siguiente ronda puede cambiarlo todo.'
-  },
-  sabotage: {
-    bgColor: '#0d0717',
-    glowColor: 'rgba(168,85,247,0.4)',
-    colorOverlay: 'rgba(168,85,247,0.08)',
-    border: 'border-electric-purple',
-    borderHex: '#a855f7',
-    text: 'text-electric-purple',
-    icon: 'auto_awesome',
-    title: 'SABOTAJE',
-    copy: 'Alguien jugó una carta.'
   }
 };
+
+const CONFETTI_COLORS = ['#ff7a1a', '#39ff14', '#3f78ff', '#a855f7', '#ffbf4d'];
+
+function BingoConfetti() {
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const pieces = [];
+    for (let i = 0; i < 24; i += 1) {
+      const piece = document.createElement('span');
+      piece.className = 'absolute rounded-sm';
+      const size = 6 + Math.random() * 8;
+      piece.style.width = `${size}px`;
+      piece.style.height = `${size}px`;
+      piece.style.left = `${Math.random() * 100}%`;
+      piece.style.top = '-40px';
+      piece.style.backgroundColor = CONFETTI_COLORS[i % CONFETTI_COLORS.length];
+      container.appendChild(piece);
+
+      pieces.push({
+        el: piece,
+        posY: -40 - Math.random() * 300,
+        posX: 0,
+        speed: 2 + Math.random() * 2,
+        drift: (Math.random() - 0.5) * 1.5,
+        rotation: 0,
+        rotSpeed: (Math.random() - 0.5) * 6
+      });
+    }
+
+    let animationId;
+    function animate() {
+      pieces.forEach((piece) => {
+        piece.posY += piece.speed;
+        piece.posX += piece.drift;
+        piece.rotation += piece.rotSpeed;
+        if (piece.posY > window.innerHeight + 40) {
+          piece.posY = -40;
+          piece.posX = 0;
+        }
+        piece.el.style.transform = `translate(${piece.posX}px, ${piece.posY}px) rotate(${piece.rotation}deg)`;
+      });
+      animationId = requestAnimationFrame(animate);
+    }
+    animate();
+
+    return () => {
+      cancelAnimationFrame(animationId);
+      pieces.forEach((piece) => piece.el.remove());
+    };
+  }, []);
+
+  return <div ref={containerRef} className="absolute inset-0 overflow-hidden pointer-events-none z-0" />;
+}
 
 function TimelineYears({ years = [] }) {
   return (
@@ -98,13 +144,58 @@ function RankingList({ players, final = false, showTimeline = false }) {
   );
 }
 
+function BingoRankingList({ ranking, winnerId }) {
+  if (!ranking.length) return null;
+  return (
+    <div className="flex flex-col gap-2 w-full">
+      {ranking.map((player, index) => {
+        const isWinner = player.id === winnerId;
+        const medalClass = isWinner
+          ? 'bg-neon-green text-black'
+          : index === 1 ? 'bg-white/20 text-white'
+            : index === 2 ? 'bg-electric-purple/30 text-white'
+              : 'bg-black/20 text-on-surface-variant';
+        const { missingForLine, missingForFullCard, hasLine } = player.bingoProgress;
+        return (
+          <motion.div
+            key={player.id}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.04 }}
+            className={`p-3 rounded-xl border ${isWinner ? 'bg-neon-green/10 border-neon-green/50' : 'bg-white/5 border-white/10'}`}
+          >
+            <div className="flex justify-between items-center gap-3">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <span className={`w-8 h-8 rounded-xl flex items-center justify-center font-black text-sm shrink-0 ${medalClass}`}>
+                  {isWinner ? '🏆' : index + 1}
+                </span>
+                {player.avatar?.startsWith?.('http') ? (
+                  <img src={player.avatar} alt={player.name} className="w-8 h-8 rounded-full object-cover border border-white/10 shrink-0" />
+                ) : (
+                  <span className="w-8 h-8 rounded-full bg-black/20 flex items-center justify-center text-lg shrink-0">
+                    {player.avatar || '•'}
+                  </span>
+                )}
+                <span className="font-bold text-sm truncate">{player.name}</span>
+              </div>
+              <span className="font-black text-xs text-neon-green shrink-0 text-right">
+                {isWinner ? '¡BINGO!' : hasLine ? `LÍNEA · faltan ${missingForFullCard}` : `Faltan ${missingForLine}`}
+              </span>
+            </div>
+          </motion.div>
+        );
+      })}
+    </div>
+  );
+}
+
 export default function ResultScreen() {
   const navigate = useNavigate();
   const [shareCopied, setShareCopied] = useState(false);
   const {
     role, phase, players, gameMode, targetScore,
     hostNextRound, hostCloseRoom, guestLeaveRoom, guestId,
-    lastResultType, lastPointDelta, lastSabotage,
+    lastResultType, lastPointDelta, bingoWinnerId, getBingoRanking,
     revealResults, currentTrack, roomError, clearRoomError, guestAvatar
   } = useGameStore();
   const [showExitConfirm, setShowExitConfirm] = useState(false);
@@ -117,11 +208,10 @@ export default function ResultScreen() {
     : null;
   const resultType = guestReveal?.resultType || lastResultType || 'success';
   const pointDelta = guestReveal?.delta ?? lastPointDelta;
-  const sabotage = guestReveal?.sabotage || lastSabotage;
-  const style = RESULT_STYLES[resultType];
+  const style = RESULT_STYLES[resultType] || RESULT_STYLES.success;
   const isSuccess = resultType === 'success';
   const isFail = resultType === 'fail';
-  const resultWord = sabotage ? 'SABOTAJE' : isSuccess ? 'CORRECTO' : isFail ? 'FALLASTE' : style.title;
+  const resultWord = isSuccess ? 'CORRECTO' : isFail ? 'FALLASTE' : style.title;
   const deltaColor = pointDelta > 0 ? 'text-neon-green' : pointDelta < 0 ? 'text-intense-red' : 'text-white/30';
   const deltaLabel = pointDelta > 0 ? `+${pointDelta}` : pointDelta !== 0 ? String(pointDelta) : null;
 
@@ -141,9 +231,12 @@ export default function ResultScreen() {
   };
 
   const handleShare = async () => {
-    const text = isFinal && winner
-      ? `¡${winner.name} ganó en Dedícalo con ${winner.points} puntos! 🎵 ¿Te atreves? ${window.location.origin}`
-      : `Llevo ${guestPoints} puntos en Dedícalo 🎵 ${window.location.origin}`;
+    const bingoWinner = gameMode === 'bingo' ? players.find((p) => p.id === bingoWinnerId) : null;
+    const text = isFinal && gameMode === 'bingo' && bingoWinner
+      ? `¡${bingoWinner.name} cantó BINGO en Dedícalo! 🎶 ¿Te atreves? ${window.location.origin}`
+      : isFinal && winner
+        ? `¡${winner.name} ganó en Dedícalo con ${winner.points} puntos! 🎵 ¿Te atreves? ${window.location.origin}`
+        : `Llevo ${guestPoints} puntos en Dedícalo 🎵 ${window.location.origin}`;
     try {
       if (navigator.share) {
         await navigator.share({ title: 'Dedícalo', text, url: window.location.origin });
@@ -157,7 +250,87 @@ export default function ResultScreen() {
     }
   };
 
-  // ── FINAL screen ──
+  // ── FINAL screen — Bingo Musical ──
+  if (isFinal && gameMode === 'bingo') {
+    const bingoRanking = getBingoRanking();
+    const bingoWinner = players.find((p) => p.id === bingoWinnerId) || bingoRanking[0];
+
+    return (
+      <motion.main
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="fixed inset-0 z-50 overflow-y-auto bg-surface text-white"
+        style={{ overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' }}
+      >
+        <BingoConfetti />
+        <div className="relative z-10 min-h-full max-w-lg mx-auto flex flex-col items-center px-5 py-8">
+          <button
+            type="button"
+            onClick={handleFinish}
+            className="absolute top-4 left-4 z-[100] h-10 rounded-xl border border-white/12 bg-black/35 px-3 text-white/75 font-label-caps text-[11px] tracking-[0.16em] flex items-center gap-1.5 active:scale-95 transition-all"
+          >
+            <span className="material-symbols-outlined text-base">arrow_back</span>
+            {role === 'host' ? 'CERRAR' : 'SALIR'}
+          </button>
+          <div className="absolute top-4 right-4 z-[100]">
+            <ProfileMenu user={role === 'host' ? auth.currentUser : null} guestAvatar={role === 'guest' ? guestAvatar : null} />
+          </div>
+          <motion.div
+            initial={{ scale: 0.92, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="w-full text-center"
+          >
+            <p className="font-label-caps text-electric-purple tracking-widest text-xs">BINGO MUSICAL</p>
+            <motion.h1
+              animate={{ scale: [1, 1.08, 1] }}
+              transition={{ repeat: Infinity, duration: 1.6, ease: 'easeInOut' }}
+              className="font-headline-lg text-5xl font-black mt-1 mb-4 text-neon-green drop-shadow-[0_0_30px_rgba(57,255,20,0.6)]"
+            >
+              ¡BINGO!
+            </motion.h1>
+
+            {bingoWinner && (
+              <div className="mb-4 rounded-2xl border border-neon-green/50 bg-neon-green/10 p-4">
+                <p className="font-label-caps text-neon-green text-xs">GANADOR</p>
+                <p className="mt-0.5 font-headline-lg-mobile text-2xl text-white">{bingoWinner.name}</p>
+                <p className="mt-0.5 text-sm text-on-surface-variant">¡Completó el cartón entero!</p>
+              </div>
+            )}
+
+            <BingoRankingList ranking={bingoRanking} winnerId={bingoWinnerId} />
+
+            <div className="mt-5 flex flex-col gap-2">
+              {role === 'host' && (
+                <button
+                  onClick={handleFinish}
+                  className="w-full h-12 rounded-xl bg-primary text-white font-label-caps text-sm uppercase font-bold border border-white/20 active:scale-95 transition-all"
+                >
+                  CERRAR SALA
+                </button>
+              )}
+              <button
+                onClick={handleShare}
+                className="w-full h-10 rounded-xl border border-white/15 bg-white/5 text-white font-label-caps text-xs font-bold active:scale-95 transition-all flex items-center justify-center gap-2"
+              >
+                <span className="material-symbols-outlined text-base">share</span>
+                {shareCopied ? 'COPIADO' : 'COMPARTIR RESULTADO'}
+              </button>
+              {role !== 'host' && (
+                <button
+                  onClick={handleFinish}
+                  className="w-full h-12 rounded-xl font-label-caps uppercase text-sm font-bold border border-white/20 bg-white/5 text-white active:scale-95 transition-all"
+                >
+                  SALIR
+                </button>
+              )}
+            </div>
+          </motion.div>
+        </div>
+      </motion.main>
+    );
+  }
+
+  // ── FINAL screen — Corte Maestro / Años Locos ──
   if (isFinal) {
     return (
       <motion.main
@@ -196,16 +369,6 @@ export default function ResultScreen() {
               </div>
             )}
 
-            {lastSabotage && (
-              <div className="mb-4 rounded-2xl border border-electric-purple/50 bg-electric-purple/10 p-3 text-left">
-                <p className="font-label-caps text-electric-purple text-[10px]">ÚLTIMO SABOTAJE</p>
-                <p className="mt-0.5 font-bold text-sm">{lastSabotage.name}</p>
-                <p className="text-xs text-on-surface-variant leading-snug">
-                  {lastSabotage.by ? `${lastSabotage.by} lo activó. ` : ''}{lastSabotage.effect}
-                </p>
-              </div>
-            )}
-
             <RankingList players={players} final showTimeline={gameMode === 'timeline'} />
 
             <div className="mt-5 flex flex-col gap-2">
@@ -239,7 +402,7 @@ export default function ResultScreen() {
     );
   }
 
-  // ── NON-FINAL screen — diseño compacto ──
+  // ── NON-FINAL screen — diseño compacto (Bingo Musical nunca llega aquí: no usa fase "result") ──
   const sortedPlayers = [...players].sort((a, b) => Number(b.points || 0) - Number(a.points || 0));
 
   return (
@@ -387,18 +550,7 @@ export default function ResultScreen() {
           </div>
 
           <div className="relative mt-4 mx-auto max-w-sm">
-            {sabotage && (
-              <div className="rounded-2xl border border-electric-purple/45 bg-electric-purple/15 px-4 py-3">
-                <p className="font-label-caps text-[10px] text-electric-purple">SABOTAJE RECIBIDO</p>
-                <p className="mt-1 text-sm font-black text-white">{sabotage.name}</p>
-                <p className="mt-1 text-xs leading-relaxed text-white/70">
-                  {sabotage.by ? `${sabotage.by} lo activó. ` : ''}{sabotage.effect}
-                </p>
-              </div>
-            )}
-            {!sabotage && (
-              <p className="text-sm leading-relaxed text-white/70">{style.copy}</p>
-            )}
+            <p className="text-sm leading-relaxed text-white/70">{style.copy}</p>
           </div>
         </motion.div>
 

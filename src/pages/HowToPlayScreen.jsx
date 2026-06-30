@@ -3,17 +3,17 @@ import { useNavigate } from 'react-router-dom';
 import NeonButton from '../components/NeonButton';
 import SupportButton from '../components/SupportButton';
 import { getPlaylistRequestUrl } from '../config/support';
-import { SABOTAGE_OPTIONS, TIMELINE_GOAL_YEARS, VICTORY_MODES } from '../store/useGameStore';
+import { BINGO_SOCIAL_PROMPTS, TIMELINE_GOAL_YEARS, VICTORY_MODES } from '../store/useGameStore';
 
 const QUICK_FLOW = [
   { icon: 'person_add', title: 'Sala', text: 'El anfitrión crea la sala. Los demás entran con PIN o QR.' },
-  { icon: 'album', title: 'Música', text: 'Suena una canción oculta. Nadie ve el título.' },
-  { icon: 'front_hand', title: 'Voto', text: 'El anfitrión corta la música y todos responden.' },
+  { icon: 'album', title: 'Música', text: 'Suena una canción del estilo elegido.' },
+  { icon: 'front_hand', title: 'Juega', text: 'Responde, ordena años o marca tu cartón según el modo.' },
   { icon: 'emoji_events', title: 'Meta', text: 'La partida sigue hasta que alguien gana.' },
 ];
 
 const GOLDEN_RULES = [
-  ['El anfitrión también juega', 'Controla la música, pero responde y suma puntos como todos.'],
+  ['El anfitrión también juega', 'Controla la música, pero participa igual que todos.'],
   ['La canción siempre va oculta', 'No se muestra título ni artista antes de revelar el resultado.'],
   ['La partida no cambia a mitad', 'El estilo, modo y meta se eligen al crear sala y se mantienen hasta el final.'],
 ];
@@ -24,29 +24,28 @@ const HOST_STEPS = [
   ['Conecta Spotify Premium', 'Solo el anfitrión necesita Spotify Premium. Los invitados no tienen que conectarlo.'],
   ['Elige un estilo musical', 'Selecciona una playlist sugerida: Reggaeton, Hits, Rock Latino, Bailable y más.'],
   ['Prueba el sonido', 'Pulsa el vinilo de prueba. Si suena, ya puedes crear la sala.'],
-  ['Comparte el PIN o QR', 'Los jugadores entran desde su móvil. El anfitrión también juega y responde como todos.'],
+  ['Comparte el PIN o QR', 'Los jugadores entran desde su móvil. El anfitrión también juega como todos.'],
 ];
 
 const GUEST_STEPS = [
   ['Elige “Invitado”', 'No necesitas Google ni Spotify. Solo entra a la sala.'],
   ['Escribe el PIN o escanea el QR', 'El anfitrión lo muestra en pantalla al crear la sala.'],
   ['Elige tu nombre e identidad', 'Así todos te reconocen en el ranking.'],
-  ['Escucha, vota y espera el resultado', 'Cuando votas, tu pantalla queda lista hasta que el anfitrión revela la ronda.'],
+  ['Escucha y participa', 'Responde, completa tu ruta de años o marca tu cartón según el modo elegido.'],
 ];
 
 const SPOTIFY_STEPS = [
   ['Google primero', 'El anfitrión inicia sesión con Google para preparar la sala.'],
   ['Spotify después', 'Pulsa “Conectar Spotify” e inicia sesión con una cuenta Premium.'],
   ['Prueba antes de crear', 'Toca “Probar sonido”. Si escuchas música, todo está listo.'],
-  ['Durante la partida', 'El anfitrión controla cuándo suena y cuándo se pausa. Nadie ve el nombre de la canción.'],
+  ['Durante la partida', 'El anfitrión controla cuándo suena la música. Nadie ve el nombre de la canción.'],
 ];
 
 const ROUND_FLOW = [
-  { icon: 'play_arrow', title: '1. Suena', text: 'Empieza una canción aleatoria del estilo elegido.' },
-  { icon: 'casino', title: '2. Ataca', text: 'En Caos DJ puedes usar sabotajes mientras suena.' },
-  { icon: 'pause', title: '3. Corta', text: 'El anfitrión pausa la música y aparece la pregunta.' },
-  { icon: 'how_to_vote', title: '4. Vota', text: 'Todos responden desde su móvil.' },
-  { icon: 'celebration', title: '5. Revela', text: 'Verde si aciertas, rojo si fallas, lila si hay sabotaje.' },
+  { icon: 'play_arrow', title: '1. Suena', text: 'Empieza una canción del estilo elegido.' },
+  { icon: 'pause', title: '2. Corta', text: 'El anfitrión pausa la música y aparece la pregunta.' },
+  { icon: 'how_to_vote', title: '3. Vota', text: 'Todos responden desde su móvil.' },
+  { icon: 'celebration', title: '4. Revela', text: 'Verde si aciertas, rojo si fallas.' },
 ];
 
 const POINT_RULES = [
@@ -56,7 +55,7 @@ const POINT_RULES = [
     value: '10',
     label: 'INICIO',
     color: '#ffffff',
-    text: 'Así nadie empieza desde cero y los sabotajes tienen valor desde el comienzo.'
+    text: 'Así nadie empieza desde cero en Corte Maestro o Años Locos.'
   },
   {
     icon: 'check_circle',
@@ -73,22 +72,12 @@ const POINT_RULES = [
     label: 'FALLO',
     color: '#ff6b8b',
     text: 'Si fallas, pierdes 3 puntos. Si no respondes, también cuenta como fallo.'
-  },
-  {
-    icon: 'warning',
-    title: 'Con La Trampa',
-    value: '-6',
-    label: 'TRAMPA',
-    color: '#ff7a1a',
-    text: 'Si tenías una trampa encima y fallas, pierdes 6 puntos en vez de 3.'
   }
 ];
 
 const POINT_EXAMPLES = [
   ['Laura acierta', '10 + 5', '15 pts'],
   ['Diego falla', '10 - 3', '7 pts'],
-  ['Marta acierta, pero estaba bloqueada', '10 + 0', '10 pts'],
-  ['Carlos falla con trampa', '10 - 6', '4 pts'],
 ];
 
 const MODES = [
@@ -107,40 +96,34 @@ const MODES = [
     text: 'Cada jugador arma su propia ruta musical. Coloca cada canción antes, después o entre los años que ya tengas.'
   },
   {
-    icon: 'auto_awesome',
+    icon: 'grid_view',
     color: '#39ff14',
-    title: 'Caos DJ',
-    goal: `Meta de ${VICTORY_MODES.map((mode) => mode.targetScore).join(', ')} puntos`,
-    text: 'Como Corte Maestro, pero con sabotajes. Aquí gana quien responde bien y también sabe jugar con estrategia.'
+    title: 'Bingo Musical',
+    goal: '24 casillas + 1 libre',
+    text: 'Cada jugador tiene un cartón. Márcalo mientras suena la música y compite por cantar ¡LÍNEA! y ¡BINGO! Ideal para grupos grandes.'
   },
 ];
 
 const FAQ = [
-  ['¿El anfitrión también juega?', 'Sí. El anfitrión controla la música, pero responde y suma puntos igual que todos.'],
+  ['¿El anfitrión también juega?', 'Sí. El anfitrión controla la música, pero participa igual que todos.'],
   ['¿Todos necesitan Spotify Premium?', 'No. Solo el anfitrión necesita conectar Spotify Premium. Los invitados solo escuchan el sonido del lugar.'],
-  ['¿Se ve la canción que está sonando?', 'No. La canción debe permanecer oculta para todos, incluido el anfitrión.'],
-  ['¿Cuándo termina la partida?', 'Corte Maestro y Caos DJ terminan cuando alguien llega a la meta de puntos. Años Locos termina cuando alguien completa su ruta de 12 años.'],
-  ['¿Puedo cambiar de estilo a mitad de partida?', 'No. El estilo se elige al crear la sala y se mantiene hasta terminar la partida.'],
-  ['¿Qué pasa si fallo?', 'Pierdes 3 puntos. Si aciertas, ganas 5 puntos. En Caos DJ algunos sabotajes pueden cambiar el resultado.'],
-  ['¿Cuándo gasto puntos en sabotajes?', 'Los puntos se descuentan al usar el sabotaje. Si no tienes suficientes puntos, no puedes activarlo.'],
-  ['¿Qué pasa cuando ya voté?', 'Tu pantalla queda esperando. Cuando el anfitrión revela, verás verde, rojo o lila según lo que ocurrió.'],
+  ['¿Se ve la canción que está sonando?', 'En Corte Maestro y Años Locos no, queda oculta hasta el resultado. En Bingo Musical tampoco se anuncia el título: tu cartón se ilumina solo si coincide.'],
+  ['¿Cuándo termina la partida?', 'Corte Maestro termina cuando alguien llega a la meta de puntos. Años Locos termina al completar 12 años. Bingo Musical termina cuando alguien completa el cartón entero.'],
+  ['¿Puedo cambiar de modo a mitad de partida?', 'No. El modo se elige al crear la sala y se mantiene hasta terminar la partida.'],
+  ['¿Qué pasa si fallo en Corte Maestro o Años Locos?', 'Pierdes 3 puntos. Si aciertas, ganas 5 puntos.'],
+  ['¿Cómo se gana en Bingo Musical?', 'Marcando casillas a medida que suenan canciones que coinciden, o casillas sociales cuando ocurren en la fiesta. El primero en completar el cartón entero gana.'],
+  ['¿El ranking de Bingo Musical usa puntos?', 'No. Se ordena solo por cuántas casillas te faltan para Línea y para el cartón completo, en vivo para todos.'],
   ['¿Qué hago si Spotify no suena?', 'Reconecta Spotify, verifica que la cuenta sea Premium, sube el volumen del dispositivo y vuelve a probar sonido antes de crear la sala.'],
 ];
 
-const SABOTAGE_RULES = [
-  ['Cuándo aparecen', 'Desde la ronda 2, mientras la canción todavía está sonando.'],
-  ['Quién puede usarlos', 'Cualquier jugador con puntos suficientes, incluido el anfitrión.'],
-  ['A quién atacan', 'La mayoría apunta al jugador que va primero. El Escudo te protege a ti.'],
-  ['Cuándo se pagan', 'El coste se descuenta en el momento de activar el sabotaje.'],
-  ['Qué pasa si hay escudo', 'El escudo absorbe el ataque y se gasta. El atacante igualmente pagó el sabotaje.'],
-  ['Qué pasa si llegan varios ataques', 'El juego prioriza el ataque activo de la ronda. Los demás quedan como intención visible para que se entienda quién intentó atacar.'],
+const BINGO_RULES = [
+  ['Casillas reales', 'Se iluminan en verde cuando una canción que ya sonó coincide con la casilla: artista, título, década o estilo.'],
+  ['Casillas sociales', 'Son moradas y siempre se pueden marcar. Tócalas solo si de verdad pasó eso en la fiesta — funcionan por honor, como en el Bingo Hipster.'],
+  ['Línea', 'Completa una fila, columna o diagonal y la pantalla celebra con un aviso de ¡LÍNEA! Puedes lograr varias en la misma partida.'],
+  ['Bingo', 'Marca las 24 casillas (la del centro ya viene marcada) y la partida termina al instante. ¡Ganaste!'],
+  ['Ranking en vivo', 'No usa puntos: se ordena por cuántas casillas te faltan para tu mejor Línea y para el cartón completo.'],
+  ['Sin turnos ni esperas', 'No hay preguntas que responder ni rondas que esperar. Cada quien marca su cartón a su ritmo mientras la música no para — ideal para grupos grandes.'],
 ];
-
-const SABOTAGE_STYLES = {
-  red: { border: 'border-intense-red/45', bg: 'bg-intense-red/10', text: 'text-intense-red' },
-  green: { border: 'border-neon-green/40', bg: 'bg-neon-green/10', text: 'text-neon-green' },
-  purple: { border: 'border-electric-purple/50', bg: 'bg-electric-purple/10', text: 'text-electric-purple' }
-};
 
 const fadeUp = {
   hidden: { opacity: 0, y: 18 },
@@ -230,7 +213,7 @@ export default function HowToPlayScreen() {
               Aprende rápido. Que empiece la fiesta.
             </h1>
             <p className="mt-4 text-sm sm:text-base leading-relaxed text-on-surface-variant max-w-2xl">
-              Una canción suena, el anfitrión la corta, todos responden y la sala explota con el resultado. Verde, rojo o lila. Así de simple.
+              Tres formas de jugar: responde antes que nadie, arma tu ruta de años o marca tu cartón de Bingo Musical mientras la música no para.
             </p>
             <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3">
               {QUICK_FLOW.map((item) => (
@@ -284,10 +267,10 @@ export default function HowToPlayScreen() {
           <ManualSection
             icon="route"
             title="Resumen rápido de una partida"
-            subtitle="El flujo que todos deben entender antes de empezar."
+            subtitle="El flujo de Corte Maestro y Años Locos."
             defaultOpen
           >
-            <div className="mt-4 grid gap-3 sm:grid-cols-5">
+            <div className="mt-4 grid gap-3 sm:grid-cols-4">
               {ROUND_FLOW.map((item, index) => (
                 <div key={item.title} className="rounded-2xl border border-white/10 bg-white/[0.035] p-3 text-center">
                   <span className="inline-flex w-9 h-9 rounded-xl bg-vinyl-orange/15 border border-vinyl-orange/30 items-center justify-center">
@@ -299,15 +282,18 @@ export default function HowToPlayScreen() {
                 </div>
               ))}
             </div>
+            <p className="mt-3 text-xs text-on-surface-variant leading-relaxed">
+              Bingo Musical no usa este flujo: no hay preguntas ni rondas, la música suena en bucle y cada quien marca su cartón. Ve la sección dedicada más abajo.
+            </p>
           </ManualSection>
 
           <ManualSection
             icon="scoreboard"
             title="Cómo funcionan los puntos"
-            subtitle="Qué suma, qué resta y cuándo termina la partida."
+            subtitle="Qué suma, qué resta y cuándo termina la partida. (No aplica a Bingo Musical, que no usa puntos.)"
             defaultOpen
           >
-            <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mt-4 grid gap-3 sm:grid-cols-3">
               {POINT_RULES.map((rule) => (
                 <article
                   key={rule.title}
@@ -349,7 +335,7 @@ export default function HowToPlayScreen() {
 
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
               <div className="rounded-2xl border border-vinyl-orange/30 bg-vinyl-orange/10 p-4">
-                <p className="text-sm font-black text-white">Corte Maestro y Caos DJ</p>
+                <p className="text-sm font-black text-white">Corte Maestro</p>
                 <p className="mt-1 text-xs leading-relaxed text-on-surface-variant">
                   Gana quien llega primero a la meta elegida por el anfitrión: {VICTORY_MODES.map((mode) => mode.targetScore).join(', ')} puntos.
                 </p>
@@ -366,7 +352,7 @@ export default function HowToPlayScreen() {
           <ManualSection
             icon="headphones"
             title="Cómo crea la sala el anfitrión"
-            subtitle="El anfitrión pone la música, pero también juega y suma puntos."
+            subtitle="El anfitrión pone la música, pero también juega."
           >
             <StepList items={HOST_STEPS} />
           </ManualSection>
@@ -421,19 +407,50 @@ export default function HowToPlayScreen() {
           </ManualSection>
 
           <ManualSection
-            icon="casino"
-            title="Sabotajes en Caos DJ"
-            subtitle="Ataques con coste de puntos. Úsalos antes de que el anfitrión pare la canción."
+            icon="grid_view"
+            title="Cómo se juega Bingo Musical"
+            subtitle="Cada jugador recibe un cartón. Marca casillas mientras la música no para."
           >
-            <div className="mt-4 rounded-2xl border border-electric-purple/35 bg-electric-purple/10 p-4">
+            <div className="mt-4 rounded-2xl border border-neon-green/35 bg-neon-green/10 p-4">
               <p className="text-sm font-black text-white">Idea principal</p>
               <p className="mt-1 text-xs leading-relaxed text-on-surface-variant">
-                Un sabotaje es una jugada estratégica: pagas puntos para protegerte, atacar al líder o cambiar lo que pasará al revelar la ronda. No es obligatorio usarlos, pero pueden cambiar una partida.
+                Inspirado en el clásico Bingo Hipster: tu cartón tiene 24 casillas más una libre en el centro. Unas son musicales (se iluminan cuando suena la canción que coincide) y otras son sociales (cosas que pasan en la fiesta). Sin turnos: todos juegan a la vez.
+              </p>
+            </div>
+
+            <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.035] p-4">
+              <p className="text-sm font-black text-white">Cartón de ejemplo</p>
+              <div className="mt-3 grid grid-cols-5 gap-1.5 max-w-sm">
+                {Array.from({ length: 25 }, (_, index) => {
+                  if (index === 12) {
+                    return (
+                      <div key={index} className="aspect-square rounded-lg border border-vinyl-orange bg-vinyl-orange/20 flex items-center justify-center">
+                        <span className="material-symbols-outlined text-vinyl-orange text-base">star</span>
+                      </div>
+                    );
+                  }
+                  const isSocial = index % 4 === 0;
+                  return (
+                    <div
+                      key={index}
+                      className={`aspect-square rounded-lg border flex items-center justify-center ${
+                        isSocial ? 'border-electric-purple/40 bg-electric-purple/10' : 'border-neon-green/30 bg-neon-green/5'
+                      }`}
+                    >
+                      <span className={`material-symbols-outlined text-sm ${isSocial ? 'text-electric-purple' : 'text-neon-green/60'}`}>
+                        {isSocial ? 'celebration' : 'music_note'}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+              <p className="mt-3 text-xs leading-relaxed text-on-surface-variant">
+                Verde = casilla musical (se marca cuando suena algo que coincide). Morado = casilla social (la marcas tú cuando pasa). Naranja = casilla libre, ya viene marcada.
               </p>
             </div>
 
             <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-              {SABOTAGE_RULES.map(([title, text]) => (
+              {BINGO_RULES.map(([title, text]) => (
                 <div key={title} className="rounded-xl border border-white/8 bg-white/[0.035] p-3">
                   <p className="text-xs font-black text-white">{title}</p>
                   <p className="mt-1 text-[11px] leading-snug text-on-surface-variant">{text}</p>
@@ -441,39 +458,25 @@ export default function HowToPlayScreen() {
               ))}
             </div>
 
-            <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {SABOTAGE_OPTIONS.map((option) => {
-                const s = SABOTAGE_STYLES[option.color] || SABOTAGE_STYLES.purple;
-                return (
-                  <article key={option.id} className={`rounded-2xl border ${s.border} ${s.bg} p-4`}>
-                    <div className="flex items-start gap-3">
-                      <span className="w-11 h-11 rounded-xl bg-black/20 flex items-center justify-center shrink-0">
-                        <span className={`material-symbols-outlined text-2xl ${s.text}`}>{option.icon}</span>
-                      </span>
-                      <div>
-                        <h3 className="text-sm font-black text-white">{option.name}</h3>
-                        <p className={`font-label-caps text-[10px] ${s.text}`}>{option.cost} pts</p>
-                      </div>
-                    </div>
-                    <p className="mt-3 text-xs leading-relaxed text-on-surface-variant">{option.effect}</p>
-                    <div className="mt-3 rounded-xl bg-black/20 px-3 py-2">
-                      <p className="font-label-caps text-[10px] text-on-surface-variant">Cómo leerlo</p>
-                      <p className="mt-1 text-[11px] leading-snug text-white/80">
-                        Pagas {option.cost} puntos al activarlo. Si el ataque se aplica, verás el aviso lila en el resultado.
-                      </p>
-                    </div>
-                  </article>
-                );
-              })}
+            <div className="mt-4 rounded-2xl border border-electric-purple/35 bg-electric-purple/10 p-4">
+              <p className="text-sm font-black text-white">Ejemplos de casillas sociales</p>
+              <ul className="mt-2 space-y-1.5 text-[11px] leading-snug text-on-surface-variant">
+                {BINGO_SOCIAL_PROMPTS.slice(0, 4).map((prompt) => (
+                  <li key={prompt} className="flex items-start gap-2">
+                    <span className="material-symbols-outlined text-electric-purple text-sm shrink-0 mt-px">bolt</span>
+                    {prompt}
+                  </li>
+                ))}
+              </ul>
             </div>
 
             <div className="mt-4 rounded-2xl border border-neon-green/30 bg-neon-green/10 p-4">
-              <p className="text-sm font-black text-white">Ejemplo de ronda con sabotaje</p>
+              <p className="text-sm font-black text-white">Ejemplo de partida</p>
               <ol className="mt-3 space-y-2 text-xs leading-relaxed text-on-surface-variant">
-                <li><span className="font-black text-neon-green">1.</span> Va ganando Laura con 40 pts.</li>
-                <li><span className="font-black text-neon-green">2.</span> Diego usa Bloqueo y paga 5 pts.</li>
-                <li><span className="font-black text-neon-green">3.</span> Laura acierta la pregunta, pero estaba bloqueada.</li>
-                <li><span className="font-black text-neon-green">4.</span> En vez de sumar +5, Laura suma 0 en esa ronda y la pantalla avisa el sabotaje.</li>
+                <li><span className="font-black text-neon-green">1.</span> Suena "Despacito" y a Laura le coincide la casilla "Suena algo de Reggaetón". La marca.</li>
+                <li><span className="font-black text-neon-green">2.</span> Alguien grita "¡esta es mi canción!" y Diego marca esa casilla social.</li>
+                <li><span className="font-black text-neon-green">3.</span> Tres canciones después, Laura completa una fila → ¡LÍNEA!</li>
+                <li><span className="font-black text-neon-green">4.</span> Laura sigue marcando hasta completar las 24 casillas → ¡BINGO! Gana la partida.</li>
               </ol>
             </div>
           </ManualSection>
