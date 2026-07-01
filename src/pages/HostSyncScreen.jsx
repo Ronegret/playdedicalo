@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { getRedirectResult, onAuthStateChanged, signInWithPopup, signInWithRedirect } from 'firebase/auth';
 import { DEDICALO_PLAYLISTS, useGameStore } from '../store/useGameStore';
 import { auth, authReady, googleProvider } from '../firebase';
-import { getPlaylistRequestUrl } from '../config/support';
+import { getPlaylistRequestUrl, openMailto } from '../config/support';
 import VinylVisualizer from '../components/VinylVisualizer';
 import NeonButton from '../components/NeonButton';
 import ProfileMenu from '../components/ProfileMenu';
@@ -525,7 +525,7 @@ export default function HostSyncScreen() {
               ¿No está tu playlist? Con una donación voluntaria la incluimos.{' '}
               <button
                 type="button"
-                onClick={() => window.open(getPlaylistRequestUrl(), '_blank', 'noopener,noreferrer')}
+                onClick={() => openMailto(getPlaylistRequestUrl())}
                 className="underline underline-offset-2 text-vinyl-orange"
               >
                 Saber cómo
