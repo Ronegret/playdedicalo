@@ -11,16 +11,15 @@ export function getSupportUrl() {
 }
 
 export function getPlaylistRequestUrl() {
-  const subject = encodeURIComponent('Quiero proponer una playlist para Dedícalo');
+  const subject = encodeURIComponent('Quiero incluir mi playlist en Dedícalo');
   const body = encodeURIComponent([
-    'Hola, quiero proponer una playlist para Dedícalo Play.',
+    'Hola, ya hice una donación voluntaria y quiero incluir mi propia playlist en Dedícalo Play.',
     '',
+    'Comprobante de la donación: (adjunta la captura aquí)',
+    'Link de mi playlist de Spotify:',
     'Nombre de la playlist:',
-    'Link de Spotify:',
     'Estilo musical:',
     'Mi nombre:',
-    '',
-    'Ya apoyé el proyecto / quiero saber cómo apoyar por Bizum.',
   ].join('\n'));
   return `mailto:${PLAYLIST_REQUEST_EMAIL}?subject=${subject}&body=${body}`;
 }

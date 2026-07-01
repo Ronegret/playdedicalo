@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { getRedirectResult, onAuthStateChanged, signInWithPopup, signInWithRedirect } from 'firebase/auth';
 import { DEDICALO_PLAYLISTS, useGameStore } from '../store/useGameStore';
 import { auth, authReady, googleProvider } from '../firebase';
+import { getPlaylistRequestUrl } from '../config/support';
 import VinylVisualizer from '../components/VinylVisualizer';
 import NeonButton from '../components/NeonButton';
 import ProfileMenu from '../components/ProfileMenu';
@@ -519,6 +520,17 @@ export default function HostSyncScreen() {
                 <p className="text-xs text-on-surface-variant mt-0.5 truncate">{selectedPlaylistData.mood}</p>
               </div>
             </div>
+
+            <p className="mt-3 text-center text-[11px] text-on-surface-variant">
+              ¿No está tu playlist? Con una donación voluntaria la incluimos.{' '}
+              <button
+                type="button"
+                onClick={() => window.open(getPlaylistRequestUrl(), '_blank', 'noopener,noreferrer')}
+                className="underline underline-offset-2 text-vinyl-orange"
+              >
+                Saber cómo
+              </button>
+            </p>
           </div>
         )}
       </div>

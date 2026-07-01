@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import NeonButton from '../components/NeonButton';
 import SupportButton from '../components/SupportButton';
-import { getPlaylistRequestUrl } from '../config/support';
+import { getPlaylistRequestUrl, SUPPORT_EMAIL } from '../config/support';
 import { BINGO_SOCIAL_PROMPTS, TIMELINE_GOAL_YEARS, VICTORY_MODES } from '../store/useGameStore';
 
 const QUICK_FLOW = [
@@ -114,6 +114,15 @@ const FAQ = [
   ['¿Cómo se gana en Bingo Musical?', 'Marcando casillas a medida que suenan canciones que coinciden, o casillas sociales cuando ocurren en la fiesta. El primero en completar el cartón entero gana.'],
   ['¿El ranking de Bingo Musical usa puntos?', 'No. Se ordena solo por cuántas casillas te faltan para Línea y para el cartón completo, en vivo para todos.'],
   ['¿Qué hago si Spotify no suena?', 'Reconecta Spotify, verifica que la cuenta sea Premium, sube el volumen del dispositivo y vuelve a probar sonido antes de crear la sala.'],
+];
+
+const LEGAL_NOTES = [
+  ['Dedícalo no es Spotify', 'Es un proyecto independiente hecho por fans. No está afiliado, respaldado ni operado por Spotify AB.'],
+  ['Reproducción vía Spotify oficial', 'La música se reproduce con la cuenta Premium del propio anfitrión a través de la API oficial de Spotify. Dedícalo no descarga, guarda ni redistribuye audio.'],
+  ['Sin cookies de rastreo ni analítica', 'No usamos cookies publicitarias ni de seguimiento. Solo guardamos en el almacenamiento local del navegador lo necesario para mantener tu sesión de Google/Spotify activa.'],
+  ['Tus datos en la partida', 'El nombre y avatar del invitado se usan solo mientras dura la sala y se eliminan al salir. El anfitrión inicia sesión con Google únicamente para conectar Spotify.'],
+  ['Fuentes e iconos', 'Usamos Google Fonts (Montserrat, Hanken Grotesk, Space Mono) y Material Symbols, ambos de uso libre bajo licencia abierta.'],
+  ['Contacto', `¿Dudas sobre privacidad o datos? Escríbenos a ${SUPPORT_EMAIL}.`],
 ];
 
 const BINGO_RULES = [
@@ -499,6 +508,21 @@ export default function HowToPlayScreen() {
               ))}
             </div>
           </ManualSection>
+
+          <ManualSection
+            icon="privacy_tip"
+            title="Legal, privacidad y cookies"
+            subtitle="Cómo usamos Spotify, tus datos y el almacenamiento del navegador."
+          >
+            <div className="mt-4 grid gap-2 sm:grid-cols-2">
+              {LEGAL_NOTES.map(([title, text]) => (
+                <div key={title} className="rounded-xl border border-white/8 bg-white/[0.035] p-3">
+                  <p className="text-xs font-black text-white">{title}</p>
+                  <p className="mt-1 text-[11px] leading-snug text-on-surface-variant">{text}</p>
+                </div>
+              ))}
+            </div>
+          </ManualSection>
         </section>
 
         <div className="mt-8 grid gap-3 sm:grid-cols-2">
@@ -512,9 +536,10 @@ export default function HowToPlayScreen() {
 
         <div className="mt-5 rounded-2xl border border-white/10 bg-white/[0.035] p-4 text-center">
           <p className="text-xs font-label-caps tracking-[0.18em] text-on-surface-variant">Opcional</p>
-          <p className="mt-1 text-sm font-black text-white">Apoya al creador y propone tu playlist</p>
+          <p className="mt-1 text-sm font-black text-white">¿Quieres jugar con tu propia playlist?</p>
           <p className="mx-auto mt-1 max-w-md text-xs leading-relaxed text-on-surface-variant">
-            Si quieres que revisemos una playlist propia para futuras partidas, apoya el proyecto y envía el enlace.
+            Las playlists de la app son gratis y no requieren nada. Incluir una playlist propia es un servicio aparte:
+            1) haz una donación voluntaria, 2) escríbenos con el comprobante y el link de tu playlist.
           </p>
           <div className="mt-3 grid gap-2 sm:grid-cols-2">
             <SupportButton compact className="w-full border-white/10 bg-black/20 text-white/85" />
@@ -526,7 +551,7 @@ export default function HowToPlayScreen() {
               <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
               <span className="relative flex items-center justify-center gap-2 font-label-caps tracking-[0.16em]">
                 <span className="material-symbols-outlined text-vinyl-orange text-base">playlist_add</span>
-                Enviar playlist
+                Enviar comprobante y playlist
               </span>
             </button>
           </div>
