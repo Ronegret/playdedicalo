@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import NeonButton from '../components/NeonButton';
 import SupportButton from '../components/SupportButton';
-import { getPlaylistRequestUrl, SUPPORT_EMAIL } from '../config/support';
+import { getPlaylistRequestUrl, openMailto, SUPPORT_EMAIL } from '../config/support';
 import { BINGO_SOCIAL_PROMPTS, TIMELINE_GOAL_YEARS, VICTORY_MODES } from '../store/useGameStore';
 
 const QUICK_FLOW = [
@@ -41,11 +41,39 @@ const SPOTIFY_STEPS = [
   ['Durante la partida', 'El anfitrión controla cuándo suena la música. Nadie ve el nombre de la canción.'],
 ];
 
-const ROUND_FLOW = [
-  { icon: 'play_arrow', title: '1. Suena', text: 'Empieza una canción del estilo elegido.' },
-  { icon: 'pause', title: '2. Corta', text: 'El anfitrión pausa la música y aparece la pregunta.' },
-  { icon: 'how_to_vote', title: '3. Vota', text: 'Todos responden desde su móvil.' },
-  { icon: 'celebration', title: '4. Revela', text: 'Verde si aciertas, rojo si fallas.' },
+const PULSE_STEPS = [
+  ['Suena la música', 'Empieza a sonar una canción del estilo que eligió el anfitrión. Nadie sabe todavía cuál es.'],
+  ['El anfitrión corta', 'En el momento que quiera, el anfitrión pausa la canción y aparece una pregunta sobre ella.'],
+  ['Todos responden', 'Cada jugador —incluido el anfitrión— elige una respuesta desde su móvil, lo más rápido posible.'],
+  ['Se revela el resultado', 'Verde si acertaste, rojo si fallaste. Los puntos se suman o restan al instante.'],
+];
+
+const PULSE_EXAMPLE = [
+  'Suena una canción de reggaetón. A los 20 segundos el anfitrión la corta y pregunta "¿De qué década es esta canción?".',
+  'Laura responde "2010s" y acierta: sube de 10 a 15 puntos.',
+  'Diego duda, responde tarde y falla: baja de 10 a 7 puntos.',
+  'La música sigue sonando ronda tras ronda hasta que alguien llega primero a la meta elegida (70, 120 o 200 puntos).',
+];
+
+const TIMELINE_STEPS = [
+  ['Tu ruta personal', 'Cada jugador arranca con un año base distinto — tu ruta es solo tuya, nadie más la ve.'],
+  ['Suena una canción', 'Escuchas un fragmento sin saber el título ni el año todavía.'],
+  ['Eliges dónde va', 'Tocas el hueco donde crees que encaja: antes de tu año más viejo, después del más nuevo, o entre dos que ya tengas.'],
+  ['Si aciertas, suma', `El año entra en tu ruta. Sigue sonando música hasta que alguien complete ${TIMELINE_GOAL_YEARS} años.`],
+];
+
+const TIMELINE_EXAMPLE = [
+  'Diego ya tiene 1998 y 2006 en su ruta.',
+  'Suena una canción nueva y Diego cree que es más reciente que sus dos años, así que la coloca "Después de 2006".',
+  'Acierta: la canción es de 2014, así que ahora tiene 1998, 2006 y 2014 en su ruta.',
+  `Sigue sonando música hasta que Diego (o alguien más) complete ${TIMELINE_GOAL_YEARS} años y gane la partida.`,
+];
+
+const BINGO_STEPS = [
+  ['Recibes tu cartón', '24 casillas + 1 libre en el centro, mezcla de casillas musicales (verdes) y sociales (moradas).'],
+  ['La música suena en bucle', 'El anfitrión pasa canción tras canción sin parar. No hay cortes ni preguntas.'],
+  ['Marca lo que va pasando', 'Toca una casilla musical cuando esa canción suena de verdad, o una social cuando ocurre en la fiesta.'],
+  ['¡Línea! y ¡Bingo!', 'Completa una fila, columna o diagonal para el logro LÍNEA. El primero en completar el cartón entero gana al instante.'],
 ];
 
 const POINT_RULES = [
@@ -165,6 +193,47 @@ function ManualSection({ icon, title, subtitle, children, defaultOpen = false })
   );
 }
 
+function ExampleList({ items, color = '#39ff14' }) {
+  return (
+    <ol className="mt-3 space-y-2 text-xs leading-relaxed text-on-surface-variant">
+      {items.map((text, index) => (
+        <li key={text} className="flex gap-2">
+          <span className="font-black shrink-0" style={{ color }}>{index + 1}.</span>
+          {text}
+        </li>
+      ))}
+    </ol>
+  );
+}
+
+function ModeIntro({ color, text }) {
+  return (
+    <div className="rounded-xl border p-3" style={{ borderColor: `${color}45`, backgroundColor: `${color}12` }}>
+      <p className="font-label-caps text-[10px] tracking-widest" style={{ color }}>IDEA EN 1 LÍNEA</p>
+      <p className="mt-1 text-sm font-bold text-white leading-snug">{text}</p>
+    </div>
+  );
+}
+
+function ModeVictory({ color, title, text }) {
+  return (
+    <div className="mt-4 rounded-xl border p-3" style={{ borderColor: `${color}45`, backgroundColor: `${color}12` }}>
+      <p className="font-label-caps text-[10px] tracking-widest" style={{ color }}>PUNTOS Y VICTORIA</p>
+      <p className="mt-1 text-sm font-black text-white">{title}</p>
+      <p className="mt-1 text-xs leading-relaxed text-on-surface-variant">{text}</p>
+    </div>
+  );
+}
+
+function ModeExample({ color, items }) {
+  return (
+    <div className="mt-4 rounded-xl border border-white/10 bg-white/[0.035] p-3">
+      <p className="font-label-caps text-[10px] tracking-widest text-white">EJEMPLO DE PARTIDA</p>
+      <ExampleList items={items} color={color} />
+    </div>
+  );
+}
+
 function StepList({ items }) {
   return (
     <ol className="mt-4 space-y-3">
@@ -187,7 +256,7 @@ export default function HowToPlayScreen() {
   const navigate = useNavigate();
 
   const openPlaylistRequest = () => {
-    window.open(getPlaylistRequestUrl(), '_blank', 'noopener,noreferrer');
+    openMailto(getPlaylistRequestUrl());
   };
 
   return (
@@ -274,32 +343,9 @@ export default function HowToPlayScreen() {
 
         <section className="mt-6 space-y-3">
           <ManualSection
-            icon="route"
-            title="Resumen rápido de una partida"
-            subtitle="El flujo de Corte Maestro y Años Locos."
-            defaultOpen
-          >
-            <div className="mt-4 grid gap-3 sm:grid-cols-4">
-              {ROUND_FLOW.map((item, index) => (
-                <div key={item.title} className="rounded-2xl border border-white/10 bg-white/[0.035] p-3 text-center">
-                  <span className="inline-flex w-9 h-9 rounded-xl bg-vinyl-orange/15 border border-vinyl-orange/30 items-center justify-center">
-                    <span className="material-symbols-outlined text-vinyl-orange">{item.icon}</span>
-                  </span>
-                  <p className="mt-2 text-[10px] font-label-caps text-neon-green">Paso {index + 1}</p>
-                  <h3 className="text-sm font-black text-white">{item.title}</h3>
-                  <p className="mt-1 text-[11px] text-on-surface-variant leading-snug">{item.text}</p>
-                </div>
-              ))}
-            </div>
-            <p className="mt-3 text-xs text-on-surface-variant leading-relaxed">
-              Bingo Musical no usa este flujo: no hay preguntas ni rondas, la música suena en bucle y cada quien marca su cartón. Ve la sección dedicada más abajo.
-            </p>
-          </ManualSection>
-
-          <ManualSection
             icon="scoreboard"
             title="Cómo funcionan los puntos"
-            subtitle="Qué suma, qué resta y cuándo termina la partida. (No aplica a Bingo Musical, que no usa puntos.)"
+            subtitle="Sistema compartido por Corte Maestro y Años Locos. Bingo Musical no usa puntos, más abajo se explica su propio sistema."
             defaultOpen
           >
             <div className="mt-4 grid gap-3 sm:grid-cols-3">
@@ -341,58 +387,37 @@ export default function HowToPlayScreen() {
                 ))}
               </div>
             </div>
+          </ManualSection>
 
-            <div className="mt-4 grid gap-3 sm:grid-cols-2">
-              <div className="rounded-2xl border border-vinyl-orange/30 bg-vinyl-orange/10 p-4">
-                <p className="text-sm font-black text-white">Corte Maestro</p>
-                <p className="mt-1 text-xs leading-relaxed text-on-surface-variant">
-                  Gana quien llega primero a la meta elegida por el anfitrión: {VICTORY_MODES.map((mode) => mode.targetScore).join(', ')} puntos.
-                </p>
-              </div>
-              <div className="rounded-2xl border border-electric-purple/35 bg-electric-purple/10 p-4">
-                <p className="text-sm font-black text-white">Años Locos</p>
-                <p className="mt-1 text-xs leading-relaxed text-on-surface-variant">
-                  Los puntos ayudan al ranking, pero la victoria principal es completar {TIMELINE_GOAL_YEARS} años en tu propia ruta musical.
-                </p>
-              </div>
+          <ManualSection
+            icon="bolt"
+            title="Cómo se juega: Corte Maestro"
+            subtitle="Escucha, corta y responde antes que nadie."
+          >
+            <ModeIntro color="#ff7a1a" text="La música suena, el anfitrión la corta en el momento justo y todos —incluido él— compiten por responder rápido y bien." />
+            <div className="mt-4">
+              <p className="font-label-caps text-[10px] tracking-widest text-white">CÓMO SE JUEGA</p>
+              <StepList items={PULSE_STEPS} />
             </div>
-          </ManualSection>
-
-          <ManualSection
-            icon="headphones"
-            title="Cómo crea la sala el anfitrión"
-            subtitle="El anfitrión pone la música, pero también juega."
-          >
-            <StepList items={HOST_STEPS} />
-          </ManualSection>
-
-          <ManualSection
-            icon="groups"
-            title="Cómo entra un invitado"
-            subtitle="Los invitados no necesitan cuenta ni Spotify."
-          >
-            <StepList items={GUEST_STEPS} />
-          </ManualSection>
-
-          <ManualSection
-            icon="graphic_eq"
-            title="Spotify explicado fácil"
-            subtitle="Qué se conecta, quién lo conecta y cómo evitar problemas de sonido."
-          >
-            <StepList items={SPOTIFY_STEPS} />
-            <div className="mt-4 rounded-2xl border border-vinyl-orange/30 bg-vinyl-orange/10 p-4">
-              <p className="text-sm font-black text-white">Regla de oro</p>
-              <p className="mt-1 text-xs leading-relaxed text-on-surface-variant">
-                Antes de crear sala, el anfitrión debe pulsar “Probar sonido”. Si se escucha, la partida puede empezar. Si no se escucha, reconecta Spotify y prueba otra vez.
-              </p>
-            </div>
+            <ModeVictory
+              color="#ff7a1a"
+              title={`Gana quien llega primero a la meta: ${VICTORY_MODES.map((mode) => mode.targetScore).join(', ')} puntos.`}
+              text="Usa el sistema de puntos de arriba: todos parten con 10, +5 al acertar, -3 al fallar o no responder a tiempo."
+            />
+            <ModeExample color="#ff7a1a" items={PULSE_EXAMPLE} />
           </ManualSection>
 
           <ManualSection
             icon="timeline"
-            title="Cómo se juega Años Locos"
-            subtitle="Cada jugador construye su propia ruta musical por años."
+            title="Cómo se juega: Años Locos"
+            subtitle="Arma tu propia ruta musical colocando canciones por año."
           >
+            <ModeIntro color="#a855f7" text="Cada jugador construye su propia línea de tiempo: escuchas una canción y adivinas si es antes, después o entre los años que ya tienes." />
+            <div className="mt-4">
+              <p className="font-label-caps text-[10px] tracking-widest text-white">CÓMO SE JUEGA</p>
+              <StepList items={TIMELINE_STEPS} />
+            </div>
+
             <div className="mt-4 rounded-2xl border border-electric-purple/40 bg-electric-purple/10 p-4">
               <p className="text-sm font-black text-white">Ejemplo visual</p>
               <div className="mt-4 flex items-center gap-2 overflow-x-auto pb-1">
@@ -410,21 +435,27 @@ export default function HowToPlayScreen() {
                 ))}
               </div>
               <p className="mt-3 text-xs leading-relaxed text-on-surface-variant">
-                Si crees que la canción salió entre 2006 y 2019, tocas ese espacio. Si aciertas, ese año entra en tu ruta. Gana quien complete {TIMELINE_GOAL_YEARS} años.
+                Si crees que la canción salió entre 2006 y 2019, tocas ese espacio.
               </p>
             </div>
+
+            <ModeVictory
+              color="#a855f7"
+              title={`Gana quien complete primero ${TIMELINE_GOAL_YEARS} años en su ruta.`}
+              text="Los aciertos también usan el sistema de puntos de arriba (+5/-3), pero eso solo ayuda al ranking: lo que decide la partida es completar tu ruta de años."
+            />
+            <ModeExample color="#a855f7" items={TIMELINE_EXAMPLE} />
           </ManualSection>
 
           <ManualSection
             icon="grid_view"
-            title="Cómo se juega Bingo Musical"
-            subtitle="Cada jugador recibe un cartón. Marca casillas mientras la música no para."
+            title="Cómo se juega: Bingo Musical"
+            subtitle="Marca tu cartón mientras la música no para."
           >
-            <div className="mt-4 rounded-2xl border border-neon-green/35 bg-neon-green/10 p-4">
-              <p className="text-sm font-black text-white">Idea principal</p>
-              <p className="mt-1 text-xs leading-relaxed text-on-surface-variant">
-                Inspirado en el clásico Bingo Hipster: tu cartón tiene 24 casillas más una libre en el centro. Unas son musicales (se iluminan cuando suena la canción que coincide) y otras son sociales (cosas que pasan en la fiesta). Sin turnos: todos juegan a la vez.
-              </p>
+            <ModeIntro color="#39ff14" text="Inspirado en el Bingo Hipster: tu cartón tiene 24 casillas más una libre en el centro, mezcla de casillas musicales y sociales. Sin turnos: todos juegan a la vez." />
+            <div className="mt-4">
+              <p className="font-label-caps text-[10px] tracking-widest text-white">CÓMO SE JUEGA</p>
+              <StepList items={BINGO_STEPS} />
             </div>
 
             <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.035] p-4">
@@ -479,14 +510,46 @@ export default function HowToPlayScreen() {
               </ul>
             </div>
 
-            <div className="mt-4 rounded-2xl border border-neon-green/30 bg-neon-green/10 p-4">
-              <p className="text-sm font-black text-white">Ejemplo de partida</p>
-              <ol className="mt-3 space-y-2 text-xs leading-relaxed text-on-surface-variant">
-                <li><span className="font-black text-neon-green">1.</span> Suena "Despacito" y a Laura le coincide la casilla "Suena algo de Reggaetón". La marca.</li>
-                <li><span className="font-black text-neon-green">2.</span> Alguien grita "¡esta es mi canción!" y Diego marca esa casilla social.</li>
-                <li><span className="font-black text-neon-green">3.</span> Tres canciones después, Laura completa una fila → ¡LÍNEA!</li>
-                <li><span className="font-black text-neon-green">4.</span> Laura sigue marcando hasta completar las 24 casillas → ¡BINGO! Gana la partida.</li>
-              </ol>
+            <ModeVictory
+              color="#39ff14"
+              title="No usa puntos. Gana quien completa el cartón entero primero."
+              text="El ranking en vivo se ordena solo por cuántas casillas te faltan para tu mejor Línea y para el cartón completo."
+            />
+            <ModeExample color="#39ff14" items={[
+              'Suena "Despacito" y a Laura le coincide la casilla "Suena algo de Reggaetón". La marca.',
+              'Alguien grita "¡esta es mi canción!" y Diego marca esa casilla social.',
+              'Tres canciones después, Laura completa una fila → ¡LÍNEA!',
+              'Laura sigue marcando hasta completar las 24 casillas → ¡BINGO! Gana la partida.',
+            ]} />
+          </ManualSection>
+
+          <ManualSection
+            icon="headphones"
+            title="Cómo crea la sala el anfitrión"
+            subtitle="El anfitrión pone la música, pero también juega."
+          >
+            <StepList items={HOST_STEPS} />
+          </ManualSection>
+
+          <ManualSection
+            icon="groups"
+            title="Cómo entra un invitado"
+            subtitle="Los invitados no necesitan cuenta ni Spotify."
+          >
+            <StepList items={GUEST_STEPS} />
+          </ManualSection>
+
+          <ManualSection
+            icon="graphic_eq"
+            title="Spotify explicado fácil"
+            subtitle="Qué se conecta, quién lo conecta y cómo evitar problemas de sonido."
+          >
+            <StepList items={SPOTIFY_STEPS} />
+            <div className="mt-4 rounded-2xl border border-vinyl-orange/30 bg-vinyl-orange/10 p-4">
+              <p className="text-sm font-black text-white">Regla de oro</p>
+              <p className="mt-1 text-xs leading-relaxed text-on-surface-variant">
+                Antes de crear sala, el anfitrión debe pulsar “Probar sonido”. Si se escucha, la partida puede empezar. Si no se escucha, reconecta Spotify y prueba otra vez.
+              </p>
             </div>
           </ManualSection>
 
