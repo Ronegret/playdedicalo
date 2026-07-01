@@ -50,8 +50,8 @@ const PULSE_STEPS = [
 
 const PULSE_EXAMPLE = [
   'Suena una canción de reggaetón. A los 20 segundos el anfitrión la corta y pregunta "¿De qué década es esta canción?".',
-  'Laura responde "2010s" y acierta: sube de 10 a 15 puntos.',
-  'Diego duda, responde tarde y falla: baja de 10 a 7 puntos.',
+  'Rodrigo responde "2010s" y acierta: sube de 10 a 15 puntos.',
+  'Noelia duda, responde tarde y falla: baja de 10 a 7 puntos.',
   'La música sigue sonando ronda tras ronda hasta que alguien llega primero a la meta elegida (70, 120 o 200 puntos).',
 ];
 
@@ -63,10 +63,10 @@ const TIMELINE_STEPS = [
 ];
 
 const TIMELINE_EXAMPLE = [
-  'Diego ya tiene 1998 y 2006 en su ruta.',
-  'Suena una canción nueva y Diego cree que es más reciente que sus dos años, así que la coloca "Después de 2006".',
+  'Noelia ya tiene 1998 y 2006 en su ruta.',
+  'Suena una canción nueva y Noelia cree que es más reciente que sus dos años, así que la coloca "Después de 2006".',
   'Acierta: la canción es de 2014, así que ahora tiene 1998, 2006 y 2014 en su ruta.',
-  `Sigue sonando música hasta que Diego (o alguien más) complete ${TIMELINE_GOAL_YEARS} años y gane la partida.`,
+  `Sigue sonando música hasta que Noelia (o alguien más) complete ${TIMELINE_GOAL_YEARS} años y gane la partida.`,
 ];
 
 const BINGO_STEPS = [
@@ -104,8 +104,8 @@ const POINT_RULES = [
 ];
 
 const POINT_EXAMPLES = [
-  ['Laura acierta', '10 + 5', '15 pts'],
-  ['Diego falla', '10 - 3', '7 pts'],
+  ['Rodrigo acierta', '10 + 5', '15 pts'],
+  ['Noelia falla', '10 - 3', '7 pts'],
 ];
 
 const MODES = [
@@ -516,10 +516,10 @@ export default function HowToPlayScreen() {
               text="El ranking en vivo se ordena solo por cuántas casillas te faltan para tu mejor Línea y para el cartón completo."
             />
             <ModeExample color="#39ff14" items={[
-              'Suena "Despacito" y a Laura le coincide la casilla "Suena algo de Reggaetón". La marca.',
-              'Alguien grita "¡esta es mi canción!" y Diego marca esa casilla social.',
-              'Tres canciones después, Laura completa una fila → ¡LÍNEA!',
-              'Laura sigue marcando hasta completar las 24 casillas → ¡BINGO! Gana la partida.',
+              'Suena "Despacito" y a Rodrigo le coincide la casilla "Suena algo de Reggaetón". La marca.',
+              'Alguien grita "¡esta es mi canción!" y Noelia marca esa casilla social.',
+              'Tres canciones después, Rodrigo completa una fila → ¡LÍNEA!',
+              'Rodrigo sigue marcando hasta completar las 24 casillas → ¡BINGO! Gana la partida.',
             ]} />
           </ManualSection>
 
