@@ -8,15 +8,37 @@ import ErrorBoundary from './components/ErrorBoundary';
 import OfflineBanner from './components/OfflineBanner';
 import { stopBgMusic, tryStartBgMusic } from './hooks/useBgMusic';
 
-const WelcomeScreen = lazy(() => import('./pages/WelcomeScreen'));
-const HowToPlayScreen = lazy(() => import('./pages/HowToPlayScreen'));
-const RoleSelectionScreen = lazy(() => import('./pages/RoleSelectionScreen'));
-const HostSyncScreen = lazy(() => import('./pages/HostSyncScreen'));
-const GuestJoinScreen = lazy(() => import('./pages/GuestJoinScreen'));
-const LobbyScreen = lazy(() => import('./pages/LobbyScreen'));
-const GameScreen = lazy(() => import('./pages/GameScreen'));
-const ResultScreen = lazy(() => import('./pages/ResultScreen'));
-const SpotifyCallbackScreen = lazy(() => import('./pages/SpotifyCallbackScreen'));
+// After a new deploy, a tab left open from before still points at the old,
+// content-hashed chunk filenames — those 404 on the server and the dynamic
+// import() rejects, which looks like "the button does nothing" to the user.
+// Reload once (guarded by sessionStorage so a genuine error doesn't loop) to
+// pick up the current index.html and its correct chunk map.
+function lazyWithReload(importer) {
+  return lazy(async () => {
+    try {
+      const mod = await importer();
+      sessionStorage.removeItem('chunk-reload-attempted');
+      return mod;
+    } catch (error) {
+      if (!sessionStorage.getItem('chunk-reload-attempted')) {
+        sessionStorage.setItem('chunk-reload-attempted', '1');
+        window.location.reload();
+        return new Promise(() => {});
+      }
+      throw error;
+    }
+  });
+}
+
+const WelcomeScreen = lazyWithReload(() => import('./pages/WelcomeScreen'));
+const HowToPlayScreen = lazyWithReload(() => import('./pages/HowToPlayScreen'));
+const RoleSelectionScreen = lazyWithReload(() => import('./pages/RoleSelectionScreen'));
+const HostSyncScreen = lazyWithReload(() => import('./pages/HostSyncScreen'));
+const GuestJoinScreen = lazyWithReload(() => import('./pages/GuestJoinScreen'));
+const LobbyScreen = lazyWithReload(() => import('./pages/LobbyScreen'));
+const GameScreen = lazyWithReload(() => import('./pages/GameScreen'));
+const ResultScreen = lazyWithReload(() => import('./pages/ResultScreen'));
+const SpotifyCallbackScreen = lazyWithReload(() => import('./pages/SpotifyCallbackScreen'));
 
 function PageLoader() {
   return (
