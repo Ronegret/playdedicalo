@@ -623,17 +623,27 @@ export default function GameScreen() {
             className="flex flex-col items-center gap-4 w-full max-w-[430px] px-5 text-center pb-32"
           >
             <p className="font-label-caps text-electric-purple text-xs tracking-widest">BINGO MUSICAL</p>
-            <div className="w-full rounded-2xl border border-neon-green/30 bg-neon-green/5 p-6">
-              <span className="material-symbols-outlined text-neon-green text-5xl">graphic_eq</span>
-              <p className="mt-2 text-white font-black text-xl">
+            <div className="w-full rounded-2xl border border-neon-green/30 bg-neon-green/5 p-4">
+              <span className="material-symbols-outlined text-neon-green text-3xl">graphic_eq</span>
+              <p className="mt-1 text-white font-black text-lg">
                 {bingoSongsPlayed === 0 ? 'Listo para empezar' : 'Sonando ahora'}
               </p>
               <p className="text-xs text-on-surface-variant mt-1">
                 {spotifyMessage || 'Pulsa el botón para reproducir la primera canción.'}
               </p>
+              <p className="font-label-caps text-[11px] text-on-surface-variant mt-2">
+                CANCIONES REPRODUCIDAS: {bingoSongsPlayed}
+              </p>
             </div>
-            <p className="font-label-caps text-[11px] text-on-surface-variant">
-              CANCIONES REPRODUCIDAS: {bingoSongsPlayed}
+            <p className="font-label-caps text-electric-purple text-xs tracking-widest">TÚ TAMBIÉN JUEGAS · TU CARTÓN</p>
+            <BingoCard
+              card={ownBingoCard}
+              marked={ownBingoMarked}
+              eligibleIndices={eligibleBingoIndices}
+              onMarkCell={handleMarkBingoCell}
+            />
+            <p className="text-xs text-on-surface-variant max-w-xs">
+              Las casillas verdes ya pueden marcarse. Las moradas son sociales: márcalas si las viste pasar.
             </p>
             {spotifyError && (
               <button
