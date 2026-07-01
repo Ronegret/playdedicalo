@@ -1,8 +1,7 @@
 import { create } from 'zustand';
-import { ref, onValue, onDisconnect } from 'firebase/database';
+import { ref, onValue, onDisconnect, get, set, update, remove } from 'firebase/database';
 import { database } from '../firebase';
 
-const DATABASE_URL = 'https://dedicalo-play-trivia-7-default-rtdb.europe-west1.firebasedatabase.app';
 export const TIMELINE_GOAL_YEARS = 12;
 export const DEDICALO_PLAYLISTS = [
   {
@@ -350,40 +349,25 @@ function computeBingoRanking(players = []) {
     });
 }
 
-function databasePath(path) {
-  return `${DATABASE_URL}/${path}.json`;
-}
-
+// Firebase SDK wrappers (kept as readData/writeData/patchData/deleteData so every
+// call site below stays unchanged). Using the SDK instead of raw REST fetch means
+// requests carry the signed-in user's auth token automatically, which the database
+// rules can rely on instead of trusting anyone who can guess a 4-digit room PIN.
 async function readData(path) {
-  const response = await fetch(databasePath(path));
-  if (!response.ok) throw new Error(`Firebase read failed: ${response.status}`);
-  return response.json();
+  const snapshot = await get(ref(database, path));
+  return snapshot.exists() ? snapshot.val() : null;
 }
 
 async function writeData(path, data) {
-  const response = await fetch(databasePath(path), {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  });
-  if (!response.ok) throw new Error(`Firebase write failed: ${response.status}`);
-  return response.json();
+  await set(ref(database, path), data);
 }
 
 async function patchData(path, data) {
-  const response = await fetch(databasePath(path), {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  });
-  if (!response.ok) throw new Error(`Firebase update failed: ${response.status}`);
-  return response.json();
+  await update(ref(database, path), data);
 }
 
 async function deleteData(path) {
-  const response = await fetch(databasePath(path), { method: 'DELETE' });
-  if (!response.ok) throw new Error(`Firebase delete failed: ${response.status}`);
-  return response.json();
+  await remove(ref(database, path));
 }
 
 export function normalizeSpotifyPlaylistUrl(value) {

@@ -1,7 +1,7 @@
 import { lazy, Suspense, useEffect } from 'react';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, signInAnonymously } from 'firebase/auth';
 import { auth } from './firebase';
 import ShaderBackground from './components/ShaderBackground';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -58,19 +58,26 @@ function App() {
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const dest = localStorage.getItem('auth_redirect_intent');
-        const intentTime = Number(localStorage.getItem('auth_redirect_intent_time') || 0);
-        // Intents older than 10 min are stale (e.g. a redirect that failed and was
-        // never cleaned up). Ignore them so they don't cause unexpected navigation.
-        const isStale = intentTime > 0 && Date.now() - intentTime > 10 * 60 * 1000;
+      if (!user) {
+        // No session at all yet (guest, or host before choosing "Sign in with Google").
+        // An anonymous session is enough to satisfy the database rules' `auth != null`
+        // check without asking guests to log in. If the host later signs in with
+        // Google, that call replaces this anonymous session on its own.
+        signInAnonymously(auth).catch((error) => console.error('No se pudo iniciar sesión anónima:', error));
+        return;
+      }
 
-        if (dest) {
-          localStorage.removeItem('auth_redirect_intent');
-          localStorage.removeItem('auth_redirect_intent_time');
-          if (!isStale && window.location.pathname !== dest) {
-            navigate(dest);
-          }
+      const dest = localStorage.getItem('auth_redirect_intent');
+      const intentTime = Number(localStorage.getItem('auth_redirect_intent_time') || 0);
+      // Intents older than 10 min are stale (e.g. a redirect that failed and was
+      // never cleaned up). Ignore them so they don't cause unexpected navigation.
+      const isStale = intentTime > 0 && Date.now() - intentTime > 10 * 60 * 1000;
+
+      if (dest) {
+        localStorage.removeItem('auth_redirect_intent');
+        localStorage.removeItem('auth_redirect_intent_time');
+        if (!isStale && window.location.pathname !== dest) {
+          navigate(dest);
         }
       }
     });

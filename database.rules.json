@@ -4,8 +4,8 @@
     ".write": false,
     "rooms": {
       "$pin": {
-        ".read": "$pin.matches(/^[0-9]{4}$/)",
-        ".write": "$pin.matches(/^[0-9]{4}$/)"
+        ".read": "auth != null && $pin.matches(/^[0-9]{4}$/)",
+        ".write": "auth != null && $pin.matches(/^[0-9]{4}$/)"
       }
     }
   }
