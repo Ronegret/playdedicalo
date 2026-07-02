@@ -195,7 +195,7 @@ export default function ResultScreen() {
   const {
     role, phase, players, gameMode, targetScore,
     hostNextRound, hostCloseRoom, guestLeaveRoom, guestId,
-    lastResultType, lastPointDelta, bingoWinnerId, getBingoRanking,
+    lastResultType, lastPointDelta, bingoWinnerId, bingoWinMode, getBingoRanking,
     revealResults, currentTrack, roomError, clearRoomError, guestAvatar
   } = useGameStore();
   const [showExitConfirm, setShowExitConfirm] = useState(false);
@@ -293,7 +293,9 @@ export default function ResultScreen() {
               <div className="mb-4 rounded-2xl border border-neon-green/50 bg-neon-green/10 p-4">
                 <p className="font-label-caps text-neon-green text-xs">GANADOR</p>
                 <p className="mt-0.5 font-headline-lg-mobile text-2xl text-white">{bingoWinner.name}</p>
-                <p className="mt-0.5 text-sm text-on-surface-variant">¡Completó el cartón entero!</p>
+                <p className="mt-0.5 text-sm text-on-surface-variant">
+                  {bingoWinMode === 'fullcard' ? '¡Completó el cartón entero!' : '¡Completó una línea primero!'}
+                </p>
               </div>
             )}
 

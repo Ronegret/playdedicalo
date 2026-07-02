@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import NeonButton from '../components/NeonButton';
 import SupportButton from '../components/SupportButton';
 import { getPlaylistRequestUrl, openMailto, SUPPORT_EMAIL } from '../config/support';
-import { BINGO_SOCIAL_PROMPTS, TIMELINE_GOAL_YEARS, VICTORY_MODES } from '../store/useGameStore';
+import { BINGO_CATEGORIES, TIMELINE_GOAL_YEARS, VICTORY_MODES } from '../store/useGameStore';
 
 const QUICK_FLOW = [
   { icon: 'person_add', title: 'Sala', text: 'El anfitrión crea la sala. Los demás entran con PIN o QR.' },
@@ -70,10 +70,10 @@ const TIMELINE_EXAMPLE = [
 ];
 
 const BINGO_STEPS = [
-  ['Recibes tu cartón', '24 casillas + 1 libre en el centro, mezcla de casillas musicales (verdes) y sociales (moradas).'],
-  ['La música suena en bucle', 'El anfitrión pasa canción tras canción sin parar. No hay cortes ni preguntas.'],
-  ['Marca lo que va pasando', 'Toca una casilla musical cuando esa canción suena de verdad, o una social cuando ocurre en la fiesta.'],
-  ['¡Línea! y ¡Bingo!', 'Completa una fila, columna o diagonal para el logro LÍNEA. El primero en completar el cartón entero gana al instante.'],
+  ['Recibes tu cartón', 'Cada casilla pertenece a una de 5 categorías con su propio color: Década, Año exacto, Antes/después de 2000, Canción o Artista.'],
+  ['El anfitrión gira la ruleta', 'Sale al azar una de las 5 categorías y suena una canción que sirve para esa categoría.'],
+  ['Todos responden contrarreloj', 'Tienes 25 segundos para elegir tu respuesta desde el móvil — igual que todos los demás, incluido el anfitrión.'],
+  ['Si acertaste, se marca sola', 'Cuando se acaba el tiempo se revela la respuesta correcta. Si acertaste, el juego marca solo una casilla sin marcar de tu cartón del color de esa categoría.'],
 ];
 
 const POINT_RULES = [
@@ -128,19 +128,19 @@ const MODES = [
     color: '#39ff14',
     title: 'Bingo Musical',
     goal: '24 casillas + 1 libre',
-    text: 'Cada jugador tiene un cartón. Márcalo mientras suena la música y compite por cantar ¡LÍNEA! y ¡BINGO! Ideal para grupos grandes.'
+    text: 'Gira la ruleta de categorías, responde contrarreloj y las casillas se marcan solas si acertaste. Ideal para grupos grandes.'
   },
 ];
 
 const FAQ = [
   ['¿El anfitrión también juega?', 'Sí. El anfitrión controla la música, pero participa igual que todos.'],
   ['¿Todos necesitan Spotify Premium?', 'No. Solo el anfitrión necesita conectar Spotify Premium. Los invitados solo escuchan el sonido del lugar.'],
-  ['¿Se ve la canción que está sonando?', 'En Corte Maestro y Años Locos no, queda oculta hasta el resultado. En Bingo Musical tampoco se anuncia el título: tu cartón se ilumina solo si coincide.'],
-  ['¿Cuándo termina la partida?', 'Corte Maestro termina cuando alguien llega a la meta de puntos. Años Locos termina al completar 12 años. Bingo Musical termina cuando alguien completa el cartón entero.'],
+  ['¿Se ve la canción que está sonando?', 'En Corte Maestro y Años Locos no, queda oculta hasta el resultado. En Bingo Musical tampoco: solo sabes la categoría de la ronda, no el título ni el artista.'],
+  ['¿Cuándo termina la partida?', 'Corte Maestro termina cuando alguien llega a la meta de puntos. Años Locos termina al completar 12 años. Bingo Musical termina cuando alguien cumple la condición de victoria elegida por el anfitrión (línea o cartón completo).'],
   ['¿Puedo cambiar de modo a mitad de partida?', 'No. El modo se elige al crear la sala y se mantiene hasta terminar la partida.'],
   ['¿Qué pasa si fallo en Corte Maestro o Años Locos?', 'Pierdes 3 puntos. Si aciertas, ganas 5 puntos.'],
-  ['¿Cómo se gana en Bingo Musical?', 'Marcando casillas a medida que suenan canciones que coinciden, o casillas sociales cuando ocurren en la fiesta. El primero en completar el cartón entero gana.'],
-  ['¿El ranking de Bingo Musical usa puntos?', 'No. Se ordena solo por cuántas casillas te faltan para Línea y para el cartón completo, en vivo para todos.'],
+  ['¿Cómo se gana en Bingo Musical?', 'Cada ronda gira la ruleta, sale una categoría y todos responden antes de que se acabe el tiempo. Si acertaste, se marca sola una casilla. Gana quien complete primero una línea o el cartón entero, según lo que haya elegido el anfitrión.'],
+  ['¿El ranking de Bingo Musical usa puntos?', 'No. Se ordena solo por cuántas casillas te faltan para tu mejor Línea (o para el cartón completo), en vivo para todos.'],
   ['¿Qué hago si Spotify no suena?', 'Reconecta Spotify, verifica que la cuenta sea Premium, sube el volumen del dispositivo y vuelve a probar sonido antes de crear la sala.'],
 ];
 
@@ -154,12 +154,12 @@ const LEGAL_NOTES = [
 ];
 
 const BINGO_RULES = [
-  ['Casillas reales', 'Se iluminan en verde cuando una canción que ya sonó coincide con la casilla: artista, título, década o estilo.'],
-  ['Casillas sociales', 'Son moradas y siempre se pueden marcar. Tócalas solo si de verdad pasó eso en la fiesta — funcionan por honor, como en el Bingo Hipster.'],
-  ['Línea', 'Completa una fila, columna o diagonal y la pantalla celebra con un aviso de ¡LÍNEA! Puedes lograr varias en la misma partida.'],
-  ['Bingo', 'Marca las 24 casillas (la del centro ya viene marcada) y la partida termina al instante. ¡Ganaste!'],
-  ['Ranking en vivo', 'No usa puntos: se ordena por cuántas casillas te faltan para tu mejor Línea y para el cartón completo.'],
-  ['Sin turnos ni esperas', 'No hay preguntas que responder ni rondas que esperar. Cada quien marca su cartón a su ritmo mientras la música no para — ideal para grupos grandes.'],
+  ['Las 5 categorías', 'Década, Año exacto, Antes/después de 2000, Nombre de la canción y Artista — cada una con su propio color.'],
+  ['Ruleta al azar', 'Cada ronda el anfitrión gira y sale una categoría distinta. No hay orden fijo ni turnos por jugador.'],
+  ['25 segundos por ronda', 'Cuando se acaba el cronómetro, la respuesta correcta se revela para todos al mismo tiempo.'],
+  ['Marcado automático', 'No tocas las casillas tú mismo: si acertaste, se marca sola una casilla sin marcar de esa categoría.'],
+  ['Sin casillas repetidas', 'Si ya no te quedan casillas sin marcar de esa categoría, esa ronda no suma nada para ti aunque hayas acertado.'],
+  ['Ranking en vivo', 'No usa puntos: se ordena por cuántas casillas te faltan para tu mejor Línea (o para el cartón completo, según el modo elegido).'],
 ];
 
 const fadeUp = {
@@ -291,7 +291,7 @@ export default function HowToPlayScreen() {
               Aprende rápido. Que empiece la fiesta.
             </h1>
             <p className="mt-4 text-sm sm:text-base leading-relaxed text-on-surface-variant max-w-2xl">
-              Tres formas de jugar: responde antes que nadie, arma tu ruta de años o marca tu cartón de Bingo Musical mientras la música no para.
+              Tres formas de jugar: responde antes que nadie, arma tu ruta de años o gira la ruleta de categorías en Bingo Musical.
             </p>
             <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3">
               {QUICK_FLOW.map((item) => (
@@ -452,7 +452,7 @@ export default function HowToPlayScreen() {
             title="Cómo se juega: Bingo Musical"
             subtitle="Marca tu cartón mientras la música no para."
           >
-            <ModeIntro color="#39ff14" text="Inspirado en el Bingo Hipster: tu cartón tiene 24 casillas más una libre en el centro, mezcla de casillas musicales y sociales. Sin turnos: todos juegan a la vez." />
+            <ModeIntro color="#39ff14" text="Inspirado en el Bingo del juego Hitster: cada ronda gira la ruleta de categorías, responde contrarreloj y las casillas se marcan solas si acertaste." />
             <div className="mt-4">
               <p className="font-label-caps text-[10px] tracking-widest text-white">CÓMO SE JUEGA</p>
               <StepList items={BINGO_STEPS} />
@@ -469,23 +469,32 @@ export default function HowToPlayScreen() {
                       </div>
                     );
                   }
-                  const isSocial = index % 4 === 0;
+                  const category = BINGO_CATEGORIES[index % BINGO_CATEGORIES.length];
                   return (
                     <div
                       key={index}
-                      className={`aspect-square rounded-lg border flex items-center justify-center ${
-                        isSocial ? 'border-electric-purple/40 bg-electric-purple/10' : 'border-neon-green/30 bg-neon-green/5'
-                      }`}
+                      className="aspect-square rounded-lg border flex items-center justify-center"
+                      style={{ borderColor: `${category.color}55`, backgroundColor: `${category.color}14` }}
                     >
-                      <span className={`material-symbols-outlined text-sm ${isSocial ? 'text-electric-purple' : 'text-neon-green/60'}`}>
-                        {isSocial ? 'celebration' : 'music_note'}
-                      </span>
+                      <span className="w-2 h-2 rounded-full" style={{ backgroundColor: category.color }} />
                     </div>
                   );
                 })}
               </div>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {BINGO_CATEGORIES.map((category) => (
+                  <span
+                    key={category.id}
+                    className="flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[9px] font-label-caps"
+                    style={{ borderColor: `${category.color}66`, backgroundColor: `${category.color}18`, color: category.color }}
+                  >
+                    <span className="w-2 h-2 rounded-full" style={{ backgroundColor: category.color }} />
+                    {category.label}
+                  </span>
+                ))}
+              </div>
               <p className="mt-3 text-xs leading-relaxed text-on-surface-variant">
-                Verde = casilla musical (se marca cuando suena algo que coincide). Morado = casilla social (la marcas tú cuando pasa). Naranja = casilla libre, ya viene marcada.
+                Cada color es una categoría. Naranja = casilla libre, ya viene marcada.
               </p>
             </div>
 
@@ -498,28 +507,16 @@ export default function HowToPlayScreen() {
               ))}
             </div>
 
-            <div className="mt-4 rounded-2xl border border-electric-purple/35 bg-electric-purple/10 p-4">
-              <p className="text-sm font-black text-white">Ejemplos de casillas sociales</p>
-              <ul className="mt-2 space-y-1.5 text-[11px] leading-snug text-on-surface-variant">
-                {BINGO_SOCIAL_PROMPTS.slice(0, 4).map((prompt) => (
-                  <li key={prompt} className="flex items-start gap-2">
-                    <span className="material-symbols-outlined text-electric-purple text-sm shrink-0 mt-px">bolt</span>
-                    {prompt}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
             <ModeVictory
               color="#39ff14"
-              title="No usa puntos. Gana quien completa el cartón entero primero."
-              text="El ranking en vivo se ordena solo por cuántas casillas te faltan para tu mejor Línea y para el cartón completo."
+              title="El anfitrión elige cómo se gana antes de empezar: LÍNEA o CARTÓN COMPLETO."
+              text="Con Línea, la partida termina apenas alguien completa una fila, columna o diagonal. Con Cartón completo, la línea es solo un logro y hay que marcar las 24 casillas para ganar."
             />
             <ModeExample color="#39ff14" items={[
-              'Suena "Despacito" y a Rodrigo le coincide la casilla "Suena algo de Reggaetón". La marca.',
-              'Alguien grita "¡esta es mi canción!" y Noelia marca esa casilla social.',
-              'Tres canciones después, Rodrigo completa una fila → ¡LÍNEA!',
-              'Rodrigo sigue marcando hasta completar las 24 casillas → ¡BINGO! Gana la partida.',
+              'El anfitrión gira la ruleta y sale la categoría "Década". Suena una canción.',
+              'Rodrigo responde "2010s" antes de que se acabe el tiempo. Noelia responde "2000s".',
+              'Se acaba el cronómetro: la respuesta correcta era "2010s". A Rodrigo se le marca sola una casilla verde de su cartón; a Noelia no.',
+              'Ronda tras ronda, el primero en completar la condición de victoria elegida grita ¡BINGO! y gana.',
             ]} />
           </ManualSection>
 

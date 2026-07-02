@@ -1,11 +1,15 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { DEDICALO_PLAYLISTS, GAME_MODES, getCombinedTimelineYears, getEligibleBingoIndices, normalizeSpotifyPlaylistUrl, useGameStore } from '../store/useGameStore';
+import { BINGO_CATEGORIES, DEDICALO_PLAYLISTS, GAME_MODES, getBingoProgress, getCombinedTimelineYears, normalizeSpotifyPlaylistUrl, useGameStore } from '../store/useGameStore';
 import ProfileMenu from '../components/ProfileMenu';
-import BingoCard from '../components/BingoCard';
+import BingoCard, { BingoCategoryLegend } from '../components/BingoCard';
 import { auth } from '../firebase';
-import { createQuestionFromTrack, explainSpotifyError, getCurrentHiddenTrack, getSpotifyStatus, getTrackStyleInfo, pauseSpotifyPlayback, startRandomPlaylistTrack } from '../services/spotify';
+import { buildBingoRound, createQuestionFromTrack, explainSpotifyError, getCurrentHiddenTrack, getPlaylistTracks, getSpotifyStatus, pauseSpotifyPlayback, playChosenTrack, startRandomPlaylistTrack } from '../services/spotify';
+
+function getBingoCategory(categoryId) {
+  return BINGO_CATEGORIES.find((category) => category.id === categoryId) || null;
+}
 
 const EQUALIZER_BARS = [0.35, 0.58, 0.42, 0.71, 0.49, 0.64, 0.39];
 
@@ -248,8 +252,13 @@ export default function GameScreen() {
     hostTriggerBlackout,
     hostRevealResults,
     hostCloseRoom,
-    hostPlayNextBingoTrack,
-    guestMarkBingoCell,
+    hostBeginBingoSpin,
+    hostStartBingoRound,
+    hostRevealBingoRound,
+    guestAnswerBingoRound,
+    bingoStage,
+    bingoRound,
+    bingoRoundAnswers,
     guestAnswer,
     guestLeaveRoom,
     guestId,
@@ -269,14 +278,17 @@ export default function GameScreen() {
   const [spotifyTrackReady, setSpotifyTrackReady] = useState(false);
   const [spotifyError, setSpotifyError] = useState(false);
   const [spotifyNeedsReconnect, setSpotifyNeedsReconnect] = useState(false);
-  const [isBingoTrackLoading, setIsBingoTrackLoading] = useState(false);
-  const [seenBingoLines, setSeenBingoLines] = useState([]);
+  const [isBingoSpinning, setIsBingoSpinning] = useState(false);
+  const [bingoTracks, setBingoTracks] = useState([]);
+  const [bingoAnsweredRoundKey, setBingoAnsweredRoundKey] = useState(null);
+  const [bingoSecondsLeft, setBingoSecondsLeft] = useState(0);
   const [lineToastVisible, setLineToastVisible] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
   const [disconnectToast, setDisconnectToast] = useState('');
   const [revealError, setRevealError] = useState('');
   const [isBlackoutPending, setIsBlackoutPending] = useState(false);
   const startedSpotifyRoundRef = useRef('');
+  const prevBingoHasLineRef = useRef(false);
   const roleRef = useRef(role);
   useEffect(() => { roleRef.current = role; }, [role]);
 
@@ -396,11 +408,7 @@ export default function GameScreen() {
 
   const playedTracksList = useMemo(() => Object.values(playedTracks || {}), [playedTracks]);
   const ownBingoCard = useMemo(() => ownPlayer?.bingoCard || [], [ownPlayer]);
-  const ownBingoMarked = ownPlayer?.bingoMarked || [];
-  const eligibleBingoIndices = useMemo(
-    () => getEligibleBingoIndices(ownBingoCard, playedTracksList),
-    [ownBingoCard, playedTracksList]
-  );
+  const ownBingoMarked = useMemo(() => ownPlayer?.bingoMarked || [], [ownPlayer]);
   // getBingoRanking() reads players from the store closure, not from a prop,
   // so `players` must stay in the deps even though eslint can't see that link.
   const bingoRanking = useMemo(
@@ -473,34 +481,94 @@ export default function GameScreen() {
       });
   };
 
-  const handleBingoNextTrack = async () => {
-    if (isBingoTrackLoading) return;
-    setIsBingoTrackLoading(true);
+  // Bingo Musical (clon de Hitster): el anfitrión necesita la lista completa de
+  // canciones de la playlist una sola vez para poder elegir, ronda a ronda, una
+  // canción que sirva para la categoría que salió en la ruleta.
+  useEffect(() => {
+    if (role !== 'host' || gameMode !== 'bingo') return undefined;
+    let cancelled = false;
+    getPlaylistTracks(spotifyPlaylistUrl)
+      .then((tracks) => { if (!cancelled) setBingoTracks(tracks); })
+      .catch((error) => {
+        if (!cancelled) {
+          console.error('Error al cargar canciones para Bingo:', error);
+          setSpotifyMessage(explainSpotifyError(error));
+          setSpotifyError(true);
+        }
+      });
+    return () => { cancelled = true; };
+  }, [role, gameMode, spotifyPlaylistUrl]);
+
+  const handleBingoSpin = async () => {
+    if (isBingoSpinning || !bingoTracks.length) return;
+    setIsBingoSpinning(true);
     setSpotifyError(false);
     try {
-      const track = await startRandomPlaylistTrack(spotifyPlaylistUrl);
+      const category = BINGO_CATEGORIES[Math.floor(Math.random() * BINGO_CATEGORIES.length)];
+      await hostBeginBingoSpin(category);
+
+      const excludeUris = playedTracksList.map((track) => track.uri).filter(Boolean);
+      let result = await buildBingoRound(category.id, bingoTracks, excludeUris);
+      if (!result) result = await buildBingoRound(category.id, bingoTracks, []);
+      if (!result) throw new Error('No encontré una canción válida para esta categoría.');
+
+      await playChosenTrack(result.track);
       setAudioPlaying(true);
-      setSpotifyMessage('Sonando ahora.');
-      const styleInfo = await getTrackStyleInfo(track).catch(() => null);
-      await hostPlayNextBingoTrack({ ...track, ...styleInfo });
+      await hostStartBingoRound({ category, question: result.question, track: result.track });
     } catch (error) {
-      console.error('Error al reproducir la siguiente canción de Bingo:', error);
+      console.error('Error al girar la ruleta de Bingo:', error);
       setSpotifyMessage(explainSpotifyError(error));
       setSpotifyError(true);
       setSpotifyNeedsReconnect(!getSpotifyStatus().connected);
-      setAudioPlaying(false);
     } finally {
-      setIsBingoTrackLoading(false);
+      setIsBingoSpinning(false);
     }
   };
 
-  const handleMarkBingoCell = async (cellIndex) => {
-    const progress = await guestMarkBingoCell(cellIndex);
-    if (progress?.hasLine && !seenBingoLines.includes(progress.bestLineIndex)) {
-      setSeenBingoLines((prev) => [...prev, progress.bestLineIndex]);
+  const bingoRoundKey = bingoRound?.startedAt ? String(bingoRound.startedAt) : '';
+  const hasAnsweredBingo = bingoAnsweredRoundKey === bingoRoundKey || Boolean(guestId && bingoRoundAnswers?.[guestId]);
+
+  const handleBingoAnswer = (optionIndex) => {
+    setBingoAnsweredRoundKey(bingoRoundKey);
+    guestAnswerBingoRound(optionIndex);
+    if (navigator.vibrate) navigator.vibrate([30]);
+  };
+
+  // El anfitrión revela solo cuando se acaba el cronómetro de la ronda — igual
+  // que la luz roja de Hitster, nadie puede adelantar la respuesta.
+  useEffect(() => {
+    if (role !== 'host' || gameMode !== 'bingo' || bingoStage !== 'answering' || !bingoRound?.startedAt) return undefined;
+    const remaining = Math.max(0, bingoRound.startedAt + bingoRound.durationMs - Date.now());
+    const timeoutId = window.setTimeout(() => {
+      hostRevealBingoRound().catch((error) => console.error('Error al revelar la ronda de Bingo:', error));
+    }, remaining);
+    return () => window.clearTimeout(timeoutId);
+  }, [role, gameMode, bingoStage, bingoRound?.startedAt, bingoRound?.durationMs, hostRevealBingoRound]);
+
+  // Cronómetro visible para todos durante la ronda de respuesta.
+  useEffect(() => {
+    if (gameMode !== 'bingo' || bingoStage !== 'answering' || !bingoRound?.startedAt) return undefined;
+    const update = () => {
+      const remaining = Math.max(0, bingoRound.startedAt + bingoRound.durationMs - Date.now());
+      setBingoSecondsLeft(Math.ceil(remaining / 1000));
+    };
+    update();
+    const interval = window.setInterval(update, 250);
+    return () => window.clearInterval(interval);
+  }, [gameMode, bingoStage, bingoRound?.startedAt, bingoRound?.durationMs]);
+
+  // Con modo de victoria "cartón completo", la primera LÍNEA es solo un logro
+  // a mitad de camino (la partida sigue). Con modo "línea" la partida ya
+  // termina en el mismo instante en que se marca la casilla (phase pasa a
+  // 'final' junto con bingoMarked), así que este toast no llega a mostrarse ahí.
+  useEffect(() => {
+    if (gameMode !== 'bingo') return;
+    const hasLine = getBingoProgress(ownBingoMarked).hasLine;
+    if (hasLine && !prevBingoHasLineRef.current && phase !== 'final') {
       setLineToastVisible(true);
     }
-  };
+    prevBingoHasLineRef.current = hasLine;
+  }, [ownBingoMarked, gameMode, phase]);
 
   const bingoSongsPlayed = playedTracksList.length;
 
@@ -540,7 +608,7 @@ export default function GameScreen() {
         </button>
         <div className="text-center">
           <p className="font-label-caps text-xs text-neon-green">
-            {gameMode === 'bingo' ? `CANCIÓN ${bingoSongsPlayed}` : `RONDA ${round}`}
+            {gameMode === 'bingo' ? `RONDA ${bingoSongsPlayed}` : `RONDA ${round}`}
           </p>
           <p className="font-label-caps text-[10px] text-on-surface-variant">
             {gameMode === 'timeline' ? 'AÑOS LOCOS' : gameMode === 'bingo' ? 'BINGO MUSICAL' : `META ${targetScore} PTS`}
@@ -592,86 +660,139 @@ export default function GameScreen() {
           </motion.div>
         )}
 
-        {phase === 'listen' && gameMode === 'bingo' && role !== 'host' && (
-          <motion.div
-            key="bingo-guest"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="flex flex-col items-center gap-4 w-full max-w-[430px] px-5 text-center"
-          >
-            <p className="font-label-caps text-electric-purple text-xs tracking-widest">TU CARTÓN</p>
-            <BingoCard
-              card={ownBingoCard}
-              marked={ownBingoMarked}
-              eligibleIndices={eligibleBingoIndices}
-              onMarkCell={handleMarkBingoCell}
-            />
-            <p className="text-xs text-on-surface-variant max-w-xs">
-              Las casillas verdes ya pueden marcarse. Las moradas son sociales: márcalas si las viste pasar.
-            </p>
-            <BingoRankingTicker ranking={bingoRanking} guestId={guestId} />
-          </motion.div>
-        )}
+        {phase === 'listen' && gameMode === 'bingo' && (() => {
+          const activeCategory = getBingoCategory(bingoRound?.categoryId);
+          return (
+            <motion.div
+              key="bingo"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className={`flex flex-col items-center gap-4 w-full max-w-[430px] px-5 text-center ${role === 'host' ? 'pb-32' : ''}`}
+            >
+              {bingoStage === 'idle' && (
+                <div className="w-full rounded-2xl border border-white/10 bg-white/5 p-5">
+                  <span className="material-symbols-outlined text-neon-green text-3xl">casino</span>
+                  <p className="mt-1 text-white font-black text-lg">Listo para la primera ronda</p>
+                  <p className="text-xs text-on-surface-variant mt-1">
+                    {role === 'host' ? 'Gira la ruleta para elegir la categoría.' : 'Esperando a que el anfitrión gire la ruleta...'}
+                  </p>
+                </div>
+              )}
 
-        {phase === 'listen' && gameMode === 'bingo' && role === 'host' && (
-          <motion.div
-            key="bingo-host"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="flex flex-col items-center gap-4 w-full max-w-[430px] px-5 text-center pb-32"
-          >
-            <p className="font-label-caps text-electric-purple text-xs tracking-widest">BINGO MUSICAL</p>
-            <div className="w-full rounded-2xl border border-neon-green/30 bg-neon-green/5 p-4">
-              <span className="material-symbols-outlined text-neon-green text-3xl">graphic_eq</span>
-              <p className="mt-1 text-white font-black text-lg">
-                {bingoSongsPlayed === 0 ? 'Listo para empezar' : 'Sonando ahora'}
-              </p>
-              <p className="text-xs text-on-surface-variant mt-1">
-                {spotifyMessage || 'Pulsa el botón para reproducir la primera canción.'}
-              </p>
-              <p className="font-label-caps text-[11px] text-on-surface-variant mt-2">
-                CANCIONES REPRODUCIDAS: {bingoSongsPlayed}
-              </p>
-            </div>
-            <p className="font-label-caps text-electric-purple text-xs tracking-widest">TÚ TAMBIÉN JUEGAS · TU CARTÓN</p>
-            <BingoCard
-              card={ownBingoCard}
-              marked={ownBingoMarked}
-              eligibleIndices={eligibleBingoIndices}
-              onMarkCell={handleMarkBingoCell}
-            />
-            <p className="text-xs text-on-surface-variant max-w-xs">
-              Las casillas verdes ya pueden marcarse. Las moradas son sociales: márcalas si las viste pasar.
-            </p>
-            {spotifyError && (
-              <button
-                onClick={handleSpotifyRetry}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl border border-vinyl-orange/50 bg-vinyl-orange/15 text-vinyl-orange font-label-caps text-xs font-bold active:scale-95 transition-all"
-              >
-                <span className="material-symbols-outlined text-sm">
-                  {spotifyNeedsReconnect ? 'login' : 'refresh'}
-                </span>
-                {spotifyNeedsReconnect ? 'RECONECTAR SPOTIFY' : 'REINTENTAR SPOTIFY'}
-              </button>
-            )}
-            <BingoRankingTicker ranking={bingoRanking} guestId={guestId} />
-            <div className="fixed bottom-5 left-4 right-4 z-40 grid gap-2 mx-auto max-w-sm md:relative md:bottom-auto md:left-auto md:right-auto md:z-auto md:w-full md:max-w-xs md:mt-2 md:mb-8">
-              <p className="text-center text-xs text-on-surface-variant">Cuando todos estén listos 👇</p>
-              <motion.button
-                whileHover={{ y: -2 }}
-                whileTap={{ scale: isBingoTrackLoading ? 1 : 0.94, y: 4 }}
-                onClick={handleBingoNextTrack}
-                disabled={isBingoTrackLoading}
-                className="w-full h-16 bg-neon-green hover:bg-green-400 text-black font-headline-lg-mobile text-xl rounded-2xl shadow-[0_10px_0_rgba(13,70,3,0.95),0_0_34px_rgba(57,255,20,0.45)] transition-colors font-black border-2 border-white/15 relative overflow-hidden disabled:opacity-60 disabled:cursor-not-allowed"
-              >
-                <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
-                {isBingoTrackLoading ? 'CARGANDO...' : 'SIGUIENTE CANCIÓN'}
-              </motion.button>
-            </div>
-          </motion.div>
-        )}
+              {bingoStage === 'spinning' && (
+                <div className="w-full rounded-2xl border border-electric-purple/40 bg-electric-purple/10 p-6">
+                  <motion.span
+                    animate={{ rotate: 360 }}
+                    transition={{ repeat: Infinity, duration: 0.9, ease: 'linear' }}
+                    className="material-symbols-outlined text-electric-purple text-4xl inline-block"
+                  >
+                    casino
+                  </motion.span>
+                  <p className="mt-2 text-white font-black text-xl">Girando la ruleta...</p>
+                  {activeCategory && (
+                    <p className="mt-1 text-xs font-label-caps tracking-widest" style={{ color: activeCategory.color }}>
+                      {activeCategory.label}
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {bingoStage === 'answering' && bingoRound?.question && activeCategory && (
+                <div className="w-full flex flex-col gap-3">
+                  <div
+                    className="w-full rounded-2xl border p-4"
+                    style={{ borderColor: `${activeCategory.color}55`, backgroundColor: `${activeCategory.color}14` }}
+                  >
+                    <p className="font-label-caps text-[10px] tracking-widest" style={{ color: activeCategory.color }}>
+                      {activeCategory.label}
+                    </p>
+                    <p className="mt-2 text-white font-black text-xl leading-tight">{bingoRound.question.text}</p>
+                    <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/25 px-3 py-1">
+                      <span className="material-symbols-outlined text-sm text-neon-green">timer</span>
+                      <span className="font-label-caps text-xs text-white">{bingoSecondsLeft}s</span>
+                    </div>
+                  </div>
+
+                  {hasAnsweredBingo ? (
+                    <div className="rounded-2xl border border-neon-green/30 bg-neon-green/10 p-5 text-center">
+                      <span className="material-symbols-outlined text-neon-green" style={{ fontSize: '2.5rem' }}>check_circle</span>
+                      <p className="mt-2 text-white font-bold">¡Respuesta enviada!</p>
+                      <p className="mt-1 text-xs text-on-surface-variant">Esperando a que se acabe el tiempo...</p>
+                    </div>
+                  ) : (
+                    <div className="grid gap-2">
+                      {bingoRound.question.options.map((option, index) => (
+                        <button
+                          key={option}
+                          type="button"
+                          onClick={() => handleBingoAnswer(index)}
+                          className="w-full min-h-[3.5rem] px-4 py-3 bg-white/8 text-white rounded-2xl border border-white/15 hover:border-neon-green/60 hover:bg-neon-green/8 active:scale-[0.97] text-left font-body-md text-base transition-all duration-150"
+                        >
+                          {option}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                  {role === 'host' && (
+                    <p className="font-label-caps text-[10px] text-on-surface-variant">
+                      RESPONDIERON {Object.keys(bingoRoundAnswers || {}).length}/{players.length}
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {bingoStage === 'revealed' && bingoRound?.question && (
+                <div className="w-full rounded-2xl border border-neon-green/30 bg-neon-green/10 p-5">
+                  <p className="font-label-caps text-[10px] text-neon-green tracking-widest">RESPUESTA CORRECTA</p>
+                  <p className="mt-1 text-white font-black text-lg">{bingoRound.question.options[bingoRound.question.correct]}</p>
+                  <p className="mt-2 text-xs text-on-surface-variant">
+                    {bingoRoundAnswers?.[guestId]?.isCorrect
+                      ? '¡Acertaste! Se marcó sola una casilla en tu cartón.'
+                      : 'Esta vez no. Atento a la próxima ronda.'}
+                  </p>
+                </div>
+              )}
+
+              <p className="font-label-caps text-electric-purple text-xs tracking-widest">TU CARTÓN</p>
+              <BingoCard card={ownBingoCard} marked={ownBingoMarked} />
+              <BingoCategoryLegend activeCategoryId={bingoStage === 'idle' ? null : bingoRound?.categoryId} />
+
+              {spotifyError && role === 'host' && (
+                <button
+                  onClick={handleSpotifyRetry}
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl border border-vinyl-orange/50 bg-vinyl-orange/15 text-vinyl-orange font-label-caps text-xs font-bold active:scale-95 transition-all"
+                >
+                  <span className="material-symbols-outlined text-sm">
+                    {spotifyNeedsReconnect ? 'login' : 'refresh'}
+                  </span>
+                  {spotifyNeedsReconnect ? 'RECONECTAR SPOTIFY' : 'REINTENTAR SPOTIFY'}
+                </button>
+              )}
+
+              <BingoRankingTicker ranking={bingoRanking} guestId={guestId} />
+
+              {role === 'host' && (bingoStage === 'idle' || bingoStage === 'revealed') && (
+                <div className="fixed bottom-5 left-4 right-4 z-40 grid gap-2 mx-auto max-w-sm md:relative md:bottom-auto md:left-auto md:right-auto md:z-auto md:w-full md:max-w-xs md:mt-2 md:mb-8">
+                  <p className="text-center text-xs text-on-surface-variant">
+                    {bingoStage === 'idle' ? 'Cuando todos estén listos 👇' : 'Siguiente ronda cuando quieras 👇'}
+                  </p>
+                  <motion.button
+                    whileHover={{ y: -2 }}
+                    whileTap={{ scale: (isBingoSpinning || !bingoTracks.length) ? 1 : 0.94, y: 4 }}
+                    onClick={handleBingoSpin}
+                    disabled={isBingoSpinning || !bingoTracks.length}
+                    className="w-full h-16 bg-neon-green hover:bg-green-400 text-black font-headline-lg-mobile text-xl rounded-2xl shadow-[0_10px_0_rgba(13,70,3,0.95),0_0_34px_rgba(57,255,20,0.45)] transition-colors font-black border-2 border-white/15 relative overflow-hidden disabled:opacity-60 disabled:cursor-not-allowed"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
+                    {isBingoSpinning ? 'PREPARANDO...' : !bingoTracks.length ? 'CARGANDO...' : bingoStage === 'idle' ? 'GIRAR RULETA' : 'SIGUIENTE RONDA'}
+                  </motion.button>
+                </div>
+              )}
+            </motion.div>
+          );
+        })()}
 
         {phase === 'listen' && gameMode !== 'bingo' && (
           <motion.div

@@ -484,40 +484,6 @@ export async function getPlaylistTracks(playlistUrl) {
   return fetchPlaylistTracksFromSpotify(playlistId);
 }
 
-// Estilos/géneros únicos presentes en una playlist del catálogo local — usado para
-// generar casillas de Bingo Musical tipo "Suena algo de Reggaetón".
-export async function getPlaylistStyles(playlistUrl) {
-  const playlistId = getPlaylistId(playlistUrl);
-  if (!playlistId) return [];
-
-  try {
-    const catalog = await loadSongCatalog();
-    const seen = new Map();
-    catalog
-      .filter((row) => row.playlist_id === playlistId && row.style)
-      .forEach((row) => {
-        if (!seen.has(row.style_slug)) seen.set(row.style_slug, row.style);
-      });
-    return Array.from(seen, ([styleSlug, style]) => ({ styleSlug, style }));
-  } catch (error) {
-    console.warn('No se pudo leer el catálogo para resolver estilos:', error);
-    return [];
-  }
-}
-
-// Resuelve el estilo/género de una pista ya reproducida (para anotarla en playedTracks).
-export async function getTrackStyleInfo(track) {
-  if (!track?.uri) return null;
-  try {
-    const catalog = await loadSongCatalog();
-    const row = catalog.find((r) => (
-      r.spotify_uri === track.uri || `spotify:track:${r.spotify_track_id}` === track.uri
-    ));
-    return row ? { style: row.style, styleSlug: row.style_slug } : null;
-  } catch {
-    return null;
-  }
-}
 
 async function fetchPlaylistTracksFromSpotify(playlistId) {
   const tracks = [];
@@ -745,10 +711,11 @@ export async function createQuestionFromTrack(track, gameMode, round = 1, timeli
   return buildArtistQuestion(track, qText, qType);
 }
 
-export async function startRandomPlaylistTrack(playlistUrl) {
+// Reproduce una pista ya elegida (a diferencia de startRandomPlaylistTrack, que
+// además la escoge). Usado por Bingo Musical: la pista se elige según la
+// categoría que salió en la ruleta, no al azar.
+export async function playChosenTrack(track) {
   const deviceId = await ensureSpotifyDevice();
-  const tracks = await getPlaylistTracks(playlistUrl);
-  const track = pickTrackWithoutRepeating(playlistUrl, tracks);
   window.sessionStorage.setItem(TRACK_KEY, JSON.stringify(track));
 
   await spotifyFetch(`https://api.spotify.com/v1/me/player/play?device_id=${encodeURIComponent(deviceId)}`, {
@@ -757,6 +724,52 @@ export async function startRandomPlaylistTrack(playlistUrl) {
   });
 
   return track;
+}
+
+export async function startRandomPlaylistTrack(playlistUrl) {
+  const tracks = await getPlaylistTracks(playlistUrl);
+  const track = pickTrackWithoutRepeating(playlistUrl, tracks);
+  return playChosenTrack(track);
+}
+
+// ---------------------------------------------------------------------------
+// Bingo Musical — preguntas por categoría (clon del Bingo de Hitster)
+// ---------------------------------------------------------------------------
+
+function buildBefore2000Question(track) {
+  if (!track.releaseYear) return null;
+  const isBefore = track.releaseYear < 2000;
+  return {
+    mode: 'bingo',
+    type: 'Antes/después de 2000',
+    text: '¿Esta canción salió antes o después del año 2000?',
+    options: ['Antes de 2000', 'Después de 2000'],
+    correct: isBefore ? 0 : 1
+  };
+}
+
+async function buildQuestionForCategory(categoryId, track) {
+  if (categoryId === 'decade') return buildDecadeQuestion(track);
+  if (categoryId === 'year') return buildYearQuestion(track);
+  if (categoryId === 'before2000') return buildBefore2000Question(track);
+  if (categoryId === 'song') return buildSongNameQuestion(track);
+  if (categoryId === 'artist') return buildArtistQuestion(track, '¿Quién canta esta canción?', 'Artista');
+  return null;
+}
+
+// Elige una pista al azar (que no haya sonado ya en esta partida) que sirva
+// para construir una pregunta válida de la categoría dada. Si una pista no
+// alcanza (falta el año, o no hay suficientes canciones/artistas distractores
+// en la playlist para ese tipo de pregunta), prueba con la siguiente.
+export async function buildBingoRound(categoryId, tracks = [], excludeUris = []) {
+  const excluded = new Set(excludeUris);
+  const candidates = shuffleArray(tracks.filter((track) => track?.uri && !excluded.has(track.uri)));
+
+  for (const track of candidates) {
+    const question = await buildQuestionForCategory(categoryId, track);
+    if (question) return { track, question };
+  }
+  return null;
 }
 
 export function getCurrentHiddenTrack() {

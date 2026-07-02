@@ -109,9 +109,9 @@ export const GAME_MODES = {
   bingo: {
     id: 'bingo',
     name: 'BINGO MUSICAL',
-    short: 'Marca tu cartón mientras suena',
-    description: 'Cada jugador tiene un cartón con casillas musicales y casillas de fiesta. Márcalas cuando ocurran y compite por cantar ¡LÍNEA! y ¡BINGO!',
-    rhythm: 'Sin turnos ni esperas: todos juegan a la vez mientras la música no para. Ideal para grupos grandes.'
+    short: 'Gira, responde y completa tu cartón',
+    description: 'Cada ronda gira la ruleta de categorías, suena una canción y todos responden antes de que se acabe el tiempo. Si aciertas, se marca sola una casilla de tu cartón.',
+    rhythm: 'Por rondas con cronómetro, como el Bingo de Hitster: todos esperan la misma canción y compiten por cantar ¡LÍNEA!'
   }
 };
 
@@ -150,13 +150,16 @@ const MUSIC_QUESTIONS = [
 ];
 
 // ---------------------------------------------------------------------------
-// Bingo Musical — modelo de cartón, banco de casillas sociales y ranking en vivo
+// Bingo Musical — clon del Bingo de Hitster: ruleta de categorías por ronda,
+// todos responden contrarreloj, y quien acierta marca sola una casilla de su
+// cartón del color de esa categoría. Ver hitstergame.com/es-es/como-jugar-bingo/
 // ---------------------------------------------------------------------------
 
 export const BINGO_GRID_SIZE = 25;
 export const BINGO_FREE_INDEX = 12;
 const BINGO_CELLS_NEEDED = BINGO_GRID_SIZE - 1;
-const BINGO_REAL_RATIO = 0.7;
+export const BINGO_ROUND_DURATION_MS = 25000;
+export const BINGO_SPIN_DURATION_MS = 1800;
 
 // 5 filas + 5 columnas + 2 diagonales del cartón 5x5.
 export const BINGO_WINNING_LINES = [
@@ -165,36 +168,20 @@ export const BINGO_WINNING_LINES = [
   [0, 6, 12, 18, 24], [4, 8, 12, 16, 20]
 ];
 
-// Banco de casillas "sociales" estilo Bingo Hipster: se marcan por honor, sin verificación.
-export const BINGO_SOCIAL_PROMPTS = [
-  'Alguien grita "¡ESTA ES MI CANCIÓN!"',
-  'Alguien canta el coro completo de pie',
-  'Dos personas bailan la misma coreografía sin ponerse de acuerdo',
-  'Alguien hace playback con el micrófono de la mano',
-  'Se forma un círculo de baile espontáneo',
-  'Alguien pide "súbele el volumen"',
-  'Alguien confiesa que esta canción le recuerda a un ex',
-  'Alguien canta en un idioma que no domina',
-  'Suena una canción que nadie reconoce y todos fingen que sí',
-  'Alguien hace un brindis sin que nadie se lo pida',
-  'Dos personas cantan la misma frase a destiempo',
-  'Alguien intenta el paso de baile de la canción y falla',
-  'Se arma una batalla de aire-guitarra',
-  'Alguien dice "esta canción es un GOL"',
-  'Alguien busca la letra en el celular a mitad de la canción',
-  'El anfitrión canta más fuerte que nadie',
-  'Alguien pide la siguiente canción antes de que termine esta',
-  'Se forma un coro improvisado de 3 o más personas',
-  'Alguien hace una entrada triunfal a la pista de baile',
-  'Alguien graba una historia para redes sociales',
-  'Dos personas se abrazan al sonar la canción',
-  'Alguien tararea la canción anterior por error',
-  'Se escucha un "¡otra, otra!" al terminar una canción',
-  'Alguien baila con un objeto como si fuera pareja',
-  'Alguien dedica la canción en voz alta a otra persona',
-  'Se forma una fila conga espontánea',
-  'Alguien hace los coros "a capela" sin que se lo pidan',
-  'Alguien adivina el año de la canción antes de que termine'
+// Las 5 secciones de la ruleta (mismo número que la ruleta física de Hitster).
+// "Grupo o solista" de Hitster se dejó fuera: la Web API de Spotify no tiene ese
+// dato de forma confiable, así que no se puede juzgar la respuesta con certeza.
+export const BINGO_CATEGORIES = [
+  { id: 'decade', label: 'DÉCADA', color: '#39ff14' },
+  { id: 'year', label: 'AÑO EXACTO', color: '#ff7a1a' },
+  { id: 'before2000', label: 'ANTES/DESPUÉS DE 2000', color: '#3f78ff' },
+  { id: 'song', label: 'NOMBRE DE LA CANCIÓN', color: '#a855f7' },
+  { id: 'artist', label: 'ARTISTA', color: '#ff6b8b' }
+];
+
+export const BINGO_WIN_MODES = [
+  { id: 'line', label: 'LÍNEA', description: 'Gana quien complete primero una fila, columna o diagonal. Partidas cortas, como el Hitster real.' },
+  { id: 'fullcard', label: 'CARTÓN COMPLETO', description: 'La línea es solo un logro a mitad de camino. Gana quien complete las 24 casillas.' }
 ];
 
 function shuffleArray(items = []) {
@@ -206,73 +193,15 @@ function shuffleArray(items = []) {
   return copy;
 }
 
-function buildRealBingoCellPool(tracks = [], styles = []) {
-  const pool = [];
-  const seenKeys = new Set();
-
-  const artistCounts = {};
-  tracks.forEach((track) => {
-    if (track?.artist) artistCounts[track.artist] = (artistCounts[track.artist] || 0) + 1;
-  });
-  Object.entries(artistCounts)
-    .filter(([, count]) => count >= 2)
-    .forEach(([artist]) => {
-      const key = `artist:${artist}`;
-      if (seenKeys.has(key)) return;
-      seenKeys.add(key);
-      pool.push({ kind: 'real', matchType: 'artist', matchValue: artist, label: `Suena algo de ${artist}` });
-    });
-
-  shuffleArray(tracks).forEach((track) => {
-    if (!track?.name) return;
-    const key = `title:${track.name}`;
-    if (seenKeys.has(key)) return;
-    seenKeys.add(key);
-    pool.push({ kind: 'real', matchType: 'title', matchValue: track.name, label: `Suena "${track.name}"` });
-  });
-
-  const decades = new Set();
-  tracks.forEach((track) => {
-    if (track?.releaseYear) decades.add(Math.floor(Number(track.releaseYear) / 10) * 10);
-  });
-  decades.forEach((decade) => {
-    const key = `decade:${decade}`;
-    if (seenKeys.has(key)) return;
-    seenKeys.add(key);
-    pool.push({ kind: 'real', matchType: 'decade', matchValue: String(decade), label: `Suena algo de los años ${decade}` });
-  });
-
-  styles.forEach(({ style, styleSlug } = {}) => {
-    if (!styleSlug) return;
-    const key = `style:${styleSlug}`;
-    if (seenKeys.has(key)) return;
-    seenKeys.add(key);
-    pool.push({ kind: 'real', matchType: 'style', matchValue: styleSlug, label: `Suena algo de ${style || styleSlug}` });
-  });
-
-  return shuffleArray(pool);
-}
-
 // Genera el cartón de un jugador (25 celdas, índice BINGO_FREE_INDEX = libre).
-// tracks/styles vienen de la playlist real del host (services/spotify.js) para que
-// las casillas "reales" correspondan a canciones que sí van a sonar en la partida.
-export function generateBingoCard(seedKey, tracks = [], styles = []) {
-  const realPool = buildRealBingoCellPool(tracks, styles);
-  const realCount = Math.min(realPool.length, Math.round(BINGO_CELLS_NEEDED * BINGO_REAL_RATIO));
-  const socialCount = BINGO_CELLS_NEEDED - realCount;
-
-  const realCells = realPool.slice(0, realCount);
-  const socialPool = shuffleArray(BINGO_SOCIAL_PROMPTS);
-  const socialCells = [];
-
-  // Si la playlist no entrega suficientes casillas reales, se rellena con casillas
-  // sociales (repitiendo el banco si hace falta) para que el cartón nunca quede incompleto.
-  for (let i = 0; i < socialCount + (BINGO_CELLS_NEEDED - realCells.length - socialCount); i += 1) {
-    const label = socialPool[i % socialPool.length];
-    socialCells.push({ kind: 'social', label });
+// Cada celda no-libre queda asignada a una de las BINGO_CATEGORIES, repartidas
+// ~parejo (24/5) y barajadas para que cada jugador tenga un arreglo distinto.
+export function generateBingoCard(seedKey) {
+  const pool = [];
+  for (let i = 0; i < BINGO_CELLS_NEEDED; i += 1) {
+    pool.push(BINGO_CATEGORIES[i % BINGO_CATEGORIES.length]);
   }
-
-  const combined = shuffleArray([...realCells, ...socialCells]).slice(0, BINGO_CELLS_NEEDED);
+  const shuffled = shuffleArray(pool);
 
   const cells = [];
   let cursor = 0;
@@ -280,37 +209,12 @@ export function generateBingoCard(seedKey, tracks = [], styles = []) {
     if (i === BINGO_FREE_INDEX) {
       cells.push({ id: `${seedKey}_free`, kind: 'free', label: 'DEDÍCALO' });
     } else {
-      cells.push({ id: `${seedKey}_${i}`, ...combined[cursor] });
+      const category = shuffled[cursor];
+      cells.push({ id: `${seedKey}_${i}`, kind: 'category', categoryId: category.id });
       cursor += 1;
     }
   }
   return cells;
-}
-
-// Casillas reales que ya pueden marcarse según el historial de canciones reproducidas.
-export function getEligibleBingoIndices(card = [], playedTracks = []) {
-  const eligible = new Set();
-  card.forEach((cell, index) => {
-    if (!cell || cell.kind !== 'real') return;
-    const matches = playedTracks.some((track) => {
-      if (!track) return false;
-      if (cell.matchType === 'artist') {
-        return String(track.artist || '').toLowerCase().includes(String(cell.matchValue).toLowerCase());
-      }
-      if (cell.matchType === 'title') {
-        return String(track.name || '').toLowerCase() === String(cell.matchValue).toLowerCase();
-      }
-      if (cell.matchType === 'decade') {
-        return Math.floor(Number(track.releaseYear || 0) / 10) * 10 === Number(cell.matchValue);
-      }
-      if (cell.matchType === 'style') {
-        return track.styleSlug === cell.matchValue;
-      }
-      return false;
-    });
-    if (matches) eligible.add(index);
-  });
-  return eligible;
 }
 
 // Progreso de un cartón: casillas que faltan para la mejor línea y para el cartón completo.
@@ -454,6 +358,10 @@ export const useGameStore = create((setStore, getStore) => ({
   // Bingo Musical
   playedTracks: {},
   bingoWinnerId: null,
+  bingoWinMode: 'line',
+  bingoStage: 'idle',
+  bingoRound: null,
+  bingoRoundAnswers: {},
 
   isAudioPlaying: false,
   isAudioMuted: false,
@@ -471,13 +379,14 @@ export const useGameStore = create((setStore, getStore) => ({
   },
   setRole: (role) => setStore({ role }),
 
-  setGameSettings: async ({ gameMode, targetScore }) => {
+  setGameSettings: async ({ gameMode, targetScore, bingoWinMode }) => {
     const pin = getStore().pin;
     if (getStore().round > 1 || getStore().phase !== 'lobby') return;
     const currentGameMode = getStore().gameMode;
     const nextSettings = {
       gameMode: gameMode || getStore().gameMode,
-      targetScore: Number(targetScore || getStore().targetScore)
+      targetScore: Number(targetScore || getStore().targetScore),
+      bingoWinMode: bingoWinMode || getStore().bingoWinMode || 'line'
     };
     const modeChanged = nextSettings.gameMode !== currentGameMode;
 
@@ -509,7 +418,8 @@ export const useGameStore = create((setStore, getStore) => ({
       round: 1,
       settings: {
         gameMode: getStore().gameMode,
-        targetScore: getStore().targetScore
+        targetScore: getStore().targetScore,
+        bingoWinMode: getStore().bingoWinMode || 'line'
       },
       players: { [hostId]: hostPlayer },
       audio: {
@@ -534,6 +444,7 @@ export const useGameStore = create((setStore, getStore) => ({
         players: [hostPlayer],
         gameMode: roomData.settings.gameMode,
         targetScore: roomData.settings.targetScore,
+        bingoWinMode: roomData.settings.bingoWinMode,
         spotifyPlaylistUrl: roomData.audio.playlistUrl,
         lastResultType: null,
         lastPointDelta: 0,
@@ -541,7 +452,10 @@ export const useGameStore = create((setStore, getStore) => ({
         revealResults: {},
         timelineYears: [],
         playedTracks: {},
-        bingoWinnerId: null
+        bingoWinnerId: null,
+        bingoStage: 'idle',
+        bingoRound: null,
+        bingoRoundAnswers: {}
       });
       getStore()._subscribeToRoom(newPin);
     } catch (error) {
@@ -550,19 +464,27 @@ export const useGameStore = create((setStore, getStore) => ({
     }
   },
 
-  hostStartGame: async ({ bingoTracks, bingoStyles } = {}) => {
-    const { pin, gameMode, players } = getStore();
+  hostStartGame: async () => {
+    const { pin, gameMode, players, bingoWinMode } = getStore();
     if (!pin) return;
 
     if (gameMode === 'bingo') {
       const cardUpdates = {};
       players.forEach((player) => {
-        const card = generateBingoCard(player.id, bingoTracks || [], bingoStyles || []);
+        const card = generateBingoCard(player.id);
         cardUpdates[`players/${player.id}/bingoCard`] = card;
         cardUpdates[`players/${player.id}/bingoMarked`] = card.map((cell) => cell.kind === 'free');
       });
-      await patchData(`rooms/${pin}`, { ...cardUpdates, playedTracks: null, bingoWinnerId: null });
-      setStore({ playedTracks: {}, bingoWinnerId: null });
+      await patchData(`rooms/${pin}`, {
+        ...cardUpdates,
+        playedTracks: null,
+        bingoWinnerId: null,
+        bingoStage: 'idle',
+        bingoRound: null,
+        bingoRoundAnswers: null,
+        'settings/bingoWinMode': bingoWinMode || 'line'
+      });
+      setStore({ playedTracks: {}, bingoWinnerId: null, bingoStage: 'idle', bingoRound: null, bingoRoundAnswers: {} });
     }
 
     await patchData(`rooms/${pin}`, { phase: 'countdown', currentQuestion: null });
@@ -575,67 +497,126 @@ export const useGameStore = create((setStore, getStore) => ({
     }, 3000);
   },
 
-  // Bingo Musical: el host reproduce canciones en bucle (sin fase blackout). Cada canción
-  // reproducida queda anotada en playedTracks para que todos los cartones la evalúen.
-  hostPlayNextBingoTrack: async (track) => {
+  // Bingo Musical, paso 1 de la ronda: se anuncia la categoría elegida y todos ven
+  // girar la ruleta al mismo tiempo, antes de que suene ninguna canción.
+  hostBeginBingoSpin: async (category) => {
     const { pin } = getStore();
-    if (!pin || !track) return;
+    if (!pin || !category) return;
+    await patchData(`rooms/${pin}`, { bingoStage: 'spinning', bingoRound: { categoryId: category.id }, bingoRoundAnswers: null });
+    setStore({ bingoStage: 'spinning', bingoRound: { categoryId: category.id }, bingoRoundAnswers: {} });
+  },
+
+  // Paso 2: ya se eligió la canción y se armó la pregunta (services/spotify.js),
+  // arranca el cronómetro de la ronda y todos pueden responder.
+  hostStartBingoRound: async ({ category, question, track }) => {
+    const { pin } = getStore();
+    if (!pin) return;
 
     const key = `t${Date.now()}_${Math.floor(Math.random() * 1000)}`;
-    const entry = {
+    const trackInfo = {
       uri: track.uri || null,
       name: track.name || null,
       artist: track.artist || null,
       releaseYear: track.releaseYear || null,
-      style: track.style || null,
-      styleSlug: track.styleSlug || null,
-      playedAt: Date.now()
+      albumImage: track.albumImage || null
+    };
+    const bingoRound = {
+      categoryId: category.id,
+      question,
+      track: trackInfo,
+      startedAt: Date.now(),
+      durationMs: BINGO_ROUND_DURATION_MS
     };
 
     await patchData(`rooms/${pin}`, {
-      [`playedTracks/${key}`]: entry,
-      currentTrack: {
-        name: track.name || null,
-        artist: track.artist || null,
-        releaseYear: track.releaseYear || null,
-        albumImage: track.albumImage || null
-      }
+      bingoStage: 'answering',
+      bingoRound,
+      bingoRoundAnswers: null,
+      currentTrack: trackInfo,
+      [`playedTracks/${key}`]: { ...trackInfo, playedAt: Date.now() }
     });
+    setStore({ bingoStage: 'answering', bingoRound, bingoRoundAnswers: {}, currentTrack: trackInfo });
   },
 
-  guestMarkBingoCell: async (cellIndex) => {
-    const { pin, guestId, players } = getStore();
-    if (!pin || !guestId) return null;
-    const player = players.find((p) => p.id === guestId);
-    if (!player) return null;
+  guestAnswerBingoRound: async (optionIndex) => {
+    const { pin, guestId, bingoRound } = getStore();
+    if (!pin || !guestId || !bingoRound?.question) return;
 
-    const marked = [...(player.bingoMarked || [])];
-    if (marked[cellIndex]) return null;
-    marked[cellIndex] = true;
-
-    await patchData(`rooms/${pin}/players/${guestId}`, { bingoMarked: marked });
+    const answer = {
+      optionIndex,
+      isCorrect: optionIndex === bingoRound.question.correct,
+      at: Date.now()
+    };
+    await writeData(`rooms/${pin}/bingoRoundAnswers/${guestId}`, answer);
     setStore({
-      players: players.map((p) => (p.id === guestId ? { ...p, bingoMarked: marked } : p))
+      bingoRoundAnswers: { ...getStore().bingoRoundAnswers, [guestId]: answer }
     });
-
-    const progress = getBingoProgress(marked);
-    if (progress.hasBingo) {
-      await getStore().claimBingoWin();
-    }
-    return progress;
   },
 
-  claimBingoWin: async () => {
-    const { pin, guestId } = getStore();
-    if (!pin || !guestId) return;
+  // Paso 3: se acabó el tiempo (o el anfitrión revela antes). Quien acertó marca
+  // sola una casilla sin marcar de su cartón del color de la categoría de la
+  // ronda. Si alguien completa la condición de victoria elegida (línea o cartón
+  // completo), la partida termina ahí mismo.
+  hostRevealBingoRound: async () => {
+    const { pin, bingoWinMode } = getStore();
+    if (!pin) return;
 
     const room = await readData(`rooms/${pin}`);
-    if (room?.bingoWinnerId) return;
+    if (!room?.bingoRound || room.bingoStage !== 'answering') return;
 
-    await Promise.all([
-      patchData(`rooms/${pin}`, { bingoWinnerId: guestId, phase: 'final' }),
-      patchData(`rooms/${pin}/audio`, { isPlaying: false })
-    ]);
+    const playersById = room.players || {};
+    const answers = room.bingoRoundAnswers || {};
+    const categoryId = room.bingoRound.categoryId;
+    const winMode = room.settings?.bingoWinMode || bingoWinMode || 'line';
+
+    // Se procesa en orden de quién respondió primero: si dos jugadores completan
+    // la condición de victoria en la misma ronda, gana quien contestó más rápido.
+    const orderedPlayers = Object.values(playersById).sort((a, b) => (
+      (answers[a.id]?.at ?? Infinity) - (answers[b.id]?.at ?? Infinity)
+    ));
+
+    const remoteUpdates = {};
+    const nextMarkedByPlayer = {};
+    let winnerId = null;
+
+    orderedPlayers.forEach((player) => {
+      if (!answers[player.id]?.isCorrect) return;
+      const marked = [...(player.bingoMarked || [])];
+      const card = player.bingoCard || [];
+      const targetIndex = card.findIndex((cell, index) => (
+        cell?.kind === 'category' && cell.categoryId === categoryId && !marked[index]
+      ));
+      if (targetIndex === -1) return;
+
+      marked[targetIndex] = true;
+      nextMarkedByPlayer[player.id] = marked;
+      remoteUpdates[`players/${player.id}/bingoMarked`] = marked;
+
+      if (!winnerId) {
+        const progress = getBingoProgress(marked);
+        const won = winMode === 'fullcard' ? progress.hasBingo : progress.hasLine;
+        if (won) winnerId = player.id;
+      }
+    });
+
+    remoteUpdates.bingoStage = 'revealed';
+    if (winnerId) {
+      remoteUpdates.bingoWinnerId = winnerId;
+      remoteUpdates.phase = 'final';
+    }
+
+    await patchData(`rooms/${pin}`, remoteUpdates);
+    if (winnerId) {
+      await patchData(`rooms/${pin}/audio`, { isPlaying: false });
+    }
+
+    setStore({
+      bingoStage: 'revealed',
+      players: getStore().players.map((p) => (
+        nextMarkedByPlayer[p.id] ? { ...p, bingoMarked: nextMarkedByPlayer[p.id] } : p
+      )),
+      ...(winnerId ? { bingoWinnerId: winnerId, phase: 'final' } : {})
+    });
   },
 
   getBingoRanking: () => computeBingoRanking(getStore().players),
@@ -778,6 +759,9 @@ export const useGameStore = create((setStore, getStore) => ({
       timelineYears: [],
       playedTracks: {},
       bingoWinnerId: null,
+      bingoStage: 'idle',
+      bingoRound: null,
+      bingoRoundAnswers: {},
       roomSubscription: null
     });
   },
@@ -818,11 +802,15 @@ export const useGameStore = create((setStore, getStore) => ({
         guestName: newPlayer.name,
         gameMode: room.settings?.gameMode || 'pulse',
         targetScore: Number(room.settings?.targetScore || 70),
+        bingoWinMode: room.settings?.bingoWinMode || 'line',
         lastResultType: null,
         lastPointDelta: 0,
         timelineYears: room.timelineYears || [],
         playedTracks: room.playedTracks || {},
-        bingoWinnerId: room.bingoWinnerId || null
+        bingoWinnerId: room.bingoWinnerId || null,
+        bingoStage: room.bingoStage || 'idle',
+        bingoRound: room.bingoRound || null,
+        bingoRoundAnswers: room.bingoRoundAnswers || {}
       });
       getStore()._subscribeToRoom(cleanPin);
     } catch (error) {
@@ -881,6 +869,9 @@ export const useGameStore = create((setStore, getStore) => ({
       timelineYears: [],
       playedTracks: {},
       bingoWinnerId: null,
+      bingoStage: 'idle',
+      bingoRound: null,
+      bingoRoundAnswers: {},
       roomSubscription: null
     });
   },
@@ -962,6 +953,7 @@ export const useGameStore = create((setStore, getStore) => ({
         round: remoteRound,
         gameMode: data.settings?.gameMode || data.gameMode || 'pulse',
         targetScore: Number(data.settings?.targetScore || data.targetScore || 70),
+        bingoWinMode: data.settings?.bingoWinMode || 'line',
         players: data.players
           ? sortPlayers(Object.values(data.players).map((player) => ({
             ...player,
@@ -974,7 +966,10 @@ export const useGameStore = create((setStore, getStore) => ({
         revealResults: data.revealResults || {},
         timelineYears: data.timelineYears || [],
         playedTracks: data.playedTracks || {},
-        bingoWinnerId: data.bingoWinnerId || null
+        bingoWinnerId: data.bingoWinnerId || null,
+        bingoStage: data.bingoStage || 'idle',
+        bingoRound: data.bingoRound || null,
+        bingoRoundAnswers: data.bingoRoundAnswers || {}
       });
 
       if (data.audio) {

@@ -2,8 +2,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MusicNotesBubbles from '../components/MusicNotesBubbles';
-import { GAME_MODES, TIMELINE_GOAL_YEARS, VICTORY_MODES, getBingoProgressLabel, getCombinedTimelineYears, useGameStore } from '../store/useGameStore';
-import { explainSpotifyError, getPlaylistStyles, getPlaylistTracks, prepareSpotifyPlayback } from '../services/spotify';
+import { BINGO_WIN_MODES, GAME_MODES, TIMELINE_GOAL_YEARS, VICTORY_MODES, getBingoProgressLabel, getCombinedTimelineYears, useGameStore } from '../store/useGameStore';
+import { explainSpotifyError, prepareSpotifyPlayback } from '../services/spotify';
 import ProfileMenu from '../components/ProfileMenu';
 import { auth } from '../firebase';
 
@@ -135,7 +135,7 @@ export default function LobbyScreen() {
     round,
     gameMode,
     targetScore,
-    spotifyPlaylistUrl,
+    bingoWinMode,
     lastDisconnectedPlayer,
     hostStartGame,
     setGameSettings,
@@ -189,22 +189,14 @@ export default function LobbyScreen() {
   };
 
   const handleSettingsChange = (nextSettings) => {
-    setGameSettings({ gameMode, targetScore, ...nextSettings });
+    setGameSettings({ gameMode, targetScore, bingoWinMode, ...nextSettings });
   };
 
   const handleHostStartGame = async () => {
     setStartError('');
     try {
       await prepareSpotifyPlayback();
-      if (gameMode === 'bingo') {
-        const [tracks, styles] = await Promise.all([
-          getPlaylistTracks(spotifyPlaylistUrl),
-          getPlaylistStyles(spotifyPlaylistUrl)
-        ]);
-        await hostStartGame({ bingoTracks: tracks, bingoStyles: styles });
-      } else {
-        await hostStartGame();
-      }
+      await hostStartGame();
     } catch (error) {
       console.error(error);
       setStartError(explainSpotifyError(error));
@@ -363,7 +355,7 @@ export default function LobbyScreen() {
                   {gameMode === 'timeline'
                     ? `Meta de Años Locos: ${TIMELINE_GOAL_YEARS} años. Cada jugador arranca con un año base distinto.`
                     : gameMode === 'bingo'
-                      ? 'Gana quien complete su cartón primero. Sin meta de puntos: todo es cuestión de Línea y Bingo.'
+                      ? `Cada ronda gira la ruleta y todos responden contrarreloj. Gana quien complete primero ${bingoWinMode === 'fullcard' ? 'el cartón entero' : 'una línea'}.`
                       : `Meta: ${targetScore} puntos. La partida sigue con las mismas reglas hasta el final.`}
                 </p>
               </div>
@@ -378,12 +370,24 @@ export default function LobbyScreen() {
                     </p>
                   </div>
                 ) : gameMode === 'bingo' ? (
-                  <div className="rounded-xl border border-neon-green/30 bg-neon-green/10 p-4 text-left">
-                    <p className="font-label-caps text-[10px] text-neon-green tracking-[0.2em]">SIN META DE PUNTOS</p>
-                    <h3 className="mt-1 text-lg font-black text-white">Línea o Cartón completo</h3>
-                    <p className="mt-1 text-sm text-on-surface-variant">
-                      Cada jugador recibe un cartón de 24 casillas + 1 libre. Gana quien marque primero todo el cartón.
-                    </p>
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-bold text-white">Cómo se gana</span>
+                      <span className="text-xs text-neon-green font-label-caps">
+                        {BINGO_WIN_MODES.find((m) => m.id === bingoWinMode)?.label || 'LÍNEA'}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-1 gap-2">
+                      {BINGO_WIN_MODES.map((winMode) => (
+                        <CheckRow
+                          key={winMode.id}
+                          title={winMode.label}
+                          subtitle={winMode.description}
+                          selected={(bingoWinMode || 'line') === winMode.id}
+                          onSelect={() => handleSettingsChange({ bingoWinMode: winMode.id })}
+                        />
+                      ))}
+                    </div>
                   </div>
                 ) : (
                   <div>
