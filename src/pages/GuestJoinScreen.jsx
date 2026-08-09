@@ -154,9 +154,9 @@ export default function GuestJoinScreen() {
   };
 
   return (
-    <motion.main className="relative z-10 w-full max-w-[430px] mx-auto min-h-screen px-margin-mobile pt-safe-header pb-28 text-center">
+    <motion.main className="relative z-10 w-full max-w-[430px] mx-auto min-h-dvh px-margin-mobile pt-safe-header pb-28 text-center">
       <header className="fixed top-0 w-full z-50 bg-glass-surface backdrop-blur-md border-b border-white/10 flex items-center justify-between px-margin-mobile h-16 left-0">
-        <button onClick={() => navigate('/role-selection')} className="text-on-surface-variant hover:text-white transition-colors flex items-center gap-2 font-label-caps text-xs tracking-[0.18em]">
+        <button onClick={() => navigate('/role-selection')} className="min-h-touch text-on-surface-variant hover:text-white transition-colors flex items-center gap-2 font-label-caps text-xs tracking-[0.18em]">
           <span className="material-symbols-outlined text-xl">arrow_back</span> VOLVER
         </button>
         <img src="/images/logo-main.png" alt="Dedícalo" className="h-8 w-auto object-contain" />
@@ -273,7 +273,7 @@ export default function GuestJoinScreen() {
                   <h2 className="font-headline-lg text-xl text-white">Escanear QR</h2>
                   <p className="text-xs text-on-surface-variant mt-1">Apunta al QR del anfitrión.</p>
                 </div>
-                <button type="button" onClick={() => setScannerOpen(false)} className="w-9 h-9 rounded-full bg-white/10 text-white">
+                <button type="button" onClick={() => setScannerOpen(false)} aria-label="Cerrar escáner" className="min-w-touch min-h-touch rounded-full bg-white/10 text-white flex items-center justify-center">
                   <span className="material-symbols-outlined text-lg">close</span>
                 </button>
               </div>

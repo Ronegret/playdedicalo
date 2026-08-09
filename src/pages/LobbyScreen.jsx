@@ -2,104 +2,12 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MusicNotesBubbles from '../components/MusicNotesBubbles';
-import { BINGO_WIN_MODES, GAME_MODES, TIMELINE_GOAL_YEARS, VICTORY_MODES, getBingoProgressLabel, getCombinedTimelineYears, useGameStore } from '../store/useGameStore';
+import { TIMELINE_GOAL_YEARS, getCombinedTimelineYears, useGameStore } from '../store/useGameStore';
 import { explainSpotifyError, prepareSpotifyPlayback } from '../services/spotify';
 import ProfileMenu from '../components/ProfileMenu';
 import { auth } from '../firebase';
 
-function InfoDetails({ title, children }) {
-  const [isOpen, setIsOpen] = useState(false);
 
-  return (
-    <>
-      <button
-        type="button"
-        onClick={() => setIsOpen(true)}
-        className="ml-auto shrink-0 w-7 h-7 rounded-full border border-white/15 bg-white/5 text-on-surface-variant flex items-center justify-center"
-        aria-label={`Ver información de ${title}`}
-      >
-        <span className="material-symbols-outlined text-sm">info</span>
-      </button>
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[120] bg-black/80 backdrop-blur-sm flex items-center justify-center px-5"
-            onClick={() => setIsOpen(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.94, y: 18 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.94, y: 18 }}
-              className="w-full max-w-sm rounded-2xl border border-white/10 bg-surface-container p-5 text-left shadow-[0_0_40px_rgba(189,0,255,0.22)]"
-              onClick={(event) => event.stopPropagation()}
-            >
-              <div className="flex items-start justify-between gap-4">
-                <h3 className="text-xl font-black text-white leading-tight">{title}</h3>
-                <button
-                  type="button"
-                  onClick={() => setIsOpen(false)}
-                  className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-on-surface-variant"
-                  aria-label="Cerrar información"
-                >
-                  <span className="material-symbols-outlined text-lg">close</span>
-                </button>
-              </div>
-              <div className="mt-4 text-sm leading-relaxed text-on-surface-variant">
-                {children}
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
-  );
-}
-
-function CheckRow({ title, subtitle, selected, onSelect, children }) {
-  return (
-    <div className={`rounded-xl border transition-colors ${selected ? 'border-neon-green bg-neon-green/10' : 'border-white/10 bg-black/10'}`}>
-      <div className="flex items-center gap-3 p-3">
-        <button
-          type="button"
-          onClick={onSelect}
-          className={`w-6 h-6 rounded-md border flex items-center justify-center shrink-0 ${selected ? 'border-neon-green bg-neon-green text-black' : 'border-white/20 bg-white/5 text-transparent'}`}
-          aria-pressed={selected}
-        >
-          <span className="material-symbols-outlined text-base">check</span>
-        </button>
-        <button type="button" onClick={onSelect} className="min-w-0 flex-1 text-left">
-          <span className="block text-sm font-bold text-white leading-tight">{title}</span>
-          {subtitle && <span className="mt-1 block text-[11px] text-on-surface-variant truncate">{subtitle}</span>}
-        </button>
-        {children}
-      </div>
-    </div>
-  );
-}
-
-function ModeCard({ mode, selected, onSelect }) {
-  return (
-    <CheckRow title={mode.name} subtitle={mode.short} selected={selected} onSelect={onSelect}>
-      <InfoDetails title={mode.name}>
-        <p>{mode.description}</p>
-        <p className="mt-2 text-neon-green">{mode.rhythm}</p>
-      </InfoDetails>
-    </CheckRow>
-  );
-}
-
-function VictoryCard({ mode, selected, onSelect }) {
-  return (
-    <CheckRow title={`${mode.targetScore} pts`} subtitle={mode.name} selected={selected} onSelect={onSelect}>
-      <InfoDetails title={mode.name}>
-        <p>{mode.description}</p>
-      </InfoDetails>
-    </CheckRow>
-  );
-}
 
 function TimelineYears({ years = [] }) {
   return (
@@ -114,16 +22,7 @@ function TimelineYears({ years = [] }) {
   );
 }
 
-function BingoProgressBadge({ player }) {
-  const label = getBingoProgressLabel(player);
-  if (!label) return null;
-  return (
-    <div className="mt-3 flex items-center gap-1.5 pl-9">
-      <span className="material-symbols-outlined text-neon-green text-sm">grid_view</span>
-      <span className="font-label-caps text-[10px] text-neon-green">{label}</span>
-    </div>
-  );
-}
+
 
 export default function LobbyScreen() {
   const navigate = useNavigate();
@@ -133,17 +32,13 @@ export default function LobbyScreen() {
     players,
     phase,
     round,
-    gameMode,
-    targetScore,
-    bingoWinMode,
-    lastDisconnectedPlayer,
     hostStartGame,
-    setGameSettings,
     guestLeaveRoom,
     hostCloseRoom,
     roomError,
     clearRoomError,
-    guestAvatar
+    guestAvatar,
+    lastDisconnectedPlayer
   } = useGameStore();
   const [showQR, setShowQR] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
@@ -188,9 +83,7 @@ export default function LobbyScreen() {
     navigate('/role-selection');
   };
 
-  const handleSettingsChange = (nextSettings) => {
-    setGameSettings({ gameMode, targetScore, bingoWinMode, ...nextSettings });
-  };
+
 
   const handleHostStartGame = async () => {
     setStartError('');
@@ -204,7 +97,7 @@ export default function LobbyScreen() {
   };
 
   return (
-    <motion.main className="relative z-10 min-h-screen px-margin-mobile pt-safe-header pb-28 max-w-lg mx-auto flex flex-col items-center w-full">
+    <motion.main className="relative z-10 min-h-dvh px-margin-mobile pt-safe-header pb-28 max-w-lg mx-auto flex flex-col items-center w-full">
       <MusicNotesBubbles />
 
       <AnimatePresence>
@@ -228,7 +121,7 @@ export default function LobbyScreen() {
       </AnimatePresence>
 
       <header className="fixed top-0 left-0 right-0 h-16 bg-surface/85 backdrop-blur-xl border-b border-white/10 flex justify-between items-center px-margin-mobile z-50">
-        <button onClick={handleExit} className="text-on-surface-variant hover:text-white transition-colors flex items-center font-label-caps text-xs gap-2">
+        <button onClick={handleExit} className="min-h-touch text-on-surface-variant hover:text-white transition-colors flex items-center font-label-caps text-xs gap-2">
           <span className="material-symbols-outlined text-xl">arrow_back</span> SALIR
         </button>
         <img src="/images/logo-main.png" alt="Dedícalo" className="h-8 w-auto object-contain" />
@@ -346,86 +239,14 @@ export default function LobbyScreen() {
 
         {role === 'host' && (
           <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-4 text-left">
-            <p className="font-label-caps text-neon-green text-xs mb-3">{gameLocked ? 'PARTIDA EN CURSO' : 'ELIGE LA PARTIDA'}</p>
-
-            {gameLocked ? (
-              <div className="rounded-xl border border-neon-green/30 bg-neon-green/10 p-4">
-                <p className="text-lg font-black text-white">{GAME_MODES[gameMode]?.name}</p>
-                <p className="mt-1 text-sm text-on-surface-variant">
-                  {gameMode === 'timeline'
-                    ? `Meta de Años Locos: ${TIMELINE_GOAL_YEARS} años. Cada jugador arranca con un año base distinto.`
-                    : gameMode === 'bingo'
-                      ? `Cada ronda gira la ruleta y todos responden contrarreloj. Gana quien complete primero ${bingoWinMode === 'fullcard' ? 'el cartón entero' : 'una línea'}.`
-                      : `Meta: ${targetScore} puntos. La partida sigue con las mismas reglas hasta el final.`}
-                </p>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {gameMode === 'timeline' ? (
-                  <div className="rounded-xl border border-vinyl-orange/30 bg-vinyl-orange/10 p-4 text-left">
-                    <p className="font-label-caps text-[10px] text-vinyl-orange tracking-[0.2em]">META DE AÑOS LOCOS</p>
-                    <h3 className="mt-1 text-lg font-black text-white">{TIMELINE_GOAL_YEARS} años</h3>
-                    <p className="mt-1 text-sm text-on-surface-variant">
-                      Cada jugador arranca con un año base distinto y va completando su línea hasta llegar a la meta.
-                    </p>
-                  </div>
-                ) : gameMode === 'bingo' ? (
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-bold text-white">Cómo se gana</span>
-                      <span className="text-xs text-neon-green font-label-caps">
-                        {BINGO_WIN_MODES.find((m) => m.id === bingoWinMode)?.label || 'LÍNEA'}
-                      </span>
-                    </div>
-                    <div className="grid grid-cols-1 gap-2">
-                      {BINGO_WIN_MODES.map((winMode) => (
-                        <CheckRow
-                          key={winMode.id}
-                          title={winMode.label}
-                          subtitle={winMode.description}
-                          selected={(bingoWinMode || 'line') === winMode.id}
-                          onSelect={() => handleSettingsChange({ bingoWinMode: winMode.id })}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                ) : (
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-bold text-white">Meta</span>
-                      <span className="text-xs text-neon-green font-label-caps">{targetScore} puntos</span>
-                    </div>
-                    <div className="grid grid-cols-1 gap-2">
-                      {VICTORY_MODES.map((mode) => (
-                        <VictoryCard
-                          key={mode.targetScore}
-                          mode={mode}
-                          selected={targetScore === mode.targetScore}
-                          onSelect={() => handleSettingsChange({ targetScore: mode.targetScore })}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-bold text-white">Modo</span>
-                    <span className="text-xs text-neon-green font-label-caps">{GAME_MODES[gameMode]?.short}</span>
-                  </div>
-                  <div className="grid gap-2">
-                    {Object.values(GAME_MODES).map((mode) => (
-                      <ModeCard
-                        key={mode.id}
-                        mode={mode}
-                        selected={gameMode === mode.id}
-                        onSelect={() => handleSettingsChange({ gameMode: mode.id })}
-                      />
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
+            <p className="font-label-caps text-neon-green text-xs mb-3">{gameLocked ? 'PARTIDA EN CURSO' : 'MODO DE JUEGO'}</p>
+            <div className="rounded-xl border border-vinyl-orange/30 bg-vinyl-orange/10 p-4 text-left">
+              <p className="font-label-caps text-[10px] text-vinyl-orange tracking-[0.2em]">AÑOS LOCOS</p>
+              <h3 className="mt-1 text-lg font-black text-white">{TIMELINE_GOAL_YEARS} años a completar</h3>
+              <p className="mt-1 text-sm text-on-surface-variant">
+                Cada jugador arranca con un año base distinto y va completando su línea hasta llegar a la meta.
+              </p>
+            </div>
 
             {players.length < 2 && (
               <p className="mt-4 rounded-xl border border-vinyl-orange/30 bg-vinyl-orange/8 px-3 py-2 text-xs text-vinyl-orange/90 text-center">
@@ -483,15 +304,12 @@ export default function LobbyScreen() {
                   )}
                   <span className="font-body-md font-bold text-white truncate">{player.name}</span>
                 </div>
-                {gameMode !== 'bingo' && (
-                  <div className="text-right shrink-0">
-                    <span className="font-black text-neon-green drop-shadow-[0_0_8px_rgba(57,255,20,0.4)]">{player.points}</span>
-                    <span className="text-xs ml-1 text-on-surface-variant">PTS</span>
-                  </div>
-                )}
+                <div className="text-right shrink-0">
+                  <span className="font-black text-neon-green drop-shadow-[0_0_8px_rgba(57,255,20,0.4)]">{player.points}</span>
+                  <span className="text-xs ml-1 text-on-surface-variant">PTS</span>
+                </div>
               </div>
-              {gameMode === 'timeline' && <TimelineYears years={getCombinedTimelineYears(player)} />}
-              {gameMode === 'bingo' && gameLocked && <BingoProgressBadge player={player} />}
+              <TimelineYears years={getCombinedTimelineYears(player)} />
             </motion.div>
           ))}
         </div>

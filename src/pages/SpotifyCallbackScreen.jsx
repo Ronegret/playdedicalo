@@ -33,7 +33,7 @@ export default function SpotifyCallbackScreen() {
   }, [navigate]);
 
   return (
-    <main className="relative z-10 min-h-screen flex items-center justify-center px-margin-mobile text-center">
+    <main className="relative z-10 min-h-dvh flex items-center justify-center px-margin-mobile text-center">
       <section className="w-full max-w-sm rounded-2xl border border-white/10 bg-white/5 p-6">
         <span className="material-symbols-outlined text-neon-green text-5xl">music_note</span>
         <h1 className="mt-4 text-2xl font-black text-white">Spotify</h1>

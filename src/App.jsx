@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { onAuthStateChanged, signInAnonymously } from 'firebase/auth';
@@ -58,9 +58,37 @@ function PageLoader() {
   );
 }
 
+import { useGameStore } from './store/useGameStore';
+
 function App() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [sessionChecked, setSessionChecked] = useState(false);
+  const sessionCheckedRef = useRef(false);
+
+  // On mobile, a call, a locked screen or switching apps can freeze the tab
+  // long enough for the socket to drop. Returning to the foreground (or wifi
+  // coming back) re-subscribes and re-marks this player as online instead of
+  // leaving them stuck on "Reconectando" until they touch something.
+  useEffect(() => {
+    const reconnect = () => {
+      const { pin, _subscribeToRoom, markPresenceOnline } = useGameStore.getState();
+      if (!pin) return;
+      _subscribeToRoom(pin);
+      markPresenceOnline();
+    };
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') reconnect();
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('online', reconnect);
+    window.addEventListener('pageshow', reconnect);
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('online', reconnect);
+      window.removeEventListener('pageshow', reconnect);
+    };
+  }, []);
 
   // Start bg music on first interaction while on welcome screen
   useEffect(() => {
@@ -79,7 +107,7 @@ function App() {
   }, [location.pathname]);
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (user) => {
+    const unsub = onAuthStateChanged(auth, async (user) => {
       if (!user) {
         // No session at all yet (guest, or host before choosing "Sign in with Google").
         // An anonymous session is enough to satisfy the database rules' `auth != null`
@@ -94,38 +122,70 @@ function App() {
       // Intents older than 10 min are stale (e.g. a redirect that failed and was
       // never cleaned up). Ignore them so they don't cause unexpected navigation.
       const isStale = intentTime > 0 && Date.now() - intentTime > 10 * 60 * 1000;
+      let navigatedByIntent = false;
 
       if (dest) {
         localStorage.removeItem('auth_redirect_intent');
         localStorage.removeItem('auth_redirect_intent_time');
         if (!isStale && window.location.pathname !== dest) {
           navigate(dest);
+          navigatedByIntent = true;
         }
+      }
+
+      // A tab that got reloaded (stale-chunk recovery, browser/OS killing a
+      // backgrounded tab and restoring it, PWA relaunch) loses all in-memory
+      // state even though the room and player id are still in localStorage.
+      // Try once per app load to rejoin exactly where the player left off
+      // instead of dumping them back on the welcome screen.
+      if (!sessionCheckedRef.current) {
+        sessionCheckedRef.current = true;
+        if (!useGameStore.getState().pin) {
+          const resumed = await useGameStore.getState().resumeSession().catch(() => false);
+          if (resumed && !navigatedByIntent) {
+            const inRoomRoute = ['/lobby', '/game', '/game/result'].includes(window.location.pathname);
+            if (!inRoomRoute) {
+              navigate(useGameStore.getState().phase === 'lobby' ? '/lobby' : '/game');
+            }
+          }
+        }
+        setSessionChecked(true);
       }
     });
     return unsub;
   }, [navigate]);
+
+  // Safety net: never let a broken/slow auth handshake strand the player on
+  // the loading screen — show the app anyway after a few seconds.
+  useEffect(() => {
+    const timeout = window.setTimeout(() => setSessionChecked(true), 4000);
+    return () => window.clearTimeout(timeout);
+  }, []);
 
   return (
     <ErrorBoundary>
       <OfflineBanner />
       <ShaderBackground />
 
-      <Suspense fallback={<PageLoader />}>
-        <AnimatePresence mode="wait">
-          <Routes location={location} key={location.pathname}>
-            <Route path="/" element={<WelcomeScreen />} />
-            <Route path="/how-to-play" element={<HowToPlayScreen />} />
-            <Route path="/role-selection" element={<RoleSelectionScreen />} />
-            <Route path="/host/sync" element={<HostSyncScreen />} />
-            <Route path="/spotify/callback" element={<SpotifyCallbackScreen />} />
-            <Route path="/guest/join" element={<GuestJoinScreen />} />
-            <Route path="/lobby" element={<LobbyScreen />} />
-            <Route path="/game" element={<GameScreen />} />
-            <Route path="/game/result" element={<ResultScreen />} />
-          </Routes>
-        </AnimatePresence>
-      </Suspense>
+      {sessionChecked ? (
+        <Suspense fallback={<PageLoader />}>
+          <AnimatePresence mode="wait">
+            <Routes location={location} key={location.pathname}>
+              <Route path="/" element={<WelcomeScreen />} />
+              <Route path="/how-to-play" element={<HowToPlayScreen />} />
+              <Route path="/role-selection" element={<RoleSelectionScreen />} />
+              <Route path="/host/sync" element={<HostSyncScreen />} />
+              <Route path="/spotify/callback" element={<SpotifyCallbackScreen />} />
+              <Route path="/guest/join" element={<GuestJoinScreen />} />
+              <Route path="/lobby" element={<LobbyScreen />} />
+              <Route path="/game" element={<GameScreen />} />
+              <Route path="/game/result" element={<ResultScreen />} />
+            </Routes>
+          </AnimatePresence>
+        </Suspense>
+      ) : (
+        <PageLoader />
+      )}
     </ErrorBoundary>
   );
 }

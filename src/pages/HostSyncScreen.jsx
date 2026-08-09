@@ -212,12 +212,12 @@ export default function HostSyncScreen() {
       initial={{ opacity: 0, x: 50 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -50 }}
-      className="relative z-10 w-full min-h-screen px-4 md:px-8 lg:px-16 pt-safe-header pb-28"
+      className="relative z-10 w-full min-h-dvh px-4 md:px-8 lg:px-16 pt-safe-header pb-28"
     >
             <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-white/8 flex justify-between items-center px-4 md:px-8 h-16">
         <button
           onClick={() => navigate('/role-selection')}
-          className="text-on-surface-variant hover:text-white transition-colors flex items-center gap-2 font-label-caps text-xs tracking-[0.18em]"
+          className="min-h-touch text-on-surface-variant hover:text-white transition-colors flex items-center gap-2 font-label-caps text-xs tracking-[0.18em]"
         >
           <span className="material-symbols-outlined text-xl">arrow_back</span>
           VOLVER

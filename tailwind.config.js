@@ -76,7 +76,14 @@ export default {
         "unit": "4px",
         "gutter": "16px",
         "stack-sm": "8px",
-        "stack-lg": "48px"
+        "stack-lg": "48px",
+        "touch": "48px"
+      },
+      "minWidth": {
+        "touch": "48px"
+      },
+      "minHeight": {
+        "touch": "48px"
       },
       "fontFamily": {
         "headline-xl": ["Montserrat", "Arial", "sans-serif"],

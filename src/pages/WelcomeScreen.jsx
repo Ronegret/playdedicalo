@@ -150,7 +150,7 @@ export default function WelcomeScreen() {
               <span className="text-animated-gradient">la habías jugado</span>
             </h1>
             <p className="text-sm md:text-base text-on-surface-variant leading-relaxed">
-              Adivina canciones, arma tu ruta de años o marca tu cartón de Bingo Musical. Gana llegando primero a la meta.
+              Escucha la música, adivina la época y construye tu ruta musical en Años Locos. El primero en llegar a 12 años gana.
             </p>
           </motion.div>
 
@@ -162,9 +162,9 @@ export default function WelcomeScreen() {
             className="hidden md:flex items-center gap-8"
           >
             {[
-              ['3', 'modos de juego'],
-              ['24', 'casillas bingo'],
-              ['+5', 'por acierto'],
+              ['12', 'años para ganar'],
+              ['+5', 'pts por acierto'],
+              ['-3', 'pts por fallo'],
             ].map(([val, label]) => (
               <div key={label}>
                 <p className="font-stats-xl text-2xl text-vinyl-orange font-black leading-none">{val}</p>

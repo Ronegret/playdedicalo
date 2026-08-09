@@ -59,17 +59,21 @@ export default function ProfileMenu({ user, guestAvatar }) {
   return (
     <div className="relative z-[200]" ref={menuRef}>
       <button
+        type="button"
         onClick={() => setIsOpen((prev) => !prev)}
-        className="w-8 h-8 rounded-full border-2 border-electric-purple overflow-hidden flex items-center justify-center bg-electric-purple/20 transition-transform active:scale-95"
+        className="min-w-touch min-h-touch rounded-full flex items-center justify-center active:scale-95 transition-transform"
         aria-label="Menú de perfil"
+        aria-expanded={isOpen}
       >
-        {user?.photoURL ? (
-          <img src={user.photoURL} alt="Avatar" className="w-full h-full object-cover" />
-        ) : guestAvatar ? (
-          <span className="text-sm leading-none">{guestAvatar}</span>
-        ) : (
-          <span className="material-symbols-outlined text-sm text-electric-purple">person</span>
-        )}
+        <span className="w-8 h-8 rounded-full border-2 border-electric-purple overflow-hidden flex items-center justify-center bg-electric-purple/20">
+          {user?.photoURL ? (
+            <img src={user.photoURL} alt="Avatar" className="w-full h-full object-cover" />
+          ) : guestAvatar ? (
+            <span className="text-sm leading-none">{guestAvatar}</span>
+          ) : (
+            <span className="material-symbols-outlined text-sm text-electric-purple">person</span>
+          )}
+        </span>
       </button>
 
       <AnimatePresence>
@@ -91,8 +95,9 @@ export default function ProfileMenu({ user, guestAvatar }) {
             </div>
             <div className="p-2">
               <button
+                type="button"
                 onClick={handleLogout}
-                className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-left text-sm font-bold text-intense-red hover:bg-intense-red/10 transition-colors"
+                className="w-full min-h-touch flex items-center gap-2 px-3 rounded-xl text-left text-sm font-bold text-intense-red hover:bg-intense-red/10 active:bg-intense-red/15 transition-colors"
               >
                 <span className="material-symbols-outlined text-[1.2rem]">logout</span>
                 Cerrar Sesión

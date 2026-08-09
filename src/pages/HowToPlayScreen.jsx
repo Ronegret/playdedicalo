@@ -3,19 +3,19 @@ import { useNavigate } from 'react-router-dom';
 import NeonButton from '../components/NeonButton';
 import SupportButton from '../components/SupportButton';
 import { getPlaylistRequestUrl, openMailto, SUPPORT_EMAIL } from '../config/support';
-import { BINGO_CATEGORIES, TIMELINE_GOAL_YEARS, VICTORY_MODES } from '../store/useGameStore';
+import { TIMELINE_GOAL_YEARS } from '../store/useGameStore';
 
 const QUICK_FLOW = [
   { icon: 'person_add', title: 'Sala', text: 'El anfitrión crea la sala. Los demás entran con PIN o QR.' },
-  { icon: 'album', title: 'Música', text: 'Suena una canción del estilo elegido.' },
-  { icon: 'front_hand', title: 'Juega', text: 'Responde, ordena años o marca tu cartón según el modo.' },
-  { icon: 'emoji_events', title: 'Meta', text: 'La partida sigue hasta que alguien gana.' },
+  { icon: 'album', title: 'Música', text: 'Suena una canción y debes adivinar su época.' },
+  { icon: 'timeline', title: 'Años Locos', text: 'Coloca cada canción antes, después o entre tus años acumulados.' },
+  { icon: 'emoji_events', title: 'Victoria', text: `El primero en acumular ${TIMELINE_GOAL_YEARS} años en su ruta personal gana.` },
 ];
 
 const GOLDEN_RULES = [
   ['El anfitrión también juega', 'Controla la música, pero participa igual que todos.'],
   ['La canción siempre va oculta', 'No se muestra título ni artista antes de revelar el resultado.'],
-  ['La partida no cambia a mitad', 'El estilo, modo y meta se eligen al crear sala y se mantienen hasta el final.'],
+  ['Modo único oficial', 'Toda la partida transcurre bajo la regla oficial de Años Locos.'],
 ];
 
 const HOST_STEPS = [
@@ -31,7 +31,7 @@ const GUEST_STEPS = [
   ['Elige “Invitado”', 'No necesitas Google ni Spotify. Solo entra a la sala.'],
   ['Escribe el PIN o escanea el QR', 'El anfitrión lo muestra en pantalla al crear la sala.'],
   ['Elige tu nombre e identidad', 'Así todos te reconocen en el ranking.'],
-  ['Escucha y participa', 'Responde, completa tu ruta de años o marca tu cartón según el modo elegido.'],
+  ['Escucha y participa', 'Responde y completa tu ruta de años en el modo Años Locos.'],
 ];
 
 const SPOTIFY_STEPS = [
@@ -39,20 +39,6 @@ const SPOTIFY_STEPS = [
   ['Spotify después', 'Pulsa “Conectar Spotify” e inicia sesión con una cuenta Premium.'],
   ['Prueba antes de crear', 'Toca “Probar sonido”. Si escuchas música, todo está listo.'],
   ['Durante la partida', 'El anfitrión controla cuándo suena la música. Nadie ve el nombre de la canción.'],
-];
-
-const PULSE_STEPS = [
-  ['Suena la música', 'Empieza a sonar una canción del estilo que eligió el anfitrión. Nadie sabe todavía cuál es.'],
-  ['El anfitrión corta', 'En el momento que quiera, el anfitrión pausa la canción y aparece una pregunta sobre ella.'],
-  ['Todos responden', 'Cada jugador —incluido el anfitrión— elige una respuesta desde su móvil, lo más rápido posible.'],
-  ['Se revela el resultado', 'Verde si acertaste, rojo si fallaste. Los puntos se suman o restan al instante.'],
-];
-
-const PULSE_EXAMPLE = [
-  'Suena una canción de reggaetón. A los 20 segundos el anfitrión la corta y pregunta "¿De qué década es esta canción?".',
-  'Rodrigo responde "2010s" y acierta: sube de 10 a 15 puntos.',
-  'Noelia duda, responde tarde y falla: baja de 10 a 7 puntos.',
-  'La música sigue sonando ronda tras ronda hasta que alguien llega primero a la meta elegida (70, 120 o 200 puntos).',
 ];
 
 const TIMELINE_STEPS = [
@@ -69,13 +55,6 @@ const TIMELINE_EXAMPLE = [
   `Sigue sonando música hasta que Noelia (o alguien más) complete ${TIMELINE_GOAL_YEARS} años y gane la partida.`,
 ];
 
-const BINGO_STEPS = [
-  ['Recibes tu cartón', 'Cada casilla pertenece a una de 5 categorías con su propio color: Década, Año exacto, Antes/después de 2000, Canción o Artista.'],
-  ['El anfitrión gira la ruleta', 'Sale al azar una de las 5 categorías y suena una canción que sirve para esa categoría.'],
-  ['Todos responden contrarreloj', 'Tienes 25 segundos para elegir tu respuesta desde el móvil — igual que todos los demás, incluido el anfitrión.'],
-  ['Si acertaste, se marca sola', 'Cuando se acaba el tiempo se revela la respuesta correcta. Si acertaste, el juego marca solo una casilla sin marcar de tu cartón del color de esa categoría.'],
-];
-
 const POINT_RULES = [
   {
     icon: 'play_circle',
@@ -83,7 +62,7 @@ const POINT_RULES = [
     value: '10',
     label: 'INICIO',
     color: '#ffffff',
-    text: 'Así nadie empieza desde cero en Corte Maestro o Años Locos.'
+    text: 'Puntos iniciales asignados a cada jugador al comenzar la partida.'
   },
   {
     icon: 'check_circle',
@@ -91,7 +70,7 @@ const POINT_RULES = [
     value: '+5',
     label: 'ACIERTO',
     color: '#39ff14',
-    text: 'Si respondes bien, subes 5 puntos cuando el anfitrión revela el resultado.'
+    text: 'Si respondes bien la colocación en la línea de tiempo, ganas 5 puntos.'
   },
   {
     icon: 'cancel',
@@ -99,7 +78,7 @@ const POINT_RULES = [
     value: '-3',
     label: 'FALLO',
     color: '#ff6b8b',
-    text: 'Si fallas, pierdes 3 puntos. Si no respondes, también cuenta como fallo.'
+    text: 'Si fallas la colocación, pierdes 3 puntos.'
   }
 ];
 
@@ -108,39 +87,13 @@ const POINT_EXAMPLES = [
   ['Noelia falla', '10 - 3', '7 pts'],
 ];
 
-const MODES = [
-  {
-    icon: 'bolt',
-    color: '#ff7a1a',
-    title: 'Corte Maestro',
-    goal: `Meta de ${VICTORY_MODES.map((mode) => mode.targetScore).join(', ')} puntos`,
-    text: 'La canción suena, el anfitrión la corta y todos responden. Rápido, simple y con tensión desde el primer corte.'
-  },
-  {
-    icon: 'timeline',
-    color: '#a855f7',
-    title: 'Años Locos',
-    goal: `${TIMELINE_GOAL_YEARS} años para ganar`,
-    text: 'Cada jugador arma su propia ruta musical. Coloca cada canción antes, después o entre los años que ya tengas.'
-  },
-  {
-    icon: 'grid_view',
-    color: '#39ff14',
-    title: 'Bingo Musical',
-    goal: '24 casillas + 1 libre',
-    text: 'Gira la ruleta de categorías, responde contrarreloj y las casillas se marcan solas si acertaste. Ideal para grupos grandes.'
-  },
-];
-
 const FAQ = [
   ['¿El anfitrión también juega?', 'Sí. El anfitrión controla la música, pero participa igual que todos.'],
   ['¿Todos necesitan Spotify Premium?', 'No. Solo el anfitrión necesita conectar Spotify Premium. Los invitados solo escuchan el sonido del lugar.'],
-  ['¿Se ve la canción que está sonando?', 'En Corte Maestro y Años Locos no, queda oculta hasta el resultado. En Bingo Musical tampoco: solo sabes la categoría de la ronda, no el título ni el artista.'],
-  ['¿Cuándo termina la partida?', 'Corte Maestro termina cuando alguien llega a la meta de puntos. Años Locos termina al completar 12 años. Bingo Musical termina cuando alguien cumple la condición de victoria elegida por el anfitrión (línea o cartón completo).'],
-  ['¿Puedo cambiar de modo a mitad de partida?', 'No. El modo se elige al crear la sala y se mantiene hasta terminar la partida.'],
-  ['¿Qué pasa si fallo en Corte Maestro o Años Locos?', 'Pierdes 3 puntos. Si aciertas, ganas 5 puntos.'],
-  ['¿Cómo se gana en Bingo Musical?', 'Cada ronda gira la ruleta, sale una categoría y todos responden antes de que se acabe el tiempo. Si acertaste, se marca sola una casilla. Gana quien complete primero una línea o el cartón entero, según lo que haya elegido el anfitrión.'],
-  ['¿El ranking de Bingo Musical usa puntos?', 'No. Se ordena solo por cuántas casillas te faltan para tu mejor Línea (o para el cartón completo), en vivo para todos.'],
+  ['¿Se ve la canción que está sonando?', 'No, queda oculta hasta que el anfitrión revela el resultado.'],
+  ['¿Cuándo termina la partida?', `Años Locos termina cuando el primer jugador logra completar sus ${TIMELINE_GOAL_YEARS} años acumulados.`],
+  ['¿Qué pasa si fallo al colocar la canción?', 'Pierdes 3 puntos. Si aciertas, ganas 5 puntos y sumas el año a tu ruta.'],
+  ['¿Qué pasa si pierdo la conexión a mitad de partida?', 'Tienes hasta 30 segundos para reconectar (llamada, pantalla bloqueada o cambio de app). Tu sitio en la sala se mantiene y sigues desde donde estabas.'],
   ['¿Qué hago si Spotify no suena?', 'Reconecta Spotify, verifica que la cuenta sea Premium, sube el volumen del dispositivo y vuelve a probar sonido antes de crear la sala.'],
 ];
 
@@ -151,15 +104,6 @@ const LEGAL_NOTES = [
   ['Tus datos en la partida', 'El nombre y avatar del invitado se usan solo mientras dura la sala y se eliminan al salir. El anfitrión inicia sesión con Google únicamente para conectar Spotify.'],
   ['Fuentes e iconos', 'Usamos Google Fonts (Montserrat, Hanken Grotesk, Space Mono) y Material Symbols, ambos de uso libre bajo licencia abierta.'],
   ['Contacto', `¿Dudas sobre privacidad o datos? Escríbenos a ${SUPPORT_EMAIL}.`],
-];
-
-const BINGO_RULES = [
-  ['Las 5 categorías', 'Década, Año exacto, Antes/después de 2000, Nombre de la canción y Artista — cada una con su propio color.'],
-  ['Ruleta al azar', 'Cada ronda el anfitrión gira y sale una categoría distinta. No hay orden fijo ni turnos por jugador.'],
-  ['25 segundos por ronda', 'Cuando se acaba el cronómetro, la respuesta correcta se revela para todos al mismo tiempo.'],
-  ['Marcado automático', 'No tocas las casillas tú mismo: si acertaste, se marca sola una casilla sin marcar de esa categoría.'],
-  ['Sin casillas repetidas', 'Si ya no te quedan casillas sin marcar de esa categoría, esa ronda no suma nada para ti aunque hayas acertado.'],
-  ['Ranking en vivo', 'No usa puntos: se ordena por cuántas casillas te faltan para tu mejor Línea (o para el cartón completo, según el modo elegido).'],
 ];
 
 const fadeUp = {
@@ -176,7 +120,7 @@ function ManualSection({ icon, title, subtitle, children, defaultOpen = false })
       open={defaultOpen}
       className="group rounded-2xl border border-white/10 bg-[#071025]/80 backdrop-blur-xl overflow-hidden shadow-[0_18px_50px_rgba(0,0,0,0.22)]"
     >
-      <summary className="cursor-pointer list-none px-4 py-4 sm:px-5 flex items-center gap-3 text-left">
+      <summary className="cursor-pointer list-none px-4 py-4 sm:px-5 flex items-center gap-3 text-left min-h-touch">
         <span className="w-11 h-11 rounded-xl bg-vinyl-orange/15 border border-vinyl-orange/30 flex items-center justify-center shrink-0">
           <span className="material-symbols-outlined text-vinyl-orange text-2xl">{icon}</span>
         </span>
@@ -264,12 +208,12 @@ export default function HowToPlayScreen() {
       initial={{ opacity: 0, y: 18 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -18 }}
-      className="relative z-10 w-full min-h-screen px-4 sm:px-6 lg:px-10 pt-safe-header pb-24"
+      className="relative z-10 w-full min-h-dvh px-4 sm:px-6 lg:px-10 pt-safe-header pb-24"
     >
       <header className="fixed top-0 left-0 right-0 h-16 z-50 bg-background/80 backdrop-blur-xl border-b border-white/8 flex items-center px-4 sm:px-6">
         <button
           onClick={() => navigate('/')}
-          className="text-on-surface-variant hover:text-white transition-colors flex items-center gap-2 font-label-caps text-xs tracking-[0.18em]"
+          className="min-h-touch text-on-surface-variant hover:text-white transition-colors flex items-center gap-2 font-label-caps text-xs tracking-[0.18em]"
         >
           <span className="material-symbols-outlined text-xl">arrow_back</span>
           VOLVER
@@ -291,7 +235,7 @@ export default function HowToPlayScreen() {
               Aprende rápido. Que empiece la fiesta.
             </h1>
             <p className="mt-4 text-sm sm:text-base leading-relaxed text-on-surface-variant max-w-2xl">
-              Tres formas de jugar: responde antes que nadie, arma tu ruta de años o gira la ruleta de categorías en Bingo Musical.
+              Un solo modo, fácil de aprender: arma tu ruta de años con cada canción que suena.
             </p>
             <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3">
               {QUICK_FLOW.map((item) => (
@@ -324,28 +268,11 @@ export default function HowToPlayScreen() {
           ))}
         </section>
 
-        <section className="mt-6 grid gap-3 sm:grid-cols-3">
-          {MODES.map((mode) => (
-            <motion.article
-              key={mode.title}
-              whileHover={{ y: -4, scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="rounded-2xl border bg-[#071025]/80 p-5"
-              style={{ borderColor: `${mode.color}44`, boxShadow: `0 0 32px ${mode.color}12` }}
-            >
-              <span className="material-symbols-outlined text-3xl" style={{ color: mode.color }}>{mode.icon}</span>
-              <h2 className="mt-3 font-headline-lg text-2xl font-black text-white">{mode.title}</h2>
-              <p className="font-label-caps text-[10px] tracking-[0.18em]" style={{ color: mode.color }}>{mode.goal}</p>
-              <p className="mt-2 text-xs leading-relaxed text-on-surface-variant">{mode.text}</p>
-            </motion.article>
-          ))}
-        </section>
-
         <section className="mt-6 space-y-3">
           <ManualSection
             icon="scoreboard"
             title="Cómo funcionan los puntos"
-            subtitle="Sistema compartido por Corte Maestro y Años Locos. Bingo Musical no usa puntos, más abajo se explica su propio sistema."
+            subtitle="Todos parten igual y suman o restan según cada ronda."
             defaultOpen
           >
             <div className="mt-4 grid gap-3 sm:grid-cols-3">
@@ -390,27 +317,10 @@ export default function HowToPlayScreen() {
           </ManualSection>
 
           <ManualSection
-            icon="bolt"
-            title="Cómo se juega: Corte Maestro"
-            subtitle="Escucha, corta y responde antes que nadie."
-          >
-            <ModeIntro color="#ff7a1a" text="La música suena, el anfitrión la corta en el momento justo y todos —incluido él— compiten por responder rápido y bien." />
-            <div className="mt-4">
-              <p className="font-label-caps text-[10px] tracking-widest text-white">CÓMO SE JUEGA</p>
-              <StepList items={PULSE_STEPS} />
-            </div>
-            <ModeVictory
-              color="#ff7a1a"
-              title={`Gana quien llega primero a la meta: ${VICTORY_MODES.map((mode) => mode.targetScore).join(', ')} puntos.`}
-              text="Usa el sistema de puntos de arriba: todos parten con 10, +5 al acertar, -3 al fallar o no responder a tiempo."
-            />
-            <ModeExample color="#ff7a1a" items={PULSE_EXAMPLE} />
-          </ManualSection>
-
-          <ManualSection
             icon="timeline"
             title="Cómo se juega: Años Locos"
             subtitle="Arma tu propia ruta musical colocando canciones por año."
+            defaultOpen
           >
             <ModeIntro color="#a855f7" text="Cada jugador construye su propia línea de tiempo: escuchas una canción y adivinas si es antes, después o entre los años que ya tienes." />
             <div className="mt-4">
@@ -448,79 +358,6 @@ export default function HowToPlayScreen() {
           </ManualSection>
 
           <ManualSection
-            icon="grid_view"
-            title="Cómo se juega: Bingo Musical"
-            subtitle="Marca tu cartón mientras la música no para."
-          >
-            <ModeIntro color="#39ff14" text="Inspirado en el Bingo del juego Hitster: cada ronda gira la ruleta de categorías, responde contrarreloj y las casillas se marcan solas si acertaste." />
-            <div className="mt-4">
-              <p className="font-label-caps text-[10px] tracking-widest text-white">CÓMO SE JUEGA</p>
-              <StepList items={BINGO_STEPS} />
-            </div>
-
-            <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.035] p-4">
-              <p className="text-sm font-black text-white">Cartón de ejemplo</p>
-              <div className="mt-3 grid grid-cols-5 gap-1.5 max-w-sm">
-                {Array.from({ length: 25 }, (_, index) => {
-                  if (index === 12) {
-                    return (
-                      <div key={index} className="aspect-square rounded-lg border border-vinyl-orange bg-vinyl-orange/20 flex items-center justify-center">
-                        <span className="material-symbols-outlined text-vinyl-orange text-base">star</span>
-                      </div>
-                    );
-                  }
-                  const category = BINGO_CATEGORIES[index % BINGO_CATEGORIES.length];
-                  return (
-                    <div
-                      key={index}
-                      className="aspect-square rounded-lg border flex items-center justify-center"
-                      style={{ borderColor: `${category.color}55`, backgroundColor: `${category.color}14` }}
-                    >
-                      <span className="w-2 h-2 rounded-full" style={{ backgroundColor: category.color }} />
-                    </div>
-                  );
-                })}
-              </div>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {BINGO_CATEGORIES.map((category) => (
-                  <span
-                    key={category.id}
-                    className="flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[9px] font-label-caps"
-                    style={{ borderColor: `${category.color}66`, backgroundColor: `${category.color}18`, color: category.color }}
-                  >
-                    <span className="w-2 h-2 rounded-full" style={{ backgroundColor: category.color }} />
-                    {category.label}
-                  </span>
-                ))}
-              </div>
-              <p className="mt-3 text-xs leading-relaxed text-on-surface-variant">
-                Cada color es una categoría. Naranja = casilla libre, ya viene marcada.
-              </p>
-            </div>
-
-            <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-              {BINGO_RULES.map(([title, text]) => (
-                <div key={title} className="rounded-xl border border-white/8 bg-white/[0.035] p-3">
-                  <p className="text-xs font-black text-white">{title}</p>
-                  <p className="mt-1 text-[11px] leading-snug text-on-surface-variant">{text}</p>
-                </div>
-              ))}
-            </div>
-
-            <ModeVictory
-              color="#39ff14"
-              title="El anfitrión elige cómo se gana antes de empezar: LÍNEA o CARTÓN COMPLETO."
-              text="Con Línea, la partida termina apenas alguien completa una fila, columna o diagonal. Con Cartón completo, la línea es solo un logro y hay que marcar las 24 casillas para ganar."
-            />
-            <ModeExample color="#39ff14" items={[
-              'El anfitrión gira la ruleta y sale la categoría "Década". Suena una canción.',
-              'Rodrigo responde "2010s" antes de que se acabe el tiempo. Noelia responde "2000s".',
-              'Se acaba el cronómetro: la respuesta correcta era "2010s". A Rodrigo se le marca sola una casilla verde de su cartón; a Noelia no.',
-              'Ronda tras ronda, el primero en completar la condición de victoria elegida grita ¡BINGO! y gana.',
-            ]} />
-          </ManualSection>
-
-          <ManualSection
             icon="headphones"
             title="Cómo crea la sala el anfitrión"
             subtitle="El anfitrión pone la música, pero también juega."
@@ -551,6 +388,23 @@ export default function HowToPlayScreen() {
           </ManualSection>
 
           <ManualSection
+            icon="wifi_off"
+            title="Si se corta la conexión a mitad de partida"
+            subtitle="Llamadas, pantalla bloqueada o cambio de app no te sacan de la sala."
+          >
+            <div className="mt-4 grid gap-2 sm:grid-cols-2">
+              <div className="rounded-xl border border-white/8 bg-white/[0.035] p-3">
+                <p className="text-xs font-black text-white">Tienes 30 segundos de gracia</p>
+                <p className="mt-1 text-[11px] leading-snug text-on-surface-variant">Si tu pantalla se bloquea o recibes una llamada, el juego te marca como "Reconectando" y guarda tu sitio en la sala.</p>
+              </div>
+              <div className="rounded-xl border border-white/8 bg-white/[0.035] p-3">
+                <p className="text-xs font-black text-white">Vuelves donde estabas</p>
+                <p className="mt-1 text-[11px] leading-snug text-on-surface-variant">Al reabrir Dedícalo, se reconecta solo a tu sala y tu ronda, sin perder puntos ni tu ruta de años.</p>
+              </div>
+            </div>
+          </ManualSection>
+
+          <ManualSection
             icon="help"
             title="Preguntas frecuentes"
             subtitle="Respuestas rápidas para que nadie se quede con dudas."
@@ -558,7 +412,7 @@ export default function HowToPlayScreen() {
             <div className="mt-4 space-y-2">
               {FAQ.map(([question, answer]) => (
                 <details key={question} className="group rounded-xl border border-white/8 bg-white/[0.035]">
-                  <summary className="cursor-pointer list-none px-4 py-3 flex items-center gap-3">
+                  <summary className="cursor-pointer list-none px-4 py-3 flex items-center gap-3 min-h-touch">
                     <span className="material-symbols-outlined text-neon-green text-lg">question_mark</span>
                     <span className="flex-1 text-sm font-black text-white">{question}</span>
                     <span className="material-symbols-outlined text-on-surface-variant transition-transform group-open:rotate-180">expand_more</span>
@@ -606,7 +460,7 @@ export default function HowToPlayScreen() {
             <button
               type="button"
               onClick={openPlaylistRequest}
-              className="group relative h-11 overflow-hidden rounded-2xl border border-white/10 bg-black/20 px-4 text-xs text-white/85 active:scale-95 transition-all"
+              className="group relative min-h-touch overflow-hidden rounded-2xl border border-white/10 bg-black/20 px-4 text-xs text-white/85 active:scale-95 transition-all"
             >
               <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
               <span className="relative flex items-center justify-center gap-2 font-label-caps tracking-[0.16em]">

@@ -712,9 +712,8 @@ export async function createQuestionFromTrack(track, gameMode, round = 1, timeli
 }
 
 // Reproduce una pista ya elegida (a diferencia de startRandomPlaylistTrack, que
-// además la escoge). Usado por Bingo Musical: la pista se elige según la
-// categoría que salió en la ruleta, no al azar.
-export async function playChosenTrack(track) {
+// además la escoge al azar).
+async function playChosenTrack(track) {
   const deviceId = await ensureSpotifyDevice();
   window.sessionStorage.setItem(TRACK_KEY, JSON.stringify(track));
 
@@ -730,46 +729,6 @@ export async function startRandomPlaylistTrack(playlistUrl) {
   const tracks = await getPlaylistTracks(playlistUrl);
   const track = pickTrackWithoutRepeating(playlistUrl, tracks);
   return playChosenTrack(track);
-}
-
-// ---------------------------------------------------------------------------
-// Bingo Musical — preguntas por categoría (clon del Bingo de Hitster)
-// ---------------------------------------------------------------------------
-
-function buildBefore2000Question(track) {
-  if (!track.releaseYear) return null;
-  const isBefore = track.releaseYear < 2000;
-  return {
-    mode: 'bingo',
-    type: 'Antes/después de 2000',
-    text: '¿Esta canción salió antes o después del año 2000?',
-    options: ['Antes de 2000', 'Después de 2000'],
-    correct: isBefore ? 0 : 1
-  };
-}
-
-async function buildQuestionForCategory(categoryId, track) {
-  if (categoryId === 'decade') return buildDecadeQuestion(track);
-  if (categoryId === 'year') return buildYearQuestion(track);
-  if (categoryId === 'before2000') return buildBefore2000Question(track);
-  if (categoryId === 'song') return buildSongNameQuestion(track);
-  if (categoryId === 'artist') return buildArtistQuestion(track, '¿Quién canta esta canción?', 'Artista');
-  return null;
-}
-
-// Elige una pista al azar (que no haya sonado ya en esta partida) que sirva
-// para construir una pregunta válida de la categoría dada. Si una pista no
-// alcanza (falta el año, o no hay suficientes canciones/artistas distractores
-// en la playlist para ese tipo de pregunta), prueba con la siguiente.
-export async function buildBingoRound(categoryId, tracks = [], excludeUris = []) {
-  const excluded = new Set(excludeUris);
-  const candidates = shuffleArray(tracks.filter((track) => track?.uri && !excluded.has(track.uri)));
-
-  for (const track of candidates) {
-    const question = await buildQuestionForCategory(categoryId, track);
-    if (question) return { track, question };
-  }
-  return null;
 }
 
 export function getCurrentHiddenTrack() {

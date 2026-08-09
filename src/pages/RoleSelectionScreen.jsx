@@ -191,12 +191,12 @@ export default function RoleSelectionScreen() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="relative z-10 mx-auto flex min-h-screen w-full max-w-[460px] flex-col items-center px-margin-mobile pb-28 pt-safe-header text-center"
+      className="relative z-10 mx-auto flex min-h-dvh w-full max-w-[460px] flex-col items-center px-margin-mobile pb-28 pt-safe-header text-center"
     >
       <header className="fixed left-0 right-0 top-0 z-50 flex h-16 items-center justify-between border-b border-white/8 bg-background/78 px-margin-mobile backdrop-blur-xl">
         <button
           onClick={() => navigate('/')}
-          className="flex items-center gap-2 font-label-caps text-xs tracking-[0.18em] text-on-surface-variant transition-colors hover:text-white"
+          className="min-h-touch flex items-center gap-2 font-label-caps text-xs tracking-[0.18em] text-on-surface-variant transition-colors hover:text-white"
         >
           <span className="material-symbols-outlined text-xl">arrow_back</span>
           VOLVER
