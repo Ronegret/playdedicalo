@@ -26,16 +26,18 @@
     background-color: #050816;
   }
 
-  /* Todos los headers fijos respetan la muesca/isla del iPhone */
+  /* Todos los headers fijos respetan la muesca/isla del iPhone, más 12px de
+     aire extra: pegar el contenido justo al borde del sensor se lee apretado
+     incluso cuando técnicamente no lo tapa. */
   header.fixed {
-    padding-top: env(safe-area-inset-top, 0px);
-    min-height: calc(4rem + env(safe-area-inset-top, 0px));
+    padding-top: calc(env(safe-area-inset-top, 0px) + 12px);
+    min-height: calc(4rem + env(safe-area-inset-top, 0px) + 12px);
     height: auto !important;
   }
 
   /* Padding-top que acompaña el header dinámico + respiro de 1rem */
   .pt-safe-header {
-    padding-top: calc(5rem + env(safe-area-inset-top, 0px));
+    padding-top: calc(5rem + env(safe-area-inset-top, 0px) + 12px);
   }
 }
 

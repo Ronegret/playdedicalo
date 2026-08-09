@@ -86,6 +86,56 @@ function scrambleYear(year) {
   return `${str[3]}${str[1]}${str[2]}${str[0]}`;
 }
 
+// Disco de vinilo decorativo para un año ya conseguido: surco texturizado +
+// etiqueta central de color con el año. Puramente visual, no es tappable —
+// solo los huecos entre discos (VinylSlotButton) responden al tacto.
+function VinylYearChip({ year, isScrambled, wobble }) {
+  const label = isScrambled ? scrambleYear(year) : year;
+  return (
+    <div
+      className="relative w-20 h-20 shrink-0 snap-center"
+      style={{ transform: `translateY(${wobble}px)` }}
+    >
+      <div
+        className={`absolute inset-0 rounded-full border-2 shadow-[0_10px_22px_rgba(0,0,0,0.4)] ${isScrambled ? 'border-error/50' : 'border-black/60'}`}
+        style={{
+          background: isScrambled
+            ? 'repeating-radial-gradient(circle, #1a0505 0 3px, #2a0a0a 4px 4.5px, #1a0505 5px 7px)'
+            : 'repeating-radial-gradient(circle, #0a0a0a 0 3px, #1c1c1c 4px 4.5px, #0a0a0a 5px 7px)'
+        }}
+      >
+        <div className="absolute inset-0 rounded-full bg-[conic-gradient(from_20deg,transparent_0_20deg,rgba(255,255,255,0.14)_20deg_26deg,transparent_26deg_170deg,rgba(255,255,255,0.08)_170deg_176deg,transparent_176deg_360deg)]" />
+      </div>
+      <div className={`absolute inset-[16%] rounded-full flex items-center justify-center border-2 border-black/50 shadow-[inset_0_2px_4px_rgba(0,0,0,0.35)] ${isScrambled ? 'bg-error animate-pulse' : 'bg-electric-purple'}`}>
+        <span className={`font-stats-xl font-black leading-none text-white text-sm ${isScrambled ? 'tracking-widest' : ''}`}>
+          {label}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+// Hueco tappable entre dos discos: el jugador toca aquí para decir dónde
+// cree que va la canción nueva. Mismo lenguaje circular que los vinilos,
+// pero como "funda vacía" (anillo punteado) para leerse claramente como
+// interactivo frente a los discos ya colocados.
+function VinylSlotButton({ label, disabled, onClick }) {
+  return (
+    <button
+      type="button"
+      disabled={disabled}
+      onClick={onClick}
+      aria-label={`Colocar canción: ${label}`}
+      className="group relative w-16 h-16 shrink-0 snap-center rounded-full border-2 border-dashed border-neon-green/50 bg-neon-green/5 text-neon-green flex flex-col items-center justify-center active:scale-90 transition-transform hover:bg-neon-green/15 hover:border-neon-green focus:outline-none focus:ring-2 focus:ring-neon-green disabled:opacity-40"
+    >
+      <span className="material-symbols-outlined text-lg leading-none">add</span>
+      <span className="absolute -bottom-6 w-24 text-center text-[10px] font-label-caps leading-tight text-on-surface-variant group-hover:text-neon-green transition-colors">
+        {label}
+      </span>
+    </button>
+  );
+}
+
 function TimelinePlacementQuestion({ question, playerYears = [], disabled, onPick, isScrambled, attackFrom }) {
   const years = playerYears.length ? playerYears : [2000];
   const slots = Array.from({ length: years.length + 1 }, (_, index) => index);
@@ -113,26 +163,25 @@ function TimelinePlacementQuestion({ question, playerYears = [], disabled, onPic
           </span>
         </div>
 
-        <div className="mt-4 overflow-x-auto pb-2 snap-x">
-          <div className="min-w-max flex items-center gap-2 px-1">
+        {/* Estante de vinilos: riel horizontal con snap-scroll, discos y huecos
+            alternados en un leve vaivén vertical para que se lea como una
+            colección real y no una grilla rígida. */}
+        <div className="relative mt-8 overflow-x-auto overflow-y-visible pb-8 pt-2 snap-x">
+          <div className="absolute left-0 right-0 top-1/2 h-px bg-gradient-to-r from-transparent via-white/12 to-transparent" />
+          <div className="relative min-w-max flex items-center gap-3 px-2">
             {slots.map((slot, index) => (
-              <div key={slot} className="flex items-center gap-2">
-                <button
-                  type="button"
+              <div key={slot} className="flex items-center gap-3">
+                <VinylSlotButton
+                  label={getTimelineSlotLabel(years, slot)}
                   disabled={disabled}
                   onClick={() => onPick({ isCorrect: slot === correctSlot, timelineSlot: slot })}
-                  className="w-24 h-20 snap-center rounded-2xl border border-dashed border-neon-green/50 bg-neon-green/10 text-neon-green active:scale-95 transition-transform flex flex-col items-center justify-center gap-1 hover:bg-neon-green/20 focus:outline-none focus:ring-2 focus:ring-neon-green"
-                >
-                  <span className="material-symbols-outlined text-xl">add_circle</span>
-                  <span className="text-[10px] font-label-caps leading-tight px-1">{getTimelineSlotLabel(years, slot)}</span>
-                </button>
+                />
                 {index < years.length && (
-                  <div className={`w-20 h-24 snap-center rounded-2xl border flex flex-col items-center justify-center shadow-[0_0_18px_rgba(0,0,0,0.22)] ${isScrambled ? 'border-error/60 bg-error/10' : 'border-white/15 bg-black/35'}`}>
-                    <span className="material-symbols-outlined text-sm text-electric-purple">album</span>
-                    <span className={`mt-1 text-2xl font-black ${isScrambled ? 'text-error tracking-widest' : 'text-3xl text-white'}`}>
-                      {isScrambled ? scrambleYear(years[index]) : years[index]}
-                    </span>
-                  </div>
+                  <VinylYearChip
+                    year={years[index]}
+                    isScrambled={isScrambled}
+                    wobble={index % 2 === 0 ? -6 : 6}
+                  />
                 )}
               </div>
             ))}
@@ -451,7 +500,7 @@ export default function GameScreen() {
                   <span className="block mt-2 font-headline-lg-mobile text-3xl sm:text-4xl text-neon-green font-black tracking-widest drop-shadow-[0_0_18px_rgba(57,255,20,0.6)]">
                     {role === 'host' ? 'SONANDO' : 'ESCUCHA'}
                   </span>
-                  <p className="mt-2 font-label-caps text-[9px] text-white/50 tracking-widest">
+                  <p className="mt-2 font-label-caps text-[10px] text-white/50 tracking-widest">
                     {role === 'host' ? 'PARA CUANDO QUIERAS' : 'EL ANFITRIÓN DECIDE'}
                   </p>
                 </div>

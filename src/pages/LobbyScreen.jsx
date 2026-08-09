@@ -14,8 +14,12 @@ function TimelineYears({ years = [] }) {
     <div className="mt-3 flex flex-wrap items-center gap-1.5 pl-9">
       <span className="font-label-caps text-[10px] text-on-surface-variant">Años {Math.min(years.length, TIMELINE_GOAL_YEARS)}/{TIMELINE_GOAL_YEARS}</span>
       {years.slice(0, TIMELINE_GOAL_YEARS).map((year) => (
-        <span key={year} className="rounded-lg border border-neon-green/30 bg-neon-green/10 px-2 py-1 text-[10px] font-black text-neon-green">
-          {year}
+        <span
+          key={year}
+          className="w-7 h-7 rounded-full border-2 border-neon-green/50 bg-black/30 flex items-center justify-center text-[9px] font-black text-neon-green shadow-[0_0_8px_rgba(57,255,20,0.2)]"
+          title={year}
+        >
+          {String(year).slice(2)}
         </span>
       ))}
     </div>

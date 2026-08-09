@@ -39,8 +39,12 @@ function TimelineYears({ years = [] }) {
         {Math.min(years.length, TIMELINE_GOAL_YEARS)}/{TIMELINE_GOAL_YEARS}
       </span>
       {years.slice(0, TIMELINE_GOAL_YEARS).map((year) => (
-        <span key={year} className="rounded border border-neon-green/30 bg-neon-green/10 px-1.5 py-0.5 text-[9px] font-black text-neon-green">
-          {year}
+        <span
+          key={year}
+          className="w-6 h-6 rounded-full border-2 border-neon-green/50 bg-black/30 flex items-center justify-center text-[8px] font-black text-neon-green"
+          title={year}
+        >
+          {String(year).slice(2)}
         </span>
       ))}
     </div>
@@ -393,7 +397,7 @@ export default function ResultScreen() {
             )}
           </div>
           <div className="flex-1 min-w-0 text-left">
-            <p className="font-label-caps text-[9px] text-white/35 tracking-widest">LA CANCIÓN ERA</p>
+            <p className="font-label-caps text-[10px] text-white/35 tracking-widest">LA CANCIÓN ERA</p>
             <p className="mt-0.5 font-black text-white text-sm leading-tight line-clamp-2">
               {currentTrack?.name || style.copy}
             </p>
@@ -407,7 +411,7 @@ export default function ResultScreen() {
                 transition={{ delay: 0.38, type: 'spring', stiffness: 140 }}
                 className="mt-1 flex items-baseline gap-1.5"
               >
-                <span className="font-label-caps text-[9px] text-white/30">AÑO</span>
+                <span className="font-label-caps text-[10px] text-white/30">AÑO</span>
                 <span className={`font-black text-2xl leading-none ${style.text}`}>
                   {currentTrack.releaseYear}
                 </span>
@@ -424,7 +428,7 @@ export default function ResultScreen() {
             transition={{ delay: 0.28 }}
             className="mt-2.5"
           >
-            <p className="font-label-caps text-[9px] text-white/30 tracking-widest text-center mb-2">
+            <p className="font-label-caps text-[10px] text-white/30 tracking-widest text-center mb-2">
               ASÍ VAN TODOS
             </p>
             <div className="flex flex-col gap-1.5">
