@@ -45,7 +45,7 @@
     {
       "name": "Cómo se juega",
       "short_name": "Manual",
-      "description": "Ver reglas y modos de juego",
+      "description": "Ver el manual del juego",
       "url": "/how-to-play",
       "icons": [{ "src": "/images/icon-app.png", "sizes": "192x192", "type": "image/png" }]
     }

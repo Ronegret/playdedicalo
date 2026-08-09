@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { DEDICALO_PLAYLISTS, GAME_MODES, getCombinedTimelineYears, normalizeSpotifyPlaylistUrl, useGameStore } from '../store/useGameStore';
+import { ATTACK_COST, DEDICALO_PLAYLISTS, GAME_MODES, getCombinedTimelineYears, normalizeSpotifyPlaylistUrl, useGameStore } from '../store/useGameStore';
 import HeaderHUD from '../components/HeaderHUD';
 import { createQuestionFromTrack, explainSpotifyError, getCurrentHiddenTrack, getSpotifyStatus, pauseSpotifyPlayback, startRandomPlaylistTrack } from '../services/spotify';
 
@@ -77,7 +77,16 @@ function getTimelineSlotLabel(years, index) {
   return `Entre ${years[index - 1]} y ${years[index]}`;
 }
 
-function TimelinePlacementQuestion({ question, playerYears = [], disabled, onPick }) {
+// El sabotaje nunca borra ni cambia tus años reales — solo los muestra
+// desordenados en pantalla durante esta ronda. Si te los sabes de memoria,
+// el ataque no te afecta en absoluto; es presión visual, no daño real.
+function scrambleYear(year) {
+  const str = String(year);
+  if (str.length !== 4) return '????';
+  return `${str[3]}${str[1]}${str[2]}${str[0]}`;
+}
+
+function TimelinePlacementQuestion({ question, playerYears = [], disabled, onPick, isScrambled, attackFrom }) {
   const years = playerYears.length ? playerYears : [2000];
   const slots = Array.from({ length: years.length + 1 }, (_, index) => index);
   const correctSlot = years.filter((year) => year < question.songYear).length;
@@ -85,6 +94,15 @@ function TimelinePlacementQuestion({ question, playerYears = [], disabled, onPic
   return (
     <div className="mt-5">
       <div className="rounded-3xl border border-neon-green/20 bg-[radial-gradient(circle_at_top,rgba(57,255,20,0.12),rgba(255,255,255,0.04)_42%,rgba(0,0,0,0.24)_100%)] p-4 shadow-[0_0_30px_rgba(57,255,20,0.08)]">
+        {isScrambled && (
+          <div className="mb-3 rounded-xl bg-error/20 border border-error/50 p-2.5 flex items-center justify-center gap-2">
+            <span className="material-symbols-outlined text-error text-lg animate-pulse">bolt</span>
+            <p className="text-xs font-bold text-error">
+              ¡{attackFrom || 'Un rival'} te saboteó! Tus años se ven revueltos esta ronda.
+            </p>
+          </div>
+        )}
+
         <div className="flex items-center justify-between gap-3">
           <div>
             <p className="font-label-caps text-[10px] text-neon-green tracking-widest">TU RUTA DE AÑOS</p>
@@ -109,9 +127,11 @@ function TimelinePlacementQuestion({ question, playerYears = [], disabled, onPic
                   <span className="text-[10px] font-label-caps leading-tight px-1">{getTimelineSlotLabel(years, slot)}</span>
                 </button>
                 {index < years.length && (
-                  <div className="w-20 h-24 snap-center rounded-2xl border border-white/15 bg-black/35 flex flex-col items-center justify-center shadow-[0_0_18px_rgba(0,0,0,0.22)]">
+                  <div className={`w-20 h-24 snap-center rounded-2xl border flex flex-col items-center justify-center shadow-[0_0_18px_rgba(0,0,0,0.22)] ${isScrambled ? 'border-error/60 bg-error/10' : 'border-white/15 bg-black/35'}`}>
                     <span className="material-symbols-outlined text-sm text-electric-purple">album</span>
-                    <span className="mt-1 text-3xl font-black text-white">{years[index]}</span>
+                    <span className={`mt-1 text-2xl font-black ${isScrambled ? 'text-error tracking-widest' : 'text-3xl text-white'}`}>
+                      {isScrambled ? scrambleYear(years[index]) : years[index]}
+                    </span>
                   </div>
                 )}
               </div>
@@ -146,7 +166,8 @@ export default function GameScreen() {
     lastDisconnectedPlayer,
     setAudioPlaying,
     roomError,
-    clearRoomError
+    clearRoomError,
+    attackOpponent
   } = useGameStore();
   const [answeredQuestionKey, setAnsweredQuestionKey] = useState(null);
   const [countdownValue, setCountdownValue] = useState(3);
@@ -155,6 +176,9 @@ export default function GameScreen() {
   const [spotifyError, setSpotifyError] = useState(false);
   const [spotifyNeedsReconnect, setSpotifyNeedsReconnect] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
+  const [showAttackModal, setShowAttackModal] = useState(false);
+  const [attackError, setAttackError] = useState('');
+  const [attackSentTo, setAttackSentTo] = useState('');
   const [disconnectToast, setDisconnectToast] = useState('');
   const [revealError, setRevealError] = useState('');
   const [isBlackoutPending, setIsBlackoutPending] = useState(false);
@@ -273,8 +297,8 @@ export default function GameScreen() {
   ));
   const ownPlayer = players.find((player) => player.id === guestId);
   const ownTimelineYears = getCombinedTimelineYears(ownPlayer);
-
-
+  const attackTargets = players.filter((player) => player.id !== guestId && player.status !== 'offline' && !player.activeAttack);
+  const canAttack = phase === 'listen' && Number(ownPlayer?.points || 0) >= ATTACK_COST && attackTargets.length > 0;
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -469,7 +493,16 @@ export default function GameScreen() {
 
             <RankingPeek players={players} guestId={guestId} />
 
-
+            {canAttack && (
+              <button
+                type="button"
+                onClick={() => { setAttackError(''); setShowAttackModal(true); }}
+                className="min-h-touch rounded-full border border-vinyl-orange/40 bg-vinyl-orange/10 px-4 flex items-center gap-2 text-vinyl-orange font-label-caps text-xs font-bold active:scale-95 transition-all"
+              >
+                <span className="material-symbols-outlined text-base">bolt</span>
+                SABOTEAR ({ATTACK_COST} PTS)
+              </button>
+            )}
 
             {role === 'host' && (
               <div className="fixed bottom-5 left-4 right-4 z-40 grid gap-2 mx-auto max-w-sm md:relative md:bottom-auto md:left-auto md:right-auto md:z-auto md:w-full md:max-w-xs md:mt-2 md:mb-8">
@@ -614,6 +647,8 @@ export default function GameScreen() {
                 playerYears={ownTimelineYears}
                 disabled={hasAnswered}
                 onPick={handleAnswer}
+                isScrambled={ownPlayer?.activeAttack?.round === round}
+                attackFrom={ownPlayer?.activeAttack?.from}
               />
             ) : (
               <motion.div
@@ -637,6 +672,86 @@ export default function GameScreen() {
                 ))}
               </motion.div>
             )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {attackSentTo && (
+          <motion.div
+            initial={{ y: -80, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -80, opacity: 0 }}
+            transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+            className="fixed top-20 inset-x-0 z-[290] flex justify-center px-5 pointer-events-none"
+          >
+            <div className="rounded-2xl border border-vinyl-orange/50 bg-vinyl-orange/15 backdrop-blur-lg px-4 py-3 flex items-center gap-2 max-w-sm w-full">
+              <span className="material-symbols-outlined text-vinyl-orange text-xl shrink-0">bolt</span>
+              <p className="text-xs font-black text-white">¡Sabotaje enviado a {attackSentTo}!</p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showAttackModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center bg-black/80 backdrop-blur-sm px-4 pb-4 sm:pb-0"
+            onClick={() => setShowAttackModal(false)}
+          >
+            <motion.div
+              initial={{ y: 40, scale: 0.96 }}
+              animate={{ y: 0, scale: 1 }}
+              exit={{ y: 40, scale: 0.96 }}
+              transition={{ type: 'spring', stiffness: 260, damping: 28 }}
+              className="w-full max-w-sm rounded-2xl border border-vinyl-orange/30 bg-surface-container p-6 text-center shadow-[0_0_50px_rgba(0,0,0,0.6)]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <span className="material-symbols-outlined text-vinyl-orange" style={{ fontSize: '2.5rem' }}>bolt</span>
+              <h3 className="mt-3 font-headline-lg text-xl font-black text-white">SABOTEAR RIVAL</h3>
+              <p className="mt-2 text-sm text-on-surface-variant">
+                Por <span className="text-vinyl-orange font-bold">{ATTACK_COST} pts</span>, sus años se ven revueltos en su próxima ronda. No pierde progreso, solo le cuesta más leerlos.
+              </p>
+
+              <div className="mt-4 flex flex-col gap-2">
+                {attackTargets.map((target) => (
+                  <button
+                    key={target.id}
+                    type="button"
+                    onClick={async () => {
+                      try {
+                        await attackOpponent(target.id);
+                        setShowAttackModal(false);
+                        setAttackSentTo(target.name);
+                        if (navigator.vibrate) navigator.vibrate([20, 40, 20]);
+                        window.setTimeout(() => setAttackSentTo(''), 3000);
+                      } catch (error) {
+                        setAttackError(error.message || 'No se pudo sabotear. Inténtalo de nuevo.');
+                      }
+                    }}
+                    className="min-h-touch rounded-xl border border-white/10 bg-white/5 px-4 flex items-center justify-between gap-2 text-white font-bold text-sm active:scale-95 transition-all hover:border-vinyl-orange/50 hover:bg-vinyl-orange/10"
+                  >
+                    <span className="truncate">{target.name}</span>
+                    <span className="material-symbols-outlined text-vinyl-orange text-lg shrink-0">bolt</span>
+                  </button>
+                ))}
+              </div>
+
+              {attackError && (
+                <p className="mt-3 text-xs text-intense-red text-center">{attackError}</p>
+              )}
+
+              <button
+                type="button"
+                onClick={() => setShowAttackModal(false)}
+                className="mt-4 w-full min-h-touch rounded-xl bg-white/5 border border-white/10 text-white font-label-caps text-sm font-bold active:scale-95 transition-all"
+              >
+                CANCELAR
+              </button>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

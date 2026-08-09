@@ -30,6 +30,11 @@ function armPresenceDisconnect(pin, playerId) {
     .catch(() => {});
 }
 
+// Cuesta puntos, no progreso: el sabotaje nunca toca los años ya conseguidos
+// de nadie, solo le complica la próxima ronda al objetivo. Así se mantiene
+// el filo competitivo sin arriesgar la condición de victoria de nadie.
+export const ATTACK_COST = 8;
+
 export const TIMELINE_GOAL_YEARS = 12;
 export const DEDICALO_PLAYLISTS = [
   {
@@ -427,7 +432,7 @@ export const useGameStore = create((setStore, getStore) => ({
   },
 
   hostNextRound: async () => {
-    const { pin, round } = getStore();
+    const { pin, round, players } = getStore();
     if (!pin) return;
 
     const remoteUpdates = {
@@ -439,6 +444,13 @@ export const useGameStore = create((setStore, getStore) => ({
       phase: 'countdown'
     };
 
+    // Un sabotaje solo dura la ronda en la que se lanzó.
+    players.forEach((player) => {
+      if (player.activeAttack) {
+        remoteUpdates[`players/${player.id}/activeAttack`] = null;
+      }
+    });
+
     await patchData(`rooms/${pin}`, remoteUpdates);
 
     setTimeout(() => {
@@ -447,6 +459,42 @@ export const useGameStore = create((setStore, getStore) => ({
         patchData(`rooms/${pin}`, { phase: 'listen' }).catch((error) => console.error('Error al continuar la ronda:', error));
       }
     }, 3000);
+  },
+
+  // Sabotaje: solo se puede lanzar durante la fase "listen" (antes de que
+  // aparezca la pregunta), así el objetivo entra a su ronda con los años
+  // revueltos visualmente en vez de que le cambien las reglas a mitad de
+  // respuesta. Cuesta puntos, nunca años — no puede decidir la partida por
+  // sí solo, solo complica el ranking del rival por una ronda.
+  attackOpponent: async (targetPlayerId) => {
+    const { pin, guestId, players, phase } = getStore();
+    if (!pin || !guestId) return;
+    if (phase !== 'listen') {
+      throw new Error('Solo puedes sabotear antes de que suene la pregunta.');
+    }
+
+    const me = players.find((player) => player.id === guestId);
+    const target = players.find((player) => player.id === targetPlayerId);
+    if (!me || !target || me.id === target.id) return;
+    if (target.status === 'offline') {
+      throw new Error('Ese jugador está desconectado ahora mismo.');
+    }
+    if (target.activeAttack) {
+      throw new Error('Ya está saboteado en esta ronda.');
+    }
+    if (Number(me.points || 0) < ATTACK_COST) {
+      throw new Error(`Necesitas ${ATTACK_COST} puntos para sabotear.`);
+    }
+
+    const nextPoints = clampPoints(Number(me.points || 0) - ATTACK_COST);
+    await patchData(`rooms/${pin}`, {
+      [`players/${targetPlayerId}/activeAttack`]: {
+        from: me.name || 'Un rival',
+        round: getStore().round,
+        at: Date.now()
+      },
+      [`players/${guestId}/points`]: nextPoints
+    });
   },
 
   hostEndGame: async () => {

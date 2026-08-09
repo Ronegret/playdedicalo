@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import NeonButton from '../components/NeonButton';
 import SupportButton from '../components/SupportButton';
 import { getPlaylistRequestUrl, openMailto, SUPPORT_EMAIL } from '../config/support';
-import { TIMELINE_GOAL_YEARS } from '../store/useGameStore';
+import { ATTACK_COST, TIMELINE_GOAL_YEARS } from '../store/useGameStore';
 
 const QUICK_FLOW = [
   { icon: 'person_add', title: 'Sala', text: 'El anfitrión crea la sala. Los demás entran con PIN o QR.' },
@@ -16,6 +16,13 @@ const GOLDEN_RULES = [
   ['El anfitrión también juega', 'Controla la música, pero participa igual que todos.'],
   ['La canción siempre va oculta', 'No se muestra título ni artista antes de revelar el resultado.'],
   ['Modo único oficial', 'Toda la partida transcurre bajo la regla oficial de Años Locos.'],
+];
+
+const ATTACK_STEPS = [
+  ['Solo mientras suena la música', `Puedes sabotear en la fase de escucha, antes de que aparezca la pregunta. Cuesta ${ATTACK_COST} pts.`],
+  ['Elige a tu rival', 'Toca "SABOTEAR" y elige a quién le complicas la próxima ronda. No puedes elegir a alguien desconectado ni ya saboteado.'],
+  ['Sus años se ven revueltos', 'En su próxima ronda, el rival ve sus años con los dígitos desordenados en pantalla — pero siguen siendo los mismos años reales.'],
+  ['No pierde progreso', 'El sabotaje nunca borra ni cambia años ya conseguidos. Solo cuesta puntos a quien ataca; es presión visual, no daño real.'],
 ];
 
 const HOST_STEPS = [
@@ -93,6 +100,7 @@ const FAQ = [
   ['¿Se ve la canción que está sonando?', 'No, queda oculta hasta que el anfitrión revela el resultado.'],
   ['¿Cuándo termina la partida?', `Años Locos termina cuando el primer jugador logra completar sus ${TIMELINE_GOAL_YEARS} años acumulados.`],
   ['¿Qué pasa si fallo al colocar la canción?', 'Pierdes 3 puntos. Si aciertas, ganas 5 puntos y sumas el año a tu ruta.'],
+  ['¿Cómo funciona el sabotaje?', `Durante la música, si tienes al menos ${ATTACK_COST} puntos, puedes tocar "SABOTEAR" y elegir a un rival conectado. En su próxima ronda verá sus años revueltos en pantalla — no pierde ningún año real, solo le cuesta más leerlos rápido.`],
   ['¿Qué pasa si pierdo la conexión a mitad de partida?', 'Tienes hasta 30 segundos para reconectar (llamada, pantalla bloqueada o cambio de app). Tu sitio en la sala se mantiene y sigues desde donde estabas.'],
   ['¿Qué hago si Spotify no suena?', 'Reconecta Spotify, verifica que la cuenta sea Premium, sube el volumen del dispositivo y vuelve a probar sonido antes de crear la sala.'],
 ];
@@ -235,7 +243,7 @@ export default function HowToPlayScreen() {
               Aprende rápido. Que empiece la fiesta.
             </h1>
             <p className="mt-4 text-sm sm:text-base leading-relaxed text-on-surface-variant max-w-2xl">
-              Un solo modo, fácil de aprender: arma tu ruta de años con cada canción que suena.
+              Un solo modo, fácil de aprender: arma tu ruta de años con cada canción que suena — y sabotea a tus rivales cuando quieras jugar sucio.
             </p>
             <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3">
               {QUICK_FLOW.map((item) => (
@@ -355,6 +363,28 @@ export default function HowToPlayScreen() {
               text="Los aciertos también usan el sistema de puntos de arriba (+5/-3), pero eso solo ayuda al ranking: lo que decide la partida es completar tu ruta de años."
             />
             <ModeExample color="#a855f7" items={TIMELINE_EXAMPLE} />
+          </ManualSection>
+
+          <ManualSection
+            icon="bolt"
+            title="Sabotaje: rompe la concentración"
+            subtitle="Un giro competitivo opcional, sin arriesgar tu ruta de años."
+          >
+            <ModeIntro color="#ff7a1a" text={`Mientras suena la música (antes de que salga la pregunta), puedes gastar ${ATTACK_COST} pts para sabotear a un rival y revolverle la vista de sus años en su próxima ronda.`} />
+            <div className="mt-4">
+              <p className="font-label-caps text-[10px] tracking-widest text-white">CÓMO FUNCIONA</p>
+              <StepList items={ATTACK_STEPS} />
+            </div>
+            <ModeVictory
+              color="#ff7a1a"
+              title="Nunca te quita años ni te saca de la partida."
+              text="El sabotaje solo desordena cómo ves tus años en pantalla por una ronda — si te los sabes de memoria, no te afecta en nada. Es presión mental, no daño real: tu ruta real nunca cambia."
+            />
+            <ModeExample color="#ff7a1a" items={[
+              'Rodrigo tiene 12 pts y ve que Noelia va ganando. Toca "SABOTEAR" y la elige, gastando 8 pts (le quedan 4).',
+              'En la próxima ronda de Noelia, sus años aparecen revueltos (ej. 1998 se ve como 8991).',
+              'Noelia se los sabe de memoria y acierta igual: el sabotaje no le costó ningún año, solo un poco de nervios.',
+            ]} />
           </ManualSection>
 
           <ManualSection
