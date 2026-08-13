@@ -20,15 +20,103 @@ import {
 } from '../services/spotify';
 
 const PLAYLIST_META = {
-  'espanol-100':            { icon: 'stadium',               color: '#ff3d77' },
-  'temazos':                { icon: 'local_fire_department', color: '#ff5500' },
-  'espanol-summer-party':   { icon: 'wb_sunny',              color: '#ffd000' },
-  'hits-todo-tiempo':       { icon: 'public',                color: '#00c8ff' },
-  'hits-rock-espanol':      { icon: 'electric_bolt',         color: '#ffcc00' },
-  'mejores-todos-tiempos':  { icon: 'emoji_events',          color: '#39ff14' },
-  'fiesta-mayor-verbena':   { icon: 'celebration',           color: '#dd44ff' },
-  'fiesta-del-pueblo':      { icon: 'nightlife',             color: '#ff44aa' },
+  'espanol-100': {
+    icon: 'stadium',
+    color: '#ff3d77',
+    accent: '#ffd000',
+    format: 'VINILO POP',
+    artwork: 'ES'
+  },
+  'temazos': {
+    icon: 'local_fire_department',
+    color: '#ff5500',
+    accent: '#39ff14',
+    format: 'CD HITS',
+    artwork: 'TM'
+  },
+  'espanol-summer-party': {
+    icon: 'wb_sunny',
+    color: '#ffd000',
+    accent: '#00c8ff',
+    format: 'SUN MIX',
+    artwork: 'SP'
+  },
+  'hits-todo-tiempo': {
+    icon: 'public',
+    color: '#00c8ff',
+    accent: '#ff7a1a',
+    format: 'GLOBAL',
+    artwork: 'HT'
+  },
+  'hits-rock-espanol': {
+    icon: 'electric_bolt',
+    color: '#ffcc00',
+    accent: '#ff3d77',
+    format: 'ROCK CD',
+    artwork: 'RK'
+  },
+  'mejores-todos-tiempos': {
+    icon: 'emoji_events',
+    color: '#39ff14',
+    accent: '#a855f7',
+    format: 'LEGENDS',
+    artwork: 'GO'
+  },
+  'fiesta-mayor-verbena': {
+    icon: 'celebration',
+    color: '#dd44ff',
+    accent: '#ffd000',
+    format: 'VERBENA',
+    artwork: 'FM'
+  },
+  'fiesta-del-pueblo': {
+    icon: 'nightlife',
+    color: '#ff44aa',
+    accent: '#00c8ff',
+    format: 'PUEBLO',
+    artwork: 'FP'
+  },
 };
+
+function PlaylistArtwork({ playlist, meta, isSelected }) {
+  return (
+    <div className="relative h-[88px] w-[88px] shrink-0 overflow-visible sm:h-[104px] sm:w-[104px]">
+      <div
+        className="absolute left-5 top-1 h-[78px] w-[78px] rounded-full border border-white/10 shadow-[0_18px_40px_rgba(0,0,0,0.45)] sm:h-[94px] sm:w-[94px]"
+        style={{
+          background: `radial-gradient(circle at center, #050816 0 13%, ${meta.accent} 14% 17%, #0a1020 18% 32%, ${meta.color} 33% 36%, #050816 37% 58%, ${meta.accent} 59% 62%, #050816 63%)`,
+          transform: isSelected ? 'rotate(14deg) translateX(3px)' : 'rotate(8deg)',
+          opacity: isSelected ? 1 : 0.72
+        }}
+      />
+      <div
+        className="absolute inset-y-0 left-0 my-auto h-[88px] w-[72px] overflow-hidden rounded-xl border p-2 shadow-[0_18px_45px_rgba(0,0,0,0.45)] sm:h-[104px] sm:w-[84px]"
+        style={{
+          borderColor: isSelected ? `${meta.color}cc` : 'rgba(255,255,255,0.14)',
+          background: `linear-gradient(145deg, ${meta.color} 0%, #111827 48%, ${meta.accent} 145%)`
+        }}
+      >
+        <div className="flex items-center justify-between">
+          <span className="rounded-full bg-black/35 px-1.5 py-0.5 font-label-caps text-[8px] tracking-[0.16em] text-white/90">
+            DED
+          </span>
+          <span className="h-2 w-2 rounded-full bg-white/80" />
+        </div>
+        <div className="mt-3 flex h-9 items-center justify-center rounded-lg bg-black/25 ring-1 ring-white/10">
+          <span className="material-symbols-outlined text-[28px] text-white drop-shadow">
+            {meta.icon}
+          </span>
+        </div>
+        <div className="absolute bottom-2 left-2 right-2">
+          <p className="font-label-caps text-[8px] tracking-[0.2em] text-white/70">{meta.format}</p>
+          <p className="mt-0.5 truncate font-headline-lg text-[18px] font-black leading-none text-white">
+            {meta.artwork || playlist.name.slice(0, 2)}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function HostSyncScreen() {
   const navigate = useNavigate();
@@ -502,9 +590,15 @@ export default function HostSyncScreen() {
               </div>
             </div>
 
-                        <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3 lg:grid-cols-4">
+            <div className="space-y-3 sm:grid sm:grid-cols-2 sm:gap-3 sm:space-y-0 xl:grid-cols-4">
               {DEDICALO_PLAYLISTS.map((playlist) => {
-                const meta = PLAYLIST_META[playlist.id] || { icon: 'music_note', color: '#ff7a1a' };
+                const meta = PLAYLIST_META[playlist.id] || {
+                  icon: 'music_note',
+                  color: '#ff7a1a',
+                  accent: '#39ff14',
+                  format: 'MIX',
+                  artwork: 'DD'
+                };
                 const isSelected = playlist.id === selectedPlaylist;
 
                 return (
@@ -513,46 +607,60 @@ export default function HostSyncScreen() {
                     type="button"
                     onClick={() => setSelectedPlaylist(playlist.id)}
                     whileTap={{ scale: 0.94 }}
-                    whileHover={{ scale: 1.04, y: -3 }}
-                    className="relative min-h-[112px] overflow-hidden rounded-2xl border p-3 text-left flex flex-col justify-between transition-all duration-200 sm:min-h-[128px] sm:p-4"
+                    whileHover={{ scale: 1.015, y: -2 }}
+                    className="group relative min-h-[120px] w-full overflow-hidden rounded-3xl border p-3 text-left transition-all duration-200 sm:min-h-[150px] sm:p-4"
                     style={{
-                      borderColor: isSelected ? meta.color : 'rgba(255,255,255,0.09)',
-                      backgroundColor: isSelected ? `${meta.color}15` : 'rgba(0,0,0,0.20)',
-                      boxShadow: isSelected ? `0 0 28px ${meta.color}22, inset 0 0 20px ${meta.color}06` : 'none',
+                      borderColor: isSelected ? `${meta.color}dd` : 'rgba(255,255,255,0.10)',
+                      background: isSelected
+                        ? `linear-gradient(135deg, ${meta.color}24, rgba(5,8,22,0.92) 52%, ${meta.accent}18)`
+                        : 'linear-gradient(135deg, rgba(255,255,255,0.06), rgba(5,8,22,0.86))',
+                      boxShadow: isSelected ? `0 0 32px ${meta.color}2e, inset 0 0 22px ${meta.color}0d` : 'none',
                     }}
                   >
-                                        <span
-                      className="material-symbols-outlined"
+                    <div
+                      className="pointer-events-none absolute inset-0 opacity-35"
                       style={{
-                        fontSize: '2.6rem',
-                        color: meta.color,
-                        opacity: isSelected ? 1 : 0.65,
-                        transition: 'opacity 0.2s',
+                        backgroundImage: `linear-gradient(90deg, transparent 0 30%, ${meta.color} 30% 31%, transparent 31% 60%, ${meta.accent} 60% 61%, transparent 61%), radial-gradient(circle at 86% 18%, ${meta.color}33, transparent 28%)`,
                       }}
-                    >
-                      {meta.icon}
-                    </span>
+                    />
+                    <div className="relative flex items-center gap-3 sm:flex-col sm:items-start sm:gap-4">
+                      <PlaylistArtwork playlist={playlist} meta={meta} isSelected={isSelected} />
 
-                                        <div className="mt-2">
-                      <p
-                        className="line-clamp-2 font-label-caps text-[10px] font-black leading-snug tracking-[0.12em] sm:text-[11px] sm:tracking-[0.14em]"
-                        style={{ color: isSelected ? '#fff' : 'rgba(255,255,255,0.82)' }}
-                      >
-                        {playlist.name}
-                      </p>
-                      <p className="mt-0.5 line-clamp-2 text-[10px] leading-snug text-on-surface-variant">
-                        {playlist.mood}
-                      </p>
+                      <div className="min-w-0 flex-1 sm:w-full">
+                        <div className="mb-2 flex items-center gap-2">
+                          <span
+                            className="inline-flex h-6 items-center rounded-full px-2 font-label-caps text-[9px] tracking-[0.18em] text-black"
+                            style={{ backgroundColor: meta.accent }}
+                          >
+                            {meta.format}
+                          </span>
+                          {isSelected && (
+                            <span className="inline-flex h-6 items-center rounded-full bg-white px-2 font-label-caps text-[9px] tracking-[0.18em] text-black">
+                              ACTIVA
+                            </span>
+                          )}
+                        </div>
+                        <p className="font-headline-lg text-[18px] font-black uppercase leading-[1.05] text-white sm:min-h-[38px]">
+                          {playlist.name}
+                        </p>
+                        <p className="mt-1.5 text-xs font-semibold leading-snug text-on-surface-variant sm:min-h-[34px]">
+                          {playlist.mood}
+                        </p>
+                        <div className="mt-3 hidden items-center gap-2 text-[10px] font-black uppercase tracking-[0.18em] text-white/55 sm:flex">
+                          <span className="h-px flex-1" style={{ backgroundColor: `${meta.color}66` }} />
+                          Portada Dedicalo
+                        </div>
+                      </div>
                     </div>
 
-                                        {isSelected && (
+                    {isSelected && (
                       <motion.div
                         initial={{ scale: 0, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
-                        className="absolute top-2.5 right-2.5 w-5 h-5 rounded-full flex items-center justify-center"
+                        className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-full shadow-lg"
                         style={{ backgroundColor: meta.color }}
                       >
-                        <span className="material-symbols-outlined text-black" style={{ fontSize: '12px', lineHeight: 1 }}>
+                        <span className="material-symbols-outlined text-black" style={{ fontSize: '16px', lineHeight: 1 }}>
                           check
                         </span>
                       </motion.div>
