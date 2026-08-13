@@ -9,6 +9,11 @@ import { database } from '../firebase';
 export const RECONNECT_GRACE_MS = 30000;
 
 const SESSION_STORAGE_KEYS = ['dedicalo_player_id', 'dedicalo_room_pin', 'dedicalo_role'];
+const PROFILE_STORAGE_KEYS = {
+  name: 'dedicalo_profile_name',
+  avatar: 'dedicalo_profile_avatar',
+  uid: 'dedicalo_profile_uid'
+};
 
 function persistSession(role, pin, playerId) {
   localStorage.setItem('dedicalo_player_id', playerId);
@@ -18,6 +23,28 @@ function persistSession(role, pin, playerId) {
 
 function clearPersistedSession() {
   SESSION_STORAGE_KEYS.forEach((key) => localStorage.removeItem(key));
+}
+
+function cleanProfileName(value, fallback = 'Jugador') {
+  return String(value || fallback).trim().slice(0, 18) || fallback;
+}
+
+function cleanProfileAvatar(value, fallback = 'DJ') {
+  return String(value || fallback).trim().slice(0, 120) || fallback;
+}
+
+function getLocalProfile(user = {}) {
+  return {
+    name: localStorage.getItem(PROFILE_STORAGE_KEYS.name) || user?.displayName || '',
+    avatar: localStorage.getItem(PROFILE_STORAGE_KEYS.avatar) || user?.photoURL || '',
+    uid: localStorage.getItem(PROFILE_STORAGE_KEYS.uid) || user?.uid || ''
+  };
+}
+
+function persistProfile(profile = {}) {
+  if (profile.name) localStorage.setItem(PROFILE_STORAGE_KEYS.name, profile.name);
+  if (profile.avatar) localStorage.setItem(PROFILE_STORAGE_KEYS.avatar, profile.avatar);
+  if (profile.uid) localStorage.setItem(PROFILE_STORAGE_KEYS.uid, profile.uid);
 }
 
 // Registra el handler de "se cayó la conexión" para el jugador actual. Cada
@@ -62,18 +89,14 @@ export const TIMELINE_GOAL_YEARS = 12;
 export const MIN_TIMELINE_GOAL_YEARS = 6;
 export const MAX_TIMELINE_GOAL_YEARS = 20;
 export const DEDICALO_PLAYLISTS = [
-  { id: 'reggaeton-historia', icon: 'local_fire_department', name: 'REGGAETON', mood: 'Clasicos para reconocer al instante.', url: 'https://open.spotify.com/playlist/64B6t8la0Rf3JTTaBXiNcm' },
-  { id: 'hits-todos-los-tiempos', icon: 'public', name: 'HITS', mood: 'Exitos para todos los gustos.', url: 'https://open.spotify.com/playlist/0f3YRJO2HyZTpCLCVxzBt0' },
-  { id: 'rock-latino', icon: 'electric_bolt', name: 'ROCK LATINO', mood: 'Guitarras, nostalgia y coros.', url: 'https://open.spotify.com/playlist/07iEAd20wfnMh8VfbmovYG' },
-  { id: 'mix-latino', icon: 'shuffle', name: 'MIX LATINO', mood: 'Rondas rapidas y energia alta.', url: 'https://open.spotify.com/playlist/2UBikaEIZWV9LOAjE0dBgx' },
-  { id: 'bailable-todos-los-tiempos', icon: 'nightlife', name: 'BAILABLE', mood: 'Facil de reconocer y bailar.', url: 'https://open.spotify.com/playlist/7FnGVaOj5s9JvAUtvZENfC' },
-  { id: 'romanticos', icon: 'favorite', name: 'ROMANTICAS', mood: 'Baladas y recuerdos.', url: 'https://open.spotify.com/playlist/3dmrZtJOYx1naGoLtyHFOk' },
-  { id: 'perreo-clasico', icon: 'whatshot', name: 'PERREO CLASICO', mood: 'Perreo clasico de memoria colectiva.', url: 'https://open.spotify.com/playlist/2aatYbsZb0ZiY3aQjcVSw2' },
-  { id: 'temazos-espanoles', icon: 'stadium', name: 'TEMAZOS ES', mood: 'Musica espanola de siempre.', url: 'https://open.spotify.com/playlist/7bsAMCUlTcMTGzG1RzxWTX' },
-  { id: 'rock-ska-espanolisimo', icon: 'music_note', name: 'ROCK Y SKA', mood: 'Rock, ska y clasicos con identidad.', url: 'https://open.spotify.com/playlist/6ZcRMfq1UCg0QzC2KkopvV' },
-  { id: 'de-to2', icon: 'apps', name: 'DE TODO', mood: 'Mezcla abierta para cualquier grupo.', url: 'https://open.spotify.com/playlist/0Pn8mtBmo8HDfuKiky5tNj' },
-  { id: 'fiestas-en-el-pueblo', icon: 'celebration', name: 'FIESTA PUEBLO', mood: 'Fiesta para cantar y reconocer rapido.', url: 'https://open.spotify.com/playlist/5kkHb7jc3WocICRywvY6Yz' },
-  { id: 'just-go', icon: 'rocket_launch', name: 'JUST GO', mood: 'Energia directa y ritmo alto.', url: 'https://open.spotify.com/playlist/0yUgOnkSswjzWwNxI2QjNC' }
+  { id: 'espanol-100', icon: 'stadium', name: 'ESPANOL 100%', mood: 'Solo temazos en espanol para cantar rapido.', url: 'https://open.spotify.com/playlist/1C3NDNNfg6c0SlPhyikGVU' },
+  { id: 'temazos', icon: 'local_fire_department', name: 'TEMAZOS', mood: 'Canciones grandes para grupos competitivos.', url: 'https://open.spotify.com/playlist/0i8fEuY6ffN6Ou53BeIcxY' },
+  { id: 'espanol-summer-party', icon: 'wb_sunny', name: 'ESPANOL SUMMER', mood: 'Fiesta luminosa, verano y energia alta.', url: 'https://open.spotify.com/playlist/0UY3oVANXRqflE5QjHhaH4' },
+  { id: 'hits-todo-tiempo', icon: 'public', name: 'HITS DE SIEMPRE', mood: 'Hits reconocibles para cualquier mesa.', url: 'https://open.spotify.com/playlist/5TOMoP3KEWtRASGeFsksUY' },
+  { id: 'hits-rock-espanol', icon: 'electric_bolt', name: 'HITS ROCK ESPANOL', mood: 'Guitarras, himnos y memoria colectiva.', url: 'https://open.spotify.com/playlist/2cT61hYCfIkwHAyVMwej9D' },
+  { id: 'mejores-todos-tiempos', icon: 'emoji_events', name: 'MEJORES DE SIEMPRE', mood: 'Clasicos y favoritos de todos los tiempos.', url: 'https://open.spotify.com/playlist/0f3YRJO2HyZTpCLCVxzBt0' },
+  { id: 'fiesta-mayor-verbena', icon: 'celebration', name: 'FIESTA MAYOR', mood: 'Verbena, pueblo y canciones para gritar.', url: 'https://open.spotify.com/playlist/7xcdrzs58PmLIZa4P5Qk3s' },
+  { id: 'fiesta-del-pueblo', icon: 'nightlife', name: 'FIESTA DEL PUEBLO', mood: 'La lista para cerrar la noche arriba.', url: 'https://open.spotify.com/playlist/4OoS8qoueVgm5PpuDUlOwH' }
 ];
 export const DEFAULT_SPOTIFY_PLAYLIST_URL = DEDICALO_PLAYLISTS[0].url;
 
@@ -209,6 +232,9 @@ export const useGameStore = create((setStore, getStore) => ({
   guestId: null,
   guestAvatar: null,
   guestName: null,
+  profileName: getLocalProfile().name,
+  profileAvatar: getLocalProfile().avatar,
+  profileUid: getLocalProfile().uid,
   lastResultType: null,
   lastPointDelta: 0,
   roundAnswers: {},
@@ -235,6 +261,30 @@ export const useGameStore = create((setStore, getStore) => ({
   },
   setRole: (role) => setStore({ role }),
 
+  loadUserProfile: async (user = {}) => {
+    const localProfile = getLocalProfile(user);
+    const remoteProfile = user?.uid ? await readData(`users/${user.uid}`).catch(() => null) : null;
+    const profile = {
+      uid: user?.uid || localProfile.uid,
+      name: cleanProfileName(remoteProfile?.name || localProfile.name || user?.displayName, 'Jugador'),
+      avatar: cleanProfileAvatar(remoteProfile?.avatar || localProfile.avatar || user?.photoURL, 'DJ'),
+      email: user?.email || remoteProfile?.email || ''
+    };
+    persistProfile(profile);
+    setStore({
+      profileName: profile.name,
+      profileAvatar: profile.avatar,
+      profileUid: profile.uid
+    });
+    if (profile.uid) {
+      await patchData(`users/${profile.uid}`, {
+        ...profile,
+        updatedAt: Date.now()
+      }).catch(() => {});
+    }
+    return profile;
+  },
+
   setGameSettings: async ({ targetScore, targetYears }) => {
     const pin = getStore().pin;
     if (getStore().round > 1 || getStore().phase !== 'lobby') return;
@@ -253,16 +303,19 @@ export const useGameStore = create((setStore, getStore) => ({
   hostCreateRoom: async (hostUser = {}) => {
     const newPin = Math.floor(1000 + Math.random() * 9000).toString();
     
-    let hostId = localStorage.getItem('dedicalo_player_id');
-    if (!hostId) {
-      hostId = hostUser?.uid || `host_${Math.random().toString(36).slice(2, 11)}`;
-    }
+    const profile = hostUser?.uid
+      ? await getStore().loadUserProfile(hostUser)
+      : { name: getStore().profileName, avatar: getStore().profileAvatar };
+    let hostId = hostUser?.uid || localStorage.getItem('dedicalo_player_id');
+    if (!hostId) hostId = `host_${Math.random().toString(36).slice(2, 11)}`;
     persistSession('host', newPin, hostId);
 
     const hostPlayer = {
       id: hostId,
-      name: hostUser?.displayName || 'Anfitrion',
-      avatar: hostUser?.photoURL || 'La Consola Maestra',
+      authUid: hostUser?.uid || null,
+      email: hostUser?.email || null,
+      name: profile?.name || hostUser?.displayName || 'Anfitrion',
+      avatar: profile?.avatar || hostUser?.photoURL || 'DJ',
       points: 10,
       isHost: true,
       status: 'online',
@@ -519,20 +572,35 @@ export const useGameStore = create((setStore, getStore) => ({
   },
 
   updatePlayerProfile: async ({ name, avatar }) => {
-    const { pin, guestId, players } = getStore();
-    if (!pin || !guestId) return;
+    const { pin, guestId, players, profileUid } = getStore();
 
     const currentPlayer = players.find((player) => player.id === guestId) || {};
     const cleanName = String(name || currentPlayer.name || 'Jugador').trim().slice(0, 18) || 'Jugador';
     const cleanAvatar = String(avatar || currentPlayer.avatar || 'DJ').trim().slice(0, 80) || 'DJ';
+    const authUid = currentPlayer.authUid || profileUid;
 
-    await patchData(`rooms/${pin}/players/${guestId}`, {
-      name: cleanName,
-      avatar: cleanAvatar,
-      profileUpdatedAt: Date.now()
-    });
+    persistProfile({ uid: authUid, name: cleanName, avatar: cleanAvatar });
+
+    if (authUid) {
+      await patchData(`users/${authUid}`, {
+        name: cleanName,
+        avatar: cleanAvatar,
+        updatedAt: Date.now()
+      }).catch(() => {});
+    }
+
+    if (pin && guestId) {
+      await patchData(`rooms/${pin}/players/${guestId}`, {
+        name: cleanName,
+        avatar: cleanAvatar,
+        profileUpdatedAt: Date.now()
+      });
+    }
 
     setStore({
+      profileName: cleanName,
+      profileAvatar: cleanAvatar,
+      profileUid: authUid || profileUid,
       guestName: cleanName,
       guestAvatar: cleanAvatar,
       players: players.map((player) => (
@@ -541,7 +609,7 @@ export const useGameStore = create((setStore, getStore) => ({
     });
   },
 
-  guestJoinRoom: async (enteredPin, guestName, guestAvatar) => {
+  guestJoinRoom: async (enteredPin, guestName, guestAvatar, authUser = null) => {
     const cleanPin = String(enteredPin || '').replace(/\D/g, '').slice(0, 4);
     const room = await readData(`rooms/${cleanPin}`);
 
@@ -554,18 +622,21 @@ export const useGameStore = create((setStore, getStore) => ({
     }
 
     try {
-      let guestId = localStorage.getItem('dedicalo_player_id');
-      if (!guestId) {
-        guestId = `guest_${Math.random().toString(36).slice(2, 11)}`;
-      }
+      const registeredProfile = authUser?.uid ? await getStore().loadUserProfile(authUser) : null;
+      let guestId = authUser?.uid || localStorage.getItem('dedicalo_player_id');
+      if (!guestId) guestId = `guest_${Math.random().toString(36).slice(2, 11)}`;
       persistSession('guest', cleanPin, guestId);
 
       // Restore existing data if any, else create a new player
       const existingPlayer = room.players?.[guestId];
+      const nextName = cleanProfileName(existingPlayer?.name || registeredProfile?.name || guestName, 'Invitado');
+      const nextAvatar = cleanProfileAvatar(existingPlayer?.avatar || registeredProfile?.avatar || guestAvatar, 'DJ');
       const newPlayer = {
         id: guestId,
-        name: existingPlayer ? existingPlayer.name : (guestName.trim().slice(0, 12) || 'Invitado'),
-        avatar: existingPlayer ? existingPlayer.avatar : guestAvatar,
+        authUid: authUser?.uid || existingPlayer?.authUid || null,
+        email: authUser?.email || existingPlayer?.email || null,
+        name: nextName,
+        avatar: nextAvatar,
         points: existingPlayer ? existingPlayer.points : 10,
         isHost: false,
         status: 'online',
@@ -577,6 +648,17 @@ export const useGameStore = create((setStore, getStore) => ({
       };
 
       await writeData(`rooms/${cleanPin}/players/${guestId}`, newPlayer);
+      if (authUser?.uid) {
+        await patchData(`users/${authUser.uid}`, {
+          uid: authUser.uid,
+          email: authUser.email || '',
+          name: nextName,
+          avatar: nextAvatar,
+          updatedAt: Date.now()
+        }).catch(() => {});
+      } else {
+        persistProfile({ name: nextName, avatar: nextAvatar });
+      }
       armPresenceDisconnect(cleanPin, guestId);
 
       setStore({
@@ -585,6 +667,9 @@ export const useGameStore = create((setStore, getStore) => ({
         guestId,
         guestAvatar: newPlayer.avatar,
         guestName: newPlayer.name,
+        profileName: newPlayer.name,
+        profileAvatar: newPlayer.avatar,
+        profileUid: authUser?.uid || getStore().profileUid,
         gameMode: 'timeline',
         targetScore: Number(room.settings?.targetScore || 70),
         targetYears: clampTimelineGoal(room.settings?.targetYears || TIMELINE_GOAL_YEARS),

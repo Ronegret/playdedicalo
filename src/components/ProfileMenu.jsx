@@ -40,7 +40,7 @@ export default function ProfileMenu({ user, guestAvatar }) {
   const guestId = useGameStore((state) => state.guestId);
   const players = useGameStore((state) => state.players);
   const currentPlayer = players.find((player) => player.id === guestId);
-  const canEditProfile = Boolean(guestId);
+  const canEditProfile = Boolean(guestId || user);
   const displayName = currentPlayer?.name || user?.displayName || 'Jugador';
   const displayAvatar = currentPlayer?.avatar || user?.photoURL || guestAvatar;
 
@@ -208,7 +208,7 @@ export default function ProfileMenu({ user, guestAvatar }) {
                   </button>
                 ) : (
                   <p className="rounded-xl px-3 py-2 text-xs leading-relaxed text-on-surface-variant">
-                    Podras editar nombre y avatar cuando la sala este creada.
+                    Entra con Google o crea una sala para editar nombre y avatar.
                   </p>
                 )}
                 <button

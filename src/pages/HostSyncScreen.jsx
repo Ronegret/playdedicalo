@@ -20,27 +20,24 @@ import {
 } from '../services/spotify';
 
 const PLAYLIST_META = {
-  'reggaeton-historia':     { icon: 'whatshot',              color: '#ff5500' },
-  'hits-todos-los-tiempos': { icon: 'public',                color: '#00c8ff' },
-  'rock-latino':            { icon: 'electric_bolt',         color: '#ffd000' },
-  'mix-latino':             { icon: 'shuffle',               color: '#aa44ff' },
-  'bailable-todos-los-tiempos': { icon: 'nightlife',           color: '#ff44aa' },
-  'romanticos':             { icon: 'favorite',              color: '#ff4466' },
-  'perreo-clasico':         { icon: 'local_fire_department', color: '#ff2222' },
-  'temazos-espanoles':      { icon: 'stadium',               color: '#ffaa00' },
-  'rock-ska-espanolisimo':  { icon: 'music_note',            color: '#00dd88' },
-  'de-to2':                 { icon: 'apps',                  color: '#6655ff' },
-  'fiestas-en-el-pueblo':   { icon: 'celebration',           color: '#dd44ff' },
-  'just-go':                { icon: 'rocket_launch',         color: '#00ddff' },
+  'espanol-100':            { icon: 'stadium',               color: '#ff3d77' },
+  'temazos':                { icon: 'local_fire_department', color: '#ff5500' },
+  'espanol-summer-party':   { icon: 'wb_sunny',              color: '#ffd000' },
+  'hits-todo-tiempo':       { icon: 'public',                color: '#00c8ff' },
+  'hits-rock-espanol':      { icon: 'electric_bolt',         color: '#ffcc00' },
+  'mejores-todos-tiempos':  { icon: 'emoji_events',          color: '#39ff14' },
+  'fiesta-mayor-verbena':   { icon: 'celebration',           color: '#dd44ff' },
+  'fiesta-del-pueblo':      { icon: 'nightlife',             color: '#ff44aa' },
 };
 
 export default function HostSyncScreen() {
   const navigate = useNavigate();
-  const { hostCreateRoom, setSpotifyPlaylistUrl, setGameSettings, targetYears } = useGameStore((state) => ({
+  const { hostCreateRoom, setSpotifyPlaylistUrl, setGameSettings, targetYears, loadUserProfile } = useGameStore((state) => ({
     hostCreateRoom: state.hostCreateRoom,
     setSpotifyPlaylistUrl: state.setSpotifyPlaylistUrl,
     setGameSettings: state.setGameSettings,
     targetYears: state.targetYears,
+    loadUserProfile: state.loadUserProfile,
   }));
 
   const [googleUser, setGoogleUser] = useState(null);
@@ -60,9 +57,10 @@ export default function HostSyncScreen() {
   const targetOptions = [6, 8, 12, 15, 20];
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         setGoogleUser(user);
+        await loadUserProfile(user);
         setAuthStatus('idle');
         setAuthMessage('');
       } else {
@@ -70,7 +68,7 @@ export default function HostSyncScreen() {
       }
     });
     return unsubscribe;
-  }, []);
+  }, [loadUserProfile]);
 
   useEffect(() => {
     const redirectIntent = localStorage.getItem('auth_redirect_intent');
@@ -78,9 +76,10 @@ export default function HostSyncScreen() {
     const hasFreshRedirectIntent = Boolean(redirectIntent) && Date.now() - intentTime < 10 * 60 * 1000;
 
     authReady.then(() => getRedirectResult(auth))
-      .then((result) => {
+      .then(async (result) => {
         if (result?.user) {
           setGoogleUser(result.user);
+          await loadUserProfile(result.user);
           setAuthStatus('idle');
           setAuthMessage('');
           return;
@@ -107,7 +106,7 @@ export default function HostSyncScreen() {
         }
         // All other errors: log only — onAuthStateChanged will set the correct state.
       });
-  }, []);
+  }, [loadUserProfile]);
 
   useEffect(() => {
     const onFocus = () => setSpotifyStatus(getSpotifyStatus());
@@ -132,6 +131,7 @@ export default function HostSyncScreen() {
 
       const result = await signInWithPopup(auth, googleProvider);
       setGoogleUser(result.user);
+      await loadUserProfile(result.user);
       setAuthStatus('idle');
     } catch (loginError) {
       let error = loginError;

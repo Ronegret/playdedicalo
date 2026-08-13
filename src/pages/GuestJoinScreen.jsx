@@ -2,8 +2,11 @@
 import jsQR from 'jsqr';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { getRedirectResult, onAuthStateChanged, signInWithPopup, signInWithRedirect } from 'firebase/auth';
 import { useGameStore } from '../store/useGameStore';
 import NeonButton from '../components/NeonButton';
+import ProfileMenu from '../components/ProfileMenu';
+import { auth, authReady, googleProvider } from '../firebase';
 
 const EMOJI_AVATARS = [
   '😎', '🎸', '🎧', '👽', '🤠', '👾', '🥳', '🔥', '🎤', '🎹',
@@ -25,6 +28,7 @@ export default function GuestJoinScreen() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const guestJoinRoom = useGameStore((state) => state.guestJoinRoom);
+  const loadUserProfile = useGameStore((state) => state.loadUserProfile);
   const inputRefs = useRef([]);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -35,11 +39,83 @@ export default function GuestJoinScreen() {
   const [avatar, setAvatar] = useState('😎');
   const [isLoading, setIsLoading] = useState(false);
   const [joinError, setJoinError] = useState('');
+  const [googleUser, setGoogleUser] = useState(null);
+  const [authStatus, setAuthStatus] = useState('idle');
+  const [authMessage, setAuthMessage] = useState('');
   const [scannerOpen, setScannerOpen] = useState(false);
   const [scannerError, setScannerError] = useState('');
 
   const canJoin = pin.length === 4 && name.trim().length > 0 && !isLoading;
   const pinDigits = pin.padEnd(4, ' ').split('').slice(0, 4);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      setGoogleUser(user);
+      if (user) {
+        const profile = await loadUserProfile(user);
+        setName(profile.name || user.displayName || '');
+        setAvatar(profile.avatar || user.photoURL || 'DJ');
+        setAuthStatus('idle');
+        setAuthMessage('');
+      }
+    });
+    return unsubscribe;
+  }, [loadUserProfile]);
+
+  useEffect(() => {
+    const redirectIntent = localStorage.getItem('auth_redirect_intent');
+    const intentTime = Number(localStorage.getItem('auth_redirect_intent_time') || 0);
+    const hasFreshRedirectIntent = redirectIntent === '/guest/join' && Date.now() - intentTime < 10 * 60 * 1000;
+
+    authReady.then(() => getRedirectResult(auth))
+      .then(async (result) => {
+        if (result?.user) {
+          const profile = await loadUserProfile(result.user);
+          setGoogleUser(result.user);
+          setName(profile.name || result.user.displayName || '');
+          setAvatar(profile.avatar || result.user.photoURL || 'DJ');
+          setAuthStatus('idle');
+          setAuthMessage('');
+        } else if (hasFreshRedirectIntent && !auth.currentUser) {
+          localStorage.removeItem('auth_redirect_intent');
+          localStorage.removeItem('auth_redirect_intent_time');
+          setAuthStatus('error');
+          setAuthMessage('Google volvio sin completar el acceso. Intentalo otra vez.');
+        }
+      })
+      .catch(() => {
+        setAuthStatus('error');
+        setAuthMessage('No pudimos completar el acceso con Google.');
+      });
+  }, [loadUserProfile]);
+
+  const handleGoogleLogin = async () => {
+    setAuthStatus('loading');
+    setAuthMessage('');
+    try {
+      await authReady;
+      const result = await signInWithPopup(auth, googleProvider);
+      const profile = await loadUserProfile(result.user);
+      setGoogleUser(result.user);
+      setName(profile.name || result.user.displayName || '');
+      setAvatar(profile.avatar || result.user.photoURL || 'DJ');
+      setAuthStatus('idle');
+    } catch (loginError) {
+      const fallbackToRedirect = [
+        'auth/popup-blocked',
+        'auth/operation-not-supported-in-this-environment',
+        'auth/web-storage-unsupported',
+      ].includes(loginError.code);
+      if (fallbackToRedirect) {
+        localStorage.setItem('auth_redirect_intent', '/guest/join');
+        localStorage.setItem('auth_redirect_intent_time', String(Date.now()));
+        await signInWithRedirect(auth, googleProvider);
+        return;
+      }
+      setAuthStatus('error');
+      setAuthMessage('No pudimos entrar con Google. Puedes jugar con alias igualmente.');
+    }
+  };
 
   useEffect(() => {
     if (!scannerOpen) return undefined;
@@ -144,7 +220,7 @@ export default function GuestJoinScreen() {
     setIsLoading(true);
     setJoinError('');
     try {
-      await guestJoinRoom(pin, name, avatar);
+      await guestJoinRoom(pin, name, avatar, googleUser);
       navigate('/lobby');
     } catch (error) {
       setJoinError(error.message || 'No pudimos unirte a la sala. Revisa el PIN e inténtalo de nuevo.');
@@ -160,7 +236,7 @@ export default function GuestJoinScreen() {
           <span className="material-symbols-outlined text-xl">arrow_back</span> VOLVER
         </button>
         <img src="/images/logo-main.png" alt="Dedícalo" className="h-8 w-auto object-contain" />
-        <div className="w-8 opacity-0" />
+        {googleUser ? <ProfileMenu user={googleUser} /> : <div className="w-8 opacity-0" />}
       </header>
 
       <div className="flex flex-col items-center gap-4 sm:gap-6">
@@ -170,6 +246,35 @@ export default function GuestJoinScreen() {
           <p className="copy-readable mx-auto mt-2 max-w-md text-on-surface-variant">
             Escribe el PIN de 4 dígitos o escanea el QR que muestra el anfitrión. Entras con 10 puntos base.
           </p>
+        </section>
+
+        <section className="w-full rounded-2xl border border-white/10 bg-white/5 p-3 text-left">
+          <div className="flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <p className="font-label-caps text-[10px] tracking-[0.2em] text-neon-green">PERFIL</p>
+              <p className="mt-1 text-sm font-bold text-white">
+                {googleUser ? 'Google conectado' : 'Alias rapido o Google'}
+              </p>
+              <p className="mt-0.5 text-xs leading-relaxed text-on-surface-variant">
+                {googleUser
+                  ? 'Guardaremos tu nombre y avatar para futuras partidas.'
+                  : 'Puedes entrar sin registro o usar Gmail para recuperar tu perfil.'}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={handleGoogleLogin}
+              disabled={authStatus === 'loading' || Boolean(googleUser)}
+              className="min-h-touch shrink-0 rounded-xl border border-white/10 bg-white px-3 font-label-caps text-[10px] font-black text-black disabled:opacity-60"
+            >
+              {googleUser ? 'LISTO' : authStatus === 'loading' ? '...' : 'GMAIL'}
+            </button>
+          </div>
+          {authMessage && (
+            <p className={`mt-2 text-xs ${authStatus === 'error' ? 'text-intense-red' : 'text-on-surface-variant'}`}>
+              {authMessage}
+            </p>
+          )}
         </section>
 
         <section className="space-y-3 w-full">
@@ -208,7 +313,7 @@ export default function GuestJoinScreen() {
           <input
             id="guest-name"
             type="text"
-            maxLength={12}
+            maxLength={18}
             className="h-13 w-full rounded-xl border border-white/10 bg-white/5 px-4 text-center text-base font-bold text-on-surface outline-none transition-colors focus:border-neon-green focus:ring-2 focus:ring-neon-green/30 sm:h-14"
             value={name}
             onChange={(event) => setName(event.target.value)}
@@ -218,6 +323,11 @@ export default function GuestJoinScreen() {
 
         <section className="w-full">
           <label className="font-label-caps text-on-surface-variant text-xs mb-2 block">ELIGE TU IDENTIDAD</label>
+          {avatar?.startsWith?.('http') && (
+            <div className="mb-2 flex items-center justify-center">
+              <img src={avatar} alt="Avatar Google" className="h-12 w-12 rounded-full border-2 border-electric-purple object-cover" />
+            </div>
+          )}
           <div className="grid max-h-[28svh] grid-cols-5 gap-2 overflow-y-auto rounded-xl border border-white/10 bg-white/5 p-3 no-scrollbar sm:max-h-none sm:grid-cols-6 sm:p-4">
             {EMOJI_AVATARS.map((emoji) => (
               <motion.button
