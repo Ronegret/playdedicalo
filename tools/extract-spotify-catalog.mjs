@@ -5,64 +5,44 @@ import { Buffer } from 'node:buffer';
 
 const PLAYLISTS = [
   {
-    style: 'Los Mejores Reggaeton de la Historia',
-    slug: 'reggaeton-historia',
-    url: 'https://open.spotify.com/playlist/64B6t8la0Rf3JTTaBXiNcm'
+    style: 'Espanol 100%',
+    slug: 'espanol-100',
+    url: 'https://open.spotify.com/playlist/1C3NDNNfg6c0SlPhyikGVU'
   },
   {
-    style: 'HITS de todos los tiempos',
-    slug: 'hits-todos-los-tiempos',
+    style: 'Temazos',
+    slug: 'temazos',
+    url: 'https://open.spotify.com/playlist/0i8fEuY6ffN6Ou53BeIcxY'
+  },
+  {
+    style: 'Espanol Summer Party',
+    slug: 'espanol-summer-party',
+    url: 'https://open.spotify.com/playlist/0UY3oVANXRqflE5QjHhaH4'
+  },
+  {
+    style: 'Hits de todo el tiempo',
+    slug: 'hits-todo-tiempo',
+    url: 'https://open.spotify.com/playlist/5TOMoP3KEWtRASGeFsksUY'
+  },
+  {
+    style: 'Hits Rock Espanol',
+    slug: 'hits-rock-espanol',
+    url: 'https://open.spotify.com/playlist/2cT61hYCfIkwHAyVMwej9D'
+  },
+  {
+    style: 'Mejores de todos los tiempos',
+    slug: 'mejores-todos-tiempos',
     url: 'https://open.spotify.com/playlist/0f3YRJO2HyZTpCLCVxzBt0'
   },
   {
-    style: 'Rock Latino',
-    slug: 'rock-latino',
-    url: 'https://open.spotify.com/playlist/07iEAd20wfnMh8VfbmovYG'
+    style: 'Temazos Fiesta Mayor y Verbena',
+    slug: 'fiesta-mayor-verbena',
+    url: 'https://open.spotify.com/playlist/7xcdrzs58PmLIZa4P5Qk3s'
   },
   {
-    style: 'Mix Latino',
-    slug: 'mix-latino',
-    url: 'https://open.spotify.com/playlist/2UBikaEIZWV9LOAjE0dBgx'
-  },
-  {
-    style: 'Bailable de todos los tiempos',
-    slug: 'bailable-todos-los-tiempos',
-    url: 'https://open.spotify.com/playlist/7FnGVaOj5s9JvAUtvZENfC'
-  },
-  {
-    style: 'Romanticos',
-    slug: 'romanticos',
-    url: 'https://open.spotify.com/playlist/3dmrZtJOYx1naGoLtyHFOk'
-  },
-  {
-    style: 'Perreo Clasico',
-    slug: 'perreo-clasico',
-    url: 'https://open.spotify.com/playlist/2aatYbsZb0ZiY3aQjcVSw2'
-  },
-  {
-    style: 'Temazos Espanoles',
-    slug: 'temazos-espanoles',
-    url: 'https://open.spotify.com/playlist/7bsAMCUlTcMTGzG1RzxWTX'
-  },
-  {
-    style: 'Rock Ska Espanolisimo',
-    slug: 'rock-ska-espanolisimo',
-    url: 'https://open.spotify.com/playlist/6ZcRMfq1UCg0QzC2KkopvV'
-  },
-  {
-    style: 'De To2',
-    slug: 'de-to2',
-    url: 'https://open.spotify.com/playlist/0Pn8mtBmo8HDfuKiky5tNj'
-  },
-  {
-    style: 'Fiestas en el Pueblo',
-    slug: 'fiestas-en-el-pueblo',
-    url: 'https://open.spotify.com/playlist/5kkHb7jc3WocICRywvY6Yz'
-  },
-  {
-    style: 'Just Go',
-    slug: 'just-go',
-    url: 'https://open.spotify.com/playlist/0yUgOnkSswjzWwNxI2QjNC'
+    style: 'Fiesta del Pueblo',
+    slug: 'fiesta-del-pueblo',
+    url: 'https://open.spotify.com/playlist/4OoS8qoueVgm5PpuDUlOwH'
   }
 ];
 

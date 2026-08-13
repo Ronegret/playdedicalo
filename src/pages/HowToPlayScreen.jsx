@@ -29,7 +29,7 @@ const HOST_STEPS = [
   ['Entra como anfitrión', 'Pulsa “Ya sé jugar” y elige “Anfitrión”.'],
   ['Inicia sesión con Google', 'Esto permite guardar la sala y mantener la partida conectada.'],
   ['Conecta Spotify Premium', 'Solo el anfitrión necesita Spotify Premium. Los invitados no tienen que conectarlo.'],
-  ['Elige la playlist', 'Selecciona la vibra de la partida: Reggaeton, Hits, Rock Latino, Bailable y más.'],
+  ['Elige la playlist', 'Selecciona la vibra de la partida: Espanol 100%, Temazos, Summer Party, Rock Espanol o Fiesta del Pueblo.'],
   ['Prueba el sonido', 'Pulsa el vinilo de prueba. Si suena, ya puedes crear la sala.'],
   ['Comparte el PIN o QR', 'Los jugadores entran desde su móvil. El anfitrión también juega como todos.'],
 ];

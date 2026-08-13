@@ -1,0 +1,50 @@
+[
+  {
+    "style": "Espanol 100%",
+    "style_slug": "espanol-100",
+    "playlist_url": "https://open.spotify.com/playlist/1C3NDNNfg6c0SlPhyikGVU",
+    "tracks_found": 30
+  },
+  {
+    "style": "Temazos",
+    "style_slug": "temazos",
+    "playlist_url": "https://open.spotify.com/playlist/0i8fEuY6ffN6Ou53BeIcxY",
+    "tracks_found": 100
+  },
+  {
+    "style": "Espanol Summer Party",
+    "style_slug": "espanol-summer-party",
+    "playlist_url": "https://open.spotify.com/playlist/0UY3oVANXRqflE5QjHhaH4",
+    "tracks_found": 30
+  },
+  {
+    "style": "Hits de todo el tiempo",
+    "style_slug": "hits-todo-tiempo",
+    "playlist_url": "https://open.spotify.com/playlist/5TOMoP3KEWtRASGeFsksUY",
+    "tracks_found": 100
+  },
+  {
+    "style": "Hits Rock Espanol",
+    "style_slug": "hits-rock-espanol",
+    "playlist_url": "https://open.spotify.com/playlist/2cT61hYCfIkwHAyVMwej9D",
+    "tracks_found": 30
+  },
+  {
+    "style": "Mejores de todos los tiempos",
+    "style_slug": "mejores-todos-tiempos",
+    "playlist_url": "https://open.spotify.com/playlist/0f3YRJO2HyZTpCLCVxzBt0",
+    "tracks_found": 30
+  },
+  {
+    "style": "Temazos Fiesta Mayor y Verbena",
+    "style_slug": "fiesta-mayor-verbena",
+    "playlist_url": "https://open.spotify.com/playlist/7xcdrzs58PmLIZa4P5Qk3s",
+    "tracks_found": 100
+  },
+  {
+    "style": "Fiesta del Pueblo",
+    "style_slug": "fiesta-del-pueblo",
+    "playlist_url": "https://open.spotify.com/playlist/4OoS8qoueVgm5PpuDUlOwH",
+    "tracks_found": 100
+  }
+]
