@@ -7,42 +7,50 @@ const PLAYLISTS = [
   {
     style: 'Espanol 100%',
     slug: 'espanol-100',
-    url: 'https://open.spotify.com/playlist/1C3NDNNfg6c0SlPhyikGVU'
+    url: 'https://open.spotify.com/playlist/1C3NDNNfg6c0SlPhyikGVU',
+    requireFullApi: true
   },
   {
     style: 'Temazos',
     slug: 'temazos',
-    url: 'https://open.spotify.com/playlist/0i8fEuY6ffN6Ou53BeIcxY'
+    url: 'https://open.spotify.com/playlist/0i8fEuY6ffN6Ou53BeIcxY',
+    requireFullApi: true
   },
   {
     style: 'Espanol Summer Party',
     slug: 'espanol-summer-party',
-    url: 'https://open.spotify.com/playlist/0UY3oVANXRqflE5QjHhaH4'
+    url: 'https://open.spotify.com/playlist/0UY3oVANXRqflE5QjHhaH4',
+    requireFullApi: true
   },
   {
     style: 'Hits de todo el tiempo',
     slug: 'hits-todo-tiempo',
-    url: 'https://open.spotify.com/playlist/5TOMoP3KEWtRASGeFsksUY'
+    url: 'https://open.spotify.com/playlist/5TOMoP3KEWtRASGeFsksUY',
+    requireFullApi: true
   },
   {
     style: 'Hits Rock Espanol',
     slug: 'hits-rock-espanol',
-    url: 'https://open.spotify.com/playlist/2cT61hYCfIkwHAyVMwej9D'
+    url: 'https://open.spotify.com/playlist/2cT61hYCfIkwHAyVMwej9D',
+    requireFullApi: true
   },
   {
     style: 'Mejores de todos los tiempos',
     slug: 'mejores-todos-tiempos',
-    url: 'https://open.spotify.com/playlist/0f3YRJO2HyZTpCLCVxzBt0'
+    url: 'https://open.spotify.com/playlist/0f3YRJO2HyZTpCLCVxzBt0',
+    requireFullApi: true
   },
   {
     style: 'Temazos Fiesta Mayor y Verbena',
     slug: 'fiesta-mayor-verbena',
-    url: 'https://open.spotify.com/playlist/7xcdrzs58PmLIZa4P5Qk3s'
+    url: 'https://open.spotify.com/playlist/7xcdrzs58PmLIZa4P5Qk3s',
+    requireFullApi: true
   },
   {
     style: 'Fiesta del Pueblo',
     slug: 'fiesta-del-pueblo',
-    url: 'https://open.spotify.com/playlist/4OoS8qoueVgm5PpuDUlOwH'
+    url: 'https://open.spotify.com/playlist/4OoS8qoueVgm5PpuDUlOwH',
+    requireFullApi: true
   }
 ];
 
@@ -381,6 +389,9 @@ async function fetchPlaylistTracks(playlist, accessToken) {
     return rows;
   } catch (error) {
     if (!String(error.message).includes('403')) throw error;
+    if (playlist.requireFullApi) {
+      throw new Error(`${playlist.style} no se pudo extraer completa con la API de Spotify. Autoriza Spotify con --oauth o importa filas completas antes de regenerar el catalogo.`);
+    }
     console.warn(`  API bloqueada para tracks. Usando preview publico limitado: ${playlist.style}`);
     const trackIds = await fetchPublicPreviewTrackIds(playlistId);
     for (const trackId of trackIds) {
