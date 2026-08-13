@@ -6,13 +6,18 @@
   html,
   body,
   #root {
+    height: 100%;
     min-height: 100%;
     overflow-x: hidden;
+    overscroll-behavior: none;
   }
 
   html,
   body {
-    overflow-y: auto;
+    overflow: hidden;
+    position: fixed;
+    inset: 0;
+    width: 100%;
   }
 
   #root {
@@ -23,6 +28,7 @@
   body {
     @apply bg-background text-on-background font-body-md;
     background-color: #050816;
+    touch-action: pan-y;
   }
 
   /* Todos los headers fijos respetan la muesca/isla del iPhone, más 12px de
@@ -44,8 +50,12 @@
   .app-screen {
     min-height: 100dvh;
     min-height: 100svh;
+    height: 100dvh;
+    height: 100svh;
     width: 100%;
     overflow-x: hidden;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
     padding-left: max(1rem, env(safe-area-inset-left));
     padding-right: max(1rem, env(safe-area-inset-right));
     padding-bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));

@@ -14,15 +14,15 @@ function RankingPeek({ players, guestId }) {
   const myRank = sorted.findIndex((p) => p.id === guestId) + 1;
 
   return (
-    <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-black/25 text-left overflow-hidden">
+    <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-black/30 text-left overflow-hidden shadow-[0_18px_40px_rgba(0,0,0,0.22)]">
       <button
         type="button"
         onClick={() => setRankOpen((prev) => !prev)}
-        className="w-full p-3 flex items-center justify-between gap-3"
+        className="w-full p-4 flex items-center justify-between gap-3"
       >
         <div>
-          <p className="font-label-caps text-neon-green text-[10px] tracking-widest">RANKING</p>
-          <p className="text-sm font-bold text-white">
+          <p className="font-label-caps text-neon-green text-sm tracking-[0.16em]">RANKING</p>
+          <p className="text-base font-bold text-white">
             {myRank ? `Posición ${myRank} de ${sorted.length}` : 'Ver puntuaciones'}
           </p>
         </div>
@@ -43,22 +43,22 @@ function RankingPeek({ players, guestId }) {
             transition={{ duration: 0.24, ease: 'easeInOut' }}
             className="overflow-hidden"
           >
-            <div className="px-3 pb-3 flex flex-col gap-2">
+            <div className="px-3 pb-3 flex flex-col gap-2.5">
               {sorted.map((player, index) => (
                 <div
                   key={player.id}
-                  className={`flex items-center gap-2 rounded-xl px-3 py-2 ${player.id === guestId ? 'bg-neon-green/10 border border-neon-green/25' : 'bg-white/5'}`}
+                  className={`flex items-center gap-2.5 rounded-xl px-3 py-2.5 ${player.id === guestId ? 'bg-neon-green/10 border border-neon-green/25' : 'bg-white/5'}`}
                 >
-                  <span className={`w-6 h-6 rounded-lg text-xs font-black flex items-center justify-center shrink-0 ${index === 0 ? 'bg-neon-green text-black' : 'bg-white/10 text-white'}`}>
+                  <span className={`w-8 h-8 rounded-lg text-sm font-black flex items-center justify-center shrink-0 ${index === 0 ? 'bg-neon-green text-black' : 'bg-white/10 text-white'}`}>
                     {index + 1}
                   </span>
                   {player.avatar?.startsWith?.('http') ? (
-                    <img src={player.avatar} alt={player.name} className="w-7 h-7 rounded-full object-cover shrink-0" />
+                    <img src={player.avatar} alt={player.name} className="w-9 h-9 rounded-full object-cover shrink-0" />
                   ) : (
                     <span className="w-7 h-7 rounded-full bg-black/20 flex items-center justify-center text-sm shrink-0">{player.avatar || '•'}</span>
                   )}
-                  <span className="text-sm font-bold text-white truncate flex-1">{player.name}</span>
-                  <span className="text-sm font-black text-neon-green shrink-0">{player.points} pts</span>
+                  <span className="text-base font-bold text-white truncate flex-1">{player.name}</span>
+                  <span className="text-base font-black text-neon-green shrink-0">{player.points} pts</span>
                 </div>
               ))}
             </div>
@@ -141,10 +141,10 @@ function VinylSlotButton({ label, disabled, onClick }) {
       disabled={disabled}
       onClick={onClick}
       aria-label={`Colocar canción: ${label}`}
-      className="group relative w-16 h-16 shrink-0 snap-center rounded-full border-2 border-dashed border-neon-green/50 bg-neon-green/5 text-neon-green flex flex-col items-center justify-center active:scale-90 transition-transform hover:bg-neon-green/15 hover:border-neon-green focus:outline-none focus:ring-2 focus:ring-neon-green disabled:opacity-40"
+      className="group relative w-20 h-20 shrink-0 snap-center rounded-full border-2 border-dashed border-neon-green/50 bg-neon-green/5 text-neon-green flex flex-col items-center justify-center active:scale-90 transition-transform hover:bg-neon-green/15 hover:border-neon-green focus:outline-none focus:ring-2 focus:ring-neon-green disabled:opacity-40"
     >
-      <span className="material-symbols-outlined text-lg leading-none">add</span>
-      <span className="absolute -bottom-6 w-24 text-center text-[10px] font-label-caps leading-tight text-on-surface-variant group-hover:text-neon-green transition-colors">
+      <span className="material-symbols-outlined text-2xl leading-none">add</span>
+      <span className="absolute -bottom-8 w-28 text-center text-xs font-label-caps leading-tight text-on-surface-variant group-hover:text-neon-green transition-colors">
         {label}
       </span>
     </button>
@@ -223,7 +223,7 @@ function TimelinePlacementQuestion({ question, playerYears = [], disabled, onPic
         {activeAttack && (
           <div className="mb-3 rounded-xl bg-error/20 border border-error/50 p-2.5 flex items-center justify-center gap-2">
             <span className="material-symbols-outlined text-error text-lg animate-pulse">bolt</span>
-            <p className="text-xs font-bold text-error">
+            <p className="text-sm font-bold leading-snug text-error">
               {activeAttack.from || 'Un rival'} activo {attackCopy.title}: {attackCopy.short || attackCopy.description}
             </p>
           </div>
@@ -231,10 +231,10 @@ function TimelinePlacementQuestion({ question, playerYears = [], disabled, onPic
 
         <div className="flex items-center justify-between gap-3">
           <div>
-            <p className="font-label-caps text-[10px] text-neon-green tracking-widest">TU RUTA DE AÑOS</p>
-            <p className="mt-1 text-sm text-white font-bold">Elige dónde colocar esta canción</p>
+            <p className="font-label-caps text-sm text-neon-green tracking-[0.16em]">TU RUTA DE AÑOS</p>
+            <p className="mt-1 text-base text-white font-bold">Elige dónde colocar esta canción</p>
           </div>
-          <span className="rounded-full border border-white/10 bg-black/25 px-3 py-1 text-[10px] font-label-caps text-on-surface-variant">
+          <span className="rounded-full border border-white/10 bg-black/25 px-3 py-1.5 text-xs font-label-caps text-on-surface-variant">
             {Math.min(years.length, targetYears)}/{targetYears}
           </span>
         </div>
@@ -242,7 +242,7 @@ function TimelinePlacementQuestion({ question, playerYears = [], disabled, onPic
         {/* Estante de vinilos: riel horizontal con snap-scroll, discos y huecos
             alternados en un leve vaivén vertical para que se lea como una
             colección real y no una grilla rígida. */}
-        <div className="relative mt-6 overflow-x-auto overflow-y-visible pb-8 pt-2 snap-x no-scrollbar sm:mt-8">
+        <div className="relative mt-6 overflow-x-auto overflow-y-visible pb-10 pt-2 snap-x no-scrollbar sm:mt-8">
           <div className="absolute left-0 right-0 top-1/2 h-px bg-gradient-to-r from-transparent via-white/12 to-transparent" />
           <div className="relative min-w-max flex items-center gap-3 px-2">
             {slots.map((slot, index) => (
@@ -271,7 +271,7 @@ function TimelinePlacementQuestion({ question, playerYears = [], disabled, onPic
             ))}
           </div>
         </div>
-        <p className="mt-3 text-xs text-on-surface-variant">
+        <p className="mt-3 text-base leading-relaxed text-on-surface-variant">
           {isSlippery
             ? 'Ojo: esta ronda el toque puede saltar al hueco vecino. Juega con sangre fria.'
             : 'Tu ruta es personal. Si no ves todos los discos, desliza la fila hacia los lados.'}
@@ -533,8 +533,8 @@ export default function GameScreen() {
             <div className="rounded-2xl border border-vinyl-orange/50 bg-vinyl-orange/15 backdrop-blur-lg p-3 flex items-center gap-3 max-w-sm w-full">
               <span className="material-symbols-outlined text-vinyl-orange text-2xl shrink-0">wifi_off</span>
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-black text-white">{disconnectToast} se desconectó</p>
-                <p className="text-[10px] text-vinyl-orange/80">Tiene 30 segundos para volver antes de quedar fuera.</p>
+                <p className="text-sm font-black text-white">{disconnectToast} se desconectó</p>
+                <p className="text-xs text-vinyl-orange/85">Tiene 30 segundos para volver antes de quedar fuera.</p>
               </div>
             </div>
           </motion.div>
@@ -597,11 +597,11 @@ export default function GameScreen() {
                 <div className="absolute inset-6 rounded-full border border-white/10" />
                 <div className="absolute inset-12 rounded-full border border-white/5" />
                 <div className="relative z-10 text-center">
-                  <p className="font-label-caps text-[10px] text-electric-purple tracking-widest">{mode.name}</p>
+                  <p className="font-label-caps text-xs text-electric-purple tracking-widest">{mode.name}</p>
                   <span className="mt-2 block font-headline-lg-mobile text-2xl font-black tracking-widest text-neon-green drop-shadow-[0_0_18px_rgba(57,255,20,0.6)] sm:text-4xl">
                     {role === 'host' ? 'SONANDO' : 'ESCUCHA'}
                   </span>
-                  <p className="mt-2 font-label-caps text-[10px] text-white/50 tracking-widest">
+                  <p className="mt-2 font-label-caps text-xs text-white/60 tracking-widest">
                     {role === 'host' ? 'PARA CUANDO QUIERAS' : 'EL ANFITRIÓN DECIDE'}
                   </p>
                 </div>
@@ -626,7 +626,7 @@ export default function GameScreen() {
                 {spotifyError && (
                   <button
                     onClick={handleSpotifyRetry}
-                    className="flex items-center gap-2 px-4 py-2 rounded-xl border border-vinyl-orange/50 bg-vinyl-orange/15 text-vinyl-orange font-label-caps text-xs font-bold active:scale-95 transition-all"
+                    className="flex items-center gap-2 px-4 py-2 rounded-xl border border-vinyl-orange/50 bg-vinyl-orange/15 text-vinyl-orange font-label-caps text-sm font-bold active:scale-95 transition-all"
                   >
                     <span className="material-symbols-outlined text-sm">
                       {spotifyNeedsReconnect ? 'login' : 'refresh'}
@@ -647,7 +647,7 @@ export default function GameScreen() {
               <button
                 type="button"
                 onClick={() => { setAttackError(''); setShowAttackModal(true); }}
-                className="min-h-touch rounded-full border border-vinyl-orange/40 bg-vinyl-orange/10 px-4 flex items-center gap-2 text-vinyl-orange font-label-caps text-xs font-bold active:scale-95 transition-all"
+                className="min-h-touch rounded-full border border-vinyl-orange/40 bg-vinyl-orange/10 px-4 flex items-center gap-2 text-vinyl-orange font-label-caps text-sm font-bold active:scale-95 transition-all"
               >
                 <span className="material-symbols-outlined text-base">bolt</span>
                 SABOTEAR ({ATTACK_COST} PTS)
@@ -656,7 +656,7 @@ export default function GameScreen() {
 
             {role === 'host' && (
               <div className="fixed inset-x-4 bottom-[calc(1rem+env(safe-area-inset-bottom,0px))] z-40 mx-auto grid max-w-sm gap-2 md:relative md:inset-auto md:z-auto md:mb-8 md:mt-2 md:w-full md:max-w-xs">
-                <p className="text-center text-xs text-on-surface-variant">Para cuando lo veas claro 👇</p>
+                <p className="text-center text-sm text-on-surface-variant">Para cuando lo veas claro 👇</p>
                 <motion.button
                   whileHover={{ y: -2 }}
                   whileTap={{ scale: (isBlackoutPending || !spotifyTrackReady) ? 1 : 0.94, y: 4 }}
@@ -742,7 +742,7 @@ export default function GameScreen() {
                               <span className="material-symbols-outlined text-black" style={{ fontSize: '10px', lineHeight: 1 }}>check</span>
                             </span>
                           )}
-                          <span className="text-[9px] text-on-surface-variant font-label-caps max-w-[2.5rem] truncate">{player.name}</span>
+                          <span className="max-w-[3.75rem] truncate font-label-caps text-xs text-on-surface-variant">{player.name}</span>
                         </div>
                       );
                     })}
@@ -750,7 +750,7 @@ export default function GameScreen() {
                 )}
 
                 {!hasAnswered && (
-                  <p className="mt-2 text-xs text-on-surface-variant">Responde primero. Tu voto también cuenta.</p>
+                  <p className="mt-2 text-sm text-on-surface-variant">Responde primero. Tu voto también cuenta.</p>
                 )}
                 <button
                   type="button"
@@ -769,7 +769,7 @@ export default function GameScreen() {
                   REVELAR RESULTADOS
                 </button>
                 {revealError && (
-                  <p className="mt-2 text-xs text-intense-red text-center">{revealError}</p>
+                  <p className="mt-2 text-sm text-intense-red text-center">{revealError}</p>
                 )}
               </div>
             )}
@@ -783,7 +783,7 @@ export default function GameScreen() {
                 >
                   <span className="material-symbols-outlined text-neon-green" style={{ fontSize: '3.5rem' }}>check_circle</span>
                   <p className="mt-3 text-white font-bold text-lg">¡Respuesta enviada!</p>
-                  <p className="mt-1 text-xs text-on-surface-variant">
+                  <p className="mt-1 text-sm text-on-surface-variant">
                     {role === 'host' ? 'Cuando todos estén listos, revela los resultados.' : 'Esperando al anfitrión...'}
                   </p>
                 </motion.div>
@@ -837,7 +837,7 @@ export default function GameScreen() {
           >
             <div className="rounded-2xl border border-vinyl-orange/50 bg-vinyl-orange/15 backdrop-blur-lg px-4 py-3 flex items-center gap-2 max-w-sm w-full">
               <span className="material-symbols-outlined text-vinyl-orange text-xl shrink-0">bolt</span>
-              <p className="text-xs font-black text-white">¡Sabotaje enviado a {attackSentTo}!</p>
+              <p className="text-sm font-black text-white">¡Sabotaje enviado a {attackSentTo}!</p>
             </div>
           </motion.div>
         )}
@@ -885,18 +885,18 @@ export default function GameScreen() {
                         {attackType.icon}
                       </span>
                       <div className="min-w-0">
-                        <p className="font-label-caps text-xs font-black text-white">{attackType.name}</p>
-                        <p className="mt-0.5 text-xs leading-snug text-on-surface-variant">{attackType.short}</p>
+                        <p className="font-label-caps text-sm font-black text-white">{attackType.name}</p>
+                        <p className="mt-0.5 text-sm leading-snug text-on-surface-variant">{attackType.short}</p>
                       </div>
                     </div>
                   </button>
                 ))}
               </div>
 
-              <p className="mt-4 font-label-caps text-[10px] tracking-[0.18em] text-on-surface-variant">ELIGE OBJETIVO</p>
+              <p className="mt-4 font-label-caps text-xs tracking-[0.18em] text-on-surface-variant">ELIGE OBJETIVO</p>
               <div className="mt-2 flex flex-col gap-2">
                 {attackTargets.length === 0 && (
-                  <p className="rounded-xl border border-white/10 bg-black/20 px-3 py-3 text-xs text-on-surface-variant">
+                  <p className="rounded-xl border border-white/10 bg-black/20 px-3 py-3 text-sm text-on-surface-variant">
                     No hay rivales disponibles ahora mismo.
                   </p>
                 )}
@@ -924,7 +924,7 @@ export default function GameScreen() {
               </div>
 
               {attackError && (
-                <p className="mt-3 text-xs text-intense-red text-center">{attackError}</p>
+                <p className="mt-3 text-sm text-intense-red text-center">{attackError}</p>
               )}
 
               <button

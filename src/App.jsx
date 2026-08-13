@@ -6,7 +6,7 @@ import { auth } from './firebase';
 import ShaderBackground from './components/ShaderBackground';
 import ErrorBoundary from './components/ErrorBoundary';
 import OfflineBanner from './components/OfflineBanner';
-import { stopBgMusic, tryStartBgMusic } from './hooks/useBgMusic';
+import { stopBgMusic } from './hooks/useBgMusic';
 
 // After a new deploy, a tab left open from before still points at the old,
 // content-hashed chunk filenames — those 404 on the server and the dynamic
@@ -87,17 +87,6 @@ function App() {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('online', reconnect);
       window.removeEventListener('pageshow', reconnect);
-    };
-  }, []);
-
-  // Start bg music on first interaction while on welcome screen
-  useEffect(() => {
-    const start = () => tryStartBgMusic();
-    window.addEventListener('click', start, { once: true });
-    window.addEventListener('touchend', start, { once: true });
-    return () => {
-      window.removeEventListener('click', start);
-      window.removeEventListener('touchend', start);
     };
   }, []);
 

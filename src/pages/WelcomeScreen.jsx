@@ -46,7 +46,7 @@ export default function WelcomeScreen() {
             tabIndex={0}
             onClick={toggleBg}
             onKeyDown={(e) => e.key === 'Enter' && toggleBg()}
-            aria-label={bgPaused ? 'Reanudar música' : 'Pausar música'}
+            aria-label={bgPaused ? 'Reproducir cancion de Dedicalo' : 'Pausar cancion de Dedicalo'}
             className="relative cursor-pointer"
             style={{
               width: 'min(clamp(132px, 28svh, 340px), calc(100vw - 72px))',
@@ -68,8 +68,8 @@ export default function WelcomeScreen() {
 
             {/* Spinning disc — conic arc makes rotation clearly visible */}
             <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ repeat: Infinity, duration: 5, ease: 'linear' }}
+              animate={bgPaused ? { rotate: 0 } : { rotate: 360 }}
+              transition={bgPaused ? { duration: 0.2 } : { repeat: Infinity, duration: 5, ease: 'linear' }}
               className="absolute inset-0 rounded-full"
               style={{
                 background: [
@@ -99,7 +99,10 @@ export default function WelcomeScreen() {
             {/* Pause overlay — visible when bg music is paused */}
             {bgPaused && (
               <div className="absolute inset-0 rounded-full flex items-center justify-center bg-black/40 backdrop-blur-[2px]">
-                <span className="material-symbols-outlined text-white/90" style={{ fontSize: '3rem' }}>play_arrow</span>
+                <div className="flex flex-col items-center gap-1">
+                  <span className="material-symbols-outlined text-white/90" style={{ fontSize: '3rem' }}>play_arrow</span>
+                  <span className="font-label-caps text-[9px] tracking-[0.18em] text-white/80">TOCA PARA SONAR</span>
+                </div>
               </div>
             )}
           </div>
@@ -109,7 +112,7 @@ export default function WelcomeScreen() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
-            className="flex items-end gap-[3px] h-5 md:h-7"
+            className={`flex items-end gap-[3px] h-5 md:h-7 ${bgPaused ? 'opacity-35' : 'opacity-100'}`}
           >
             {EQ_BARS.map((h, i) => (
               <div

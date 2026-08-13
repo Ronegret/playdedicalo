@@ -7,6 +7,7 @@ import { useGameStore } from '../store/useGameStore';
 import { resetSpotifyConnection } from '../services/spotify';
 
 const QUICK_AVATARS = ['DJ', 'VIP', 'POP', '90s', 'ROCK', 'GO'];
+const EMOJI_AVATARS = ['😎', '🕺', '💃', '🎧', '🎤', '🎸', '🥁', '🎹', '🔥', '⚡', '🌟', '🚀', '👑', '🪩', '🎵', '🍻', '🥳', '🤘'];
 
 function AvatarBubble({ avatar, fallback = 'person', className = 'h-8 w-8' }) {
   const isImage = avatar?.startsWith?.('http');
@@ -15,7 +16,7 @@ function AvatarBubble({ avatar, fallback = 'person', className = 'h-8 w-8' }) {
       {isImage ? (
         <img src={avatar} alt="Avatar" className="h-full w-full object-cover" />
       ) : avatar ? (
-        <span className="px-1 text-[10px] font-black leading-none text-white">{avatar}</span>
+        <span className="px-1 text-sm font-black leading-none text-white">{avatar}</span>
       ) : (
         <span className="material-symbols-outlined text-sm text-electric-purple">{fallback}</span>
       )}
@@ -132,7 +133,7 @@ export default function ProfileMenu({ user, guestAvatar }) {
                 <AvatarBubble avatar={displayAvatar} className="h-11 w-11" />
                 <div className="min-w-0">
                   <p className="truncate text-sm font-black text-white">{displayName}</p>
-                  <p className="mt-0.5 truncate font-label-caps text-[10px] text-on-surface-variant">
+                  <p className="mt-0.5 truncate font-label-caps text-xs text-on-surface-variant">
                     {role === 'host' ? 'ANFITRION' : 'INVITADO'}
                   </p>
                 </div>
@@ -141,25 +142,25 @@ export default function ProfileMenu({ user, guestAvatar }) {
 
             {isEditing ? (
               <div className="p-3">
-                <label className="font-label-caps text-[10px] tracking-[0.18em] text-on-surface-variant">
+                <label className="font-label-caps text-xs tracking-[0.16em] text-on-surface-variant">
                   Nombre visible
                 </label>
                 <input
                   value={profileName}
                   onChange={(event) => setProfileName(event.target.value)}
                   maxLength={18}
-                  className="mt-1 h-11 w-full rounded-xl border border-white/10 bg-black/25 px-3 text-sm font-bold text-white outline-none focus:border-neon-green/60"
+                  className="mt-1 h-12 w-full rounded-xl border border-white/10 bg-black/25 px-3 text-base font-bold text-white outline-none focus:border-neon-green/60"
                 />
 
-                <label className="mt-3 block font-label-caps text-[10px] tracking-[0.18em] text-on-surface-variant">
-                  Avatar corto o URL
+                <label className="mt-3 block font-label-caps text-xs tracking-[0.16em] text-on-surface-variant">
+                  Avatar o URL
                 </label>
                 <input
                   value={profileAvatar}
                   onChange={(event) => setProfileAvatar(event.target.value)}
                   maxLength={80}
-                  className="mt-1 h-11 w-full rounded-xl border border-white/10 bg-black/25 px-3 text-sm font-bold text-white outline-none focus:border-electric-purple/60"
-                  placeholder="DJ, VIP, 90s o una URL"
+                  className="mt-1 h-12 w-full rounded-xl border border-white/10 bg-black/25 px-3 text-base font-bold text-white outline-none focus:border-electric-purple/60"
+                  placeholder="Elige un emoji, DJ, VIP o una URL"
                 />
 
                 <div className="mt-2 grid grid-cols-6 gap-1.5">
@@ -168,20 +169,34 @@ export default function ProfileMenu({ user, guestAvatar }) {
                       key={avatar}
                       type="button"
                       onClick={() => setProfileAvatar(avatar)}
-                      className="h-9 rounded-lg border border-white/10 bg-white/5 text-[10px] font-black text-white active:scale-95"
+                      className="h-10 rounded-lg border border-white/10 bg-white/5 text-xs font-black text-white active:scale-95"
                     >
                       {avatar}
                     </button>
                   ))}
                 </div>
 
-                {profileError && <p className="mt-2 text-xs text-intense-red">{profileError}</p>}
+                <div className="mt-2 grid max-h-28 grid-cols-6 gap-1.5 overflow-y-auto rounded-xl border border-white/10 bg-black/20 p-1.5">
+                  {EMOJI_AVATARS.map((avatar) => (
+                    <button
+                      key={avatar}
+                      type="button"
+                      onClick={() => setProfileAvatar(avatar)}
+                      className={`h-10 rounded-lg border text-2xl active:scale-95 ${profileAvatar === avatar ? 'border-neon-green bg-neon-green/15 shadow-[0_0_14px_rgba(57,255,20,0.22)]' : 'border-white/10 bg-white/5'}`}
+                      aria-label={`Usar avatar ${avatar}`}
+                    >
+                      {avatar}
+                    </button>
+                  ))}
+                </div>
+
+                {profileError && <p className="mt-2 text-sm text-intense-red">{profileError}</p>}
 
                 <div className="mt-3 grid grid-cols-2 gap-2">
                   <button
                     type="button"
                     onClick={() => setIsEditing(false)}
-                    className="min-h-touch rounded-xl border border-white/10 bg-white/5 font-label-caps text-xs font-bold text-white"
+                    className="min-h-touch rounded-xl border border-white/10 bg-white/5 font-label-caps text-sm font-bold text-white"
                   >
                     CANCELAR
                   </button>
@@ -189,7 +204,7 @@ export default function ProfileMenu({ user, guestAvatar }) {
                     type="button"
                     onClick={handleSaveProfile}
                     disabled={isSaving}
-                    className="min-h-touch rounded-xl bg-neon-green font-label-caps text-xs font-black text-black disabled:opacity-60"
+                    className="min-h-touch rounded-xl bg-neon-green font-label-caps text-sm font-black text-black disabled:opacity-60"
                   >
                     {isSaving ? 'GUARDANDO' : 'GUARDAR'}
                   </button>
@@ -207,7 +222,7 @@ export default function ProfileMenu({ user, guestAvatar }) {
                     Editar perfil
                   </button>
                 ) : (
-                  <p className="rounded-xl px-3 py-2 text-xs leading-relaxed text-on-surface-variant">
+                  <p className="rounded-xl px-3 py-3 text-sm leading-relaxed text-on-surface-variant">
                     Entra con Google o crea una sala para editar nombre y avatar.
                   </p>
                 )}

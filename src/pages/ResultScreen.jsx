@@ -34,14 +34,14 @@ const RESULT_STYLES = {
 
 function TimelineYears({ years = [], goalYears = 12 }) {
   return (
-    <div className="mt-2 flex flex-wrap items-center gap-1 pl-9">
-      <span className="font-label-caps text-[9px] text-on-surface-variant">
+    <div className="mt-2 flex flex-wrap items-center gap-1.5 pl-11">
+      <span className="font-label-caps text-xs text-on-surface-variant">
         {Math.min(years.length, goalYears)}/{goalYears}
       </span>
       {years.slice(0, goalYears).map((year, index) => (
         <span
           key={`${year}-${index}`}
-          className="w-6 h-6 rounded-full border-2 border-neon-green/50 bg-black/30 flex items-center justify-center text-[8px] font-black text-neon-green"
+          className="w-8 h-8 rounded-full border-2 border-neon-green/50 bg-black/30 flex items-center justify-center text-xs font-black text-neon-green"
           title={year}
         >
           {String(year).slice(2)}
@@ -67,23 +67,23 @@ function RankingList({ players, final = false, showTimeline = false, goalYears =
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.04 }}
-            className={`p-3 rounded-xl border ${final && index === 0 ? 'bg-neon-green/10 border-neon-green/50' : 'bg-white/5 border-white/10'}`}
+            className={`p-4 rounded-2xl border ${final && index === 0 ? 'bg-neon-green/10 border-neon-green/50' : 'bg-white/5 border-white/10'}`}
           >
             <div className="flex justify-between items-center gap-3">
-              <div className="flex items-center gap-2.5 min-w-0">
-                <span className={`w-8 h-8 rounded-xl flex items-center justify-center font-black text-sm shrink-0 ${medalClass}`}>
+              <div className="flex items-center gap-3 min-w-0">
+                <span className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-base shrink-0 ${medalClass}`}>
                   {index + 1}
                 </span>
                 {player.avatar?.startsWith?.('http') ? (
-                  <img src={player.avatar} alt={player.name} className="w-8 h-8 rounded-full object-cover border border-white/10 shrink-0" />
+                  <img src={player.avatar} alt={player.name} className="w-10 h-10 rounded-full object-cover border border-white/10 shrink-0" />
                 ) : (
-                  <span className="w-8 h-8 rounded-full bg-black/20 flex items-center justify-center text-lg shrink-0">
+                  <span className="w-10 h-10 rounded-full bg-black/20 flex items-center justify-center text-xl shrink-0">
                     {player.avatar || '•'}
                   </span>
                 )}
-                <span className="font-bold text-sm truncate">{player.name}</span>
+                <span className="font-bold text-base truncate">{player.name}</span>
               </div>
-              <span className="font-black text-sm text-neon-green shrink-0">{player.points} pts</span>
+              <span className="font-black text-base text-neon-green shrink-0">{player.points} pts</span>
             </div>
             {showTimeline && <TimelineYears years={getCombinedTimelineYears(player)} goalYears={goalYears} />}
           </motion.div>
@@ -349,7 +349,7 @@ export default function ResultScreen() {
 
           <div className="relative mt-5 flex items-end justify-center gap-4">
             <div>
-              <p className="font-label-caps text-[10px] text-white/45">TUS PUNTOS</p>
+              <p className="font-label-caps text-sm text-white/55">TUS PUNTOS</p>
               <motion.p
                 initial={{ y: 12, scale: 0.75, opacity: 0 }}
                 animate={{ y: 0, scale: 1, opacity: 1 }}
@@ -381,7 +381,7 @@ export default function ResultScreen() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.12 }}
-          className="mt-2.5 flex items-center gap-3 rounded-2xl border border-white/10 bg-black/30 p-3 backdrop-blur-sm"
+          className="mt-3 flex items-center gap-3 rounded-2xl border border-white/10 bg-black/30 p-4 backdrop-blur-sm"
         >
           <div
             className="rounded-xl overflow-hidden shrink-0"
@@ -396,12 +396,12 @@ export default function ResultScreen() {
             )}
           </div>
           <div className="flex-1 min-w-0 text-left">
-            <p className="font-label-caps text-[10px] text-white/35 tracking-widest">LA CANCIÓN ERA</p>
-            <p className="mt-0.5 font-black text-white text-sm leading-tight line-clamp-2">
+            <p className="font-label-caps text-xs text-white/45 tracking-widest">LA CANCIÓN ERA</p>
+            <p className="mt-1 font-black text-white text-base leading-tight line-clamp-2">
               {currentTrack?.name || style.copy}
             </p>
             {currentTrack?.artist && (
-              <p className="text-xs text-white/50 mt-0.5 truncate">{currentTrack.artist}</p>
+              <p className="text-sm text-white/60 mt-0.5 truncate">{currentTrack.artist}</p>
             )}
             {currentTrack?.releaseYear && (
               <motion.div
@@ -410,7 +410,7 @@ export default function ResultScreen() {
                 transition={{ delay: 0.38, type: 'spring', stiffness: 140 }}
                 className="mt-1 flex items-baseline gap-1.5"
               >
-                <span className="font-label-caps text-[10px] text-white/30">AÑO</span>
+                <span className="font-label-caps text-xs text-white/40">AÑO</span>
                 <span className={`font-black text-4xl leading-none ${style.text}`}>
                   {currentTrack.releaseYear}
                 </span>
@@ -426,37 +426,37 @@ export default function ResultScreen() {
             transition={{ delay: 0.28 }}
             className="mt-2.5"
           >
-            <p className="font-label-caps text-[10px] text-white/30 tracking-widest text-center mb-2">
+            <p className="font-label-caps text-xs text-white/45 tracking-widest text-center mb-2">
               ASÍ VAN TODOS
             </p>
             <div className="flex flex-col gap-1.5">
               {sortedPlayers.map((player, index) => (
                 <div
                   key={player.id}
-                  className={`flex items-center gap-2 rounded-xl px-2.5 py-2 ${
+                  className={`flex items-center gap-2.5 rounded-xl px-3 py-2.5 ${
                     player.id === guestId
                       ? `border ${style.border} bg-white/5`
                       : 'bg-white/5 border border-white/8'
                   }`}
                 >
-                  <span className={`w-6 h-6 rounded-lg text-[10px] font-black flex items-center justify-center shrink-0 ${
+                  <span className={`w-8 h-8 rounded-lg text-sm font-black flex items-center justify-center shrink-0 ${
                     index === 0 ? 'bg-neon-green text-black' : 'bg-white/10 text-white'
                   }`}>
                     {index + 1}
                   </span>
                   {player.avatar?.startsWith?.('http') ? (
-                    <img src={player.avatar} alt={player.name} className="w-7 h-7 rounded-full object-cover shrink-0" />
+                    <img src={player.avatar} alt={player.name} className="w-9 h-9 rounded-full object-cover shrink-0" />
                   ) : (
-                    <span className="w-7 h-7 rounded-full bg-black/20 flex items-center justify-center text-sm shrink-0">
+                    <span className="w-9 h-9 rounded-full bg-black/20 flex items-center justify-center text-lg shrink-0">
                       {player.avatar || '•'}
                     </span>
                   )}
-                  <span className="text-sm font-bold text-white truncate flex-1">{player.name}</span>
+                  <span className="text-base font-bold text-white truncate flex-1">{player.name}</span>
                   <div className="text-right shrink-0">
-                    <p className="text-xs font-black text-neon-green">
+                    <p className="text-sm font-black text-neon-green">
                       {Math.min(getCombinedTimelineYears(player).length, targetYears)}/{targetYears} RUTA
                     </p>
-                    <p className="text-[10px] font-bold text-white/50">{player.points} pts</p>
+                    <p className="text-xs font-bold text-white/55">{player.points} pts</p>
                   </div>
                 </div>
               ))}
@@ -479,14 +479,14 @@ export default function ResultScreen() {
             </button>
           ) : (
             <div className="py-3 rounded-xl border border-white/10 bg-white/5 text-center">
-              <p className="text-xs text-white/45 font-label-caps tracking-widest animate-pulse">
+              <p className="text-sm text-white/55 font-label-caps tracking-widest animate-pulse">
                 ESPERANDO AL ANFITRIÓN...
               </p>
             </div>
           )}
           <button
             onClick={handleShare}
-            className="w-full h-10 rounded-xl border border-white/12 bg-white/5 text-white font-label-caps text-xs font-bold active:scale-95 transition-all flex items-center justify-center gap-2"
+            className="w-full h-12 rounded-xl border border-white/12 bg-white/5 text-white font-label-caps text-sm font-bold active:scale-95 transition-all flex items-center justify-center gap-2"
           >
             <span className="material-symbols-outlined text-base">share</span>
             {shareCopied ? 'COPIADO' : 'COMPARTIR'}

@@ -43,7 +43,10 @@ export function useBgMusic() {
 
   const toggle = useCallback(() => {
     const a = getAudio();
-    if (a.paused) { a.play().catch(() => {}); }
+    if (a.paused) {
+      _userStarted = true;
+      a.play().catch(() => {});
+    }
     else { a.pause(); }
   }, []);
 
