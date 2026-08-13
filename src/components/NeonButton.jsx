@@ -74,7 +74,7 @@ export default function NeonButton({
 
       {icon && <span className="relative z-10 flex items-center justify-center">{icon}</span>}
 
-      <span className="font-label-caps text-sm sm:text-base text-white relative z-10 uppercase tracking-[0.18em] text-center select-none">
+      <span className="relative z-10 select-none text-center font-label-caps text-[0.82rem] uppercase tracking-[0.12em] text-white sm:text-base sm:tracking-[0.18em]">
         {children}
       </span>
     </motion.button>

@@ -506,7 +506,7 @@ async function fetchPlaylistTracksFromSpotify(playlistId) {
     url = data.next;
   }
 
-  if (!tracks.length) throw new Error('No encontré canciones reproducibles en esta playlist.');
+  if (!tracks.length) throw new Error('No encontre canciones reproducibles en esta playlist.');
   return tracks;
 }
 
@@ -519,17 +519,16 @@ function buildTimelineYears(songYear, round = 1) {
     [1980, 1990, 2000, 2010, 2020]
   ];
   const years = anchorSets[Math.min(anchorSets.length - 1, Math.max(0, Number(round || 1) - 1))];
-  return [...new Set(years.filter((year) => year !== songYear))].sort((a, b) => a - b);
+  return [...years].sort((a, b) => a - b);
 }
 
 function getTimelineYearsForRound(songYear, round, timelineYears = []) {
-  const savedYears = [...new Set((timelineYears || []).map(Number).filter(Boolean))]
-    .filter((timelineYear) => timelineYear !== songYear)
+  const savedYears = [...(timelineYears || []).map(Number).filter(Boolean)]
     .sort((a, b) => a - b)
-    .slice(0, 12);
+    .slice(0, 20);
 
   if (savedYears.length) return savedYears;
-  return buildTimelineYears(songYear, round).slice(0, 12);
+  return buildTimelineYears(songYear, round).slice(0, 20);
 }
 
 const ARTIST_DISTRACTORS = [
@@ -537,7 +536,7 @@ const ARTIST_DISTRACTORS = [
   'Anuel AA', 'Karol G', 'Rauw Alejandro', 'Daddy Yankee', 'Nicky Jam',
   'Feid', 'Myke Towers', 'Jhay Cortez', 'Sech', 'Lunay', 'Bizarrap',
   'C. Tangana', 'Dua Lipa', 'The Weeknd', 'Drake', 'Ed Sheeran',
-  'Becky G', 'Sebastián Yatra', 'Luis Fonsi', 'Enrique Iglesias'
+  'Becky G', 'Sebastian Yatra', 'Luis Fonsi', 'Enrique Iglesias'
 ];
 
 function shuffleArray(arr) {
@@ -585,9 +584,9 @@ async function buildArtistQuestion(track, text, type = 'Identidad') {
 }
 
 const YEAR_QUESTION_TEXTS = [
-  '¿En qué año salió esta canción?',
-  '¿De qué año es este temazo?',
-  '¿Cuándo se lanzó esta canción?',
+  'En que ano salio esta cancion?',
+  'De que ano es este temazo?',
+  'Cuando se lanzo esta cancion?',
 ];
 
 function buildYearQuestion(track) {
@@ -615,17 +614,17 @@ function buildDecadeQuestion(track) {
   if (!allDecades.includes(correctLabel)) return null;
   return {
     mode: 'pulse',
-    type: 'Época',
-    text: '¿En qué época salió esta canción?',
+    type: 'Epoca',
+    text: 'En que epoca salio esta cancion?',
     options: allDecades,
     correct: allDecades.indexOf(correctLabel)
   };
 }
 
 const SONG_QUESTION_TEXTS = [
-  '¿Cuál es el título de esta canción?',
-  '¿Cómo se llama esta canción?',
-  '¿Cuál es el nombre de este tema?',
+  'Cual es el titulo de esta cancion?',
+  'Como se llama esta cancion?',
+  'Cual es el nombre de este tema?',
 ];
 
 async function buildSongNameQuestion(track) {
@@ -649,7 +648,7 @@ async function buildSongNameQuestion(track) {
   const text = SONG_QUESTION_TEXTS[Math.floor(Math.random() * SONG_QUESTION_TEXTS.length)];
   return {
     mode: 'pulse',
-    type: 'Canción',
+    type: 'Cancion',
     text,
     options,
     correct: options.indexOf(track.name)
@@ -657,10 +656,10 @@ async function buildSongNameQuestion(track) {
 }
 
 const ARTIST_QUESTION_TEXTS = [
-  ['¿Quién canta principalmente esta canción?', 'Identidad'],
-  ['¿A qué artista pertenece esta voz?', 'Reconoce la voz'],
-  ['¿Quién es el intérprete de esta canción?', 'Intérprete'],
-  ['¿Quién firma este temazo?', 'Artista'],
+  ['Quien canta principalmente esta cancion?', 'Identidad'],
+  ['A que artista pertenece esta voz?', 'Reconoce la voz'],
+  ['Quien es el interprete de esta cancion?', 'Interprete'],
+  ['Quien firma este temazo?', 'Artista'],
 ];
 
 // Structured cycle: guarantees variety across rounds.
@@ -672,7 +671,7 @@ export async function createQuestionFromTrack(track, gameMode, round = 1, timeli
 
   if (gameMode === 'timeline') {
     const roundTimelineYears = getTimelineYearsForRound(year, round, timelineYears);
-    const correct = roundTimelineYears.filter((timelineYear) => timelineYear < year).length;
+    const correct = roundTimelineYears.filter((timelineYear) => timelineYear <= year).length;
 
     return {
       mode: 'timeline',

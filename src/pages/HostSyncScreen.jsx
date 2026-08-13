@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getRedirectResult, onAuthStateChanged, signInWithPopup, signInWithRedirect } from 'firebase/auth';
-import { DEDICALO_PLAYLISTS, useGameStore } from '../store/useGameStore';
+import { DEDICALO_PLAYLISTS, MAX_TIMELINE_GOAL_YEARS, MIN_TIMELINE_GOAL_YEARS, useGameStore } from '../store/useGameStore';
 import { auth, authReady, googleProvider } from '../firebase';
 import { getPlaylistRequestUrl, openMailto } from '../config/support';
 import VinylVisualizer from '../components/VinylVisualizer';
@@ -36,9 +36,11 @@ const PLAYLIST_META = {
 
 export default function HostSyncScreen() {
   const navigate = useNavigate();
-  const { hostCreateRoom, setSpotifyPlaylistUrl } = useGameStore((state) => ({
+  const { hostCreateRoom, setSpotifyPlaylistUrl, setGameSettings, targetYears } = useGameStore((state) => ({
     hostCreateRoom: state.hostCreateRoom,
     setSpotifyPlaylistUrl: state.setSpotifyPlaylistUrl,
+    setGameSettings: state.setGameSettings,
+    targetYears: state.targetYears,
   }));
 
   const [googleUser, setGoogleUser] = useState(null);
@@ -55,6 +57,7 @@ export default function HostSyncScreen() {
   const selectedPlaylistData = DEDICALO_PLAYLISTS.find((p) => p.id === selectedPlaylist) || DEDICALO_PLAYLISTS[0];
   const selectedMeta = PLAYLIST_META[selectedPlaylist] || { icon: 'music_note', color: '#ff7a1a' };
   const canCreateRoom = Boolean(googleUser && spotifyStatus.connected && selectedPlaylistData);
+  const targetOptions = [6, 8, 12, 15, 20];
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -207,12 +210,17 @@ export default function HostSyncScreen() {
     }
   };
 
+  const handleTargetYearsChange = (nextValue) => {
+    const next = Math.min(MAX_TIMELINE_GOAL_YEARS, Math.max(MIN_TIMELINE_GOAL_YEARS, Number(nextValue)));
+    setGameSettings({ targetYears: next });
+  };
+
   return (
     <motion.main
       initial={{ opacity: 0, x: 50 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -50 }}
-      className="relative z-10 w-full min-h-dvh px-4 md:px-8 lg:px-16 pt-safe-header pb-28"
+      className="app-screen safe-bottom-action relative z-10 overflow-y-auto pt-safe-header md:px-8 lg:px-16"
     >
             <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-white/8 flex justify-between items-center px-4 md:px-8 h-16">
         <button
@@ -228,9 +236,9 @@ export default function HostSyncScreen() {
         {googleUser && <ProfileMenu user={googleUser} />}
       </header>
 
-            <div className={`w-full max-w-6xl mx-auto flex ${googleUser ? 'flex-col md:flex-row md:items-start gap-8 md:gap-10' : 'flex-col items-center'}`}>
+            <div className={`app-shell-wide flex ${googleUser ? 'flex-col gap-6 md:flex-row md:items-start md:gap-10' : 'flex-col items-center'}`}>
 
-                <div className={`flex flex-col items-center gap-5 ${googleUser ? 'w-full md:w-80 lg:w-96 md:self-start md:sticky md:top-24' : 'w-full max-w-sm'}`}>
+                <div className={`flex flex-col items-center gap-4 ${googleUser ? 'w-full md:w-80 md:self-start md:sticky md:top-24 lg:w-96' : 'w-full max-w-sm'}`}>
 
           <div className="mt-1">
             <VinylVisualizer rotating={spotifyStatus.connected} size="compact" logoSrc="/images/icon-app.png" />
@@ -238,7 +246,7 @@ export default function HostSyncScreen() {
 
           <div className="text-center">
             <p className="font-label-caps text-neon-green text-xs tracking-[0.28em]">CREA SALA</p>
-            <h2 className="mt-2 font-headline-lg text-2xl md:text-3xl font-black text-on-surface leading-tight">
+            <h2 className="mt-2 font-headline-lg text-2xl font-black leading-tight text-on-surface md:text-3xl">
               Tú mandas la música y también juegas
             </h2>
             <p className="text-on-surface-variant text-sm mt-2 leading-relaxed">
@@ -270,24 +278,29 @@ export default function HostSyncScreen() {
             )}
 
                         {googleUser && (
-              <div className="rounded-2xl border border-white/10 bg-surface-container/70 p-5 text-center">
-                <p className="font-label-caps text-neon-green text-[10px] tracking-[0.22em] mb-3">SPOTIFY PREMIUM</p>
+              <div className="overflow-hidden rounded-3xl border border-[#1ed760]/35 bg-[linear-gradient(160deg,rgba(30,215,96,0.16),rgba(168,85,247,0.10),rgba(0,0,0,0.28))] p-5 text-center shadow-[0_0_42px_rgba(30,215,96,0.12)]">
+                <div className="mb-4 flex items-center justify-center gap-2">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#1ed760] text-black">
+                    <span className="material-symbols-outlined text-lg">graphic_eq</span>
+                  </span>
+                  <p className="font-label-caps text-[#1ed760] text-[10px] tracking-[0.22em]">SPOTIFY PREMIUM</p>
+                </div>
 
                 <div className="flex items-center justify-between gap-3 mb-5">
                   <div className="text-left min-w-0">
                     <p className="text-sm font-bold text-white truncate">
                       {spotifyStatus.connected ? 'Cuenta conectada' : 'Conecta tu cuenta'}
                     </p>
-                    <p className="text-xs text-on-surface-variant mt-0.5">Solo el anfitrión necesita Premium.</p>
+                    <p className="text-xs text-on-surface-variant mt-0.5">Solo el anfitrión necesita Premium para tomar la cabina.</p>
                   </div>
                   <motion.button
                     type="button"
                     onClick={connectSpotify}
                     whileTap={{ scale: 0.94 }}
-                    className={`h-9 px-3 rounded-xl font-label-caps text-[10px] tracking-[0.15em] shrink-0 ${
+                    className={`min-h-touch px-3 rounded-xl font-label-caps text-[10px] tracking-[0.15em] shrink-0 ${
                       spotifyStatus.connected
                         ? 'border border-white/15 bg-white/5 text-on-surface-variant'
-                        : 'bg-vinyl-orange text-black font-bold'
+                        : 'bg-[#1ed760] text-black font-bold'
                     }`}
                   >
                     {spotifyStatus.connected ? 'RECONECTAR' : 'CONECTAR'}
@@ -390,7 +403,7 @@ export default function HostSyncScreen() {
                 {spotifyCheck && (
                   <p className={`mt-4 rounded-xl border px-3 py-2 text-xs leading-relaxed ${
                     spotifyCheck.type === 'success'
-                      ? 'border-vinyl-orange/40 bg-vinyl-orange/10 text-white'
+                      ? 'border-[#1ed760]/45 bg-[#1ed760]/10 text-white'
                       : spotifyCheck.type === 'error'
                         ? 'border-intense-red/40 bg-intense-red/10 text-intense-red'
                         : 'border-white/10 bg-black/15 text-on-surface-variant'
@@ -398,6 +411,54 @@ export default function HostSyncScreen() {
                     {spotifyCheck.message}
                   </p>
                 )}
+              </div>
+            )}
+
+            {googleUser && (
+              <div className="rounded-3xl border border-electric-purple/35 bg-electric-purple/10 p-4 text-left shadow-[0_0_34px_rgba(168,85,247,0.10)]">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="font-label-caps text-[10px] tracking-[0.2em] text-electric-purple">DURACIÓN</p>
+                    <h3 className="mt-1 text-lg font-black text-white">{targetYears} canciones para ganar</h3>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => handleTargetYearsChange(targetYears - 1)}
+                      className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/12 bg-white/8 text-white active:scale-95"
+                      aria-label="Reducir duración"
+                    >
+                      <span className="material-symbols-outlined">remove</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleTargetYearsChange(targetYears + 1)}
+                      className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/12 bg-white/8 text-white active:scale-95"
+                      aria-label="Aumentar duración"
+                    >
+                      <span className="material-symbols-outlined">add</span>
+                    </button>
+                  </div>
+                </div>
+                <div className="mt-3 grid grid-cols-5 gap-1.5">
+                  {targetOptions.map((option) => (
+                    <button
+                      key={option}
+                      type="button"
+                      onClick={() => handleTargetYearsChange(option)}
+                      className={`min-h-touch rounded-xl border font-label-caps text-xs font-black transition-all active:scale-95 ${
+                        targetYears === option
+                          ? 'border-neon-green bg-neon-green text-black shadow-[0_0_20px_rgba(57,255,20,0.25)]'
+                          : 'border-white/10 bg-black/20 text-white/75'
+                      }`}
+                    >
+                      {option}
+                    </button>
+                  ))}
+                </div>
+                <p className="mt-3 text-xs leading-relaxed text-on-surface-variant">
+                  12 es el ritmo recomendado. Baja para una partida rápida o sube si la noche pide más música.
+                </p>
               </div>
             )}
 
@@ -424,8 +485,8 @@ export default function HostSyncScreen() {
           <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-3 mb-4">
               <div>
-                <p className="font-label-caps text-xs tracking-[0.22em] text-neon-green">ELIGE EL ESTILO</p>
-                <p className="mt-0.5 text-sm text-on-surface-variant">Toca una tarjeta para jugar con esa vibe.</p>
+                <p className="font-label-caps text-xs tracking-[0.22em] text-neon-green">ELIGE LA PLAYLIST</p>
+                <p className="mt-0.5 text-sm text-on-surface-variant">Define la vibra de la partida: una sola mecánica, muchas energías.</p>
               </div>
               <div
                 className="h-9 px-3 rounded-xl flex items-center gap-2 font-label-caps text-[11px] text-white border shrink-0"
@@ -441,7 +502,7 @@ export default function HostSyncScreen() {
               </div>
             </div>
 
-                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                        <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3 lg:grid-cols-4">
               {DEDICALO_PLAYLISTS.map((playlist) => {
                 const meta = PLAYLIST_META[playlist.id] || { icon: 'music_note', color: '#ff7a1a' };
                 const isSelected = playlist.id === selectedPlaylist;
@@ -453,7 +514,7 @@ export default function HostSyncScreen() {
                     onClick={() => setSelectedPlaylist(playlist.id)}
                     whileTap={{ scale: 0.94 }}
                     whileHover={{ scale: 1.04, y: -3 }}
-                    className="relative min-h-[130px] rounded-2xl border p-4 text-left flex flex-col justify-between overflow-hidden transition-all duration-200"
+                    className="relative min-h-[112px] overflow-hidden rounded-2xl border p-3 text-left flex flex-col justify-between transition-all duration-200 sm:min-h-[128px] sm:p-4"
                     style={{
                       borderColor: isSelected ? meta.color : 'rgba(255,255,255,0.09)',
                       backgroundColor: isSelected ? `${meta.color}15` : 'rgba(0,0,0,0.20)',
@@ -474,12 +535,12 @@ export default function HostSyncScreen() {
 
                                         <div className="mt-2">
                       <p
-                        className="font-label-caps text-[11px] font-black tracking-[0.14em] leading-snug"
+                        className="line-clamp-2 font-label-caps text-[10px] font-black leading-snug tracking-[0.12em] sm:text-[11px] sm:tracking-[0.14em]"
                         style={{ color: isSelected ? '#fff' : 'rgba(255,255,255,0.82)' }}
                       >
                         {playlist.name}
                       </p>
-                      <p className="mt-0.5 text-[10px] text-on-surface-variant leading-snug">
+                      <p className="mt-0.5 line-clamp-2 text-[10px] leading-snug text-on-surface-variant">
                         {playlist.mood}
                       </p>
                     </div>
@@ -516,13 +577,13 @@ export default function HostSyncScreen() {
               </span>
               <div className="min-w-0">
                 <p className="font-label-caps text-[10px] text-on-surface-variant tracking-widest">SELECCIONADO</p>
-                <p className="text-sm font-black text-white uppercase mt-0.5">{selectedPlaylistData.name}</p>
+                <p className="mt-0.5 truncate text-sm font-black uppercase text-white">{selectedPlaylistData.name}</p>
                 <p className="text-xs text-on-surface-variant mt-0.5 truncate">{selectedPlaylistData.mood}</p>
               </div>
             </div>
 
             <p className="mt-3 text-center text-[11px] text-on-surface-variant">
-              ¿No está tu playlist? Con una donación voluntaria la incluimos.{' '}
+              ¿No está tu playlist Con una donación voluntaria la incluimos.{' '}
               <button
                 type="button"
                 onClick={() => openMailto(getPlaylistRequestUrl())}

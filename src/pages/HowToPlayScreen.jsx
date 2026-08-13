@@ -9,7 +9,7 @@ const QUICK_FLOW = [
   { icon: 'person_add', title: 'Sala', text: 'El anfitrión crea la sala. Los demás entran con PIN o QR.' },
   { icon: 'album', title: 'Música', text: 'Suena una canción y debes adivinar su época.' },
   { icon: 'timeline', title: 'Años Locos', text: 'Coloca cada canción antes, después o entre tus años acumulados.' },
-  { icon: 'emoji_events', title: 'Victoria', text: `El primero en acumular ${TIMELINE_GOAL_YEARS} años en su ruta personal gana.` },
+  { icon: 'emoji_events', title: 'Victoria', text: `${TIMELINE_GOAL_YEARS} canciones es la meta recomendada; el anfitrión puede ajustar la duración.` },
 ];
 
 const GOLDEN_RULES = [
@@ -29,7 +29,7 @@ const HOST_STEPS = [
   ['Entra como anfitrión', 'Pulsa “Ya sé jugar” y elige “Anfitrión”.'],
   ['Inicia sesión con Google', 'Esto permite guardar la sala y mantener la partida conectada.'],
   ['Conecta Spotify Premium', 'Solo el anfitrión necesita Spotify Premium. Los invitados no tienen que conectarlo.'],
-  ['Elige un estilo musical', 'Selecciona una playlist sugerida: Reggaeton, Hits, Rock Latino, Bailable y más.'],
+  ['Elige la playlist', 'Selecciona la vibra de la partida: Reggaeton, Hits, Rock Latino, Bailable y más.'],
   ['Prueba el sonido', 'Pulsa el vinilo de prueba. Si suena, ya puedes crear la sala.'],
   ['Comparte el PIN o QR', 'Los jugadores entran desde su móvil. El anfitrión también juega como todos.'],
 ];
@@ -52,14 +52,14 @@ const TIMELINE_STEPS = [
   ['Tu ruta personal', 'Cada jugador arranca con un año base distinto — tu ruta es solo tuya, nadie más la ve.'],
   ['Suena una canción', 'Escuchas un fragmento sin saber el título ni el año todavía.'],
   ['Eliges dónde va', 'Tocas el hueco donde crees que encaja: antes de tu año más viejo, después del más nuevo, o entre dos que ya tengas.'],
-  ['Si aciertas, suma', `El año entra en tu ruta. Sigue sonando música hasta que alguien complete ${TIMELINE_GOAL_YEARS} años.`],
+  ['Si aciertas, suma', `El año entra en tu ruta. Sigue sonando música hasta que alguien complete la meta elegida.`],
 ];
 
 const TIMELINE_EXAMPLE = [
   'Noelia ya tiene 1998 y 2006 en su ruta.',
   'Suena una canción nueva y Noelia cree que es más reciente que sus dos años, así que la coloca "Después de 2006".',
   'Acierta: la canción es de 2014, así que ahora tiene 1998, 2006 y 2014 en su ruta.',
-  `Sigue sonando música hasta que Noelia (o alguien más) complete ${TIMELINE_GOAL_YEARS} años y gane la partida.`,
+  `Sigue sonando música hasta que Noelia (o alguien más) complete la meta elegida y gane la partida.`,
 ];
 
 const POINT_RULES = [
@@ -95,14 +95,14 @@ const POINT_EXAMPLES = [
 ];
 
 const FAQ = [
-  ['¿El anfitrión también juega?', 'Sí. El anfitrión controla la música, pero participa igual que todos.'],
-  ['¿Todos necesitan Spotify Premium?', 'No. Solo el anfitrión necesita conectar Spotify Premium. Los invitados solo escuchan el sonido del lugar.'],
-  ['¿Se ve la canción que está sonando?', 'No, queda oculta hasta que el anfitrión revela el resultado.'],
-  ['¿Cuándo termina la partida?', `Años Locos termina cuando el primer jugador logra completar sus ${TIMELINE_GOAL_YEARS} años acumulados.`],
-  ['¿Qué pasa si fallo al colocar la canción?', 'Pierdes 3 puntos. Si aciertas, ganas 5 puntos y sumas el año a tu ruta.'],
-  ['¿Cómo funciona el sabotaje?', `Durante la música, si tienes al menos ${ATTACK_COST} puntos, puedes tocar "SABOTEAR" y elegir a un rival conectado. En su próxima ronda verá sus años revueltos en pantalla — no pierde ningún año real, solo le cuesta más leerlos rápido.`],
-  ['¿Qué pasa si pierdo la conexión a mitad de partida?', 'Tienes hasta 30 segundos para reconectar (llamada, pantalla bloqueada o cambio de app). Tu sitio en la sala se mantiene y sigues desde donde estabas.'],
-  ['¿Qué hago si Spotify no suena?', 'Reconecta Spotify, verifica que la cuenta sea Premium, sube el volumen del dispositivo y vuelve a probar sonido antes de crear la sala.'],
+  ['¿El anfitrión también juega', 'Sí. El anfitrión controla la música, pero participa igual que todos.'],
+  ['¿Todos necesitan Spotify Premium', 'No. Solo el anfitrión necesita conectar Spotify Premium. Los invitados solo escuchan el sonido del lugar.'],
+  ['¿Se ve la canción que está sonando', 'No, queda oculta hasta que el anfitrión revela el resultado.'],
+  ['¿Cuándo termina la partida', `Años Locos termina cuando el primer jugador logra completar la meta de canciones/años elegida por el anfitrión.`],
+  ['¿Qué pasa si fallo al colocar la canción', 'Pierdes 3 puntos. Si aciertas, ganas 5 puntos y sumas el año a tu ruta.'],
+  ['¿Cómo funciona el sabotaje', `Durante la música, si tienes al menos ${ATTACK_COST} puntos, puedes tocar "SABOTEAR" y elegir a un rival conectado. En su próxima ronda verá sus años revueltos en pantalla — no pierde ningún año real, solo le cuesta más leerlos rápido.`],
+  ['¿Qué pasa si pierdo la conexión a mitad de partida', 'Tienes hasta 30 segundos para reconectar (llamada, pantalla bloqueada o cambio de app). Tu sitio en la sala se mantiene y sigues desde donde estabas.'],
+  ['¿Qué hago si Spotify no suena', 'Reconecta Spotify, verifica que la cuenta sea Premium, sube el volumen del dispositivo y vuelve a probar sonido antes de crear la sala.'],
 ];
 
 const LEGAL_NOTES = [
@@ -111,7 +111,7 @@ const LEGAL_NOTES = [
   ['Sin cookies de rastreo ni analítica', 'No usamos cookies publicitarias ni de seguimiento. Solo guardamos en el almacenamiento local del navegador lo necesario para mantener tu sesión de Google/Spotify activa.'],
   ['Tus datos en la partida', 'El nombre y avatar del invitado se usan solo mientras dura la sala y se eliminan al salir. El anfitrión inicia sesión con Google únicamente para conectar Spotify.'],
   ['Fuentes e iconos', 'Usamos Google Fonts (Montserrat, Hanken Grotesk, Space Mono) y Material Symbols, ambos de uso libre bajo licencia abierta.'],
-  ['Contacto', `¿Dudas sobre privacidad o datos? Escríbenos a ${SUPPORT_EMAIL}.`],
+  ['Contacto', `¿Dudas sobre privacidad o datos Escríbenos a ${SUPPORT_EMAIL}.`],
 ];
 
 const fadeUp = {
@@ -216,7 +216,7 @@ export default function HowToPlayScreen() {
       initial={{ opacity: 0, y: 18 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -18 }}
-      className="relative z-10 w-full min-h-dvh px-4 sm:px-6 lg:px-10 pt-safe-header pb-24"
+      className="app-screen relative z-10 overflow-y-auto pt-safe-header sm:px-6 lg:px-10"
     >
       <header className="fixed top-0 left-0 right-0 h-16 z-50 bg-background/80 backdrop-blur-xl border-b border-white/8 flex items-center px-4 sm:px-6">
         <button
@@ -229,7 +229,7 @@ export default function HowToPlayScreen() {
       </header>
 
       <div className="max-w-5xl mx-auto">
-        <section className="relative overflow-hidden rounded-[28px] border border-white/10 bg-[#071025] min-h-[420px] flex items-end mt-2">
+        <section className="relative mt-2 flex min-h-[320px] items-end overflow-hidden rounded-[24px] border border-white/10 bg-[#071025] sm:min-h-[420px] sm:rounded-[28px]">
           <img
             src="/images/hero-how-to-play.png"
             alt="Así se juega Dedícalo"
@@ -239,13 +239,13 @@ export default function HowToPlayScreen() {
           <div className="absolute inset-0 bg-gradient-to-t from-[#050814] via-[#050814]/75 to-[#050814]/25" />
           <div className="relative p-5 sm:p-8 lg:p-10 max-w-3xl">
             <p className="font-label-caps text-neon-green text-xs tracking-[0.25em]">MANUAL DE JUEGO</p>
-            <h1 className="mt-3 font-headline-lg text-4xl sm:text-6xl text-white font-black leading-[0.95]">
+            <h1 className="heading-impact mt-3 font-headline-lg font-black text-white">
               Aprende rápido. Que empiece la fiesta.
             </h1>
-            <p className="mt-4 text-sm sm:text-base leading-relaxed text-on-surface-variant max-w-2xl">
+            <p className="copy-readable mt-4 max-w-2xl text-on-surface-variant">
               Un solo modo, fácil de aprender: arma tu ruta de años con cada canción que suena — y sabotea a tus rivales cuando quieras jugar sucio.
             </p>
-            <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="mt-5 grid grid-cols-2 gap-2.5 sm:mt-6 sm:grid-cols-4 sm:gap-3">
               {QUICK_FLOW.map((item) => (
                 <div key={item.title} className="rounded-2xl border border-white/10 bg-black/35 p-3 text-center">
                   <span className="material-symbols-outlined text-vinyl-orange text-2xl">{item.icon}</span>
@@ -359,7 +359,7 @@ export default function HowToPlayScreen() {
 
             <ModeVictory
               color="#a855f7"
-              title={`Gana quien complete primero ${TIMELINE_GOAL_YEARS} años en su ruta.`}
+              title={`Gana quien complete primero la meta elegida. ${TIMELINE_GOAL_YEARS} es el valor recomendado.`}
               text="Los aciertos también usan el sistema de puntos de arriba (+5/-3), pero eso solo ayuda al ranking: lo que decide la partida es completar tu ruta de años."
             />
             <ModeExample color="#a855f7" items={TIMELINE_EXAMPLE} />
@@ -480,7 +480,7 @@ export default function HowToPlayScreen() {
 
         <div className="mt-5 rounded-2xl border border-white/10 bg-white/[0.035] p-4 text-center">
           <p className="text-xs font-label-caps tracking-[0.18em] text-on-surface-variant">Opcional</p>
-          <p className="mt-1 text-sm font-black text-white">¿Quieres jugar con tu propia playlist?</p>
+          <p className="mt-1 text-sm font-black text-white">¿Quieres jugar con tu propia playlist</p>
           <p className="mx-auto mt-1 max-w-md text-xs leading-relaxed text-on-surface-variant">
             Las playlists de la app son gratis y no requieren nada. Incluir una playlist propia es un servicio aparte:
             1) haz una donación voluntaria, 2) escríbenos con el comprobante y el link de tu playlist.

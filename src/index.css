@@ -6,19 +6,18 @@
   html,
   body,
   #root {
-    height: 100dvh;
+    min-height: 100%;
     overflow-x: hidden;
   }
 
   html,
   body {
-    overflow-y: hidden;
+    overflow-y: auto;
   }
 
   #root {
-    overflow-y: auto;
-    /* Extra scroll space so content isn't hidden under iOS home indicator */
-    padding-bottom: env(safe-area-inset-bottom, 0px);
+    min-height: 100dvh;
+    overflow-x: hidden;
   }
 
   body {
@@ -42,6 +41,63 @@
 }
 
 @layer utilities {
+  .app-screen {
+    min-height: 100dvh;
+    min-height: 100svh;
+    width: 100%;
+    overflow-x: hidden;
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+    padding-bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .app-shell {
+    width: min(100%, 430px);
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .app-shell-wide {
+    width: min(100%, 1120px);
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .safe-bottom-action {
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .heading-impact {
+    font-size: clamp(2rem, 10vw, 4.75rem);
+    line-height: 0.96;
+    letter-spacing: -0.035em;
+    overflow-wrap: anywhere;
+  }
+
+  .heading-page {
+    font-size: clamp(1.9rem, 8vw, 3.6rem);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    overflow-wrap: anywhere;
+  }
+
+  .copy-readable {
+    font-size: clamp(0.92rem, 3.6vw, 1rem);
+    line-height: 1.45;
+  }
+
+  .touch-card {
+    min-height: 3.25rem;
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
   .glass-surface {
     background: rgba(8, 16, 31, 0.62);
     backdrop-filter: blur(18px);

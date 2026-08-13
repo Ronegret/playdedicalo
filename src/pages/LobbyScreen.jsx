@@ -2,20 +2,20 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MusicNotesBubbles from '../components/MusicNotesBubbles';
-import { TIMELINE_GOAL_YEARS, getCombinedTimelineYears, useGameStore } from '../store/useGameStore';
+import { MAX_TIMELINE_GOAL_YEARS, MIN_TIMELINE_GOAL_YEARS, getCombinedTimelineYears, getPlayerPresence, useGameStore } from '../store/useGameStore';
 import { explainSpotifyError, prepareSpotifyPlayback } from '../services/spotify';
 import ProfileMenu from '../components/ProfileMenu';
 import { auth } from '../firebase';
 
 
 
-function TimelineYears({ years = [] }) {
+function TimelineYears({ years = [], goalYears = 12 }) {
   return (
-    <div className="mt-3 flex flex-wrap items-center gap-1.5 pl-9">
-      <span className="font-label-caps text-[10px] text-on-surface-variant">Años {Math.min(years.length, TIMELINE_GOAL_YEARS)}/{TIMELINE_GOAL_YEARS}</span>
-      {years.slice(0, TIMELINE_GOAL_YEARS).map((year) => (
+    <div className="mt-3 flex flex-wrap items-center gap-1.5 pl-0 sm:pl-9">
+      <span className="font-label-caps text-[10px] text-on-surface-variant">Ruta {Math.min(years.length, goalYears)}/{goalYears}</span>
+      {years.slice(0, goalYears).map((year, index) => (
         <span
-          key={year}
+          key={`${year}-${index}`}
           className="w-7 h-7 rounded-full border-2 border-neon-green/50 bg-black/30 flex items-center justify-center text-[9px] font-black text-neon-green shadow-[0_0_8px_rgba(57,255,20,0.2)]"
           title={year}
         >
@@ -42,7 +42,9 @@ export default function LobbyScreen() {
     roomError,
     clearRoomError,
     guestAvatar,
-    lastDisconnectedPlayer
+    lastDisconnectedPlayer,
+    targetYears,
+    setGameSettings
   } = useGameStore();
   const [showQR, setShowQR] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
@@ -50,7 +52,9 @@ export default function LobbyScreen() {
   const [linkShared, setLinkShared] = useState(false);
   const [startError, setStartError] = useState('');
   const [disconnectToast, setDisconnectToast] = useState('');
+  const [now, setNow] = useState(() => Date.now());
   const gameLocked = round > 1;
+  const targetOptions = [6, 8, 12, 15, 20];
 
   useEffect(() => {
     if (phase === 'countdown' || phase === 'listen' || phase === 'blackout') navigate('/game');
@@ -63,6 +67,11 @@ export default function LobbyScreen() {
       navigate('/role-selection');
     }
   }, [roomError, clearRoomError, navigate]);
+
+  useEffect(() => {
+    const interval = window.setInterval(() => setNow(Date.now()), 1000);
+    return () => window.clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     if (!lastDisconnectedPlayer) return;
@@ -100,8 +109,14 @@ export default function LobbyScreen() {
     }
   };
 
+  const handleTargetYearsChange = (nextValue) => {
+    if (gameLocked) return;
+    const next = Math.min(MAX_TIMELINE_GOAL_YEARS, Math.max(MIN_TIMELINE_GOAL_YEARS, Number(nextValue)));
+    setGameSettings({ targetYears: next });
+  };
+
   return (
-    <motion.main className="relative z-10 min-h-dvh px-margin-mobile pt-safe-header pb-28 max-w-lg mx-auto flex flex-col items-center w-full">
+    <motion.main className="app-screen safe-bottom-action relative z-10 mx-auto flex w-full max-w-lg flex-col items-center overflow-y-auto pt-safe-header">
       <MusicNotesBubbles />
 
       <AnimatePresence>
@@ -117,7 +132,7 @@ export default function LobbyScreen() {
               <span className="material-symbols-outlined text-vinyl-orange text-2xl shrink-0">wifi_off</span>
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-black text-white">{disconnectToast} se desconectó</p>
-                <p className="text-[10px] text-vinyl-orange/80">Ha sido eliminado de la sala.</p>
+                <p className="text-[10px] text-vinyl-orange/80">Tiene 30 segundos para volver antes de quedar fuera.</p>
               </div>
             </div>
           </motion.div>
@@ -134,8 +149,8 @@ export default function LobbyScreen() {
 
       {/* Host vinyl hero */}
       {role === 'host' && (
-        <div className="w-full flex flex-col items-center gap-1 mb-2 z-10">
-          <div className="relative" style={{ width: 'min(180px, 45vw)', aspectRatio: '1' }}>
+        <div className="z-10 mb-2 flex w-full flex-col items-center gap-1">
+          <div className="relative" style={{ width: 'min(150px, 38vw, 180px)', aspectRatio: '1' }}>
             {/* Rings */}
             {[0, 0.9].map((delay) => (
               <div
@@ -174,8 +189,8 @@ export default function LobbyScreen() {
         </div>
       )}
 
-      <section className="w-full flex flex-col gap-4 z-10">
-        <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-5">
+      <section className="z-10 flex w-full flex-col gap-3 sm:gap-4">
+        <div className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-md sm:p-5">
           <div className="flex items-center justify-between gap-4">
             <div>
               <p className="font-label-caps text-neon-green text-xs">RONDA {round}</p>
@@ -197,7 +212,7 @@ export default function LobbyScreen() {
                 initial={{ opacity: 0, y: 10, scale: 0.85 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ delay: index * 0.08, type: 'spring', stiffness: 200 }}
-                className="h-16 bg-black/25 border-2 border-neon-green/35 rounded-xl flex items-center justify-center font-stats-xl text-4xl text-neon-green shadow-[0_0_16px_rgba(57,255,20,0.15),inset_0_0_10px_rgba(0,0,0,0.3)] select-none"
+                className="flex h-14 select-none items-center justify-center rounded-xl border-2 border-neon-green/35 bg-black/25 font-stats-xl text-3xl text-neon-green shadow-[0_0_16px_rgba(57,255,20,0.15),inset_0_0_10px_rgba(0,0,0,0.3)] sm:h-16 sm:text-4xl"
               >
                 {char}
               </motion.div>
@@ -244,12 +259,33 @@ export default function LobbyScreen() {
         {role === 'host' && (
           <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-4 text-left">
             <p className="font-label-caps text-neon-green text-xs mb-3">{gameLocked ? 'PARTIDA EN CURSO' : 'MODO DE JUEGO'}</p>
-            <div className="rounded-xl border border-vinyl-orange/30 bg-vinyl-orange/10 p-4 text-left">
+            <div className="rounded-2xl border border-vinyl-orange/30 bg-[linear-gradient(135deg,rgba(255,122,26,0.14),rgba(168,85,247,0.12))] p-4 text-left">
               <p className="font-label-caps text-[10px] text-vinyl-orange tracking-[0.2em]">AÑOS LOCOS</p>
-              <h3 className="mt-1 text-lg font-black text-white">{TIMELINE_GOAL_YEARS} años a completar</h3>
+              <h3 className="mt-1 text-lg font-black text-white">{targetYears} canciones para ganar</h3>
               <p className="mt-1 text-sm text-on-surface-variant">
-                Cada jugador arranca con un año base distinto y va completando su línea hasta llegar a la meta.
+                Una sola mecánica: escucha, coloca el año y completa tu ruta antes que los demás.
               </p>
+              {!gameLocked && (
+                <div className="mt-4">
+                  <div className="grid grid-cols-5 gap-1.5">
+                    {targetOptions.map((option) => (
+                      <button
+                        key={option}
+                        type="button"
+                        onClick={() => handleTargetYearsChange(option)}
+                        className={`min-h-touch rounded-xl border font-label-caps text-xs font-black transition-all active:scale-95 ${
+                          targetYears === option
+                            ? 'border-neon-green bg-neon-green text-black'
+                            : 'border-white/10 bg-black/20 text-white/75'
+                        }`}
+                      >
+                        {option}
+                      </button>
+                    ))}
+                  </div>
+                  <p className="mt-2 text-xs text-on-surface-variant">12 es recomendado, pero puedes hacer la partida más rápida o más larga.</p>
+                </div>
+              )}
             </div>
 
             {players.length < 2 && (
@@ -279,7 +315,7 @@ export default function LobbyScreen() {
         )}
       </section>
 
-      <section className="mt-8 w-full z-10">
+      <section className="z-10 mt-6 w-full sm:mt-8">
         <div className="flex items-center gap-4 mb-5">
           <div className="h-[1px] flex-grow bg-gradient-to-r from-transparent to-white/10" />
           <span className="font-label-caps text-label-caps text-on-surface-variant/70 tracking-widest">JUGADORES ({players.length})</span>
@@ -288,13 +324,22 @@ export default function LobbyScreen() {
 
         <div className="flex flex-col gap-3">
           {players.length === 0 && <p className="text-center text-on-surface-variant text-sm">No hay jugadores aún.</p>}
-          {players.map((player, index) => (
+          {players.map((player, index) => {
+            const presence = getPlayerPresence(player, now);
+            const seconds = Math.ceil((presence.remainingMs || 0) / 1000);
+            return (
             <motion.div
               key={player.id}
               initial={{ opacity: 0, x: -12 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.06, type: 'spring', stiffness: 180 }}
-              className="p-4 bg-white/5 rounded-xl border border-white/10 backdrop-blur-md hover:border-white/20 transition-colors"
+              className={`rounded-xl border p-3.5 backdrop-blur-md transition-colors hover:border-white/20 sm:p-4 ${
+                presence.status === 'kicked'
+                  ? 'border-white/8 bg-white/[0.03] opacity-55'
+                  : presence.status === 'reconnecting'
+                    ? 'border-chaos-gold/35 bg-chaos-gold/8'
+                    : 'border-white/10 bg-white/5'
+              }`}
             >
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3 min-w-0">
@@ -306,16 +351,31 @@ export default function LobbyScreen() {
                       {player.avatar || '•'}
                     </div>
                   )}
-                  <span className="font-body-md font-bold text-white truncate">{player.name}</span>
+                  <div className="min-w-0">
+                    <span className="block truncate font-body-md font-bold text-white">{player.name}</span>
+                    <span className={`mt-0.5 block font-label-caps text-[10px] ${
+                      presence.status === 'online'
+                        ? 'text-neon-green'
+                        : presence.status === 'reconnecting'
+                          ? 'text-chaos-gold'
+                          : 'text-on-surface-variant'
+                    }`}>
+                      {presence.status === 'online'
+                        ? 'CONECTADO'
+                        : presence.status === 'reconnecting'
+                          ? `RECONECTANDO ${seconds}s`
+                          : 'FUERA'}
+                    </span>
+                  </div>
                 </div>
                 <div className="text-right shrink-0">
                   <span className="font-black text-neon-green drop-shadow-[0_0_8px_rgba(57,255,20,0.4)]">{player.points}</span>
                   <span className="text-xs ml-1 text-on-surface-variant">PTS</span>
                 </div>
               </div>
-              <TimelineYears years={getCombinedTimelineYears(player)} />
+              <TimelineYears years={getCombinedTimelineYears(player)} goalYears={targetYears} />
             </motion.div>
-          ))}
+          );})}
         </div>
       </section>
 
@@ -363,7 +423,7 @@ export default function LobbyScreen() {
             >
               <span className="material-symbols-outlined text-intense-red" style={{ fontSize: '2.5rem' }}>logout</span>
               <h3 className="mt-3 font-headline-lg text-xl font-black text-white">
-                {role === 'host' ? '¿Cerrar la sala?' : '¿Salir de la sala?'}
+                {role === 'host' ? '¿Cerrar la sala' : '¿Salir de la sala'}
               </h3>
               <p className="mt-2 text-sm text-on-surface-variant">
                 {role === 'host'

@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ATTACK_COST, DEDICALO_PLAYLISTS, GAME_MODES, getCombinedTimelineYears, normalizeSpotifyPlaylistUrl, useGameStore } from '../store/useGameStore';
+import { ATTACK_COST, ATTACK_TYPES, DEDICALO_PLAYLISTS, GAME_MODES, getCombinedTimelineYears, getPlayerPresence, normalizeSpotifyPlaylistUrl, useGameStore } from '../store/useGameStore';
 import HeaderHUD from '../components/HeaderHUD';
 import { createQuestionFromTrack, explainSpotifyError, getCurrentHiddenTrack, getSpotifyStatus, pauseSpotifyPlayback, startRandomPlaylistTrack } from '../services/spotify';
 
@@ -71,10 +71,25 @@ function RankingPeek({ players, guestId }) {
 
 
 
-function getTimelineSlotLabel(years, index) {
+function getTimelineSlotLabel(years, index, isReversed = false) {
+  if (isReversed) {
+    if (index === 0) return `Mas reciente que ${years[0]}`;
+    if (index === years.length) return `Mas antiguo que ${years[years.length - 1]}`;
+    return `Entre ${years[index - 1]} y ${years[index]}`;
+  }
   if (index === 0) return `Antes de ${years[0]}`;
   if (index === years.length) return `Después de ${years[years.length - 1]}`;
   return `Entre ${years[index - 1]} y ${years[index]}`;
+}
+
+function getAttackCopy(attack) {
+  const fallback = ATTACK_TYPES[attack?.type] || ATTACK_TYPES.reverse_order;
+  return {
+    title: attack?.title || fallback.name,
+    short: fallback.short,
+    description: attack?.description || fallback.description,
+    icon: fallback.icon
+  };
 }
 
 // El sabotaje nunca borra ni cambia tus años reales — solo los muestra
@@ -136,19 +151,80 @@ function VinylSlotButton({ label, disabled, onClick }) {
   );
 }
 
-function TimelinePlacementQuestion({ question, playerYears = [], disabled, onPick, isScrambled, attackFrom }) {
+function AttackWarningOverlay({ attack, onClose }) {
+  if (!attack) return null;
+  const attackCopy = getAttackCopy(attack);
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 1.04 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.96 }}
+      transition={{ duration: 0.24 }}
+      className="fixed inset-0 z-[260] flex items-center justify-center overflow-hidden bg-[#7c1cff] px-5 text-center text-white"
+    >
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(255,255,255,0.26),transparent_28%),radial-gradient(circle_at_20%_80%,rgba(255,122,26,0.22),transparent_32%),linear-gradient(160deg,rgba(255,0,170,0.42),rgba(68,20,180,0.72))]" />
+      <div className="absolute inset-x-0 top-0 h-32 bg-white/10 blur-3xl" />
+      <motion.div
+        initial={{ y: 24, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.06, type: 'spring', stiffness: 180, damping: 18 }}
+        className="relative mx-auto w-full max-w-sm"
+      >
+        <motion.div
+          animate={{ rotate: [-2, 2, -2], scale: [1, 1.04, 1] }}
+          transition={{ repeat: Infinity, duration: 0.7 }}
+          className="mx-auto flex h-24 w-24 items-center justify-center rounded-full border-4 border-white/70 bg-black/25 shadow-[0_0_70px_rgba(255,255,255,0.45)]"
+        >
+          <span className="material-symbols-outlined text-6xl">{attackCopy.icon}</span>
+        </motion.div>
+        <p className="mt-6 font-label-caps text-sm tracking-[0.28em] text-white/80">ALERTA DE CABINA</p>
+        <h2 className="mt-2 font-headline-lg text-5xl font-black leading-[0.9] drop-shadow-[0_8px_26px_rgba(0,0,0,0.35)]">
+          TE ATACARON
+        </h2>
+        <p className="mx-auto mt-4 max-w-xs text-lg font-black leading-tight">
+          {attack.from || 'Un rival'} lanzo: {attackCopy.title}.
+        </p>
+        <p className="mx-auto mt-2 max-w-xs text-sm leading-relaxed text-white/78">
+          {attackCopy.description} Respira, mira el ritmo y coloca la cancion igual.
+        </p>
+        <button
+          type="button"
+          onClick={onClose}
+          className="mt-7 min-h-touch w-full rounded-2xl bg-white px-5 font-label-caps text-sm font-black tracking-[0.16em] text-[#6b10e8] shadow-[0_8px_0_rgba(53,8,118,0.65)] active:translate-y-1 active:shadow-[0_4px_0_rgba(53,8,118,0.65)]"
+        >
+          JUGAR IGUAL
+        </button>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+function TimelinePlacementQuestion({ question, playerYears = [], disabled, onPick, activeAttack, targetYears = 12 }) {
   const years = playerYears.length ? playerYears : [2000];
-  const slots = Array.from({ length: years.length + 1 }, (_, index) => index);
-  const correctSlot = years.filter((year) => year < question.songYear).length;
+  const attackType = activeAttack?.type;
+  const isReversed = attackType === 'reverse_order';
+  const isMirrored = attackType === 'mirror_year';
+  const isSlippery = attackType === 'slippery_tap';
+  const visibleYears = isReversed ? [...years].reverse() : years;
+  const slots = Array.from({ length: visibleYears.length + 1 }, (_, index) => index);
+  const correctSlot = isReversed
+    ? visibleYears.filter((year) => year >= question.songYear).length
+    : visibleYears.filter((year) => year <= question.songYear).length;
+  const getEffectiveSlot = (slot) => {
+    if (!isSlippery) return slot;
+    if (slots.length <= 1) return slot;
+    return slot >= slots.length - 1 ? slot - 1 : slot + 1;
+  };
+  const attackCopy = activeAttack ? getAttackCopy(activeAttack) : null;
 
   return (
     <div className="mt-5">
       <div className="rounded-3xl border border-neon-green/20 bg-[radial-gradient(circle_at_top,rgba(57,255,20,0.12),rgba(255,255,255,0.04)_42%,rgba(0,0,0,0.24)_100%)] p-4 shadow-[0_0_30px_rgba(57,255,20,0.08)]">
-        {isScrambled && (
+        {activeAttack && (
           <div className="mb-3 rounded-xl bg-error/20 border border-error/50 p-2.5 flex items-center justify-center gap-2">
             <span className="material-symbols-outlined text-error text-lg animate-pulse">bolt</span>
             <p className="text-xs font-bold text-error">
-              ¡{attackFrom || 'Un rival'} te saboteó! Tus años se ven revueltos esta ronda.
+              {activeAttack.from || 'Un rival'} activo {attackCopy.title}: {attackCopy.short || attackCopy.description}
             </p>
           </div>
         )}
@@ -159,27 +235,35 @@ function TimelinePlacementQuestion({ question, playerYears = [], disabled, onPic
             <p className="mt-1 text-sm text-white font-bold">Elige dónde colocar esta canción</p>
           </div>
           <span className="rounded-full border border-white/10 bg-black/25 px-3 py-1 text-[10px] font-label-caps text-on-surface-variant">
-            {Math.min(years.length, 12)}/12
+            {Math.min(years.length, targetYears)}/{targetYears}
           </span>
         </div>
 
         {/* Estante de vinilos: riel horizontal con snap-scroll, discos y huecos
             alternados en un leve vaivén vertical para que se lea como una
             colección real y no una grilla rígida. */}
-        <div className="relative mt-8 overflow-x-auto overflow-y-visible pb-8 pt-2 snap-x">
+        <div className="relative mt-6 overflow-x-auto overflow-y-visible pb-8 pt-2 snap-x no-scrollbar sm:mt-8">
           <div className="absolute left-0 right-0 top-1/2 h-px bg-gradient-to-r from-transparent via-white/12 to-transparent" />
           <div className="relative min-w-max flex items-center gap-3 px-2">
             {slots.map((slot, index) => (
               <div key={slot} className="flex items-center gap-3">
                 <VinylSlotButton
-                  label={getTimelineSlotLabel(years, slot)}
+                  label={getTimelineSlotLabel(visibleYears, slot, isReversed)}
                   disabled={disabled}
-                  onClick={() => onPick({ isCorrect: slot === correctSlot, timelineSlot: slot })}
+                  onClick={() => {
+                    const effectiveSlot = getEffectiveSlot(slot);
+                    onPick({
+                      isCorrect: effectiveSlot === correctSlot,
+                      timelineSlot: slot,
+                      effectiveSlot,
+                      attackType
+                    });
+                  }}
                 />
-                {index < years.length && (
+                {index < visibleYears.length && (
                   <VinylYearChip
-                    year={years[index]}
-                    isScrambled={isScrambled}
+                    year={visibleYears[index]}
+                    isScrambled={isMirrored}
                     wobble={index % 2 === 0 ? -6 : 6}
                   />
                 )}
@@ -188,7 +272,9 @@ function TimelinePlacementQuestion({ question, playerYears = [], disabled, onPic
           </div>
         </div>
         <p className="mt-3 text-xs text-on-surface-variant">
-          Tu ruta es personal. Coloca la canción antes, después o entre tus años.
+          {isSlippery
+            ? 'Ojo: esta ronda el toque puede saltar al hueco vecino. Juega con sangre fria.'
+            : 'Tu ruta es personal. Si no ves todos los discos, desliza la fila hacia los lados.'}
         </p>
       </div>
     </div>
@@ -203,6 +289,7 @@ export default function GameScreen() {
     round,
     gameMode,
     currentQuestion,
+    targetYears,
     spotifyPlaylistUrl,
     hostTriggerBlackout,
     hostRevealResults,
@@ -228,9 +315,11 @@ export default function GameScreen() {
   const [showAttackModal, setShowAttackModal] = useState(false);
   const [attackError, setAttackError] = useState('');
   const [attackSentTo, setAttackSentTo] = useState('');
+  const [selectedAttackType, setSelectedAttackType] = useState('reverse_order');
   const [disconnectToast, setDisconnectToast] = useState('');
   const [revealError, setRevealError] = useState('');
   const [isBlackoutPending, setIsBlackoutPending] = useState(false);
+  const [dismissedAttackKey, setDismissedAttackKey] = useState('');
   const startedSpotifyRoundRef = useRef('');
   const roleRef = useRef(role);
   useEffect(() => { roleRef.current = role; }, [role]);
@@ -339,14 +428,17 @@ export default function GameScreen() {
   const hasRemoteAnswer = Boolean(guestId && roundAnswers?.[guestId] && roundAnswers[guestId].round === round);
   const hasAnswered = answeredQuestionKey === questionKey || hasRemoteAnswer;
   const answerCount = Object.keys(roundAnswers || {}).length;
-  const expectedVotes = players.length;
+  const expectedVotes = players.filter((player) => getPlayerPresence(player).status !== 'kicked').length || players.length;
   const mode = GAME_MODES[gameMode] || GAME_MODES.timeline;
   const activePlaylist = DEDICALO_PLAYLISTS.find((playlist) => (
     normalizeSpotifyPlaylistUrl(playlist.url) === normalizeSpotifyPlaylistUrl(spotifyPlaylistUrl)
   ));
   const ownPlayer = players.find((player) => player.id === guestId);
   const ownTimelineYears = getCombinedTimelineYears(ownPlayer);
-  const attackTargets = players.filter((player) => player.id !== guestId && player.status !== 'offline' && !player.activeAttack);
+  const incomingAttack = ownPlayer?.activeAttack?.round === round ? ownPlayer.activeAttack : null;
+  const attackKey = incomingAttack ? `${round}-${incomingAttack.from || 'rival'}` : '';
+  const showIncomingAttack = Boolean(incomingAttack && dismissedAttackKey !== attackKey && (phase === 'listen' || phase === 'blackout'));
+  const attackTargets = players.filter((player) => player.id !== guestId && getPlayerPresence(player).status === 'online' && !player.activeAttack);
   const canAttack = phase === 'listen' && Number(ownPlayer?.points || 0) >= ATTACK_COST && attackTargets.length > 0;
 
   const containerVariants = {
@@ -416,9 +508,18 @@ export default function GameScreen() {
 
 
   return (
-    <div className={`relative z-10 min-h-dvh w-full flex flex-col items-center justify-center pt-safe-header pb-8 transition-colors duration-500 ${phase === 'blackout' ? 'bg-black' : 'bg-transparent'}`}>
+    <div className={`app-screen relative z-10 flex flex-col items-center overflow-y-auto pt-safe-header transition-colors duration-500 ${phase === 'blackout' ? 'bg-black' : 'bg-transparent'}`}>
 
       <HeaderHUD onExit={() => setShowExitConfirm(true)} />
+
+      <AnimatePresence>
+        {showIncomingAttack && (
+          <AttackWarningOverlay
+            attack={incomingAttack}
+            onClose={() => setDismissedAttackKey(attackKey)}
+          />
+        )}
+      </AnimatePresence>
 
       <AnimatePresence>
         {disconnectToast && (
@@ -433,7 +534,7 @@ export default function GameScreen() {
               <span className="material-symbols-outlined text-vinyl-orange text-2xl shrink-0">wifi_off</span>
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-black text-white">{disconnectToast} se desconectó</p>
-                <p className="text-[10px] text-vinyl-orange/80">Ha sido eliminado de la partida.</p>
+                <p className="text-[10px] text-vinyl-orange/80">Tiene 30 segundos para volver antes de quedar fuera.</p>
               </div>
             </div>
           </motion.div>
@@ -448,7 +549,7 @@ export default function GameScreen() {
             animate={{ opacity: 1 }}
             exit={{ scale: 1.5, opacity: 0 }}
             transition={{ duration: 0.5 }}
-            className="w-full max-w-[430px] px-margin-mobile text-center flex flex-col items-center"
+            className="app-shell flex flex-col items-center px-1 text-center"
           >
             <p className="font-label-caps text-electric-purple tracking-widest text-sm">PREPARA EL OÍDO</p>
 
@@ -465,7 +566,7 @@ export default function GameScreen() {
                 initial={{ scale: 0.3, opacity: 0 }}
                 animate={{ scale: [0.6, 1.15, 1], opacity: 1 }}
                 transition={{ duration: 0.35, ease: 'backOut' }}
-                className="font-stats-xl text-[8rem] leading-none text-neon-green drop-shadow-[0_0_40px_rgba(57,255,20,0.6)]"
+                className="font-stats-xl text-[clamp(5rem,28vw,8rem)] leading-none text-neon-green drop-shadow-[0_0_40px_rgba(57,255,20,0.6)]"
               >
                 {countdownValue}
               </motion.div>
@@ -481,7 +582,7 @@ export default function GameScreen() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className={`flex flex-col items-center gap-4 w-full max-w-[430px] px-5 text-center ${role === 'host' ? 'pb-32' : ''}`}
+            className={`app-shell flex flex-col items-center gap-3 px-1 text-center sm:gap-4 ${role === 'host' ? 'safe-bottom-action' : ''}`}
           >
             {/* Vinyl listen circle */}
             <div className="relative w-60 h-60 sm:w-72 sm:h-72 flex items-center justify-center">
@@ -492,12 +593,12 @@ export default function GameScreen() {
                   style={{ animationDelay: `${delay}s` }}
                 />
               ))}
-              <div className="w-52 h-52 sm:w-64 sm:h-64 rounded-full border-4 border-neon-green flex items-center justify-center shadow-[0_0_50px_rgba(57,255,20,0.35),inset_0_0_30px_rgba(0,0,0,0.6)] bg-black/30 relative">
+              <div className="relative flex h-44 w-44 items-center justify-center rounded-full border-4 border-neon-green bg-black/30 shadow-[0_0_50px_rgba(57,255,20,0.35),inset_0_0_30px_rgba(0,0,0,0.6)] sm:h-64 sm:w-64">
                 <div className="absolute inset-6 rounded-full border border-white/10" />
                 <div className="absolute inset-12 rounded-full border border-white/5" />
                 <div className="relative z-10 text-center">
                   <p className="font-label-caps text-[10px] text-electric-purple tracking-widest">{mode.name}</p>
-                  <span className="block mt-2 font-headline-lg-mobile text-3xl sm:text-4xl text-neon-green font-black tracking-widest drop-shadow-[0_0_18px_rgba(57,255,20,0.6)]">
+                  <span className="mt-2 block font-headline-lg-mobile text-2xl font-black tracking-widest text-neon-green drop-shadow-[0_0_18px_rgba(57,255,20,0.6)] sm:text-4xl">
                     {role === 'host' ? 'SONANDO' : 'ESCUCHA'}
                   </span>
                   <p className="mt-2 font-label-caps text-[10px] text-white/50 tracking-widest">
@@ -536,7 +637,7 @@ export default function GameScreen() {
               </div>
             ) : (
               <p className="max-w-xs text-sm text-on-surface-variant text-center">
-                {`${activePlaylist?.icon || '🎵'} Escucha con atención. Nadie ve la canción.`}
+                {`${activePlaylist?.name || 'Playlist'} en marcha. Escucha con atención: nadie ve la canción.`}
               </p>
             )}
 
@@ -554,7 +655,7 @@ export default function GameScreen() {
             )}
 
             {role === 'host' && (
-              <div className="fixed bottom-5 left-4 right-4 z-40 grid gap-2 mx-auto max-w-sm md:relative md:bottom-auto md:left-auto md:right-auto md:z-auto md:w-full md:max-w-xs md:mt-2 md:mb-8">
+              <div className="fixed inset-x-4 bottom-[calc(1rem+env(safe-area-inset-bottom,0px))] z-40 mx-auto grid max-w-sm gap-2 md:relative md:inset-auto md:z-auto md:mb-8 md:mt-2 md:w-full md:max-w-xs">
                 <p className="text-center text-xs text-on-surface-variant">Para cuando lo veas claro 👇</p>
                 <motion.button
                   whileHover={{ y: -2 }}
@@ -577,7 +678,7 @@ export default function GameScreen() {
             key="blackout"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="w-full max-w-[430px] px-margin-mobile py-20 flex flex-col gap-4"
+            className="app-shell flex flex-col gap-4 px-1 py-6 sm:py-12"
           >
             <div className="text-center">
               <motion.p
@@ -591,7 +692,7 @@ export default function GameScreen() {
                 initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.35 }}
-                className="mt-3 text-white font-headline-lg-mobile text-3xl leading-tight"
+                className="heading-page mt-3 font-headline-lg-mobile text-white"
               >
                 {currentQuestion.text}
               </motion.h2>
@@ -696,8 +797,8 @@ export default function GameScreen() {
                 playerYears={ownTimelineYears}
                 disabled={hasAnswered}
                 onPick={handleAnswer}
-                isScrambled={ownPlayer?.activeAttack?.round === round}
-                attackFrom={ownPlayer?.activeAttack?.from}
+                activeAttack={incomingAttack}
+                targetYears={targetYears}
               />
             ) : (
               <motion.div
@@ -711,7 +812,7 @@ export default function GameScreen() {
                     key={option}
                     variants={itemVariants}
                     onClick={() => handleAnswer(index === currentQuestion.correct)}
-                    className="w-full min-h-[5rem] p-4 bg-white/8 text-white rounded-2xl border border-white/15 hover:border-neon-green/60 hover:bg-neon-green/8 active:scale-[0.97] text-left font-body-md text-base transition-all duration-150 flex items-center gap-4 group"
+                    className="flex w-full min-h-[4.25rem] items-center gap-3 rounded-2xl border border-white/15 bg-white/8 p-3.5 text-left font-body-md text-base text-white transition-all duration-150 hover:border-neon-green/60 hover:bg-neon-green/8 active:scale-[0.97] group sm:min-h-[5rem] sm:gap-4 sm:p-4"
                   >
                     <span className="w-10 h-10 rounded-xl bg-black/30 border border-white/15 text-neon-green group-hover:bg-neon-green group-hover:text-black group-hover:border-neon-green flex items-center justify-center font-black text-lg shrink-0 transition-all duration-150">
                       {String.fromCharCode(65 + index)}
@@ -756,23 +857,56 @@ export default function GameScreen() {
               animate={{ y: 0, scale: 1 }}
               exit={{ y: 40, scale: 0.96 }}
               transition={{ type: 'spring', stiffness: 260, damping: 28 }}
-              className="w-full max-w-sm rounded-2xl border border-vinyl-orange/30 bg-surface-container p-6 text-center shadow-[0_0_50px_rgba(0,0,0,0.6)]"
+              className="relative w-full max-w-sm overflow-hidden rounded-3xl border border-electric-purple/40 bg-[#160725] p-6 text-center shadow-[0_0_80px_rgba(168,85,247,0.42)]"
               onClick={(e) => e.stopPropagation()}
             >
-              <span className="material-symbols-outlined text-vinyl-orange" style={{ fontSize: '2.5rem' }}>bolt</span>
+              <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_0%,rgba(168,85,247,0.34),transparent_38%),radial-gradient(circle_at_15%_90%,rgba(255,122,26,0.18),transparent_35%)]" />
+              <div className="relative">
+              <span className="material-symbols-outlined text-electric-purple drop-shadow-[0_0_24px_rgba(168,85,247,0.75)]" style={{ fontSize: '3rem' }}>bolt</span>
               <h3 className="mt-3 font-headline-lg text-xl font-black text-white">SABOTEAR RIVAL</h3>
               <p className="mt-2 text-sm text-on-surface-variant">
-                Por <span className="text-vinyl-orange font-bold">{ATTACK_COST} pts</span>, sus años se ven revueltos en su próxima ronda. No pierde progreso, solo le cuesta más leerlos.
+                Por <span className="text-vinyl-orange font-bold">{ATTACK_COST} pts</span>, eliges una trampa visual para la proxima ronda. No borra progreso: solo crea caos divertido.
               </p>
 
-              <div className="mt-4 flex flex-col gap-2">
+              <div className="mt-4 grid gap-2">
+                {Object.values(ATTACK_TYPES).map((attackType) => (
+                  <button
+                    key={attackType.id}
+                    type="button"
+                    onClick={() => setSelectedAttackType(attackType.id)}
+                    className={`min-h-[4.25rem] rounded-2xl border px-3 text-left transition-all active:scale-95 ${
+                      selectedAttackType === attackType.id
+                        ? 'border-neon-green bg-neon-green/12 shadow-[0_0_24px_rgba(57,255,20,0.16)]'
+                        : 'border-white/10 bg-white/5'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className={`material-symbols-outlined text-2xl ${selectedAttackType === attackType.id ? 'text-neon-green' : 'text-electric-purple'}`}>
+                        {attackType.icon}
+                      </span>
+                      <div className="min-w-0">
+                        <p className="font-label-caps text-xs font-black text-white">{attackType.name}</p>
+                        <p className="mt-0.5 text-xs leading-snug text-on-surface-variant">{attackType.short}</p>
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+
+              <p className="mt-4 font-label-caps text-[10px] tracking-[0.18em] text-on-surface-variant">ELIGE OBJETIVO</p>
+              <div className="mt-2 flex flex-col gap-2">
+                {attackTargets.length === 0 && (
+                  <p className="rounded-xl border border-white/10 bg-black/20 px-3 py-3 text-xs text-on-surface-variant">
+                    No hay rivales disponibles ahora mismo.
+                  </p>
+                )}
                 {attackTargets.map((target) => (
                   <button
                     key={target.id}
                     type="button"
                     onClick={async () => {
                       try {
-                        await attackOpponent(target.id);
+                        await attackOpponent(target.id, selectedAttackType);
                         setShowAttackModal(false);
                         setAttackSentTo(target.name);
                         if (navigator.vibrate) navigator.vibrate([20, 40, 20]);
@@ -781,7 +915,7 @@ export default function GameScreen() {
                         setAttackError(error.message || 'No se pudo sabotear. Inténtalo de nuevo.');
                       }
                     }}
-                    className="min-h-touch rounded-xl border border-white/10 bg-white/5 px-4 flex items-center justify-between gap-2 text-white font-bold text-sm active:scale-95 transition-all hover:border-vinyl-orange/50 hover:bg-vinyl-orange/10"
+                    className="min-h-touch rounded-2xl border border-white/12 bg-white/8 px-4 flex items-center justify-between gap-2 text-white font-bold text-sm active:scale-95 transition-all hover:border-electric-purple/60 hover:bg-electric-purple/15"
                   >
                     <span className="truncate">{target.name}</span>
                     <span className="material-symbols-outlined text-vinyl-orange text-lg shrink-0">bolt</span>
@@ -800,6 +934,7 @@ export default function GameScreen() {
               >
                 CANCELAR
               </button>
+              </div>
             </motion.div>
           </motion.div>
         )}
@@ -826,11 +961,11 @@ export default function GameScreen() {
                 {role === 'host' ? 'emoji_events' : 'logout'}
               </span>
               <h3 className="mt-3 font-headline-lg text-xl font-black text-white">
-                {role === 'host' ? '¿Terminar la partida?' : '¿Salir de la partida?'}
+                {role === 'host' ? '¿Terminar la partida' : '¿Salir de la partida'}
               </h3>
               <p className="mt-2 text-sm text-on-surface-variant">
                 {role === 'host'
-                  ? 'Se mostrará el ranking final a todos los jugadores. ¿Estás seguro?'
+                  ? 'Se mostrará el ranking final a todos los jugadores. ¿Estás seguro'
                   : 'Perderás tu progreso en esta ronda.'}
               </p>
               <div className="mt-5 flex flex-col gap-2">

@@ -29,11 +29,11 @@ export default function WelcomeScreen() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, scale: 0.98 }}
       transition={{ duration: 0.4 }}
-      className="relative z-10 flex min-h-svh w-full flex-col items-center justify-center overflow-x-hidden px-5 py-8 md:min-h-screen md:px-10 md:py-16 lg:px-20"
+      className="app-screen relative z-10 flex flex-col items-center justify-start overflow-y-auto py-6 sm:justify-center md:px-10 md:py-12 lg:px-20"
     >
-      <div className="w-full max-w-[430px] md:max-w-5xl lg:max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-4 md:gap-16 lg:gap-24">
+      <div className="app-shell-wide flex flex-col items-center gap-4 md:flex-row md:gap-14 lg:gap-20">
 
-        {/* ── Vinyl + EQ ── */}
+        {/* Vinyl + EQ */}
         <motion.div
           initial={{ opacity: 0, scale: 0.82 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -49,7 +49,7 @@ export default function WelcomeScreen() {
             aria-label={bgPaused ? 'Reanudar música' : 'Pausar música'}
             className="relative cursor-pointer"
             style={{
-              width: 'min(clamp(150px, 34vh, 360px), calc(100vw - 80px))',
+              width: 'min(clamp(132px, 28svh, 340px), calc(100vw - 72px))',
               aspectRatio: '1',
             }}
           >
@@ -127,7 +127,7 @@ export default function WelcomeScreen() {
           </motion.div>
         </motion.div>
 
-        {/* ── Text + CTAs ── */}
+        {/* Text + CTAs */}
         <div className="flex flex-col items-center md:items-start gap-3 md:gap-5 text-center md:text-left">
 
           <motion.p
@@ -143,14 +143,14 @@ export default function WelcomeScreen() {
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.35, duration: 0.6 }}
-            className="space-y-2 max-w-xs md:max-w-md lg:max-w-lg"
+            className="max-w-[21rem] space-y-2 md:max-w-md lg:max-w-lg"
           >
-            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight uppercase tracking-tight">
+            <h1 className="heading-impact font-black uppercase text-white">
               La música como nunca{' '}
               <span className="text-animated-gradient">la habías jugado</span>
             </h1>
-            <p className="text-sm md:text-base text-on-surface-variant leading-relaxed">
-              Escucha la música, adivina la época y construye tu ruta musical en Años Locos. El primero en llegar a 12 años gana.
+            <p className="copy-readable text-on-surface-variant">
+              Escucha la música, adivina la época y construye tu ruta musical en Años Locos. 12 canciones es el ritmo recomendado, pero el anfitrión puede cambiarlo.
             </p>
           </motion.div>
 
@@ -162,7 +162,7 @@ export default function WelcomeScreen() {
             className="hidden md:flex items-center gap-8"
           >
             {[
-              ['12', 'años para ganar'],
+              ['6-20', 'canciones por partida'],
               ['+5', 'pts por acierto'],
               ['-3', 'pts por fallo'],
             ].map(([val, label]) => (
@@ -177,7 +177,7 @@ export default function WelcomeScreen() {
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.6 }}
-            className="w-full max-w-xs flex flex-col gap-2"
+            className="flex w-full max-w-xs flex-col gap-2"
           >
             <NeonButton primary color="vinyl-orange" onClick={() => navigate('/role-selection')}>
               Entrar a jugar

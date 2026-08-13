@@ -26,7 +26,7 @@ function clearPersistedSession() {
 // registrar el handler o un corte real ya no marcaría a nadie como offline.
 function armPresenceDisconnect(pin, playerId) {
   onDisconnect(ref(database, `rooms/${pin}/players/${playerId}`))
-    .update({ status: 'offline', lastSeenAt: serverTimestamp() })
+    .update({ status: 'offline', lastSeenAt: serverTimestamp(), offlineSince: serverTimestamp() })
     .catch(() => {});
 }
 
@@ -34,116 +34,67 @@ function armPresenceDisconnect(pin, playerId) {
 // de nadie, solo le complica la próxima ronda al objetivo. Así se mantiene
 // el filo competitivo sin arriesgar la condición de victoria de nadie.
 export const ATTACK_COST = 8;
+export const ATTACK_TYPES = {
+  reverse_order: {
+    id: 'reverse_order',
+    icon: 'swap_vert',
+    name: 'Modo espejo',
+    short: 'Ruta de mayor a menor',
+    description: 'Sus discos se muestran al reves durante una ronda.'
+  },
+  mirror_year: {
+    id: 'mirror_year',
+    icon: 'flip',
+    name: 'Ano remix',
+    short: 'Digitos cambiados',
+    description: 'Los anos se ven con los digitos revueltos para distraer.'
+  },
+  slippery_tap: {
+    id: 'slippery_tap',
+    icon: 'ads_click',
+    name: 'Toque falso',
+    short: 'El boton vecino responde',
+    description: 'Al tocar un hueco, la seleccion se puede mover al hueco de al lado.'
+  }
+};
 
 export const TIMELINE_GOAL_YEARS = 12;
+export const MIN_TIMELINE_GOAL_YEARS = 6;
+export const MAX_TIMELINE_GOAL_YEARS = 20;
 export const DEDICALO_PLAYLISTS = [
-  {
-    id: 'reggaeton-historia',
-    icon: '🔥',
-    name: 'REGGAETON',
-    mood: 'Clásicos para reconocer al instante.',
-    url: 'https://open.spotify.com/playlist/64B6t8la0Rf3JTTaBXiNcm'
-  },
-  {
-    id: 'hits-todos-los-tiempos',
-    icon: '🌍',
-    name: 'HITS',
-    mood: 'Éxitos para todos los gustos.',
-    url: 'https://open.spotify.com/playlist/0f3YRJO2HyZTpCLCVxzBt0'
-  },
-  {
-    id: 'rock-latino',
-    icon: '🎸',
-    name: 'ROCK LATINO',
-    mood: 'Guitarras, nostalgia y coros.',
-    url: 'https://open.spotify.com/playlist/07iEAd20wfnMh8VfbmovYG'
-  },
-  {
-    id: 'mix-latino',
-    icon: '⚡',
-    name: 'MIX LATINO',
-    mood: 'Rondas rápidas y energía alta.',
-    url: 'https://open.spotify.com/playlist/2UBikaEIZWV9LOAjE0dBgx'
-  },
-  {
-    id: 'bailable-todos-los-tiempos',
-    icon: '💃',
-    name: 'BAILABLE',
-    mood: 'Fácil de reconocer y bailar.',
-    url: 'https://open.spotify.com/playlist/7FnGVaOj5s9JvAUtvZENfC'
-  },
-  {
-    id: 'romanticos',
-    icon: '💜',
-    name: 'ROMÁNTICAS',
-    mood: 'Baladas y recuerdos.',
-    url: 'https://open.spotify.com/playlist/3dmrZtJOYx1naGoLtyHFOk'
-  },
-  {
-    id: 'perreo-clasico',
-    icon: '🕺',
-    name: 'PERREO CLÁSICO',
-    mood: 'Perreo clásico de memoria colectiva.',
-    url: 'https://open.spotify.com/playlist/2aatYbsZb0ZiY3aQjcVSw2'
-  },
-  {
-    id: 'temazos-espanoles',
-    icon: '🇪🇸',
-    name: 'TEMAZOS ES',
-    mood: 'Música española de siempre.',
-    url: 'https://open.spotify.com/playlist/7bsAMCUlTcMTGzG1RzxWTX'
-  },
-  {
-    id: 'rock-ska-espanolisimo',
-    icon: '🎺',
-    name: 'ROCK Y SKA',
-    mood: 'Rock, ska y clásicos con identidad.',
-    url: 'https://open.spotify.com/playlist/6ZcRMfq1UCg0QzC2KkopvV'
-  },
-  {
-    id: 'de-to2',
-    icon: '🎲',
-    name: 'DE TODO',
-    mood: 'Mezcla abierta para cualquier grupo.',
-    url: 'https://open.spotify.com/playlist/0Pn8mtBmo8HDfuKiky5tNj'
-  },
-  {
-    id: 'fiestas-en-el-pueblo',
-    icon: '🎉',
-    name: 'FIESTA PUEBLO',
-    mood: 'Fiesta para cantar y reconocer rápido.',
-    url: 'https://open.spotify.com/playlist/5kkHb7jc3WocICRywvY6Yz'
-  },
-  {
-    id: 'just-go',
-    icon: '🚀',
-    name: 'JUST GO',
-    mood: 'Energía directa y ritmo alto.',
-    url: 'https://open.spotify.com/playlist/0yUgOnkSswjzWwNxI2QjNC'
-  }
+  { id: 'reggaeton-historia', icon: 'local_fire_department', name: 'REGGAETON', mood: 'Clasicos para reconocer al instante.', url: 'https://open.spotify.com/playlist/64B6t8la0Rf3JTTaBXiNcm' },
+  { id: 'hits-todos-los-tiempos', icon: 'public', name: 'HITS', mood: 'Exitos para todos los gustos.', url: 'https://open.spotify.com/playlist/0f3YRJO2HyZTpCLCVxzBt0' },
+  { id: 'rock-latino', icon: 'electric_bolt', name: 'ROCK LATINO', mood: 'Guitarras, nostalgia y coros.', url: 'https://open.spotify.com/playlist/07iEAd20wfnMh8VfbmovYG' },
+  { id: 'mix-latino', icon: 'shuffle', name: 'MIX LATINO', mood: 'Rondas rapidas y energia alta.', url: 'https://open.spotify.com/playlist/2UBikaEIZWV9LOAjE0dBgx' },
+  { id: 'bailable-todos-los-tiempos', icon: 'nightlife', name: 'BAILABLE', mood: 'Facil de reconocer y bailar.', url: 'https://open.spotify.com/playlist/7FnGVaOj5s9JvAUtvZENfC' },
+  { id: 'romanticos', icon: 'favorite', name: 'ROMANTICAS', mood: 'Baladas y recuerdos.', url: 'https://open.spotify.com/playlist/3dmrZtJOYx1naGoLtyHFOk' },
+  { id: 'perreo-clasico', icon: 'whatshot', name: 'PERREO CLASICO', mood: 'Perreo clasico de memoria colectiva.', url: 'https://open.spotify.com/playlist/2aatYbsZb0ZiY3aQjcVSw2' },
+  { id: 'temazos-espanoles', icon: 'stadium', name: 'TEMAZOS ES', mood: 'Musica espanola de siempre.', url: 'https://open.spotify.com/playlist/7bsAMCUlTcMTGzG1RzxWTX' },
+  { id: 'rock-ska-espanolisimo', icon: 'music_note', name: 'ROCK Y SKA', mood: 'Rock, ska y clasicos con identidad.', url: 'https://open.spotify.com/playlist/6ZcRMfq1UCg0QzC2KkopvV' },
+  { id: 'de-to2', icon: 'apps', name: 'DE TODO', mood: 'Mezcla abierta para cualquier grupo.', url: 'https://open.spotify.com/playlist/0Pn8mtBmo8HDfuKiky5tNj' },
+  { id: 'fiestas-en-el-pueblo', icon: 'celebration', name: 'FIESTA PUEBLO', mood: 'Fiesta para cantar y reconocer rapido.', url: 'https://open.spotify.com/playlist/5kkHb7jc3WocICRywvY6Yz' },
+  { id: 'just-go', icon: 'rocket_launch', name: 'JUST GO', mood: 'Energia directa y ritmo alto.', url: 'https://open.spotify.com/playlist/0yUgOnkSswjzWwNxI2QjNC' }
 ];
 export const DEFAULT_SPOTIFY_PLAYLIST_URL = DEDICALO_PLAYLISTS[0].url;
 
 export const GAME_MODES = {
   timeline: {
     id: 'timeline',
-    name: 'AÑOS LOCOS',
-    short: 'Ordena canciones por año',
-    description: `Cada jugador arma su propia ruta musical y gana quien completa primero ${TIMELINE_GOAL_YEARS} años.`,
-    rhythm: 'Memoria, intuición y nostalgia: coloca cada canción donde crees que pertenece.'
+    name: 'ANOS LOCOS',
+    short: 'Ordena canciones por ano',
+    description: `Cada jugador arma su propia ruta musical y gana quien completa primero ${TIMELINE_GOAL_YEARS} canciones.`,
+    rhythm: 'Memoria, intuicion y nostalgia: coloca cada cancion donde crees que pertenece.'
   }
 };
-
 
 
 // These questions are fallbacks shown only when no Spotify track is available.
 // All answers must be objectively correct for any song/situation.
 const MUSIC_QUESTIONS = [
-  { mode: 'timeline', answerType: 'timeline-placement', type: 'Años Locos', text: '¿Dónde encaja esta canción en tu ruta de años?', timelineYears: [2000], songYear: 2014, options: ['0', '1'], correct: 1 },
-  { mode: 'timeline', answerType: 'timeline-placement', type: 'Años Locos', text: '¿Dónde pondrías esta canción?', timelineYears: [1995, 2005], songYear: 2001, options: ['0', '1', '2'], correct: 1 },
-  { mode: 'timeline', answerType: 'timeline-placement', type: 'Años Locos', text: 'Escucha y colócala por año.', timelineYears: [1990, 2000, 2010], songYear: 2020, options: ['0', '1', '2', '3'], correct: 3 }
+  { mode: 'timeline', answerType: 'timeline-placement', type: 'Anos Locos', text: 'Donde encaja esta cancion en tu ruta de anos?', timelineYears: [2000], songYear: 2014, options: ['0', '1'], correct: 1 },
+  { mode: 'timeline', answerType: 'timeline-placement', type: 'Anos Locos', text: 'Donde pondrias esta cancion?', timelineYears: [1995, 2005], songYear: 2001, options: ['0', '1', '2'], correct: 1 },
+  { mode: 'timeline', answerType: 'timeline-placement', type: 'Anos Locos', text: 'Escucha y colocala por ano.', timelineYears: [1990, 2000, 2010], songYear: 2020, options: ['0', '1', '2', '3'], correct: 3 }
 ];
-
 
 
 // Firebase SDK wrappers (kept as readData/writeData/patchData/deleteData so every
@@ -209,16 +160,38 @@ function getTimelineBaseYear(seed = '') {
   return 1990 + (hashString(seed) % 21);
 }
 
-function normalizeTimelineYears(years = []) {
-  return [...new Set((years || []).map(Number).filter(Boolean))]
+function clampTimelineGoal(value) {
+  return Math.min(MAX_TIMELINE_GOAL_YEARS, Math.max(MIN_TIMELINE_GOAL_YEARS, Number(value || TIMELINE_GOAL_YEARS)));
+}
+
+export function getPlayerPresence(player, now = Date.now()) {
+  if (!player) return { status: 'offline', remainingMs: 0, elapsedMs: RECONNECT_GRACE_MS };
+  if (player.status === 'kicked' || player.kicked) {
+    return { status: 'kicked', remainingMs: 0, elapsedMs: RECONNECT_GRACE_MS };
+  }
+  if (player.status !== 'offline') {
+    return { status: 'online', remainingMs: RECONNECT_GRACE_MS, elapsedMs: 0 };
+  }
+  const offlineAt = Number(player.offlineSince || player.lastSeenAt || now);
+  const elapsedMs = Math.max(0, now - offlineAt);
+  const remainingMs = Math.max(0, RECONNECT_GRACE_MS - elapsedMs);
+  return {
+    status: remainingMs > 0 ? 'reconnecting' : 'kicked',
+    remainingMs,
+    elapsedMs
+  };
+}
+
+function normalizeTimelineYears(years = [], limit = MAX_TIMELINE_GOAL_YEARS) {
+  return [...(years || []).map(Number).filter(Boolean)]
     .sort((a, b) => a - b)
-    .slice(0, 12);
+    .slice(0, clampTimelineGoal(limit));
 }
 
 export function getCombinedTimelineYears(player) {
   const p = player || {};
   const baseYear = Number(p.timelineBaseYear || 2000);
-  return normalizeTimelineYears([baseYear, ...(p.timelineYears || [])]);
+  return normalizeTimelineYears([baseYear, ...(p.timelineYears || [])], MAX_TIMELINE_GOAL_YEARS);
 }
 
 
@@ -231,6 +204,7 @@ export const useGameStore = create((setStore, getStore) => ({
   round: 1,
   gameMode: 'timeline',
   targetScore: 70,
+  targetYears: TIMELINE_GOAL_YEARS,
   currentQuestion: null,
   guestId: null,
   guestAvatar: null,
@@ -261,12 +235,13 @@ export const useGameStore = create((setStore, getStore) => ({
   },
   setRole: (role) => setStore({ role }),
 
-  setGameSettings: async ({ targetScore }) => {
+  setGameSettings: async ({ targetScore, targetYears }) => {
     const pin = getStore().pin;
     if (getStore().round > 1 || getStore().phase !== 'lobby') return;
     const nextSettings = {
       gameMode: 'timeline',
-      targetScore: Number(targetScore || getStore().targetScore)
+      targetScore: Number(targetScore || getStore().targetScore),
+      targetYears: clampTimelineGoal(targetYears || getStore().targetYears)
     };
 
     setStore(nextSettings);
@@ -286,12 +261,14 @@ export const useGameStore = create((setStore, getStore) => ({
 
     const hostPlayer = {
       id: hostId,
-      name: hostUser?.displayName || 'Anfitrión',
+      name: hostUser?.displayName || 'Anfitrion',
       avatar: hostUser?.photoURL || 'La Consola Maestra',
       points: 10,
       isHost: true,
       status: 'online',
       lastSeenAt: Date.now(),
+      offlineSince: null,
+      kicked: false,
       timelineBaseYear: getTimelineBaseYear(hostId),
       timelineYears: []
     };
@@ -301,7 +278,8 @@ export const useGameStore = create((setStore, getStore) => ({
       round: 1,
       settings: {
         gameMode: 'timeline',
-        targetScore: getStore().targetScore
+        targetScore: getStore().targetScore,
+        targetYears: clampTimelineGoal(getStore().targetYears)
       },
       players: { [hostId]: hostPlayer },
       audio: {
@@ -325,6 +303,7 @@ export const useGameStore = create((setStore, getStore) => ({
         players: [hostPlayer],
         gameMode: 'timeline',
         targetScore: roomData.settings.targetScore,
+        targetYears: roomData.settings.targetYears,
         spotifyPlaylistUrl: roomData.audio.playlistUrl,
         lastResultType: null,
         lastPointDelta: 0,
@@ -335,7 +314,7 @@ export const useGameStore = create((setStore, getStore) => ({
       getStore()._subscribeToRoom(newPin);
     } catch (error) {
       console.error('Error al crear la sala:', error);
-      throw new Error('No pudimos crear la sala. Inténtalo otra vez.', { cause: error });
+      throw new Error('No pudimos crear la sala. Intentalo otra vez.', { cause: error });
     }
   },
 
@@ -405,16 +384,17 @@ export const useGameStore = create((setStore, getStore) => ({
         remoteUpdates[`players/${player.id}/timelineYears`] = normalizeTimelineYears([
           ...(player.timelineYears || []),
           currentQuestion.songYear
-        ]);
+        ], room?.settings?.targetYears || getStore().targetYears);
       }
     });
 
     const nextPlayers = sortPlayers(Object.values(playersById).map((player) => ({
       ...player,
       points: remoteUpdates[`players/${player.id}/points`] ?? player.points,
-      timelineYears: remoteUpdates[`players/${player.id}/timelineYears`] ?? normalizeTimelineYears(player.timelineYears || [])
+      timelineYears: remoteUpdates[`players/${player.id}/timelineYears`] ?? normalizeTimelineYears(player.timelineYears || [], room?.settings?.targetYears || getStore().targetYears)
     })));
-    const timelineComplete = nextPlayers.some((player) => getCombinedTimelineYears(player).length >= TIMELINE_GOAL_YEARS);
+    const targetYears = clampTimelineGoal(room?.settings?.targetYears || getStore().targetYears);
+    const timelineComplete = nextPlayers.some((player) => getCombinedTimelineYears(player).length >= targetYears);
     remoteUpdates.phase = timelineComplete ? 'final' : 'result';
     remoteUpdates.revealResults = revealResults;
     remoteUpdates.currentQuestion = timelineComplete ? null : room.currentQuestion || null;
@@ -444,7 +424,7 @@ export const useGameStore = create((setStore, getStore) => ({
       phase: 'countdown'
     };
 
-    // Un sabotaje solo dura la ronda en la que se lanzó.
+    // Un sabotaje solo dura la ronda en la que se lanzo.
     players.forEach((player) => {
       if (player.activeAttack) {
         remoteUpdates[`players/${player.id}/activeAttack`] = null;
@@ -466,21 +446,22 @@ export const useGameStore = create((setStore, getStore) => ({
   // revueltos visualmente en vez de que le cambien las reglas a mitad de
   // respuesta. Cuesta puntos, nunca años — no puede decidir la partida por
   // sí solo, solo complica el ranking del rival por una ronda.
-  attackOpponent: async (targetPlayerId) => {
+  attackOpponent: async (targetPlayerId, attackTypeId = 'reverse_order') => {
     const { pin, guestId, players, phase } = getStore();
     if (!pin || !guestId) return;
     if (phase !== 'listen') {
-      throw new Error('Solo puedes sabotear antes de que suene la pregunta.');
+      throw new Error('Solo puedes sabotear antes de que salga la pregunta.');
     }
 
     const me = players.find((player) => player.id === guestId);
     const target = players.find((player) => player.id === targetPlayerId);
+    const attackType = ATTACK_TYPES[attackTypeId] || ATTACK_TYPES.reverse_order;
     if (!me || !target || me.id === target.id) return;
-    if (target.status === 'offline') {
-      throw new Error('Ese jugador está desconectado ahora mismo.');
+    if (getPlayerPresence(target).status !== 'online') {
+      throw new Error('Ese jugador no esta disponible ahora mismo.');
     }
     if (target.activeAttack) {
-      throw new Error('Ya está saboteado en esta ronda.');
+      throw new Error('Ya esta saboteado en esta ronda.');
     }
     if (Number(me.points || 0) < ATTACK_COST) {
       throw new Error(`Necesitas ${ATTACK_COST} puntos para sabotear.`);
@@ -489,6 +470,9 @@ export const useGameStore = create((setStore, getStore) => ({
     const nextPoints = clampPoints(Number(me.points || 0) - ATTACK_COST);
     await patchData(`rooms/${pin}`, {
       [`players/${targetPlayerId}/activeAttack`]: {
+        type: attackType.id,
+        title: attackType.name,
+        description: attackType.description,
         from: me.name || 'Un rival',
         round: getStore().round,
         at: Date.now()
@@ -534,6 +518,29 @@ export const useGameStore = create((setStore, getStore) => ({
     });
   },
 
+  updatePlayerProfile: async ({ name, avatar }) => {
+    const { pin, guestId, players } = getStore();
+    if (!pin || !guestId) return;
+
+    const currentPlayer = players.find((player) => player.id === guestId) || {};
+    const cleanName = String(name || currentPlayer.name || 'Jugador').trim().slice(0, 18) || 'Jugador';
+    const cleanAvatar = String(avatar || currentPlayer.avatar || 'DJ').trim().slice(0, 80) || 'DJ';
+
+    await patchData(`rooms/${pin}/players/${guestId}`, {
+      name: cleanName,
+      avatar: cleanAvatar,
+      profileUpdatedAt: Date.now()
+    });
+
+    setStore({
+      guestName: cleanName,
+      guestAvatar: cleanAvatar,
+      players: players.map((player) => (
+        player.id === guestId ? { ...player, name: cleanName, avatar: cleanAvatar } : player
+      ))
+    });
+  },
+
   guestJoinRoom: async (enteredPin, guestName, guestAvatar) => {
     const cleanPin = String(enteredPin || '').replace(/\D/g, '').slice(0, 4);
     const room = await readData(`rooms/${cleanPin}`);
@@ -563,6 +570,8 @@ export const useGameStore = create((setStore, getStore) => ({
         isHost: false,
         status: 'online',
         lastSeenAt: Date.now(),
+        offlineSince: null,
+        kicked: false,
         timelineBaseYear: existingPlayer ? existingPlayer.timelineBaseYear : getTimelineBaseYear(guestId),
         timelineYears: existingPlayer ? (existingPlayer.timelineYears || []) : []
       };
@@ -578,6 +587,7 @@ export const useGameStore = create((setStore, getStore) => ({
         guestName: newPlayer.name,
         gameMode: 'timeline',
         targetScore: Number(room.settings?.targetScore || 70),
+        targetYears: clampTimelineGoal(room.settings?.targetYears || TIMELINE_GOAL_YEARS),
         lastResultType: null,
         lastPointDelta: 0,
         timelineYears: room.timelineYears || []
@@ -585,7 +595,7 @@ export const useGameStore = create((setStore, getStore) => ({
       getStore()._subscribeToRoom(cleanPin);
     } catch (error) {
       console.error('Error al unirse a la sala:', error);
-      throw new Error('No pudimos unirte a la sala. Inténtalo otra vez.', { cause: error });
+      throw new Error('No pudimos unirte a la sala. Intentalo otra vez.', { cause: error });
     }
   },
 
@@ -651,7 +661,7 @@ export const useGameStore = create((setStore, getStore) => ({
   markPresenceOnline: () => {
     const { pin, guestId } = getStore();
     if (!pin || !guestId) return;
-    patchData(`rooms/${pin}/players/${guestId}`, { status: 'online', lastSeenAt: Date.now() }).catch(() => {});
+    patchData(`rooms/${pin}/players/${guestId}`, { status: 'online', lastSeenAt: Date.now(), offlineSince: null, kicked: false }).catch(() => {});
     armPresenceDisconnect(pin, guestId);
   },
 
@@ -672,7 +682,7 @@ export const useGameStore = create((setStore, getStore) => ({
         return false;
       }
 
-      await patchData(`rooms/${pin}/players/${playerId}`, { status: 'online', lastSeenAt: Date.now() });
+      await patchData(`rooms/${pin}/players/${playerId}`, { status: 'online', lastSeenAt: Date.now(), offlineSince: null, kicked: false });
       armPresenceDisconnect(pin, playerId);
 
       setStore({
@@ -683,6 +693,7 @@ export const useGameStore = create((setStore, getStore) => ({
         guestName: player.name,
         gameMode: 'timeline',
         targetScore: Number(room.settings?.targetScore || 70),
+        targetYears: clampTimelineGoal(room.settings?.targetYears || TIMELINE_GOAL_YEARS),
         lastResultType: null,
         lastPointDelta: 0,
         timelineYears: room.timelineYears || []
@@ -759,6 +770,21 @@ export const useGameStore = create((setStore, getStore) => ({
 
       const remoteRound = Number(data.round || 1);
       const remotePhase = data.phase || 'lobby';
+      const now = Date.now();
+      const normalizedPlayers = data.players
+        ? sortPlayers(Object.values(data.players).map((player) => {
+          const presence = getPlayerPresence(player, now);
+          if (current.role === 'host' && presence.status === 'kicked' && player.status === 'offline') {
+            patchData(`rooms/${pin}/players/${player.id}`, { status: 'kicked', kicked: true }).catch(() => {});
+          }
+          return {
+            ...player,
+            status: presence.status === 'kicked' ? 'kicked' : player.status,
+            reconnectRemainingMs: presence.remainingMs,
+            timelineBaseYear: Number(player.timelineBaseYear || getTimelineBaseYear(player.id))
+          };
+        }))
+        : [];
       const keepGuestResult = current.role === 'guest'
         && current.phase === 'result'
         && current.lastResultType
@@ -770,12 +796,8 @@ export const useGameStore = create((setStore, getStore) => ({
         round: remoteRound,
         gameMode: 'timeline',
         targetScore: Number(data.settings?.targetScore || data.targetScore || 70),
-        players: data.players
-          ? sortPlayers(Object.values(data.players).map((player) => ({
-            ...player,
-            timelineBaseYear: Number(player.timelineBaseYear || getTimelineBaseYear(player.id))
-          })))
-          : [],
+        targetYears: clampTimelineGoal(data.settings?.targetYears || TIMELINE_GOAL_YEARS),
+        players: normalizedPlayers,
         currentQuestion: data.currentQuestion || null,
         currentTrack: data.currentTrack || null,
         roundAnswers: data.roundAnswers || {},

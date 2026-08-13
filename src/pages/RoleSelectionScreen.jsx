@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+﻿import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useBgMusic } from '../hooks/useBgMusic';
 
@@ -53,18 +53,18 @@ function AlbumTrackHero({ paused, onToggle }) {
       initial={{ opacity: 0, y: 16, scale: 0.96 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ type: 'spring', stiffness: 120, damping: 16 }}
-      className="relative w-full max-w-[360px]"
+      className="relative w-full max-w-[320px] sm:max-w-[360px]"
       aria-label="Logo Dedícalo"
     >
       <div className="absolute -inset-6 rounded-full bg-vinyl-orange/20 blur-3xl" />
       <div className="absolute -left-8 top-12 h-20 w-20 rounded-full border border-vinyl-orange/25 ring-expand-anim" />
       <div className="absolute -right-6 bottom-8 h-16 w-16 rounded-full border border-electric-purple/25 ring-expand-anim" style={{ animationDelay: '0.8s' }} />
 
-      <div className="relative overflow-hidden rounded-[2rem] border border-white/12 bg-[#071025]/90 p-4 shadow-[0_24px_70px_rgba(0,0,0,0.38),0_0_42px_rgba(255,122,26,0.18)]">
+      <div className="relative overflow-hidden rounded-[1.5rem] border border-white/12 bg-[#071025]/90 p-3.5 shadow-[0_20px_56px_rgba(0,0,0,0.34),0_0_34px_rgba(255,122,26,0.16)] sm:rounded-[2rem] sm:p-4">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,122,26,0.26),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(63,120,255,0.24),transparent_38%)]" />
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-vinyl-orange/80 to-transparent" />
 
-        <div className="relative grid grid-cols-[112px_1fr] items-center gap-4">
+        <div className="relative grid grid-cols-[92px_1fr] items-center gap-3 sm:grid-cols-[112px_1fr] sm:gap-4">
           <motion.div
             animate={{ y: [0, -4, 0] }}
             transition={{ repeat: Infinity, duration: 4.4, ease: 'easeInOut' }}
@@ -81,7 +81,7 @@ function AlbumTrackHero({ paused, onToggle }) {
 
           <div className="relative min-w-0 text-left">
             <p className="font-label-caps text-[10px] tracking-[0.24em] text-neon-green">NOW PLAYING</p>
-            <h2 className="mt-1 text-2xl font-black uppercase leading-none text-white">Dedícalo Play</h2>
+            <h2 className="mt-1 text-xl font-black uppercase leading-none text-white sm:text-2xl">Dedícalo Play</h2>
             <p className="mt-1 text-xs leading-snug text-on-surface-variant">Party game musical</p>
 
             <div className="mt-4 flex items-center gap-3">
@@ -111,7 +111,7 @@ function AlbumTrackHero({ paused, onToggle }) {
           </div>
         </div>
 
-        <div className="relative mt-5 flex items-end justify-center gap-1.5">
+        <div className="relative mt-4 flex items-end justify-center gap-1.5 sm:mt-5">
           {bars.map((height, index) => (
             <span
               key={`${height}-${index}`}
@@ -147,7 +147,7 @@ function RoleCard({ type, title, text, action, icon, color, glow, onClick }) {
       whileHover={{ scale: 1.015, y: -4 }}
       whileTap={{ scale: 0.97 }}
       transition={{ type: 'spring', stiffness: 280, damping: 22 }}
-      className="group relative w-full overflow-hidden rounded-[2rem] border border-white/10 bg-surface-container/72 p-5 text-left shadow-[0_24px_70px_rgba(0,0,0,0.22)] backdrop-blur-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-vinyl-orange/70"
+      className="group relative w-full overflow-hidden rounded-[1.4rem] border border-white/10 bg-surface-container/72 p-4 text-left shadow-[0_20px_54px_rgba(0,0,0,0.20)] backdrop-blur-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-vinyl-orange/70 sm:rounded-[2rem] sm:p-5"
       style={{ boxShadow: `0 0 0 1px ${color}22, 0 24px 70px ${glow}` }}
     >
       <div
@@ -162,7 +162,7 @@ function RoleCard({ type, title, text, action, icon, color, glow, onClick }) {
           <p className="font-label-caps text-[10px] tracking-[0.24em]" style={{ color }}>
             {type}
           </p>
-          <h2 className="mt-1 text-2xl font-black leading-tight text-white">
+          <h2 className="mt-1 text-xl font-black leading-tight text-white sm:text-2xl">
             {title}
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-on-surface-variant">
@@ -191,7 +191,7 @@ export default function RoleSelectionScreen() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="relative z-10 mx-auto flex min-h-dvh w-full max-w-[460px] flex-col items-center px-margin-mobile pb-28 pt-safe-header text-center"
+      className="app-screen safe-bottom-action relative z-10 mx-auto flex w-full max-w-[460px] flex-col items-center overflow-y-auto pt-safe-header text-center"
     >
       <header className="fixed left-0 right-0 top-0 z-50 flex h-16 items-center justify-between border-b border-white/8 bg-background/78 px-margin-mobile backdrop-blur-xl">
         <button
@@ -204,12 +204,12 @@ export default function RoleSelectionScreen() {
         <div className="w-16 opacity-0" aria-hidden="true" />
       </header>
 
-      <section className="mb-7 flex w-full flex-col items-center gap-5">
+      <section className="mb-5 flex w-full flex-col items-center gap-4 sm:mb-7 sm:gap-5">
         <AlbumTrackHero paused={bgPaused} onToggle={toggleBg} />
 
         <div>
           <p className="font-label-caps text-xs tracking-[0.28em] text-neon-green">ELIGE CÓMO ENTRAS</p>
-          <h1 className="mt-2 font-headline-lg text-4xl font-black uppercase leading-tight tracking-tight text-on-surface">
+          <h1 className="heading-page mt-2 font-headline-lg font-black uppercase text-on-surface">
             A jugar
           </h1>
           <p className="mx-auto mt-2 max-w-xs text-sm leading-relaxed text-on-surface-variant">

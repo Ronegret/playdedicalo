@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TIMELINE_GOAL_YEARS, getCombinedTimelineYears, useGameStore } from '../store/useGameStore';
+import { getCombinedTimelineYears, useGameStore } from '../store/useGameStore';
 import ProfileMenu from '../components/ProfileMenu';
 import { auth } from '../firebase';
 
@@ -32,15 +32,15 @@ const RESULT_STYLES = {
 
 
 
-function TimelineYears({ years = [] }) {
+function TimelineYears({ years = [], goalYears = 12 }) {
   return (
     <div className="mt-2 flex flex-wrap items-center gap-1 pl-9">
       <span className="font-label-caps text-[9px] text-on-surface-variant">
-        {Math.min(years.length, TIMELINE_GOAL_YEARS)}/{TIMELINE_GOAL_YEARS}
+        {Math.min(years.length, goalYears)}/{goalYears}
       </span>
-      {years.slice(0, TIMELINE_GOAL_YEARS).map((year) => (
+      {years.slice(0, goalYears).map((year, index) => (
         <span
-          key={year}
+          key={`${year}-${index}`}
           className="w-6 h-6 rounded-full border-2 border-neon-green/50 bg-black/30 flex items-center justify-center text-[8px] font-black text-neon-green"
           title={year}
         >
@@ -51,7 +51,7 @@ function TimelineYears({ years = [] }) {
   );
 }
 
-function RankingList({ players, final = false, showTimeline = false }) {
+function RankingList({ players, final = false, showTimeline = false, goalYears = 12 }) {
   if (!players.length) return null;
   return (
     <div className="flex flex-col gap-2 w-full">
@@ -85,7 +85,7 @@ function RankingList({ players, final = false, showTimeline = false }) {
               </div>
               <span className="font-black text-sm text-neon-green shrink-0">{player.points} pts</span>
             </div>
-            {showTimeline && <TimelineYears years={getCombinedTimelineYears(player)} />}
+            {showTimeline && <TimelineYears years={getCombinedTimelineYears(player)} goalYears={goalYears} />}
           </motion.div>
         );
       })}
@@ -101,7 +101,8 @@ export default function ResultScreen() {
   const {
     role, phase, players,
     hostNextRound, hostCloseRoom, guestLeaveRoom, guestId,
-    lastResultType, lastPointDelta, revealResults, currentTrack, roomError, clearRoomError, guestAvatar
+    lastResultType, lastPointDelta, revealResults, currentTrack, roomError, clearRoomError, guestAvatar,
+    targetYears
   } = useGameStore();
   const [showExitConfirm, setShowExitConfirm] = useState(false);
 
@@ -137,7 +138,7 @@ export default function ResultScreen() {
 
   const handleShare = async () => {
     const text = isFinal && winner
-      ? `¡${winner.name} ganó en Dedícalo con ${winner.points} puntos! 🎵 ¿Te atreves? ${window.location.origin}`
+      ? `¡${winner.name} ganó en Dedícalo con ${winner.points} puntos! 🎵 ¿Te atreves ${window.location.origin}`
       : `Llevo ${guestPoints} puntos en Dedícalo 🎵 ${window.location.origin}`;
     try {
       if (navigator.share) {
@@ -153,7 +154,7 @@ export default function ResultScreen() {
   };
 
 
-  // ── FINAL screen — Años Locos ──
+  // FINAL screen — Años Locos
   if (isFinal) {
     return (
       <motion.main
@@ -162,7 +163,7 @@ export default function ResultScreen() {
         className="fixed inset-0 z-50 overflow-y-auto bg-surface text-white"
         style={{ overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' }}
       >
-        <div className="min-h-full max-w-lg mx-auto flex flex-col items-center px-5 py-8">
+        <div className="mx-auto flex min-h-full max-w-lg flex-col items-center px-5 pb-[calc(2rem+env(safe-area-inset-bottom,0px))] pt-[calc(4.5rem+env(safe-area-inset-top,0px))]">
           <button
             type="button"
             onClick={handleFinish}
@@ -180,19 +181,19 @@ export default function ResultScreen() {
             className="w-full text-center"
           >
             <p className="font-label-caps text-electric-purple tracking-widest text-xs">
-              META {TIMELINE_GOAL_YEARS} AÑOS
+              META {targetYears} CANCIONES
             </p>
             <h1 className="font-headline-lg text-3xl font-black mt-1 mb-4">RANKING FINAL</h1>
 
             {winner && (
-              <div className="mb-4 rounded-2xl border border-neon-green/50 bg-neon-green/10 p-4">
-                <p className="font-label-caps text-neon-green text-xs">GANADOR</p>
-                <p className="mt-0.5 font-headline-lg-mobile text-2xl text-white">{winner.name}</p>
-                <p className="mt-0.5 text-sm text-on-surface-variant">{winner.points} puntos finales</p>
+              <div className="mb-4 overflow-hidden rounded-3xl border border-neon-green/50 bg-[linear-gradient(145deg,rgba(57,255,20,0.16),rgba(168,85,247,0.12))] p-5 shadow-[0_0_50px_rgba(57,255,20,0.16)]">
+                <p className="font-label-caps text-neon-green text-xs tracking-[0.22em]">DUEÑO DE LA CABINA</p>
+                <p className="mt-1 font-headline-lg-mobile text-3xl text-white">{winner.name}</p>
+                <p className="mt-1 text-sm text-on-surface-variant">{winner.points} puntos finales · {getCombinedTimelineYears(winner).length}/{targetYears} en ruta</p>
               </div>
             )}
 
-            <RankingList players={players} final showTimeline />
+            <RankingList players={players} final showTimeline goalYears={targetYears} />
 
             <div className="mt-5 flex flex-col gap-2">
               {role === 'host' && (
@@ -225,14 +226,14 @@ export default function ResultScreen() {
     );
   }
 
-  // ── NON-FINAL screen — diseño compacto ──
+  // NON-FINAL screen — diseño compacto
   const sortedPlayers = [...players].sort((a, b) => Number(b.points || 0) - Number(a.points || 0));
 
   return (
     <motion.main
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="fixed inset-0 z-50 flex flex-col text-white overflow-hidden"
+      className="fixed inset-0 z-50 overflow-y-auto text-white"
       style={{ backgroundColor: style.bgColor }}
     >
       {/* Blurred album art backdrop */}
@@ -284,7 +285,7 @@ export default function ResultScreen() {
 
       {/* Scrollable content */}
       <div
-        className="relative z-10 flex flex-col w-full max-w-lg mx-auto px-4 pt-12 pb-5 overflow-y-auto flex-1"
+        className="relative z-10 mx-auto flex min-h-full w-full max-w-lg flex-col px-4 pb-[calc(1.25rem+env(safe-area-inset-bottom,0px))] pt-[calc(4.5rem+env(safe-area-inset-top,0px))]"
         style={{ overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' }}
       >
         <button
@@ -299,8 +300,7 @@ export default function ResultScreen() {
         <div className="absolute top-4 right-4 z-[100]">
           <ProfileMenu user={role === 'host' ? auth.currentUser : null} guestAvatar={role === 'guest' ? guestAvatar : null} />
         </div>
-
-        {/* ① Resultado personal — pantalla protagonista */}
+        {/* Resultado personal */}
         <motion.div
           initial={{ y: -18, opacity: 0, scale: 0.96 }}
           animate={{ y: 0, opacity: 1, scale: 1 }}
@@ -341,7 +341,7 @@ export default function ResultScreen() {
               fontSize: 'clamp(2.05rem, 11.5vw, 5rem)',
               letterSpacing: '0.01em',
               textShadow: `0 0 34px ${style.glowColor}`,
-              whiteSpace: 'nowrap'
+              whiteSpace: 'normal'
             }}
           >
             {resultWord}
@@ -355,7 +355,7 @@ export default function ResultScreen() {
                 animate={{ y: 0, scale: 1, opacity: 1 }}
                 transition={{ delay: 0.22, type: 'spring', stiffness: 150 }}
                 className={`font-stats-xl font-black leading-none ${style.text}`}
-                style={{ fontSize: '4.5rem' }}
+                style={{ fontSize: 'clamp(3.2rem, 17vw, 4.5rem)' }}
               >
                 {guestPoints}
               </motion.p>
@@ -376,20 +376,19 @@ export default function ResultScreen() {
             <p className="text-sm leading-relaxed text-white/70">{style.copy}</p>
           </div>
         </motion.div>
-
-        {/* ② Canción revelada — horizontal compacto */}
+        {/* Cancion revelada */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.12 }}
-          className="mt-2.5 rounded-2xl border border-white/10 bg-black/30 backdrop-blur-sm p-3 flex items-center gap-3"
+          className="mt-2.5 flex items-center gap-3 rounded-2xl border border-white/10 bg-black/30 p-3 backdrop-blur-sm"
         >
           <div
             className="rounded-xl overflow-hidden shrink-0"
             style={{ width: 72, height: 72, boxShadow: `0 6px 24px ${style.glowColor}` }}
           >
             {currentTrack?.albumImage ? (
-              <img src={currentTrack.albumImage} alt={currentTrack.name || 'Canción'} className="w-full h-full object-cover" />
+              <img src={currentTrack.albumImage} alt={currentTrack?.name || 'Canción'} className="w-full h-full object-cover" />
             ) : (
               <div className="w-full h-full bg-black/40 flex items-center justify-center">
                 <span className={`material-symbols-outlined ${style.text}`} style={{ fontSize: '2rem' }}>{style.icon}</span>
@@ -412,15 +411,14 @@ export default function ResultScreen() {
                 className="mt-1 flex items-baseline gap-1.5"
               >
                 <span className="font-label-caps text-[10px] text-white/30">AÑO</span>
-                <span className={`font-black text-2xl leading-none ${style.text}`}>
+                <span className={`font-black text-4xl leading-none ${style.text}`}>
                   {currentTrack.releaseYear}
                 </span>
               </motion.div>
             )}
           </div>
         </motion.div>
-
-        {/* ③ Cómo van todos */}
+        {/* Ranking compacto */}
         {sortedPlayers.length > 1 && (
           <motion.div
             initial={{ opacity: 0, y: 8 }}
@@ -456,7 +454,7 @@ export default function ResultScreen() {
                   <span className="text-sm font-bold text-white truncate flex-1">{player.name}</span>
                   <div className="text-right shrink-0">
                     <p className="text-xs font-black text-neon-green">
-                      {getCombinedTimelineYears(player).length}/12 AÑOS
+                      {Math.min(getCombinedTimelineYears(player).length, targetYears)}/{targetYears} RUTA
                     </p>
                     <p className="text-[10px] font-bold text-white/50">{player.points} pts</p>
                   </div>
@@ -465,8 +463,7 @@ export default function ResultScreen() {
             </div>
           </motion.div>
         )}
-
-        {/* ④ Acciones */}
+        {/* Acciones */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -516,7 +513,7 @@ export default function ResultScreen() {
                 {role === 'host' ? 'emoji_events' : 'logout'}
               </span>
               <h3 className="mt-3 font-headline-lg text-xl font-black text-white">
-                {role === 'host' ? '¿Cerrar la partida?' : '¿Salir de la partida?'}
+                {role === 'host' ? '¿Cerrar la partida' : '¿Salir de la partida'}
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-on-surface-variant">
                 {role === 'host'

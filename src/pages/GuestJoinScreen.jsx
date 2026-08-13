@@ -154,7 +154,7 @@ export default function GuestJoinScreen() {
   };
 
   return (
-    <motion.main className="relative z-10 w-full max-w-[430px] mx-auto min-h-dvh px-margin-mobile pt-safe-header pb-28 text-center">
+    <motion.main className="app-screen safe-bottom-action app-shell relative z-10 overflow-y-auto pt-safe-header text-center">
       <header className="fixed top-0 w-full z-50 bg-glass-surface backdrop-blur-md border-b border-white/10 flex items-center justify-between px-margin-mobile h-16 left-0">
         <button onClick={() => navigate('/role-selection')} className="min-h-touch text-on-surface-variant hover:text-white transition-colors flex items-center gap-2 font-label-caps text-xs tracking-[0.18em]">
           <span className="material-symbols-outlined text-xl">arrow_back</span> VOLVER
@@ -163,11 +163,11 @@ export default function GuestJoinScreen() {
         <div className="w-8 opacity-0" />
       </header>
 
-      <div className="flex flex-col gap-6 items-center">
+      <div className="flex flex-col items-center gap-4 sm:gap-6">
         <section className="w-full">
           <p className="font-label-caps text-neon-green text-xs mb-2">INVITADO</p>
-          <h1 className="font-headline-lg text-4xl font-black uppercase text-on-surface leading-tight">UNIRSE A LA SALA</h1>
-          <p className="text-on-surface-variant text-base mt-3 leading-relaxed max-w-md mx-auto">
+          <h1 className="heading-page font-headline-lg font-black uppercase text-on-surface">UNIRSE A LA SALA</h1>
+          <p className="copy-readable mx-auto mt-2 max-w-md text-on-surface-variant">
             Escribe el PIN de 4 dígitos o escanea el QR que muestra el anfitrión. Entras con 10 puntos base.
           </p>
         </section>
@@ -178,7 +178,7 @@ export default function GuestJoinScreen() {
             <button
               type="button"
               onClick={() => setScannerOpen(true)}
-              className="h-9 px-3 rounded-lg border border-neon-green/40 bg-neon-green/10 text-neon-green text-xs font-label-caps flex items-center gap-2 mx-auto"
+              className="min-h-touch rounded-lg border border-neon-green/40 bg-neon-green/10 px-3 text-xs font-label-caps text-neon-green flex items-center gap-2 active:scale-95 transition-transform"
             >
               <span className="material-symbols-outlined text-base">qr_code_scanner</span>
               ESCANEAR QR
@@ -194,7 +194,7 @@ export default function GuestJoinScreen() {
                 inputMode="numeric"
                 maxLength={1}
                 aria-label={`Dígito ${index + 1} del PIN`}
-                className="h-16 rounded-xl bg-white/5 border-2 border-white/10 text-center font-stats-xl text-3xl text-neon-green outline-none focus:border-neon-green transition-colors"
+                className="h-14 rounded-xl border-2 border-white/10 bg-white/5 text-center font-stats-xl text-2xl text-neon-green outline-none transition-colors focus:border-neon-green sm:h-16 sm:text-3xl"
                 value={digit.trim()}
                 onChange={(event) => updatePinAt(index, event.target.value)}
                 onKeyDown={(event) => handlePinKeyDown(event, index)}
@@ -209,7 +209,7 @@ export default function GuestJoinScreen() {
             id="guest-name"
             type="text"
             maxLength={12}
-            className="w-full bg-white/5 border border-white/10 rounded-xl h-14 px-4 font-body-lg text-on-surface text-center font-bold outline-none focus:border-neon-green focus:ring-2 focus:ring-neon-green/30 transition-colors"
+            className="h-13 w-full rounded-xl border border-white/10 bg-white/5 px-4 text-center text-base font-bold text-on-surface outline-none transition-colors focus:border-neon-green focus:ring-2 focus:ring-neon-green/30 sm:h-14"
             value={name}
             onChange={(event) => setName(event.target.value)}
             placeholder="DJ Invitado"
@@ -218,7 +218,7 @@ export default function GuestJoinScreen() {
 
         <section className="w-full">
           <label className="font-label-caps text-on-surface-variant text-xs mb-2 block">ELIGE TU IDENTIDAD</label>
-          <div className="grid grid-cols-5 sm:grid-cols-6 gap-2 bg-white/5 p-4 rounded-xl border border-white/10">
+          <div className="grid max-h-[28svh] grid-cols-5 gap-2 overflow-y-auto rounded-xl border border-white/10 bg-white/5 p-3 no-scrollbar sm:max-h-none sm:grid-cols-6 sm:p-4">
             {EMOJI_AVATARS.map((emoji) => (
               <motion.button
                 key={emoji}
@@ -226,7 +226,7 @@ export default function GuestJoinScreen() {
                 onClick={() => setAvatar(emoji)}
                 whileTap={{ scale: 0.9 }}
                 whileHover={{ scale: 1.06 }}
-                className={`text-2xl h-10 flex items-center justify-center rounded-lg transition-all ${avatar === emoji ? 'bg-primary/40 border border-primary scale-110 shadow-[0_0_18px_rgba(57,255,20,0.22)]' : 'hover:bg-white/10 border border-transparent'}`}
+                className={`flex h-10 items-center justify-center rounded-lg text-2xl transition-all ${avatar === emoji ? 'bg-primary/40 border border-primary scale-110 shadow-[0_0_18px_rgba(57,255,20,0.22)]' : 'hover:bg-white/10 border border-transparent'}`}
               >
                 {emoji}
               </motion.button>
@@ -295,5 +295,6 @@ export default function GuestJoinScreen() {
     </motion.main>
   );
 }
+
 
 
