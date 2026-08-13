@@ -41,6 +41,11 @@ function parsePosition(text) {
   return match ? Number(match[1]) : null;
 }
 
+function parsePlaylistTotal(text) {
+  const match = String(text || '').match(/(\d{1,5})\s+canciones/i);
+  return match ? Number(match[1]) : null;
+}
+
 async function collectVisibleRows(page) {
   return page.evaluate(() => {
     const anchors = [...document.querySelectorAll('a[href*="/track/"]')];
@@ -59,6 +64,16 @@ async function collectVisibleRows(page) {
   });
 }
 
+async function scrollTrackContainer(page, amount = 1800) {
+  await page.evaluate((delta) => {
+    const candidates = [...document.querySelectorAll('main, .main-view-container__scroll-node-child, div')]
+      .filter((element) => element.scrollHeight > element.clientHeight + 200)
+      .sort((a, b) => b.scrollHeight - a.scrollHeight);
+    const target = candidates[0] || document.scrollingElement || document.documentElement;
+    target.scrollTop += delta;
+  }, amount);
+}
+
 async function capturePlaylist(page, playlist) {
   console.log(`\nAbriendo ${playlist.style}...`);
   await page.goto(`https://open.spotify.com/playlist/${playlist.id}`, {
@@ -70,18 +85,27 @@ async function capturePlaylist(page, playlist) {
   const seen = new Map();
   let stableRounds = 0;
   let previousCount = 0;
+  let captureOrder = 0;
+  let playlistTotal = await page.evaluate(() => {
+    const match = document.body.innerText.match(/(\d{1,5})\s+canciones/i);
+    return match ? Number(match[1]) : null;
+  });
 
   for (let round = 0; round < 260 && stableRounds < 18; round += 1) {
     const rows = await collectVisibleRows(page);
     for (const row of rows) {
       const position = parsePosition(row.rowText);
-      const key = position ? `${position}` : row.id;
-      seen.set(key, {
-        id: row.id,
-        position,
-        rowText: row.rowText,
-        title: row.title
-      });
+      const key = position ? `${position}:${row.id}` : row.id;
+      if (!seen.has(key)) {
+        seen.set(key, {
+          id: row.id,
+          position,
+          captureOrder,
+          rowText: row.rowText,
+          title: row.title
+        });
+        captureOrder += 1;
+      }
     }
 
     const count = seen.size;
@@ -89,16 +113,54 @@ async function capturePlaylist(page, playlist) {
     previousCount = count;
 
     if (round % 10 === 0) {
-      console.log(`  ${playlist.style}: ${count} filas capturadas`);
+      console.log(`  ${playlist.style}: ${count}${playlistTotal ? `/${playlistTotal}` : ''} filas capturadas`);
     }
 
-    await page.mouse.wheel(0, 1800);
+    await scrollTrackContainer(page);
     await page.waitForTimeout(450);
+
+    if (playlistTotal && count >= playlistTotal) break;
   }
 
-  const rows = [...seen.values()]
+  const rowsByCaptureOrder = [...seen.values()]
     .filter((row) => row.id)
-    .sort((a, b) => (a.position || 999999) - (b.position || 999999));
+    .sort((a, b) => a.captureOrder - b.captureOrder);
+
+  for (let index = 0; index < rowsByCaptureOrder.length; index += 1) {
+    if (rowsByCaptureOrder[index].position) continue;
+    const previousPosition = rowsByCaptureOrder
+      .slice(0, index)
+      .findLast((row) => row.position)?.position;
+    const nextPosition = rowsByCaptureOrder
+      .slice(index + 1)
+      .find((row) => row.position)?.position;
+    const missingRun = rowsByCaptureOrder
+      .slice(index)
+      .findIndex((row) => row.position);
+    const runLength = missingRun === -1 ? rowsByCaptureOrder.length - index : missingRun;
+
+    if (previousPosition && nextPosition && nextPosition - previousPosition - 1 === runLength) {
+      for (let offset = 0; offset < runLength; offset += 1) {
+        rowsByCaptureOrder[index + offset].position = previousPosition + offset + 1;
+      }
+      index += runLength - 1;
+    }
+  }
+
+  let rows = rowsByCaptureOrder
+    .sort((a, b) => (a.position || a.captureOrder + 100000) - (b.position || b.captureOrder + 100000))
+    .map(({ captureOrder: _captureOrder, ...row }) => row);
+
+  playlistTotal = playlistTotal || parsePlaylistTotal(await page.evaluate(() => document.body.innerText));
+  if (playlistTotal) {
+    const positionedRows = rows.filter((row) => Number(row.position) >= 1 && Number(row.position) <= playlistTotal);
+    const uniquePositions = new Set(positionedRows.map((row) => Number(row.position)));
+    if (uniquePositions.size >= playlistTotal) {
+      rows = positionedRows
+        .filter((row, index, array) => array.findIndex((candidate) => candidate.position === row.position) === index)
+        .sort((a, b) => Number(a.position) - Number(b.position));
+    }
+  }
 
   const maxPosition = Math.max(0, ...rows.map((row) => Number(row.position || 0)));
   const missingPositions = maxPosition
@@ -110,7 +172,7 @@ async function capturePlaylist(page, playlist) {
   await fs.writeFile(outputPath, `${JSON.stringify(rows, null, 2)}\n`, 'utf8');
 
   console.log(`  Guardado ${outputPath}`);
-  console.log(`  Total capturado: ${rows.length}. Ultima posicion: ${maxPosition || 'sin posicion'}.`);
+  console.log(`  Total capturado: ${rows.length}${playlistTotal ? `/${playlistTotal}` : ''}. Ultima posicion: ${maxPosition || 'sin posicion'}.`);
   if (missingPositions.length) {
     console.warn(`  Posiciones faltantes: ${missingPositions.slice(0, 40).join(', ')}`);
   }
@@ -118,6 +180,7 @@ async function capturePlaylist(page, playlist) {
   return {
     ...playlist,
     rows: rows.length,
+    expectedRows: playlistTotal,
     maxPosition,
     missingPositions
   };

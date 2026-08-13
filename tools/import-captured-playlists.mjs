@@ -118,6 +118,11 @@ function parseRowText(rowText) {
 }
 
 async function fetchPublicTrackMetadata(trackId, attempt = 0) {
+  fetchPublicTrackMetadata.cache ||= new Map();
+  if (fetchPublicTrackMetadata.cache.has(trackId)) {
+    return fetchPublicTrackMetadata.cache.get(trackId);
+  }
+
   const response = await fetch(`https://open.spotify.com/track/${trackId}`);
   if (response.status === 429 && attempt < 5) {
     await new Promise((resolve) => setTimeout(resolve, 1500 + attempt * 500));
@@ -128,12 +133,14 @@ async function fetchPublicTrackMetadata(trackId, attempt = 0) {
   const jsonLdMatch = html.match(/<script[^>]*type="application\/ld\+json"[^>]*>(.*?)<\/script>/s);
   const jsonLd = jsonLdMatch ? JSON.parse(jsonLdMatch[1]) : {};
 
-  return {
+  const metadata = {
     title: jsonLd.name || '',
     release_date: jsonLd.datePublished || html.match(/release_date" content="([^"]+)"/)?.[1] || '',
     cover_url: jsonLd.image || html.match(/property="og:image" content="([^"]+)"/)?.[1] || '',
     description: jsonLd.description || ''
   };
+  fetchPublicTrackMetadata.cache.set(trackId, metadata);
+  return metadata;
 }
 
 function artistFromDescription(description) {
@@ -175,7 +182,7 @@ function rowFromTrack(track, playlist, position) {
   const releaseYear = Number(releaseDate.slice(0, 4)) || '';
   const durationSeconds = Number(track.duration_seconds || 0);
   const base = {
-    id: `${slugify(track.artist_main)}-${slugify(track.title)}-${track.id.slice(0, 6)}`,
+    id: `${playlist.style_slug}-${String(position).padStart(3, '0')}-${slugify(track.artist_main)}-${slugify(track.title)}-${track.id.slice(0, 6)}`,
     playlist_source: playlist.playlist_source,
     playlist_id: playlist.playlist_id,
     playlist_owner: playlist.playlist_owner,
@@ -210,15 +217,15 @@ function rowFromTrack(track, playlist, position) {
 async function loadRows(playlist) {
   const rowsPath = path.join(CAPTURE_DIR, `${playlist.style_slug}-rows.json`);
   const rows = JSON.parse(await fs.readFile(rowsPath, 'utf8'));
-  const uniqueRows = [...new Map(rows.map((row) => [row.id, row])).values()]
+  const playlistRows = rows
     .filter((row) => row.id)
     .sort((a, b) => Number(a.position || 999999) - Number(b.position || 999999));
 
-  if (uniqueRows.length < playlist.minimum_rows) {
-    throw new Error(`${playlist.style} tiene ${uniqueRows.length} filas; minimo esperado ${playlist.minimum_rows}. No importo catalogos incompletos.`);
+  if (playlistRows.length < playlist.minimum_rows) {
+    throw new Error(`${playlist.style} tiene ${playlistRows.length} filas; minimo esperado ${playlist.minimum_rows}. No importo catalogos incompletos.`);
   }
 
-  return uniqueRows;
+  return playlistRows;
 }
 
 const existingCatalog = JSON.parse(await fs.readFile(CATALOG_PATH, 'utf8'));

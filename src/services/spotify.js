@@ -478,14 +478,10 @@ export async function getPlaylistTracks(playlistUrl) {
   const playlistId = getPlaylistId(playlistUrl);
   if (!playlistId) throw new Error('El enlace de Spotify no parece una playlist válida.');
 
-  try {
-    return await fetchPlaylistTracksFromSpotify(playlistId);
-  } catch (error) {
-    console.warn('No se pudo leer la playlist completa desde Spotify. Usando catalogo local de respaldo:', error);
-    const catalogTracks = await getCatalogTracks(playlistId);
-    if (catalogTracks.length) return catalogTracks;
-    throw error;
-  }
+  const catalogTracks = await getCatalogTracks(playlistId);
+  if (catalogTracks.length) return catalogTracks;
+
+  return fetchPlaylistTracksFromSpotify(playlistId);
 }
 
 
