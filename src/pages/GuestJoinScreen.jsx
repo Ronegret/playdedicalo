@@ -48,16 +48,31 @@ export default function GuestJoinScreen() {
   const canJoin = pin.length === 4 && name.trim().length > 0 && !isLoading;
   const pinDigits = pin.padEnd(4, ' ').split('').slice(0, 4);
 
+  // Cada invitado también recibe una sesión anónima automática (la necesita
+  // Firebase para autorizar la lectura/escritura de la sala). Esa sesión
+  // anónima NO es un login de Google — si se trata como tal, en cuanto
+  // termina de armarse (uno o varios segundos después de cargar la
+  // pantalla) pisa el alias/emoji que la persona ya empezó a escribir con
+  // el perfil vacío "Jugador"/"DJ" de esa sesión anónima. isAnonymous
+  // distingue exactamente ese caso.
+  // También protegemos con esta ref: si la persona ya tocó el nombre o el
+  // avatar a mano, ningún autocompletado (ni de un login real de Google)
+  // puede volver a pisarlo.
+  const hasEditedNameRef = useRef(false);
+  const hasEditedAvatarRef = useRef(false);
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      setGoogleUser(user);
-      if (user) {
-        const profile = await loadUserProfile(user);
-        setName(profile.name || user.displayName || '');
-        setAvatar(profile.avatar || user.photoURL || 'DJ');
-        setAuthStatus('idle');
-        setAuthMessage('');
+      if (!user || user.isAnonymous) {
+        setGoogleUser(null);
+        return;
       }
+      setGoogleUser(user);
+      const profile = await loadUserProfile(user);
+      if (!hasEditedNameRef.current) setName(profile.name || user.displayName || '');
+      if (!hasEditedAvatarRef.current) setAvatar(profile.avatar || user.photoURL || 'DJ');
+      setAuthStatus('idle');
+      setAuthMessage('');
     });
     return unsubscribe;
   }, [loadUserProfile]);
@@ -69,11 +84,11 @@ export default function GuestJoinScreen() {
 
     authReady.then(() => getRedirectResult(auth))
       .then(async (result) => {
-        if (result?.user) {
+        if (result?.user && !result.user.isAnonymous) {
           const profile = await loadUserProfile(result.user);
           setGoogleUser(result.user);
-          setName(profile.name || result.user.displayName || '');
-          setAvatar(profile.avatar || result.user.photoURL || 'DJ');
+          if (!hasEditedNameRef.current) setName(profile.name || result.user.displayName || '');
+          if (!hasEditedAvatarRef.current) setAvatar(profile.avatar || result.user.photoURL || 'DJ');
           setAuthStatus('idle');
           setAuthMessage('');
         } else if (hasFreshRedirectIntent && !auth.currentUser) {
@@ -316,7 +331,7 @@ export default function GuestJoinScreen() {
             maxLength={18}
             className="h-13 w-full rounded-xl border border-white/10 bg-white/5 px-4 text-center text-base font-bold text-on-surface outline-none transition-colors focus:border-neon-green focus:ring-2 focus:ring-neon-green/30 sm:h-14"
             value={name}
-            onChange={(event) => setName(event.target.value)}
+            onChange={(event) => { hasEditedNameRef.current = true; setName(event.target.value); }}
             placeholder="DJ Invitado"
           />
         </section>
@@ -333,7 +348,7 @@ export default function GuestJoinScreen() {
               <motion.button
                 key={emoji}
                 type="button"
-                onClick={() => setAvatar(emoji)}
+                onClick={() => { hasEditedAvatarRef.current = true; setAvatar(emoji); }}
                 whileTap={{ scale: 0.9 }}
                 whileHover={{ scale: 1.06 }}
                 className={`flex h-10 items-center justify-center rounded-lg text-2xl transition-all ${avatar === emoji ? 'bg-primary/40 border border-primary scale-110 shadow-[0_0_18px_rgba(57,255,20,0.22)]' : 'hover:bg-white/10 border border-transparent'}`}

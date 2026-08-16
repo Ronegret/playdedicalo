@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getCombinedTimelineYears, useGameStore } from '../store/useGameStore';
+import { getCombinedTimelineYears, getTimelineProgress, useGameStore } from '../store/useGameStore';
 import ProfileMenu from '../components/ProfileMenu';
 import { auth } from '../firebase';
 
@@ -32,11 +32,12 @@ const RESULT_STYLES = {
 
 
 
-function TimelineYears({ years = [], goalYears = 12 }) {
+function TimelineYears({ years = [], wildcards = 0, goalYears = 12 }) {
+  const progress = Math.min(years.length + wildcards, goalYears);
   return (
     <div className="mt-2 flex flex-wrap items-center gap-1.5 pl-11">
       <span className="font-label-caps text-xs text-on-surface-variant">
-        {Math.min(years.length, goalYears)}/{goalYears}
+        {progress}/{goalYears}
       </span>
       {years.slice(0, goalYears).map((year, index) => (
         <span
@@ -45,6 +46,15 @@ function TimelineYears({ years = [], goalYears = 12 }) {
           title={year}
         >
           {String(year).slice(2)}
+        </span>
+      ))}
+      {Array.from({ length: Math.max(0, Math.min(wildcards, goalYears - years.length)) }, (_, index) => (
+        <span
+          key={`wildcard-${index}`}
+          className="w-8 h-8 rounded-full border-2 border-chaos-gold/60 bg-chaos-gold/15 flex items-center justify-center"
+          title="Canjeada con puntos"
+        >
+          <span className="material-symbols-outlined text-chaos-gold text-sm">star</span>
         </span>
       ))}
     </div>
@@ -83,9 +93,12 @@ function RankingList({ players, final = false, showTimeline = false, goalYears =
                 )}
                 <span className="font-bold text-base truncate">{player.name}</span>
               </div>
-              <span className="font-black text-base text-neon-green shrink-0">{player.points} pts</span>
+              <div className="text-right shrink-0">
+                <p className="font-black text-base text-neon-green leading-none">{getTimelineProgress(player)}/{goalYears}</p>
+                <p className="mt-0.5 text-xs text-on-surface-variant leading-none">{player.points} pts</p>
+              </div>
             </div>
-            {showTimeline && <TimelineYears years={getCombinedTimelineYears(player)} goalYears={goalYears} />}
+            {showTimeline && <TimelineYears years={getCombinedTimelineYears(player)} wildcards={Number(player.wildcards || 0)} goalYears={goalYears} />}
           </motion.div>
         );
       })}
@@ -110,7 +123,7 @@ export default function ResultScreen() {
   const guestPoints = guestReveal?.points ?? players.find((p) => p.id === guestId)?.points ?? 10;
   const isFinal = phase === 'final';
   const winner = Array.isArray(players) && players.length
-    ? [...players].sort((a, b) => Number(b.points || 0) - Number(a.points || 0))[0]
+    ? [...players].sort((a, b) => getTimelineProgress(b) - getTimelineProgress(a))[0]
     : null;
   const resultType = guestReveal?.resultType || lastResultType || 'success';
   const pointDelta = guestReveal?.delta ?? lastPointDelta;
@@ -189,7 +202,7 @@ export default function ResultScreen() {
               <div className="mb-4 overflow-hidden rounded-3xl border border-neon-green/50 bg-[linear-gradient(145deg,rgba(57,255,20,0.16),rgba(168,85,247,0.12))] p-5 shadow-[0_0_50px_rgba(57,255,20,0.16)]">
                 <p className="font-label-caps text-neon-green text-xs tracking-[0.22em]">DUEÑO DE LA CABINA</p>
                 <p className="mt-1 font-headline-lg-mobile text-3xl text-white">{winner.name}</p>
-                <p className="mt-1 text-sm text-on-surface-variant">{winner.points} puntos finales · {getCombinedTimelineYears(winner).length}/{targetYears} en ruta</p>
+                <p className="mt-1 text-sm text-on-surface-variant">{getTimelineProgress(winner)}/{targetYears} canciones · {winner.points} pts</p>
               </div>
             )}
 
@@ -227,7 +240,7 @@ export default function ResultScreen() {
   }
 
   // NON-FINAL screen — diseño compacto
-  const sortedPlayers = [...players].sort((a, b) => Number(b.points || 0) - Number(a.points || 0));
+  const sortedPlayers = [...players].sort((a, b) => getTimelineProgress(b) - getTimelineProgress(a));
 
   return (
     <motion.main
@@ -454,7 +467,7 @@ export default function ResultScreen() {
                   <span className="text-base font-bold text-white truncate flex-1">{player.name}</span>
                   <div className="text-right shrink-0">
                     <p className="text-sm font-black text-neon-green">
-                      {Math.min(getCombinedTimelineYears(player).length, targetYears)}/{targetYears} RUTA
+                      {getTimelineProgress(player)}/{targetYears} CANCIONES
                     </p>
                     <p className="text-xs font-bold text-white/55">{player.points} pts</p>
                   </div>

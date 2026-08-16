@@ -2,17 +2,18 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MusicNotesBubbles from '../components/MusicNotesBubbles';
-import { MAX_TIMELINE_GOAL_YEARS, MIN_TIMELINE_GOAL_YEARS, getCombinedTimelineYears, getPlayerPresence, useGameStore } from '../store/useGameStore';
+import { MAX_TIMELINE_GOAL_YEARS, MIN_TIMELINE_GOAL_YEARS, getCombinedTimelineYears, getPlayerPresence, getTimelineProgress, useGameStore } from '../store/useGameStore';
 import { explainSpotifyError, prepareSpotifyPlayback } from '../services/spotify';
 import ProfileMenu from '../components/ProfileMenu';
 import { auth } from '../firebase';
 
 
 
-function TimelineYears({ years = [], goalYears = 12 }) {
+function TimelineYears({ years = [], wildcards = 0, goalYears = 12 }) {
+  const progress = Math.min(years.length + wildcards, goalYears);
   return (
     <div className="mt-3 flex flex-wrap items-center gap-1.5 pl-0 sm:pl-9">
-      <span className="font-label-caps text-[10px] text-on-surface-variant">Ruta {Math.min(years.length, goalYears)}/{goalYears}</span>
+      <span className="font-label-caps text-[10px] text-on-surface-variant">Ruta {progress}/{goalYears}</span>
       {years.slice(0, goalYears).map((year, index) => (
         <span
           key={`${year}-${index}`}
@@ -20,6 +21,15 @@ function TimelineYears({ years = [], goalYears = 12 }) {
           title={year}
         >
           {String(year).slice(2)}
+        </span>
+      ))}
+      {Array.from({ length: Math.max(0, Math.min(wildcards, goalYears - years.length)) }, (_, index) => (
+        <span
+          key={`wildcard-${index}`}
+          className="w-7 h-7 rounded-full border-2 border-chaos-gold/60 bg-chaos-gold/15 flex items-center justify-center shadow-[0_0_8px_rgba(255,191,77,0.25)]"
+          title="Canjeada con puntos"
+        >
+          <span className="material-symbols-outlined text-chaos-gold text-sm">star</span>
         </span>
       ))}
     </div>
@@ -369,11 +379,13 @@ export default function LobbyScreen() {
                   </div>
                 </div>
                 <div className="text-right shrink-0">
-                  <span className="font-black text-neon-green drop-shadow-[0_0_8px_rgba(57,255,20,0.4)]">{player.points}</span>
-                  <span className="text-xs ml-1 text-on-surface-variant">PTS</span>
+                  <p className="font-black text-neon-green drop-shadow-[0_0_8px_rgba(57,255,20,0.4)] leading-none">
+                    {getTimelineProgress(player)}<span className="text-xs text-on-surface-variant">/{targetYears}</span>
+                  </p>
+                  <p className="mt-1 text-[10px] text-on-surface-variant leading-none">{player.points} pts</p>
                 </div>
               </div>
-              <TimelineYears years={getCombinedTimelineYears(player)} goalYears={targetYears} />
+              <TimelineYears years={getCombinedTimelineYears(player)} wildcards={Number(player.wildcards || 0)} goalYears={targetYears} />
             </motion.div>
           );})}
         </div>

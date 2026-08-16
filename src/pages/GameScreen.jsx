@@ -1,17 +1,21 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ATTACK_COST, ATTACK_TYPES, DEDICALO_PLAYLISTS, GAME_MODES, getCombinedTimelineYears, getPlayerPresence, normalizeSpotifyPlaylistUrl, useGameStore } from '../store/useGameStore';
+import { ATTACK_COST, ATTACK_TYPES, DEDICALO_PLAYLISTS, GAME_MODES, REDEEM_YEAR_COST, getCombinedTimelineYears, getPlayerPresence, getTimelineProgress, normalizeSpotifyPlaylistUrl, useGameStore } from '../store/useGameStore';
 import HeaderHUD from '../components/HeaderHUD';
 import { createQuestionFromTrack, explainSpotifyError, getCurrentHiddenTrack, getSpotifyStatus, pauseSpotifyPlayback, startRandomPlaylistTrack } from '../services/spotify';
 
 const EQUALIZER_BARS = [0.35, 0.58, 0.42, 0.71, 0.49, 0.64, 0.39];
 
-function RankingPeek({ players, guestId }) {
+function RankingPeek({ players, guestId, targetYears = 12 }) {
   const [rankOpen, setRankOpen] = useState(false);
   if (!players.length) return null;
-  const sorted = [...players].sort((a, b) => Number(b.points || 0) - Number(a.points || 0));
+  // Gana quien más canciones lleva hacia la meta — los puntos son aparte
+  // (sirven para sabotear o canjear), así que el ranking ordena y muestra
+  // progreso real, no puntos.
+  const sorted = [...players].sort((a, b) => getTimelineProgress(b) - getTimelineProgress(a));
   const myRank = sorted.findIndex((p) => p.id === guestId) + 1;
+  const leader = sorted[0];
 
   return (
     <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-black/30 text-left overflow-hidden shadow-[0_18px_40px_rgba(0,0,0,0.22)]">
@@ -21,9 +25,9 @@ function RankingPeek({ players, guestId }) {
         className="w-full p-4 flex items-center justify-between gap-3"
       >
         <div>
-          <p className="font-label-caps text-neon-green text-sm tracking-[0.16em]">RANKING</p>
+          <p className="font-label-caps text-neon-green text-sm tracking-[0.16em]">RANKING · CANCIONES</p>
           <p className="text-base font-bold text-white">
-            {myRank ? `Posición ${myRank} de ${sorted.length}` : 'Ver puntuaciones'}
+            {myRank ? `Posición ${myRank} de ${sorted.length}` : 'Ver progreso'}
           </p>
         </div>
         <motion.span
@@ -44,23 +48,32 @@ function RankingPeek({ players, guestId }) {
             className="overflow-hidden"
           >
             <div className="px-3 pb-3 flex flex-col gap-2.5">
-              {sorted.map((player, index) => (
-                <div
-                  key={player.id}
-                  className={`flex items-center gap-2.5 rounded-xl px-3 py-2.5 ${player.id === guestId ? 'bg-neon-green/10 border border-neon-green/25' : 'bg-white/5'}`}
-                >
-                  <span className={`w-8 h-8 rounded-lg text-sm font-black flex items-center justify-center shrink-0 ${index === 0 ? 'bg-neon-green text-black' : 'bg-white/10 text-white'}`}>
-                    {index + 1}
-                  </span>
-                  {player.avatar?.startsWith?.('http') ? (
-                    <img src={player.avatar} alt={player.name} className="w-9 h-9 rounded-full object-cover shrink-0" />
-                  ) : (
-                    <span className="w-7 h-7 rounded-full bg-black/20 flex items-center justify-center text-sm shrink-0">{player.avatar || '•'}</span>
-                  )}
-                  <span className="text-base font-bold text-white truncate flex-1">{player.name}</span>
-                  <span className="text-base font-black text-neon-green shrink-0">{player.points} pts</span>
-                </div>
-              ))}
+              {sorted.map((player, index) => {
+                const progress = getTimelineProgress(player);
+                const missing = Math.max(0, targetYears - progress);
+                return (
+                  <div
+                    key={player.id}
+                    className={`flex items-center gap-2.5 rounded-xl px-3 py-2.5 ${player.id === guestId ? 'bg-neon-green/10 border border-neon-green/25' : 'bg-white/5'}`}
+                  >
+                    <span className={`w-8 h-8 rounded-lg text-sm font-black flex items-center justify-center shrink-0 ${index === 0 ? 'bg-neon-green text-black' : 'bg-white/10 text-white'}`}>
+                      {index + 1}
+                    </span>
+                    {player.avatar?.startsWith?.('http') ? (
+                      <img src={player.avatar} alt={player.name} className="w-9 h-9 rounded-full object-cover shrink-0" />
+                    ) : (
+                      <span className="w-7 h-7 rounded-full bg-black/20 flex items-center justify-center text-sm shrink-0">{player.avatar || '•'}</span>
+                    )}
+                    <span className="text-base font-bold text-white truncate flex-1">{player.name}</span>
+                    <div className="text-right shrink-0">
+                      <p className="text-base font-black text-neon-green leading-none">{progress}/{targetYears}</p>
+                      <p className="mt-0.5 text-xs font-bold text-on-surface-variant leading-none">
+                        {missing === 0 ? '¡Meta!' : player === leader ? 'Va primero' : `Faltan ${missing}`}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </motion.div>
         )}
@@ -130,6 +143,29 @@ function VinylYearChip({ year, isScrambled, wobble }) {
   );
 }
 
+// Disco dorado = una canción comprada con puntos (ver REDEEM_YEAR_COST), no
+// acertada. Cuenta igual para la meta, pero se distingue con una estrella en
+// vez de un año — así el jugador ve de un vistazo cuánto de su progreso es
+// "de oído" y cuánto es canjeado.
+function WildcardChip({ wobble }) {
+  return (
+    <div
+      className="relative w-20 h-20 shrink-0 snap-center"
+      style={{ transform: `translateY(${wobble}px)` }}
+    >
+      <div
+        className="absolute inset-0 rounded-full border-2 border-black/60 shadow-[0_10px_22px_rgba(0,0,0,0.4)]"
+        style={{ background: 'repeating-radial-gradient(circle, #1a1405 0 3px, #2a2008 4px 4.5px, #1a1405 5px 7px)' }}
+      >
+        <div className="absolute inset-0 rounded-full bg-[conic-gradient(from_20deg,transparent_0_20deg,rgba(255,255,255,0.14)_20deg_26deg,transparent_26deg_170deg,rgba(255,255,255,0.08)_170deg_176deg,transparent_176deg_360deg)]" />
+      </div>
+      <div className="absolute inset-[16%] rounded-full flex items-center justify-center border-2 border-black/50 bg-chaos-gold shadow-[inset_0_2px_4px_rgba(0,0,0,0.35)]">
+        <span className="material-symbols-outlined text-black text-xl">star</span>
+      </div>
+    </div>
+  );
+}
+
 // Hueco tappable entre dos discos: el jugador toca aquí para decir dónde
 // cree que va la canción nueva. Mismo lenguaje circular que los vinilos,
 // pero como "funda vacía" (anillo punteado) para leerse claramente como
@@ -144,7 +180,7 @@ function VinylSlotButton({ label, disabled, onClick }) {
       className="group relative w-20 h-20 shrink-0 snap-center rounded-full border-2 border-dashed border-neon-green/50 bg-neon-green/5 text-neon-green flex flex-col items-center justify-center active:scale-90 transition-transform hover:bg-neon-green/15 hover:border-neon-green focus:outline-none focus:ring-2 focus:ring-neon-green disabled:opacity-40"
     >
       <span className="material-symbols-outlined text-2xl leading-none">add</span>
-      <span className="absolute -bottom-8 w-28 text-center text-xs font-label-caps leading-tight text-on-surface-variant group-hover:text-neon-green transition-colors">
+      <span className="absolute -bottom-9 w-32 text-center text-sm font-bold font-label-caps leading-tight text-white group-hover:text-neon-green transition-colors">
         {label}
       </span>
     </button>
@@ -199,7 +235,7 @@ function AttackWarningOverlay({ attack, onClose }) {
   );
 }
 
-function TimelinePlacementQuestion({ question, playerYears = [], disabled, onPick, activeAttack, targetYears = 12 }) {
+function TimelinePlacementQuestion({ question, playerYears = [], wildcards = 0, disabled, onPick, activeAttack, targetYears = 12 }) {
   const years = playerYears.length ? playerYears : [2000];
   const attackType = activeAttack?.type;
   const isReversed = attackType === 'reverse_order';
@@ -234,15 +270,15 @@ function TimelinePlacementQuestion({ question, playerYears = [], disabled, onPic
             <p className="font-label-caps text-sm text-neon-green tracking-[0.16em]">TU RUTA DE AÑOS</p>
             <p className="mt-1 text-base text-white font-bold">Elige dónde colocar esta canción</p>
           </div>
-          <span className="rounded-full border border-white/10 bg-black/25 px-3 py-1.5 text-xs font-label-caps text-on-surface-variant">
-            {Math.min(years.length, targetYears)}/{targetYears}
+          <span className="rounded-full border border-white/10 bg-black/25 px-3 py-1.5 text-sm font-label-caps text-on-surface-variant">
+            {Math.min(years.length + wildcards, targetYears)}/{targetYears}
           </span>
         </div>
 
         {/* Estante de vinilos: riel horizontal con snap-scroll, discos y huecos
             alternados en un leve vaivén vertical para que se lea como una
             colección real y no una grilla rígida. */}
-        <div className="relative mt-6 overflow-x-auto overflow-y-visible pb-10 pt-2 snap-x no-scrollbar sm:mt-8">
+        <div className="relative mt-6 overflow-x-auto overflow-y-visible pb-12 pt-2 snap-x no-scrollbar sm:mt-8">
           <div className="absolute left-0 right-0 top-1/2 h-px bg-gradient-to-r from-transparent via-white/12 to-transparent" />
           <div className="relative min-w-max flex items-center gap-3 px-2">
             {slots.map((slot, index) => (
@@ -269,8 +305,17 @@ function TimelinePlacementQuestion({ question, playerYears = [], disabled, onPic
                 )}
               </div>
             ))}
+            {wildcards > 0 && Array.from({ length: wildcards }, (_, index) => (
+              <WildcardChip key={`wildcard-${index}`} wobble={(visibleYears.length + index) % 2 === 0 ? -6 : 6} />
+            ))}
           </div>
         </div>
+        {wildcards > 0 && (
+          <p className="mt-2 flex items-center gap-1.5 text-sm text-chaos-gold">
+            <span className="material-symbols-outlined text-base">star</span>
+            {wildcards === 1 ? '1 canción canjeada con puntos' : `${wildcards} canciones canjeadas con puntos`}
+          </p>
+        )}
         <p className="mt-3 text-base leading-relaxed text-on-surface-variant">
           {isSlippery
             ? 'Ojo: esta ronda el toque puede saltar al hueco vecino. Juega con sangre fria.'
@@ -303,7 +348,8 @@ export default function GameScreen() {
     setAudioPlaying,
     roomError,
     clearRoomError,
-    attackOpponent
+    attackOpponent,
+    redeemPointsForYear
   } = useGameStore();
   const [answeredQuestionKey, setAnsweredQuestionKey] = useState(null);
   const [countdownValue, setCountdownValue] = useState(3);
@@ -320,6 +366,9 @@ export default function GameScreen() {
   const [revealError, setRevealError] = useState('');
   const [isBlackoutPending, setIsBlackoutPending] = useState(false);
   const [dismissedAttackKey, setDismissedAttackKey] = useState('');
+  const [isRedeeming, setIsRedeeming] = useState(false);
+  const [redeemError, setRedeemError] = useState('');
+  const [redeemToast, setRedeemToast] = useState(false);
   const startedSpotifyRoundRef = useRef('');
   const roleRef = useRef(role);
   useEffect(() => { roleRef.current = role; }, [role]);
@@ -440,6 +489,24 @@ export default function GameScreen() {
   const showIncomingAttack = Boolean(incomingAttack && dismissedAttackKey !== attackKey && (phase === 'listen' || phase === 'blackout'));
   const attackTargets = players.filter((player) => player.id !== guestId && getPlayerPresence(player).status === 'online' && !player.activeAttack);
   const canAttack = phase === 'listen' && Number(ownPlayer?.points || 0) >= ATTACK_COST && attackTargets.length > 0;
+  const canRedeem = phase === 'listen' && Number(ownPlayer?.points || 0) >= REDEEM_YEAR_COST && getTimelineProgress(ownPlayer) < targetYears;
+
+  const handleRedeem = async () => {
+    if (isRedeeming) return;
+    setRedeemError('');
+    setIsRedeeming(true);
+    try {
+      await redeemPointsForYear();
+      setRedeemToast(true);
+      if (navigator.vibrate) navigator.vibrate([20, 40, 20]);
+      window.setTimeout(() => setRedeemToast(false), 3000);
+    } catch (error) {
+      setRedeemError(error.message || 'No se pudo canjear. Inténtalo de nuevo.');
+      window.setTimeout(() => setRedeemError(''), 4000);
+    } finally {
+      setIsRedeeming(false);
+    }
+  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -641,17 +708,35 @@ export default function GameScreen() {
               </p>
             )}
 
-            <RankingPeek players={players} guestId={guestId} />
+            <RankingPeek players={players} guestId={guestId} targetYears={targetYears} />
 
-            {canAttack && (
-              <button
-                type="button"
-                onClick={() => { setAttackError(''); setShowAttackModal(true); }}
-                className="min-h-touch rounded-full border border-vinyl-orange/40 bg-vinyl-orange/10 px-4 flex items-center gap-2 text-vinyl-orange font-label-caps text-sm font-bold active:scale-95 transition-all"
-              >
-                <span className="material-symbols-outlined text-base">bolt</span>
-                SABOTEAR ({ATTACK_COST} PTS)
-              </button>
+            {(canAttack || canRedeem) && (
+              <div className="flex flex-wrap items-center justify-center gap-2">
+                {canAttack && (
+                  <button
+                    type="button"
+                    onClick={() => { setAttackError(''); setShowAttackModal(true); }}
+                    className="min-h-touch rounded-full border border-vinyl-orange/40 bg-vinyl-orange/10 px-4 flex items-center gap-2 text-vinyl-orange font-label-caps text-sm font-bold active:scale-95 transition-all"
+                  >
+                    <span className="material-symbols-outlined text-base">bolt</span>
+                    SABOTEAR ({ATTACK_COST} PTS)
+                  </button>
+                )}
+                {canRedeem && (
+                  <button
+                    type="button"
+                    onClick={handleRedeem}
+                    disabled={isRedeeming}
+                    className="min-h-touch rounded-full border border-chaos-gold/50 bg-chaos-gold/10 px-4 flex items-center gap-2 text-chaos-gold font-label-caps text-sm font-bold active:scale-95 transition-all disabled:opacity-50"
+                  >
+                    <span className="material-symbols-outlined text-base">star</span>
+                    {isRedeeming ? 'CANJEANDO...' : `CANJEAR (${REDEEM_YEAR_COST} PTS)`}
+                  </button>
+                )}
+              </div>
+            )}
+            {redeemError && (
+              <p className="text-sm text-intense-red text-center">{redeemError}</p>
             )}
 
             {role === 'host' && (
@@ -788,13 +873,14 @@ export default function GameScreen() {
                   </p>
                 </motion.div>
                 <div className="mt-3 w-full flex flex-col gap-2">
-                  <RankingPeek players={players} guestId={guestId} />
+                  <RankingPeek players={players} guestId={guestId} targetYears={targetYears} />
                 </div>
               </>
             ) : currentQuestion.answerType === 'timeline-placement' ? (
               <TimelinePlacementQuestion
                 question={currentQuestion}
                 playerYears={ownTimelineYears}
+                wildcards={Number(ownPlayer?.wildcards || 0)}
                 disabled={hasAnswered}
                 onPick={handleAnswer}
                 activeAttack={incomingAttack}
@@ -838,6 +924,23 @@ export default function GameScreen() {
             <div className="rounded-2xl border border-vinyl-orange/50 bg-vinyl-orange/15 backdrop-blur-lg px-4 py-3 flex items-center gap-2 max-w-sm w-full">
               <span className="material-symbols-outlined text-vinyl-orange text-xl shrink-0">bolt</span>
               <p className="text-sm font-black text-white">¡Sabotaje enviado a {attackSentTo}!</p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {redeemToast && (
+          <motion.div
+            initial={{ y: -80, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -80, opacity: 0 }}
+            transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+            className="fixed top-20 inset-x-0 z-[290] flex justify-center px-5 pointer-events-none"
+          >
+            <div className="rounded-2xl border border-chaos-gold/50 bg-chaos-gold/15 backdrop-blur-lg px-4 py-3 flex items-center gap-2 max-w-sm w-full">
+              <span className="material-symbols-outlined text-chaos-gold text-xl shrink-0">star</span>
+              <p className="text-sm font-black text-white">¡Canjeaste una canción para tu ruta!</p>
             </div>
           </motion.div>
         )}

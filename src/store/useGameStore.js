@@ -61,27 +61,34 @@ function armPresenceDisconnect(pin, playerId) {
 // de nadie, solo le complica la próxima ronda al objetivo. Así se mantiene
 // el filo competitivo sin arriesgar la condición de victoria de nadie.
 export const ATTACK_COST = 8;
+
+// Los puntos de acierto (+5/-3) nunca ganan la partida por sí solos — solo
+// sirven para dos cosas: sabotear (ATTACK_COST) o canjearlos por progreso
+// real hacia la meta. Con REDEEM_YEAR_COST puntos ahorrados, un jugador
+// puede comprar directamente una "canción" de progreso sin tener que
+// acertarla, para quien vaya atrás en el conteo de canciones.
+export const REDEEM_YEAR_COST = 40;
 export const ATTACK_TYPES = {
   reverse_order: {
     id: 'reverse_order',
     icon: 'swap_vert',
     name: 'Modo espejo',
     short: 'Ruta de mayor a menor',
-    description: 'Sus discos se muestran al reves durante una ronda.'
+    description: 'Sus discos se muestran al revés durante una ronda.'
   },
   mirror_year: {
     id: 'mirror_year',
     icon: 'flip',
-    name: 'Ano remix',
-    short: 'Digitos cambiados',
-    description: 'Los anos se ven con los digitos revueltos para distraer.'
+    name: 'Año remix',
+    short: 'Dígitos cambiados',
+    description: 'Los años se ven con los dígitos revueltos para distraer.'
   },
   slippery_tap: {
     id: 'slippery_tap',
     icon: 'ads_click',
     name: 'Toque falso',
-    short: 'El boton vecino responde',
-    description: 'Al tocar un hueco, la seleccion se puede mover al hueco de al lado.'
+    short: 'El botón vecino responde',
+    description: 'Al tocar un hueco, la selección se puede mover al hueco de al lado.'
   }
 };
 
@@ -89,12 +96,12 @@ export const TIMELINE_GOAL_YEARS = 12;
 export const MIN_TIMELINE_GOAL_YEARS = 6;
 export const MAX_TIMELINE_GOAL_YEARS = 20;
 export const DEDICALO_PLAYLISTS = [
-  { id: 'espanol-100', icon: 'stadium', name: 'ESPANOL 100%', mood: 'Solo temazos en espanol para cantar rapido.', url: 'https://open.spotify.com/playlist/1C3NDNNfg6c0SlPhyikGVU' },
+  { id: 'espanol-100', icon: 'stadium', name: 'ESPAÑOL 100%', mood: 'Solo temazos en español para cantar rápido.', url: 'https://open.spotify.com/playlist/1C3NDNNfg6c0SlPhyikGVU' },
   { id: 'temazos', icon: 'local_fire_department', name: 'TEMAZOS', mood: 'Canciones grandes para grupos competitivos.', url: 'https://open.spotify.com/playlist/0i8fEuY6ffN6Ou53BeIcxY' },
-  { id: 'espanol-summer-party', icon: 'wb_sunny', name: 'ESPANOL SUMMER', mood: 'Fiesta luminosa, verano y energia alta.', url: 'https://open.spotify.com/playlist/0UY3oVANXRqflE5QjHhaH4' },
+  { id: 'espanol-summer-party', icon: 'wb_sunny', name: 'ESPAÑOL SUMMER', mood: 'Fiesta luminosa, verano y energía alta.', url: 'https://open.spotify.com/playlist/0UY3oVANXRqflE5QjHhaH4' },
   { id: 'hits-todo-tiempo', icon: 'public', name: 'HITS DE SIEMPRE', mood: 'Hits reconocibles para cualquier mesa.', url: 'https://open.spotify.com/playlist/5TOMoP3KEWtRASGeFsksUY' },
-  { id: 'hits-rock-espanol', icon: 'electric_bolt', name: 'HITS ROCK ESPANOL', mood: 'Guitarras, himnos y memoria colectiva.', url: 'https://open.spotify.com/playlist/2cT61hYCfIkwHAyVMwej9D' },
-  { id: 'mejores-todos-tiempos', icon: 'emoji_events', name: 'MEJORES DE SIEMPRE', mood: 'Clasicos y favoritos de todos los tiempos.', url: 'https://open.spotify.com/playlist/0f3YRJO2HyZTpCLCVxzBt0' },
+  { id: 'hits-rock-espanol', icon: 'electric_bolt', name: 'HITS ROCK ESPAÑOL', mood: 'Guitarras, himnos y memoria colectiva.', url: 'https://open.spotify.com/playlist/2cT61hYCfIkwHAyVMwej9D' },
+  { id: 'mejores-todos-tiempos', icon: 'emoji_events', name: 'MEJORES DE SIEMPRE', mood: 'Clásicos y favoritos de todos los tiempos.', url: 'https://open.spotify.com/playlist/0f3YRJO2HyZTpCLCVxzBt0' },
   { id: 'fiesta-mayor-verbena', icon: 'celebration', name: 'FIESTA MAYOR', mood: 'Verbena, pueblo y canciones para gritar.', url: 'https://open.spotify.com/playlist/7xcdrzs58PmLIZa4P5Qk3s' },
   { id: 'fiesta-del-pueblo', icon: 'nightlife', name: 'FIESTA DEL PUEBLO', mood: 'La lista para cerrar la noche arriba.', url: 'https://open.spotify.com/playlist/4OoS8qoueVgm5PpuDUlOwH' }
 ];
@@ -103,10 +110,10 @@ export const DEFAULT_SPOTIFY_PLAYLIST_URL = DEDICALO_PLAYLISTS[0].url;
 export const GAME_MODES = {
   timeline: {
     id: 'timeline',
-    name: 'ANOS LOCOS',
-    short: 'Ordena canciones por ano',
+    name: 'AÑOS LOCOS',
+    short: 'Ordena canciones por año',
     description: `Cada jugador arma su propia ruta musical y gana quien completa primero ${TIMELINE_GOAL_YEARS} canciones.`,
-    rhythm: 'Memoria, intuicion y nostalgia: coloca cada cancion donde crees que pertenece.'
+    rhythm: 'Memoria, intuición y nostalgia: coloca cada canción donde crees que pertenece.'
   }
 };
 
@@ -114,9 +121,9 @@ export const GAME_MODES = {
 // These questions are fallbacks shown only when no Spotify track is available.
 // All answers must be objectively correct for any song/situation.
 const MUSIC_QUESTIONS = [
-  { mode: 'timeline', answerType: 'timeline-placement', type: 'Anos Locos', text: 'Donde encaja esta cancion en tu ruta de anos?', timelineYears: [2000], songYear: 2014, options: ['0', '1'], correct: 1 },
-  { mode: 'timeline', answerType: 'timeline-placement', type: 'Anos Locos', text: 'Donde pondrias esta cancion?', timelineYears: [1995, 2005], songYear: 2001, options: ['0', '1', '2'], correct: 1 },
-  { mode: 'timeline', answerType: 'timeline-placement', type: 'Anos Locos', text: 'Escucha y colocala por ano.', timelineYears: [1990, 2000, 2010], songYear: 2020, options: ['0', '1', '2', '3'], correct: 3 }
+  { mode: 'timeline', answerType: 'timeline-placement', type: 'Años Locos', text: '¿Dónde encaja esta canción en tu ruta de años?', timelineYears: [2000], songYear: 2014, options: ['0', '1'], correct: 1 },
+  { mode: 'timeline', answerType: 'timeline-placement', type: 'Años Locos', text: '¿Dónde pondrías esta canción?', timelineYears: [1995, 2005], songYear: 2001, options: ['0', '1', '2'], correct: 1 },
+  { mode: 'timeline', answerType: 'timeline-placement', type: 'Años Locos', text: 'Escucha y colócala por año.', timelineYears: [1990, 2000, 2010], songYear: 2020, options: ['0', '1', '2', '3'], correct: 3 }
 ];
 
 
@@ -160,10 +167,10 @@ export function normalizeSpotifyPlaylistUrl(value) {
 function sortPlayers(players) {
   if (!Array.isArray(players)) return [];
   return [...players].sort((a, b) => {
-    const yearsA = getCombinedTimelineYears(a).length;
-    const yearsB = getCombinedTimelineYears(b).length;
-    if (yearsB !== yearsA) {
-      return yearsB - yearsA;
+    const progressA = getTimelineProgress(a);
+    const progressB = getTimelineProgress(b);
+    if (progressB !== progressA) {
+      return progressB - progressA;
     }
     return Number(b.points || 0) - Number(a.points || 0);
   });
@@ -217,6 +224,14 @@ export function getCombinedTimelineYears(player) {
   return normalizeTimelineYears([baseYear, ...(p.timelineYears || [])], MAX_TIMELINE_GOAL_YEARS);
 }
 
+// Progreso real hacia la meta: canciones acertadas + comodines canjeados con
+// puntos (ver REDEEM_YEAR_COST). Es lo único que decide quién gana — los
+// puntos por sí solos NUNCA ganan la partida, solo sirven para sabotear o
+// para comprar este progreso.
+export function getTimelineProgress(player) {
+  return getCombinedTimelineYears(player).length + Number(player?.wildcards || 0);
+}
+
 
 
 export const useGameStore = create((setStore, getStore) => ({
@@ -261,14 +276,21 @@ export const useGameStore = create((setStore, getStore) => ({
   },
   setRole: (role) => setStore({ role }),
 
+  // Defensa extra: una sesión anónima (la que arma Firebase automáticamente
+  // solo para cumplir las reglas de la base de datos) nunca debe tratarse
+  // como un perfil registrado — no tiene nombre/avatar reales y su uid ni
+  // siquiera es estable en todos los dispositivos. Las pantallas ya filtran
+  // esto antes de llamar aquí, pero se repite el chequeo por si algún otro
+  // caller pasa un usuario sin filtrar.
   loadUserProfile: async (user = {}) => {
+    const isRealUser = Boolean(user?.uid) && !user.isAnonymous;
     const localProfile = getLocalProfile(user);
-    const remoteProfile = user?.uid ? await readData(`users/${user.uid}`).catch(() => null) : null;
+    const remoteProfile = isRealUser ? await readData(`users/${user.uid}`).catch(() => null) : null;
     const profile = {
-      uid: user?.uid || localProfile.uid,
-      name: cleanProfileName(remoteProfile?.name || localProfile.name || user?.displayName, 'Jugador'),
-      avatar: cleanProfileAvatar(remoteProfile?.avatar || localProfile.avatar || user?.photoURL, 'DJ'),
-      email: user?.email || remoteProfile?.email || ''
+      uid: isRealUser ? user.uid : localProfile.uid,
+      name: cleanProfileName(remoteProfile?.name || localProfile.name || (isRealUser ? user.displayName : ''), 'Jugador'),
+      avatar: cleanProfileAvatar(remoteProfile?.avatar || localProfile.avatar || (isRealUser ? user.photoURL : ''), 'DJ'),
+      email: (isRealUser ? user.email : '') || remoteProfile?.email || ''
     };
     persistProfile(profile);
     setStore({
@@ -276,7 +298,7 @@ export const useGameStore = create((setStore, getStore) => ({
       profileAvatar: profile.avatar,
       profileUid: profile.uid
     });
-    if (profile.uid) {
+    if (isRealUser) {
       await patchData(`users/${profile.uid}`, {
         ...profile,
         updatedAt: Date.now()
@@ -314,7 +336,7 @@ export const useGameStore = create((setStore, getStore) => ({
       id: hostId,
       authUid: hostUser?.uid || null,
       email: hostUser?.email || null,
-      name: profile?.name || hostUser?.displayName || 'Anfitrion',
+      name: profile?.name || hostUser?.displayName || 'Anfitrión',
       avatar: profile?.avatar || hostUser?.photoURL || 'DJ',
       points: 10,
       isHost: true,
@@ -323,7 +345,8 @@ export const useGameStore = create((setStore, getStore) => ({
       offlineSince: null,
       kicked: false,
       timelineBaseYear: getTimelineBaseYear(hostId),
-      timelineYears: []
+      timelineYears: [],
+      wildcards: 0
     };
 
     const roomData = {
@@ -447,7 +470,7 @@ export const useGameStore = create((setStore, getStore) => ({
       timelineYears: remoteUpdates[`players/${player.id}/timelineYears`] ?? normalizeTimelineYears(player.timelineYears || [], room?.settings?.targetYears || getStore().targetYears)
     })));
     const targetYears = clampTimelineGoal(room?.settings?.targetYears || getStore().targetYears);
-    const timelineComplete = nextPlayers.some((player) => getCombinedTimelineYears(player).length >= targetYears);
+    const timelineComplete = nextPlayers.some((player) => getTimelineProgress(player) >= targetYears);
     remoteUpdates.phase = timelineComplete ? 'final' : 'result';
     remoteUpdates.revealResults = revealResults;
     remoteUpdates.currentQuestion = timelineComplete ? null : room.currentQuestion || null;
@@ -532,6 +555,40 @@ export const useGameStore = create((setStore, getStore) => ({
       },
       [`players/${guestId}/points`]: nextPoints
     });
+  },
+
+  // Único otro uso de los puntos: cambiarlos por progreso real hacia la
+  // meta. No apunta a nadie ni depende de acertar una pregunta — por eso se
+  // permite en cualquier momento de la partida excepto durante una ronda ya
+  // en marcha (fase "blackout"), para no tentar a nadie a comprar la
+  // respuesta a mitad de pregunta.
+  redeemPointsForYear: async () => {
+    const { pin, guestId, players, phase, targetYears } = getStore();
+    if (!pin || !guestId) return;
+    if (phase === 'blackout') {
+      throw new Error('Espera a que termine esta ronda para canjear puntos.');
+    }
+
+    const me = players.find((player) => player.id === guestId);
+    if (!me) return;
+    if (Number(me.points || 0) < REDEEM_YEAR_COST) {
+      throw new Error(`Necesitas ${REDEEM_YEAR_COST} puntos para canjear una canción.`);
+    }
+
+    const nextPoints = clampPoints(Number(me.points || 0) - REDEEM_YEAR_COST);
+    const nextWildcards = Number(me.wildcards || 0) + 1;
+    const nextPlayer = { ...me, points: nextPoints, wildcards: nextWildcards };
+    const remoteUpdates = {
+      [`players/${guestId}/points`]: nextPoints,
+      [`players/${guestId}/wildcards`]: nextWildcards
+    };
+
+    if (getTimelineProgress(nextPlayer) >= clampTimelineGoal(targetYears)) {
+      remoteUpdates.phase = 'final';
+      remoteUpdates.currentQuestion = null;
+    }
+
+    await patchData(`rooms/${pin}`, remoteUpdates);
   },
 
   hostEndGame: async () => {
@@ -644,7 +701,8 @@ export const useGameStore = create((setStore, getStore) => ({
         offlineSince: null,
         kicked: false,
         timelineBaseYear: existingPlayer ? existingPlayer.timelineBaseYear : getTimelineBaseYear(guestId),
-        timelineYears: existingPlayer ? (existingPlayer.timelineYears || []) : []
+        timelineYears: existingPlayer ? (existingPlayer.timelineYears || []) : [],
+        wildcards: existingPlayer ? Number(existingPlayer.wildcards || 0) : 0
       };
 
       await writeData(`rooms/${cleanPin}/players/${guestId}`, newPlayer);

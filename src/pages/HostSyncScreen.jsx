@@ -144,9 +144,15 @@ export default function HostSyncScreen() {
   const canCreateRoom = Boolean(googleUser && spotifyStatus.connected && selectedPlaylistData);
   const targetOptions = [6, 8, 12, 15, 20];
 
+  // Todo el mundo (host incluido) recibe una sesión anónima automática solo
+  // para satisfacer las reglas de Firebase — no es un login real. Si se
+  // trata como si lo fuera, en cuanto esa sesión anónima termina de armarse
+  // la pantalla ya muestra "Google conectado" sin que el anfitrión haya
+  // tocado el botón, y el perfil (nombre/avatar) nunca queda ligado a su
+  // cuenta real. isAnonymous es la señal que distingue ambos casos.
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
+      if (user && !user.isAnonymous) {
         setGoogleUser(user);
         await loadUserProfile(user);
         setAuthStatus('idle');
@@ -165,7 +171,7 @@ export default function HostSyncScreen() {
 
     authReady.then(() => getRedirectResult(auth))
       .then(async (result) => {
-        if (result?.user) {
+        if (result?.user && !result.user.isAnonymous) {
           setGoogleUser(result.user);
           await loadUserProfile(result.user);
           setAuthStatus('idle');

@@ -73,8 +73,8 @@ export default function HeaderHUD({ onExit }) {
 
           <div className="flex min-w-0 flex-1 justify-center text-center">
             <div className="min-w-0">
-              <p className="font-label-caps text-xs text-neon-green">RONDA {round}</p>
-              <p className="truncate font-label-caps text-xs text-on-surface-variant">ANOS LOCOS</p>
+              <p className="font-label-caps text-sm text-neon-green">RONDA {round}</p>
+              <p className="truncate font-label-caps text-xs text-on-surface-variant">AÑOS LOCOS</p>
             </div>
           </div>
 
