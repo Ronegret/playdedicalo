@@ -78,7 +78,7 @@ export const ATTACK_TYPES = {
   },
   mirror_year: {
     id: 'mirror_year',
-    icon: 'flip',
+    icon: 'shuffle',
     name: 'Año remix',
     short: 'Dígitos cambiados',
     description: 'Los años se ven con los dígitos revueltos para distraer.'

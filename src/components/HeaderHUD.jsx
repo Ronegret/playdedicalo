@@ -53,16 +53,17 @@ export default function HeaderHUD({ onExit }) {
   const ownPlayer = players.find((player) => player.id === guestId);
   const activeCount = players.filter((player) => getPlayerPresence(player, now).status !== 'kicked').length;
   const myYears = getTimelineProgress(ownPlayer);
-  // Calcular posición en el ranking (mayor progreso = mejor posición)
-  const sortedByProgress = [...players].sort((a, b) => getTimelineProgress(b) - getTimelineProgress(a));
-  const myRank = sortedByProgress.findIndex((p) => p.id === guestId) + 1;
 
   return (
     <div className="fixed inset-x-0 top-0 z-[100] border-b border-white/10 bg-surface/80 shadow-md backdrop-blur-xl">
       <div style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 12px)' }}>
-        <div className="flex min-h-[64px] items-center justify-between gap-1 px-2.5">
+        {/* Columnas laterales a su ancho natural (nunca se disputan espacio
+            entre sí) + una única columna central flexible que se achica o
+            trunca si hace falta — evita que dos elementos de ancho fijo
+            terminen superpuestos en pantallas angostas. */}
+        <div className="grid min-h-[64px] grid-cols-[auto_1fr_auto] items-center gap-2 px-2.5">
           {/* Left: back + room */}
-          <div className="flex min-w-0 flex-1 items-center gap-1.5">
+          <div className="flex min-w-0 items-center gap-1.5">
             {onExit && (
               <button
                 type="button"
@@ -78,35 +79,25 @@ export default function HeaderHUD({ onExit }) {
             </span>
           </div>
 
-          {/* Center: round + years + rank */}
-          <div className="flex min-w-0 flex-1 justify-center">
-            <div className="flex items-center gap-2.5">
-              <div className="text-center">
-                <p className="font-label-caps text-xs text-neon-green leading-none">RONDA {round}</p>
-                <p className="font-label-caps text-[10px] text-on-surface-variant leading-none mt-0.5">AÑOS LOCOS</p>
-              </div>
-              {myYears > 0 && (
-                <>
-                  <span className="h-5 w-px bg-white/15" />
-                  <div className="text-center">
-                    <p className="font-stats-xl text-lg font-black text-white leading-none">{myYears}<span className="text-sm text-on-surface-variant font-bold">/{targetYears || 12}</span></p>
-                    <p className="font-label-caps text-[10px] text-neon-green/80 leading-none mt-0.5">AÑOS</p>
-                  </div>
-                  {myRank > 0 && (
-                    <>
-                      <span className="h-5 w-px bg-white/15" />
-                      <div className={`flex h-7 w-7 items-center justify-center rounded-lg text-sm font-black shrink-0 ${myRank === 1 ? 'bg-neon-green text-black' : 'bg-white/10 text-white'}`}>
-                        {myRank}°
-                      </div>
-                    </>
-                  )}
-                </>
-              )}
+          {/* Center: round + years, siempre puede achicarse */}
+          <div className="flex min-w-0 items-center justify-center gap-2.5 overflow-hidden">
+            <div className="min-w-0 text-center">
+              <p className="font-label-caps text-xs text-neon-green leading-none">RONDA {round}</p>
+              <p className="truncate font-label-caps text-[10px] text-on-surface-variant leading-none mt-0.5">AÑOS LOCOS</p>
             </div>
+            {myYears > 0 && (
+              <>
+                <span className="h-5 w-px shrink-0 bg-white/15" />
+                <div className="shrink-0 text-center">
+                  <p className="font-stats-xl text-lg font-black text-white leading-none">{myYears}<span className="text-sm text-on-surface-variant font-bold">/{targetYears || 12}</span></p>
+                  <p className="font-label-caps text-[10px] text-neon-green/80 leading-none mt-0.5">AÑOS</p>
+                </div>
+              </>
+            )}
           </div>
 
           {/* Right: players + pts + avatar */}
-          <div className="flex min-w-0 flex-1 items-center justify-end gap-1.5">
+          <div className="flex items-center justify-end gap-1.5">
             <button
               type="button"
               onClick={() => setRosterOpen((prev) => !prev)}
