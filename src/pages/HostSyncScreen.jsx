@@ -8,6 +8,7 @@ import { getPlaylistRequestUrl, openMailto } from '../config/support';
 import VinylVisualizer from '../components/VinylVisualizer';
 import NeonButton from '../components/NeonButton';
 import ProfileMenu from '../components/ProfileMenu';
+import FontSizeControl from '../components/FontSizeControl';
 import {
   connectSpotify,
   explainSpotifyError,
@@ -327,7 +328,7 @@ export default function HostSyncScreen() {
         <h1 className="font-headline-xl text-2xl italic tracking-tighter text-electric-purple select-none">
           ANFITRIÓN
         </h1>
-        {googleUser && <ProfileMenu user={googleUser} />}
+        {googleUser ? <ProfileMenu user={googleUser} /> : <FontSizeControl />}
       </header>
 
             <div className={`app-shell-wide flex ${googleUser ? 'flex-col gap-6 md:flex-row md:items-start md:gap-10' : 'flex-col items-center'}`}>

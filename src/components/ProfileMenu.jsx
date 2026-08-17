@@ -5,13 +5,7 @@ import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
 import { useGameStore } from '../store/useGameStore';
 import { resetSpotifyConnection } from '../services/spotify';
-import { useFontScale } from '../hooks/useFontScale';
-
-const FONT_SCALE_OPTIONS = [
-  { id: 'normal', label: 'A', title: 'Normal' },
-  { id: 'large', label: 'A+', title: 'Grande' },
-  { id: 'xl', label: 'A++', title: 'Extra grande' }
-];
+import FontSizeControl from './FontSizeControl';
 
 const QUICK_AVATARS = ['DJ', 'VIP', 'POP', '90s', 'ROCK', 'GO'];
 const EMOJI_AVATARS = ['😎', '🕺', '💃', '🎧', '🎤', '🎸', '🥁', '🎹', '🔥', '⚡', '🌟', '🚀', '👑', '🪩', '🎵', '🍻', '🥳', '🤘'];
@@ -40,8 +34,6 @@ export default function ProfileMenu({ user, guestAvatar }) {
   const [profileAvatar, setProfileAvatar] = useState('');
   const [profileError, setProfileError] = useState('');
   const [isSaving, setIsSaving] = useState(false);
-
-  const { scale: fontScale, setScale: setFontScale } = useFontScale();
 
   const hostCloseRoom = useGameStore((state) => state.hostCloseRoom);
   const guestLeaveRoom = useGameStore((state) => state.guestLeaveRoom);
@@ -221,26 +213,8 @@ export default function ProfileMenu({ user, guestAvatar }) {
               </div>
             ) : (
               <div className="p-2">
-                <div className="mb-1 flex items-center justify-between gap-2 rounded-xl px-3 py-2.5">
-                  <span className="font-label-caps text-xs font-bold text-white">Tamaño de letra</span>
-                  <div className="flex items-center gap-1.5" role="group" aria-label="Tamaño de letra">
-                    {FONT_SCALE_OPTIONS.map((option) => (
-                      <button
-                        key={option.id}
-                        type="button"
-                        onClick={() => setFontScale(option.id)}
-                        aria-pressed={fontScale === option.id}
-                        title={option.title}
-                        className={`min-w-touch min-h-touch rounded-lg border font-black transition-all active:scale-95 ${
-                          fontScale === option.id
-                            ? 'border-neon-green bg-neon-green/15 text-neon-green'
-                            : 'border-white/10 bg-white/5 text-white/70'
-                        }`}
-                      >
-                        {option.label}
-                      </button>
-                    ))}
-                  </div>
+                <div className="mb-1 rounded-xl px-3 py-2.5">
+                  <FontSizeControl className="justify-between" />
                 </div>
                 {canEditProfile ? (
                   <button

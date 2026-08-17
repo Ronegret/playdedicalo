@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NeonButton from '../components/NeonButton';
+import FontSizeControl from '../components/FontSizeControl';
 import { useBgMusic } from '../hooks/useBgMusic';
 
 const EQ_BARS = [0.4, 0.7, 0.55, 0.9, 0.45, 0.8, 0.6, 0.35, 0.75, 0.5];
@@ -31,6 +32,16 @@ export default function WelcomeScreen() {
       transition={{ duration: 0.4 }}
       className="app-screen relative z-10 flex flex-col items-center justify-start overflow-y-auto py-6 sm:justify-center md:px-10 md:py-12 lg:px-20"
     >
+      {/* Siempre visible desde la primera pantalla — antes el tamaño de
+          letra solo se podía cambiar desde el menú de perfil, que no
+          aparece hasta estar dentro de una sala. */}
+      <div
+        className="fixed right-3 z-20 rounded-2xl border border-white/10 bg-black/40 px-2.5 py-2 backdrop-blur-md"
+        style={{ top: 'calc(env(safe-area-inset-top, 0px) + 12px)' }}
+      >
+        <FontSizeControl />
+      </div>
+
       <div className="app-shell-wide flex flex-col items-center gap-4 md:flex-row md:gap-14 lg:gap-20">
 
         {/* Vinyl + EQ */}

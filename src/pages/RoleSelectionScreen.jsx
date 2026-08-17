@@ -1,6 +1,7 @@
 ﻿import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useBgMusic } from '../hooks/useBgMusic';
+import FontSizeControl from '../components/FontSizeControl';
 
 function MiniVinyl({ active = false, color = '#ff7a1a', icon = 'play_arrow' }) {
   return (
@@ -201,7 +202,7 @@ export default function RoleSelectionScreen() {
           <span className="material-symbols-outlined text-xl">arrow_back</span>
           VOLVER
         </button>
-        <div className="w-16 opacity-0" aria-hidden="true" />
+        <FontSizeControl />
       </header>
 
       <section className="mb-5 flex w-full flex-col items-center gap-4 sm:mb-7 sm:gap-5">

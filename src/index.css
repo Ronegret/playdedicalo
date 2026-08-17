@@ -3,25 +3,28 @@
 @tailwind utilities;
 
 /* ── CSS Custom Properties (accesibilidad y escala de fuente) ──────────────
-   --vinyl-size controla el diámetro de los discos en la timeline del juego.
+   --vinyl-size controla el diámetro de los círculos de año en la timeline
+   del juego (más chico desde que dejaron de ser discos de vinilo con
+   textura — ahora es solo un número grande en un círculo, así que no
+   necesita tanto espacio).
    --font-scale amplifica el tamaño de fuente para mejor legibilidad.
    Para cambiar tamaño: aplicar clase .fs-large o .fs-xl en el <html>.
 ─────────────────────────────────────────────────────────────────────────── */
 :root {
-  --vinyl-size: 6.5rem;
+  --vinyl-size: 4.75rem;
   --font-scale: 1;
 }
 
 /* Tamaño de fuente grande (accesibilidad) */
 html.fs-large {
-  --vinyl-size: 7.5rem;
+  --vinyl-size: 5.5rem;
   --font-scale: 1.15;
   font-size: calc(16px * 1.15);
 }
 
 /* Tamaño de fuente muy grande */
 html.fs-xl {
-  --vinyl-size: 8.5rem;
+  --vinyl-size: 6.25rem;
   --font-scale: 1.3;
   font-size: calc(16px * 1.3);
 }

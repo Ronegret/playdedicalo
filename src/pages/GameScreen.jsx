@@ -141,65 +141,45 @@ function scrambleYear(year) {
   return `${str[3]}${str[1]}${str[2]}${str[0]}`;
 }
 
-// Disco de vinilo decorativo para un año ya conseguido: surco texturizado +
-// etiqueta central de color con el año. Puramente visual, no es tappable —
-// solo los huecos entre discos (VinylSlotButton) responden al tacto.
-function VinylYearChip({ year, isScrambled, wobble }) {
+// Círculo simple para un año ya conseguido: nada de textura ni relieve, solo
+// el número bien grande — se lee de un vistazo y a distancia. La versión
+// anterior (disco de vinilo con surco) se veía bonita pero ocupaba mucho
+// espacio por muy poca información real; esto deja ver más ruta a la vez y
+// prioriza el número sobre la decoración.
+function VinylYearChip({ year, isScrambled }) {
   const label = isScrambled ? scrambleYear(year) : year;
   return (
     <div
-      className="relative shrink-0 snap-center"
-      style={{ width: 'var(--vinyl-size, 6.5rem)', height: 'var(--vinyl-size, 6.5rem)', transform: `translateY(${wobble}px)` }}
+      className={`relative flex shrink-0 snap-center items-center justify-center rounded-full border-[3px] shadow-[0_6px_18px_rgba(0,0,0,0.35)] ${isScrambled ? 'border-error bg-error/20 animate-pulse' : 'border-electric-purple bg-electric-purple/20'}`}
+      style={{ width: 'var(--vinyl-size, 4.75rem)', height: 'var(--vinyl-size, 4.75rem)' }}
     >
-      <div
-        className={`absolute inset-0 rounded-full border-2 shadow-[0_10px_22px_rgba(0,0,0,0.4)] ${isScrambled ? 'border-error/50' : 'border-black/60'}`}
-        style={{
-          background: isScrambled
-            ? 'repeating-radial-gradient(circle, #1a0505 0 3px, #2a0a0a 4px 4.5px, #1a0505 5px 7px)'
-            : 'repeating-radial-gradient(circle, #0a0a0a 0 3px, #1c1c1c 4px 4.5px, #0a0a0a 5px 7px)'
-        }}
+      <span
+        className={`font-stats-xl font-black leading-none ${isScrambled ? 'text-error tracking-widest' : 'text-white'}`}
+        style={{ fontSize: 'clamp(1.1rem, 5.5vw, 1.5rem)' }}
       >
-        <div className="absolute inset-0 rounded-full bg-[conic-gradient(from_20deg,transparent_0_20deg,rgba(255,255,255,0.14)_20deg_26deg,transparent_26deg_170deg,rgba(255,255,255,0.08)_170deg_176deg,transparent_176deg_360deg)]" />
-      </div>
-      <div className={`absolute inset-[15%] rounded-full flex items-center justify-center border-2 border-black/50 shadow-[inset_0_2px_4px_rgba(0,0,0,0.35)] ${isScrambled ? 'bg-error animate-pulse' : 'bg-electric-purple'}`}>
-        <span
-          className={`font-stats-xl font-black leading-none text-white ${isScrambled ? 'tracking-widest' : ''}`}
-          style={{ fontSize: 'clamp(1rem, 4.5vw, 1.35rem)' }}
-        >
-          {label}
-        </span>
-      </div>
+        {label}
+      </span>
     </div>
   );
 }
 
-// Disco dorado = una canción comprada con puntos (ver REDEEM_YEAR_COST), no
-// acertada. Cuenta igual para la meta, pero se distingue con una estrella en
-// vez de un año — así el jugador ve de un vistazo cuánto de su progreso es
-// "de oído" y cuánto es canjeado.
-function WildcardChip({ wobble }) {
+// Igual de simple que un año, pero dorado con una estrella: una canción
+// comprada con puntos (ver REDEEM_YEAR_COST), no acertada de oído. Cuenta
+// igual para la meta, pero se distingue de un vistazo.
+function WildcardChip() {
   return (
     <div
-      className="relative shrink-0 snap-center"
-      style={{ width: 'var(--vinyl-size, 6.5rem)', height: 'var(--vinyl-size, 6.5rem)', transform: `translateY(${wobble}px)` }}
+      className="relative flex shrink-0 snap-center items-center justify-center rounded-full border-[3px] border-chaos-gold bg-chaos-gold/20 shadow-[0_6px_18px_rgba(0,0,0,0.35)]"
+      style={{ width: 'var(--vinyl-size, 4.75rem)', height: 'var(--vinyl-size, 4.75rem)' }}
     >
-      <div
-        className="absolute inset-0 rounded-full border-2 border-black/60 shadow-[0_10px_22px_rgba(0,0,0,0.4)]"
-        style={{ background: 'repeating-radial-gradient(circle, #1a1405 0 3px, #2a2008 4px 4.5px, #1a1405 5px 7px)' }}
-      >
-        <div className="absolute inset-0 rounded-full bg-[conic-gradient(from_20deg,transparent_0_20deg,rgba(255,255,255,0.14)_20deg_26deg,transparent_26deg_170deg,rgba(255,255,255,0.08)_170deg_176deg,transparent_176deg_360deg)]" />
-      </div>
-      <div className="absolute inset-[15%] rounded-full flex items-center justify-center border-2 border-black/50 bg-chaos-gold shadow-[inset_0_2px_4px_rgba(0,0,0,0.35)]">
-        <span className="material-symbols-outlined text-black text-2xl">star</span>
-      </div>
+      <span className="material-symbols-outlined text-chaos-gold" style={{ fontSize: 'clamp(1.6rem, 7vw, 2.1rem)' }}>star</span>
     </div>
   );
 }
 
-// Hueco tappable entre dos discos: el jugador toca aquí para decir dónde
-// cree que va la canción nueva. Mismo lenguaje circular que los vinilos,
-// pero como "funda vacía" (anillo punteado) para leerse claramente como
-// interactivo frente a los discos ya colocados.
+// Hueco tappable entre dos años: el jugador toca aquí para decir dónde cree
+// que va la canción nueva. Mismo círculo simple, pero punteado y con un "+"
+// para leerse claramente como interactivo frente a los años ya colocados.
 function VinylSlotButton({ label, disabled, onClick }) {
   return (
     <button
@@ -207,11 +187,11 @@ function VinylSlotButton({ label, disabled, onClick }) {
       disabled={disabled}
       onClick={onClick}
       aria-label={`Colocar canción: ${label}`}
-      className="group relative shrink-0 snap-center rounded-full border-2 border-dashed border-neon-green/50 bg-neon-green/5 text-neon-green flex flex-col items-center justify-center active:scale-90 transition-transform hover:bg-neon-green/15 hover:border-neon-green focus:outline-none focus:ring-2 focus:ring-neon-green disabled:opacity-40"
-      style={{ width: 'var(--vinyl-size, 6.5rem)', height: 'var(--vinyl-size, 6.5rem)' }}
+      className="group relative shrink-0 snap-center rounded-full border-[3px] border-dashed border-neon-green/60 bg-neon-green/5 text-neon-green flex flex-col items-center justify-center active:scale-90 transition-transform hover:bg-neon-green/15 hover:border-neon-green focus:outline-none focus:ring-2 focus:ring-neon-green disabled:opacity-40"
+      style={{ width: 'var(--vinyl-size, 4.75rem)', height: 'var(--vinyl-size, 4.75rem)' }}
     >
-      <span className="material-symbols-outlined text-3xl leading-none">add</span>
-      <span className="absolute -bottom-11 w-36 text-center text-[clamp(0.7rem,2.8vw,0.85rem)] font-bold font-label-caps leading-tight text-white group-hover:text-neon-green transition-colors">
+      <span className="material-symbols-outlined text-2xl leading-none">add</span>
+      <span className="absolute -bottom-9 w-32 text-center text-[clamp(0.72rem,3vw,0.88rem)] font-bold font-label-caps leading-tight text-white group-hover:text-neon-green transition-colors">
         {label}
       </span>
     </button>
@@ -330,10 +310,9 @@ function TimelinePlacementQuestion({ question, playerYears = [], wildcards = 0, 
           </span>
         </div>
 
-        {/* Estante de vinilos: riel horizontal con snap-scroll, discos y huecos
-            alternados en un leve vaivén vertical para que se lea como una
-            colección real y no una grilla rígida. */}
-        <div className="relative mt-6 overflow-x-auto overflow-y-visible pb-16 pt-2 snap-x no-scrollbar sm:mt-8">
+        {/* Fila de años: riel horizontal con snap-scroll, círculos y huecos
+            en línea recta para leerse rápido de un vistazo. */}
+        <div className="relative mt-6 overflow-x-auto overflow-y-visible pb-12 pt-2 snap-x no-scrollbar sm:mt-8">
           <div className="absolute left-0 right-0 top-1/2 h-px bg-gradient-to-r from-transparent via-white/12 to-transparent" />
           <div className="relative min-w-max flex items-center gap-3 px-2">
             {slots.map((slot, index) => (
@@ -355,13 +334,12 @@ function TimelinePlacementQuestion({ question, playerYears = [], wildcards = 0, 
                   <VinylYearChip
                     year={visibleYears[index]}
                     isScrambled={isMirrored}
-                    wobble={index % 2 === 0 ? -6 : 6}
                   />
                 )}
               </div>
             ))}
             {wildcards > 0 && Array.from({ length: wildcards }, (_, index) => (
-              <WildcardChip key={`wildcard-${index}`} wobble={(visibleYears.length + index) % 2 === 0 ? -6 : 6} />
+              <WildcardChip key={`wildcard-${index}`} />
             ))}
           </div>
         </div>

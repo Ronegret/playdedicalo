@@ -6,6 +6,7 @@ import { getRedirectResult, onAuthStateChanged, signInWithPopup, signInWithRedir
 import { useGameStore } from '../store/useGameStore';
 import NeonButton from '../components/NeonButton';
 import ProfileMenu from '../components/ProfileMenu';
+import FontSizeControl from '../components/FontSizeControl';
 import { auth, authReady, googleProvider } from '../firebase';
 
 const EMOJI_AVATARS = [
@@ -251,7 +252,7 @@ export default function GuestJoinScreen() {
           <span className="material-symbols-outlined text-xl">arrow_back</span> VOLVER
         </button>
         <img src="/images/logo-main.png" alt="Dedícalo" className="h-8 w-auto object-contain" />
-        {googleUser ? <ProfileMenu user={googleUser} /> : <div className="w-8 opacity-0" />}
+        {googleUser ? <ProfileMenu user={googleUser} /> : <FontSizeControl />}
       </header>
 
       <div className="flex flex-col items-center gap-5 sm:gap-6">
