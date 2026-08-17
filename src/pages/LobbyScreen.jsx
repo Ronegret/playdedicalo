@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MusicNotesBubbles from '../components/MusicNotesBubbles';
-import { MAX_TIMELINE_GOAL_YEARS, MIN_TIMELINE_GOAL_YEARS, getCombinedTimelineYears, getPlayerPresence, getTimelineProgress, useGameStore } from '../store/useGameStore';
+import { DEDICALO_PLAYLISTS, MAX_TIMELINE_GOAL_YEARS, MIN_TIMELINE_GOAL_YEARS, PLAYLIST_META, getCombinedTimelineYears, getPlayerPresence, getTimelineProgress, normalizeSpotifyPlaylistUrl, useGameStore } from '../store/useGameStore';
 import { explainSpotifyError, prepareSpotifyPlayback } from '../services/spotify';
 import ProfileMenu from '../components/ProfileMenu';
 import { auth } from '../firebase';
@@ -54,7 +54,9 @@ export default function LobbyScreen() {
     guestAvatar,
     lastDisconnectedPlayer,
     targetYears,
-    setGameSettings
+    setGameSettings,
+    spotifyPlaylistUrl,
+    hostSetSpotifyPlaylistUrl
   } = useGameStore();
   const [showQR, setShowQR] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
@@ -65,6 +67,9 @@ export default function LobbyScreen() {
   const [now, setNow] = useState(() => Date.now());
   const gameLocked = round > 1;
   const targetOptions = [6, 8, 12, 15, 20];
+  const selectedPlaylistId = DEDICALO_PLAYLISTS.find(
+    (playlist) => normalizeSpotifyPlaylistUrl(playlist.url) === spotifyPlaylistUrl
+  )?.id || DEDICALO_PLAYLISTS[0].id;
 
   useEffect(() => {
     if (phase === 'countdown' || phase === 'listen' || phase === 'blackout') navigate('/game');
@@ -297,6 +302,39 @@ export default function LobbyScreen() {
                 </div>
               )}
             </div>
+
+            {!gameLocked && (
+              <div className="mt-4">
+                <p className="mb-2 font-label-caps text-[10px] text-vinyl-orange tracking-[0.2em]">ESTILO DE PLAYLIST</p>
+                <div className="no-scrollbar -mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
+                  {DEDICALO_PLAYLISTS.map((playlist) => {
+                    const meta = PLAYLIST_META[playlist.id] || { icon: 'music_note', color: '#ff7a1a' };
+                    const isSelected = playlist.id === selectedPlaylistId;
+                    return (
+                      <button
+                        key={playlist.id}
+                        type="button"
+                        onClick={() => hostSetSpotifyPlaylistUrl(playlist.url)}
+                        className="flex min-h-touch shrink-0 items-center gap-2 rounded-xl border px-3 py-2.5 transition-all active:scale-95"
+                        style={isSelected
+                          ? { borderColor: `${meta.color}cc`, backgroundColor: `${meta.color}18` }
+                          : { borderColor: 'rgba(255,255,255,0.1)', backgroundColor: 'rgba(0,0,0,0.2)' }}
+                      >
+                        <span className="material-symbols-outlined text-lg" style={{ color: isSelected ? meta.color : 'rgba(255,255,255,0.6)' }}>
+                          {meta.icon}
+                        </span>
+                        <span
+                          className="whitespace-nowrap font-label-caps text-[11px] font-bold"
+                          style={{ color: isSelected ? '#ffffff' : 'rgba(255,255,255,0.68)' }}
+                        >
+                          {playlist.name}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
 
             {players.length < 2 && (
               <p className="mt-4 rounded-xl border border-vinyl-orange/30 bg-vinyl-orange/8 px-3 py-2 text-xs text-vinyl-orange/90 text-center">

@@ -261,11 +261,12 @@ export default function ResultScreen() {
   const [shareCopied, setShareCopied] = useState(false);
   const {
     role, phase, players,
-    hostNextRound, hostCloseRoom, guestLeaveRoom, guestId,
+    hostNextRound, hostCloseRoom, hostRestartGame, guestLeaveRoom, guestId,
     lastResultType, lastPointDelta, revealResults, currentTrack, roomError, clearRoomError, guestAvatar,
     targetYears
   } = useGameStore();
   const [showExitConfirm, setShowExitConfirm] = useState(false);
+  const [isRestarting, setIsRestarting] = useState(false);
 
   const guestReveal = revealResults?.[guestId] || null;
   const guestPoints = guestReveal?.points ?? players.find((p) => p.id === guestId)?.points ?? 10;
@@ -302,6 +303,20 @@ export default function ResultScreen() {
     if (role === 'host') hostCloseRoom();
     if (role === 'guest') guestLeaveRoom();
     navigate('/role-selection');
+  };
+
+  // Mismo pin, mismo grupo, marcador en cero — el anfitrión puede cambiar
+  // playlist y meta de años en el lobby antes de arrancar la revancha.
+  const handlePlayAgain = async () => {
+    if (isRestarting) return;
+    setIsRestarting(true);
+    try {
+      await hostRestartGame();
+      navigate('/lobby');
+    } catch (error) {
+      console.error('Error al reiniciar la partida:', error);
+      setIsRestarting(false);
+    }
   };
 
   const handleShare = async () => {
@@ -394,11 +409,18 @@ export default function ResultScreen() {
             <div className="mt-6 flex flex-col gap-2">
               {role === 'host' && (
                 <button
-                  onClick={handleFinish}
-                  className="w-full h-12 rounded-xl bg-primary text-white font-label-caps text-sm uppercase font-bold border border-white/20 active:scale-95 transition-all"
+                  onClick={handlePlayAgain}
+                  disabled={isRestarting}
+                  className="w-full h-12 rounded-xl bg-neon-green text-black font-label-caps text-sm uppercase font-bold active:scale-95 transition-all disabled:opacity-60 flex items-center justify-center gap-2"
                 >
-                  CERRAR SALA
+                  <span className="material-symbols-outlined text-lg">{isRestarting ? 'autorenew' : 'replay'}</span>
+                  {isRestarting ? 'PREPARANDO REVANCHA...' : 'JUGAR OTRA VEZ'}
                 </button>
+              )}
+              {role === 'host' && (
+                <p className="text-center text-xs text-on-surface-variant">
+                  Mismo PIN, mismo grupo. En el lobby puedes cambiar la playlist y la meta de años.
+                </p>
               )}
               <button
                 onClick={handleShare}
@@ -407,6 +429,14 @@ export default function ResultScreen() {
                 <span className="material-symbols-outlined text-base">share</span>
                 {shareCopied ? 'COPIADO' : 'COMPARTIR RESULTADO'}
               </button>
+              {role === 'host' && (
+                <button
+                  onClick={handleFinish}
+                  className="w-full h-12 rounded-xl bg-primary text-white font-label-caps text-sm uppercase font-bold border border-white/20 active:scale-95 transition-all"
+                >
+                  CERRAR SALA
+                </button>
+              )}
               {role !== 'host' && (
                 <button
                   onClick={handleFinish}

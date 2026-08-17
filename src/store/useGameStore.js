@@ -106,6 +106,20 @@ export const DEDICALO_PLAYLISTS = [
 ];
 export const DEFAULT_SPOTIFY_PLAYLIST_URL = DEDICALO_PLAYLISTS[0].url;
 
+// Vibra visual de cada playlist (color/acento/formato) — compartida entre
+// la pantalla de creación de sala y el selector de "jugar otra vez" del
+// lobby, así ambos pintan la misma identidad por playlist.
+export const PLAYLIST_META = {
+  'espanol-100': { icon: 'stadium', color: '#ff3d77', accent: '#ffd000', format: 'VINILO POP' },
+  'temazos': { icon: 'local_fire_department', color: '#ff5500', accent: '#39ff14', format: 'CD HITS' },
+  'espanol-summer-party': { icon: 'wb_sunny', color: '#ffd000', accent: '#00c8ff', format: 'SUN MIX' },
+  'hits-todo-tiempo': { icon: 'public', color: '#00c8ff', accent: '#ff7a1a', format: 'GLOBAL' },
+  'hits-rock-espanol': { icon: 'electric_bolt', color: '#ffcc00', accent: '#ff3d77', format: 'ROCK CD' },
+  'mejores-todos-tiempos': { icon: 'emoji_events', color: '#39ff14', accent: '#a855f7', format: 'LEGENDS' },
+  'fiesta-mayor-verbena': { icon: 'celebration', color: '#dd44ff', accent: '#ffd000', format: 'VERBENA' },
+  'fiesta-del-pueblo': { icon: 'nightlife', color: '#ff44aa', accent: '#00c8ff', format: 'PUEBLO' }
+};
+
 export const GAME_MODES = {
   timeline: {
     id: 'timeline',
@@ -658,6 +672,49 @@ export const useGameStore = create((setStore, getStore) => ({
       revealResults: {},
       timelineYears: [],
       roomSubscription: null
+    });
+  },
+
+  // "Jugar otra vez" desde el ranking final — vuelve al lobby con el MISMO
+  // pin y el mismo grupo (nadie tiene que volver a escanear el QR), pero
+  // con el progreso de todos en cero. El anfitrión puede tocar ronda 1 de
+  // la sala normal (fija el estilo de playlist y la meta de años) antes de
+  // arrancar de nuevo.
+  hostRestartGame: async () => {
+    const { pin, role, players } = getStore();
+    if (role !== 'host' || !pin) return;
+
+    const remoteUpdates = {
+      phase: 'lobby',
+      round: 1,
+      currentQuestion: null,
+      currentTrack: null,
+      roundAnswers: null,
+      revealResults: null,
+      timelineYears: []
+    };
+    players.forEach((player) => {
+      remoteUpdates[`players/${player.id}/points`] = 10;
+      remoteUpdates[`players/${player.id}/timelineYears`] = [];
+      remoteUpdates[`players/${player.id}/wildcards`] = 0;
+      remoteUpdates[`players/${player.id}/activeAttack`] = null;
+    });
+
+    await Promise.all([
+      patchData(`rooms/${pin}`, remoteUpdates),
+      patchData(`rooms/${pin}/audio`, { isPlaying: false })
+    ]);
+
+    setStore({
+      phase: 'lobby',
+      round: 1,
+      currentQuestion: null,
+      currentTrack: null,
+      roundAnswers: {},
+      revealResults: {},
+      timelineYears: [],
+      lastResultType: null,
+      lastPointDelta: 0
     });
   },
 

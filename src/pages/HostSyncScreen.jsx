@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getRedirectResult, onAuthStateChanged, signInWithPopup, signInWithRedirect } from 'firebase/auth';
-import { DEDICALO_PLAYLISTS, MAX_TIMELINE_GOAL_YEARS, MIN_TIMELINE_GOAL_YEARS, useGameStore } from '../store/useGameStore';
+import { DEDICALO_PLAYLISTS, MAX_TIMELINE_GOAL_YEARS, MIN_TIMELINE_GOAL_YEARS, PLAYLIST_META, useGameStore } from '../store/useGameStore';
 import { auth, authReady, googleProvider } from '../firebase';
 import { getPlaylistRequestUrl, openMailto } from '../config/support';
 import VinylVisualizer from '../components/VinylVisualizer';
@@ -19,57 +19,6 @@ import {
   prepareSpotifyPlayback,
   startRandomPlaylistTrack
 } from '../services/spotify';
-
-const PLAYLIST_META = {
-  'espanol-100': {
-    icon: 'stadium',
-    color: '#ff3d77',
-    accent: '#ffd000',
-    format: 'VINILO POP'
-  },
-  'temazos': {
-    icon: 'local_fire_department',
-    color: '#ff5500',
-    accent: '#39ff14',
-    format: 'CD HITS'
-  },
-  'espanol-summer-party': {
-    icon: 'wb_sunny',
-    color: '#ffd000',
-    accent: '#00c8ff',
-    format: 'SUN MIX'
-  },
-  'hits-todo-tiempo': {
-    icon: 'public',
-    color: '#00c8ff',
-    accent: '#ff7a1a',
-    format: 'GLOBAL'
-  },
-  'hits-rock-espanol': {
-    icon: 'electric_bolt',
-    color: '#ffcc00',
-    accent: '#ff3d77',
-    format: 'ROCK CD'
-  },
-  'mejores-todos-tiempos': {
-    icon: 'emoji_events',
-    color: '#39ff14',
-    accent: '#a855f7',
-    format: 'LEGENDS'
-  },
-  'fiesta-mayor-verbena': {
-    icon: 'celebration',
-    color: '#dd44ff',
-    accent: '#ffd000',
-    format: 'VERBENA'
-  },
-  'fiesta-del-pueblo': {
-    icon: 'nightlife',
-    color: '#ff44aa',
-    accent: '#00c8ff',
-    format: 'PUEBLO'
-  },
-};
 
 // La mini "carátula" solo tiene que comunicar la vibra con color + ícono —
 // el nombre y el formato de la playlist ya se leen justo al lado (pill +
