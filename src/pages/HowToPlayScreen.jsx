@@ -85,10 +85,10 @@ const fadeUp = {
 
 function SectionTitle({ eyebrow, title, text }) {
   return (
-    <div className="mb-4">
+    <div className="mb-5">
       <p className="font-label-caps text-sm tracking-[0.18em] text-neon-green">{eyebrow}</p>
-      <h2 className="mt-2 text-2xl font-black leading-tight text-white sm:text-3xl">{title}</h2>
-      {text && <p className="mt-2 text-base leading-relaxed text-on-surface-variant">{text}</p>}
+      <h2 className="mt-2 font-black leading-tight text-white" style={{ fontSize: 'clamp(1.6rem, 6vw, 2.4rem)' }}>{title}</h2>
+      {text && <p className="mt-2 leading-relaxed text-on-surface-variant" style={{ fontSize: 'clamp(0.95rem, 3.4vw, 1.08rem)' }}>{text}</p>}
     </div>
   );
 }
@@ -99,17 +99,17 @@ function StepCard({ step, index }) {
       variants={fadeUp}
       initial="hidden"
       whileInView="show"
-      viewport={{ once: true, amount: 0.25 }}
+      viewport={{ once: true, amount: 0.2 }}
       transition={{ delay: index * 0.03 }}
-      className="rounded-2xl border border-white/10 bg-white/[0.055] p-4 shadow-[0_18px_40px_rgba(0,0,0,0.22)]"
+      className="rounded-2xl border border-white/10 bg-white/[0.055] p-5 shadow-[0_18px_40px_rgba(0,0,0,0.22)]"
     >
-      <div className="flex items-start gap-3">
-        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-vinyl-orange/35 bg-vinyl-orange/15 text-vinyl-orange">
-          <span className="material-symbols-outlined text-3xl">{step.icon}</span>
+      <div className="flex items-start gap-4">
+        <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-vinyl-orange/35 bg-vinyl-orange/15 text-vinyl-orange">
+          <span className="material-symbols-outlined text-[2rem]">{step.icon}</span>
         </span>
         <div>
-          <h3 className="text-lg font-black leading-tight text-white">{step.title}</h3>
-          <p className="mt-1 text-base leading-relaxed text-on-surface-variant">{step.text}</p>
+          <h3 className="font-black leading-tight text-white" style={{ fontSize: 'clamp(1.05rem, 4vw, 1.2rem)' }}>{step.title}</h3>
+          <p className="mt-1 leading-relaxed text-on-surface-variant" style={{ fontSize: 'clamp(0.92rem, 3.4vw, 1.02rem)' }}>{step.text}</p>
         </div>
       </div>
     </motion.article>
@@ -205,44 +205,50 @@ export default function HowToPlayScreen() {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -16 }}
-      className="app-screen relative z-10 overflow-y-auto pt-safe-header sm:px-6 lg:px-10"
+      className="app-screen relative z-10 overflow-y-auto no-scrollbar sm:px-6 lg:px-10"
+      style={{ paddingTop: 'calc(5rem + env(safe-area-inset-top, 0px) + 12px)' }}
     >
-      <header className="fixed left-0 right-0 top-0 z-50 flex h-16 items-center border-b border-white/8 bg-background/85 px-4 backdrop-blur-xl sm:px-6">
+      <header className="fixed left-0 right-0 top-0 z-50 flex items-center border-b border-white/8 bg-background/85 px-4 backdrop-blur-xl sm:px-6"
+        style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 12px)', minHeight: 'calc(4rem + env(safe-area-inset-top, 0px) + 12px)' }}
+      >
         <button
           onClick={() => navigate('/')}
-          className="flex min-h-touch items-center gap-2 font-label-caps text-sm tracking-[0.16em] text-on-surface-variant transition-colors hover:text-white"
+          className="flex min-h-touch items-center gap-2 font-label-caps text-sm tracking-[0.16em] text-on-surface-variant transition-colors hover:text-white active:scale-95"
         >
           <span className="material-symbols-outlined text-2xl">arrow_back</span>
           Volver
         </button>
+        <span className="ml-3 font-label-caps text-xs tracking-[0.18em] text-on-surface-variant/60">MANUAL</span>
       </header>
 
-      <div className="mx-auto max-w-5xl pb-8">
-        <section className="relative mt-3 min-h-[420px] overflow-hidden rounded-[28px] border border-white/10 bg-[#070917] sm:min-h-[520px]">
+      <div className="mx-auto max-w-5xl pb-16">
+        {/* Hero — responsive height, no fixed px that clips content */}
+        <section className="relative mt-3 overflow-hidden rounded-[28px] border border-white/10 bg-[#070917]">
           <img
             src="/images/hero-how-to-play.png"
             alt="Grupo jugando Dedícalo con música"
-            className="absolute inset-0 h-full w-full object-cover opacity-50"
+            className="absolute inset-0 h-full w-full object-cover opacity-45"
             draggable={false}
+            onError={(e) => { e.currentTarget.style.display = 'none'; }}
           />
+          {/* Animated background fallback if image missing */}
+          <div className="absolute inset-0 animated-mesh" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#05060f] via-[#05060f]/75 to-[#05060f]/20" />
-          <div className="relative flex min-h-[420px] items-end p-5 sm:min-h-[520px] sm:p-8 lg:p-10">
-            <div className="max-w-3xl">
-              <p className="font-label-caps text-sm tracking-[0.22em] text-neon-green">Cómo se juega</p>
-              <h1 className="heading-impact mt-3 font-headline-lg font-black text-white">
-                Dedícalo es música, memoria y risas rápidas.
-              </h1>
-              <p className="mt-4 max-w-2xl text-lg leading-relaxed text-white/82">
-                Escuchas una canción, adivinas dónde encaja su año y miras cómo subes en el ranking. Se aprende en una ronda. Se pica en dos.
-              </p>
-              <div className="mt-6 grid gap-3 sm:grid-cols-3">
-                {PLAYER_RULES.map(([title, text]) => (
-                  <div key={title} className="rounded-2xl border border-white/12 bg-black/35 p-4">
-                    <p className="text-lg font-black text-white">{title}</p>
-                    <p className="mt-1 text-base leading-snug text-on-surface-variant">{text}</p>
-                  </div>
-                ))}
-              </div>
+          <div className="relative px-5 pb-8 pt-10 sm:px-8 sm:pb-12 sm:pt-14 lg:px-10 lg:pb-14">
+            <p className="font-label-caps text-sm tracking-[0.22em] text-neon-green">Cómo se juega</p>
+            <h1 className="heading-impact mt-3 font-headline-lg font-black text-white">
+              Dedícalo es música, memoria y risas rápidas.
+            </h1>
+            <p className="mt-4 max-w-2xl text-[clamp(1rem,3.5vw,1.18rem)] leading-relaxed text-white/82">
+              Escuchas una canción, adivinas dónde encaja su año y miras cómo subes en el ranking. Se aprende en una ronda. Se pica en dos.
+            </p>
+            <div className="mt-6 grid gap-3 sm:grid-cols-3">
+              {PLAYER_RULES.map(([title, text]) => (
+                <div key={title} className="rounded-2xl border border-white/12 bg-black/40 p-4">
+                  <p className="text-[clamp(1rem,3.5vw,1.12rem)] font-black text-white">{title}</p>
+                  <p className="mt-1 text-[clamp(0.9rem,3.2vw,1rem)] leading-snug text-on-surface-variant">{text}</p>
+                </div>
+              ))}
             </div>
           </div>
         </section>
@@ -304,12 +310,12 @@ export default function HowToPlayScreen() {
           <div className="grid gap-3 sm:grid-cols-2">
             {FAQ.map(([question, answer]) => (
               <details key={question} className="group rounded-2xl border border-white/10 bg-white/[0.045]">
-                <summary className="flex min-h-touch cursor-pointer list-none items-center gap-3 px-4 py-4">
-                  <span className="material-symbols-outlined text-2xl text-neon-green">help</span>
-                  <span className="flex-1 text-lg font-black leading-tight text-white">{question}</span>
-                  <span className="material-symbols-outlined text-on-surface-variant transition-transform group-open:rotate-180">expand_more</span>
+                <summary className="flex cursor-pointer list-none items-center gap-3 px-4 py-5" style={{ minHeight: '3.5rem' }}>
+                  <span className="material-symbols-outlined text-2xl text-neon-green shrink-0">help</span>
+                  <span className="flex-1 font-black leading-snug text-white" style={{ fontSize: 'clamp(1rem, 3.8vw, 1.12rem)' }}>{question}</span>
+                  <span className="material-symbols-outlined text-on-surface-variant transition-transform group-open:rotate-180 shrink-0">expand_more</span>
                 </summary>
-                <p className="px-4 pb-5 pl-14 text-base leading-relaxed text-on-surface-variant">{answer}</p>
+                <p className="px-4 pb-6 pl-14 leading-relaxed text-on-surface-variant" style={{ fontSize: 'clamp(0.92rem, 3.4vw, 1rem)' }}>{answer}</p>
               </details>
             ))}
           </div>
@@ -342,12 +348,15 @@ export default function HowToPlayScreen() {
 
         <div className="mt-6 grid gap-3 sm:grid-cols-2">
           <NeonButton primary color="vinyl-orange" onClick={() => navigate('/role-selection')}>
-            Ya sé jugar
+            ¡Ya sé jugar!
           </NeonButton>
           <NeonButton color="white" onClick={scrollTop}>
             Volver arriba
           </NeonButton>
         </div>
+
+        {/* Extra bottom breathing room so last item never hides behind safe-area */}
+        <div style={{ height: 'calc(1.5rem + env(safe-area-inset-bottom, 0px))' }} />
       </div>
     </motion.main>
   );

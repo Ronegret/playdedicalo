@@ -42,7 +42,7 @@ function TimelineYears({ years = [], wildcards = 0, goalYears = 12 }) {
       {years.slice(0, goalYears).map((year, index) => (
         <span
           key={`${year}-${index}`}
-          className="w-8 h-8 rounded-full border-2 border-neon-green/50 bg-black/30 flex items-center justify-center text-xs font-black text-neon-green"
+          className="w-9 h-9 rounded-full border-2 border-neon-green/60 bg-black/30 flex items-center justify-center text-[11px] font-black text-neon-green"
           title={year}
         >
           {String(year).slice(2)}
@@ -51,10 +51,10 @@ function TimelineYears({ years = [], wildcards = 0, goalYears = 12 }) {
       {Array.from({ length: Math.max(0, Math.min(wildcards, goalYears - years.length)) }, (_, index) => (
         <span
           key={`wildcard-${index}`}
-          className="w-8 h-8 rounded-full border-2 border-chaos-gold/60 bg-chaos-gold/15 flex items-center justify-center"
+          className="w-9 h-9 rounded-full border-2 border-chaos-gold/60 bg-chaos-gold/15 flex items-center justify-center"
           title="Canjeada con puntos"
         >
-          <span className="material-symbols-outlined text-chaos-gold text-sm">star</span>
+          <span className="material-symbols-outlined text-chaos-gold text-base">star</span>
         </span>
       ))}
     </div>

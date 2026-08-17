@@ -12,13 +12,13 @@ import { auth } from '../firebase';
 function TimelineYears({ years = [], wildcards = 0, goalYears = 12 }) {
   const progress = Math.min(years.length + wildcards, goalYears);
   return (
-    <div className="mt-3 flex flex-wrap items-center gap-1.5 pl-0 sm:pl-9">
-      <span className="font-label-caps text-[10px] text-on-surface-variant">Ruta {progress}/{goalYears}</span>
+    <div className="mt-2 flex flex-wrap items-center gap-2 pl-0 sm:pl-9">
+      <span className="font-label-caps text-xs text-on-surface-variant font-bold">Ruta {progress}/{goalYears}</span>
       {years.slice(0, goalYears).map((year, index) => (
         <span
           key={`${year}-${index}`}
-          className="w-7 h-7 rounded-full border-2 border-neon-green/50 bg-black/30 flex items-center justify-center text-[9px] font-black text-neon-green shadow-[0_0_8px_rgba(57,255,20,0.2)]"
-          title={year}
+          className="w-9 h-9 rounded-full border-2 border-neon-green/60 bg-black/30 flex items-center justify-center text-[11px] font-black text-neon-green shadow-[0_0_10px_rgba(57,255,20,0.25)]"
+          title={String(year)}
         >
           {String(year).slice(2)}
         </span>
@@ -26,10 +26,10 @@ function TimelineYears({ years = [], wildcards = 0, goalYears = 12 }) {
       {Array.from({ length: Math.max(0, Math.min(wildcards, goalYears - years.length)) }, (_, index) => (
         <span
           key={`wildcard-${index}`}
-          className="w-7 h-7 rounded-full border-2 border-chaos-gold/60 bg-chaos-gold/15 flex items-center justify-center shadow-[0_0_8px_rgba(255,191,77,0.25)]"
+          className="w-9 h-9 rounded-full border-2 border-chaos-gold/60 bg-chaos-gold/15 flex items-center justify-center shadow-[0_0_10px_rgba(255,191,77,0.28)]"
           title="Canjeada con puntos"
         >
-          <span className="material-symbols-outlined text-chaos-gold text-sm">star</span>
+          <span className="material-symbols-outlined text-chaos-gold text-base">star</span>
         </span>
       ))}
     </div>

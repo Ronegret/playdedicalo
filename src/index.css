@@ -2,6 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── CSS Custom Properties (accesibilidad y escala de fuente) ──────────────
+   --vinyl-size controla el diámetro de los discos en la timeline del juego.
+   --font-scale amplifica el tamaño de fuente para mejor legibilidad.
+   Para cambiar tamaño: aplicar clase .fs-large o .fs-xl en el <html>.
+─────────────────────────────────────────────────────────────────────────── */
+:root {
+  --vinyl-size: 6.5rem;
+  --font-scale: 1;
+}
+
+/* Tamaño de fuente grande (accesibilidad) */
+html.fs-large {
+  --vinyl-size: 7.5rem;
+  --font-scale: 1.15;
+  font-size: calc(16px * 1.15);
+}
+
+/* Tamaño de fuente muy grande */
+html.fs-xl {
+  --vinyl-size: 8.5rem;
+  --font-scale: 1.3;
+  font-size: calc(16px * 1.3);
+}
+
 @layer base {
   html,
   body,

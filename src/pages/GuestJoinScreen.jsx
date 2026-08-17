@@ -254,54 +254,85 @@ export default function GuestJoinScreen() {
         {googleUser ? <ProfileMenu user={googleUser} /> : <div className="w-8 opacity-0" />}
       </header>
 
-      <div className="flex flex-col items-center gap-4 sm:gap-6">
-        <section className="w-full">
-          <p className="font-label-caps text-neon-green text-xs mb-2">INVITADO</p>
+      <div className="flex flex-col items-center gap-5 sm:gap-6">
+        {/* Header section */}
+        <section className="w-full text-center">
+          <p className="font-label-caps text-neon-green text-xs mb-1">INVITADO</p>
           <h1 className="heading-page font-headline-lg font-black uppercase text-on-surface">UNIRSE A LA SALA</h1>
           <p className="copy-readable mx-auto mt-2 max-w-md text-on-surface-variant">
-            Escribe el PIN de 4 dígitos o escanea el QR que muestra el anfitrión. Entras con 10 puntos base.
+            Elige quién eres, pon tu nombre y escribe el PIN del anfitrión.
           </p>
         </section>
 
-        <section className="w-full rounded-2xl border border-white/10 bg-white/5 p-3 text-left">
-          <div className="flex items-center justify-between gap-3">
-            <div className="min-w-0">
-              <p className="font-label-caps text-[10px] tracking-[0.2em] text-neon-green">PERFIL</p>
-              <p className="mt-1 text-sm font-bold text-white">
-                {googleUser ? 'Google conectado' : 'Alias rapido o Google'}
-              </p>
-              <p className="mt-0.5 text-xs leading-relaxed text-on-surface-variant">
-                {googleUser
-                  ? 'Guardaremos tu nombre y avatar para futuras partidas.'
-                  : 'Puedes entrar sin registro o usar Gmail para recuperar tu perfil.'}
-              </p>
+        {/* STEP 1 — Elige tu icono (icon first, with default) */}
+        <section className="w-full rounded-2xl border border-electric-purple/30 bg-electric-purple/8 p-4">
+          <p className="font-label-caps text-[11px] tracking-[0.22em] text-electric-purple mb-3">① ELIGE TU ÍCONO</p>
+
+          {/* Preview del avatar seleccionado */}
+          <div className="flex items-center justify-center mb-4">
+            <div className="relative">
+              <div className="flex h-20 w-20 items-center justify-center rounded-full border-4 border-electric-purple bg-electric-purple/20 text-4xl shadow-[0_0_28px_rgba(168,85,247,0.35)]">
+                {avatar?.startsWith?.('http') ? (
+                  <img src={avatar} alt="Avatar" className="h-full w-full rounded-full object-cover" />
+                ) : (
+                  avatar || '😎'
+                )}
+              </div>
+              <div className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-neon-green shadow-[0_0_12px_rgba(57,255,20,0.5)]">
+                <span className="material-symbols-outlined text-black" style={{ fontSize: '14px' }}>check</span>
+              </div>
             </div>
-            <button
-              type="button"
-              onClick={handleGoogleLogin}
-              disabled={authStatus === 'loading' || Boolean(googleUser)}
-              className="min-h-touch shrink-0 rounded-xl border border-white/10 bg-white px-3 font-label-caps text-[10px] font-black text-black disabled:opacity-60"
-            >
-              {googleUser ? 'LISTO' : authStatus === 'loading' ? '...' : 'GMAIL'}
-            </button>
           </div>
-          {authMessage && (
-            <p className={`mt-2 text-xs ${authStatus === 'error' ? 'text-intense-red' : 'text-on-surface-variant'}`}>
-              {authMessage}
-            </p>
-          )}
+
+          {/* Grid de emojis — prominente, filas legibles */}
+          <div className="grid grid-cols-6 gap-2 sm:grid-cols-8">
+            {EMOJI_AVATARS.map((emoji) => (
+              <motion.button
+                key={emoji}
+                type="button"
+                onClick={() => { hasEditedAvatarRef.current = true; setAvatar(emoji); }}
+                whileTap={{ scale: 0.88 }}
+                whileHover={{ scale: 1.08 }}
+                aria-label={`Elegir ${emoji} como avatar`}
+                className={`flex h-12 items-center justify-center rounded-xl text-3xl transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-neon-green ${
+                  avatar === emoji
+                    ? 'border-2 border-neon-green bg-neon-green/15 shadow-[0_0_20px_rgba(57,255,20,0.30)] scale-110'
+                    : 'border border-white/8 bg-white/5 hover:bg-white/12'
+                }`}
+              >
+                {emoji}
+              </motion.button>
+            ))}
+          </div>
         </section>
 
-        <section className="space-y-3 w-full">
+        {/* STEP 2 — Tu alias */}
+        <section className="w-full rounded-2xl border border-white/10 bg-white/5 p-4">
+          <p className="font-label-caps text-[11px] tracking-[0.22em] text-vinyl-orange mb-3">② TU NOMBRE EN EL JUEGO</p>
+          <input
+            id="guest-name"
+            type="text"
+            maxLength={18}
+            className="h-14 w-full rounded-xl border border-white/10 bg-black/30 px-4 text-center text-xl font-black text-on-surface outline-none transition-colors focus:border-neon-green focus:ring-2 focus:ring-neon-green/30 placeholder:text-on-surface-variant/50"
+            value={name}
+            onChange={(event) => { hasEditedNameRef.current = true; setName(event.target.value); }}
+            placeholder="DJ Invitado"
+            autoComplete="nickname"
+          />
+          <p className="mt-2 text-center font-label-caps text-[10px] text-on-surface-variant">Máximo 18 caracteres · Visible para todos</p>
+        </section>
+
+        {/* STEP 3 — PIN de la sala */}
+        <section className="w-full rounded-2xl border border-white/10 bg-white/5 p-4 space-y-3">
           <div className="flex items-center justify-between gap-3">
-            <label className="font-label-caps text-on-surface-variant text-xs">PIN DE LA SALA</label>
+            <p className="font-label-caps text-[11px] tracking-[0.22em] text-neon-green">③ PIN DE LA SALA</p>
             <button
               type="button"
               onClick={() => setScannerOpen(true)}
               className="min-h-touch rounded-lg border border-neon-green/40 bg-neon-green/10 px-3 text-xs font-label-caps text-neon-green flex items-center gap-2 active:scale-95 transition-transform"
             >
               <span className="material-symbols-outlined text-base">qr_code_scanner</span>
-              ESCANEAR QR
+              QR
             </button>
           </div>
 
@@ -314,7 +345,7 @@ export default function GuestJoinScreen() {
                 inputMode="numeric"
                 maxLength={1}
                 aria-label={`Dígito ${index + 1} del PIN`}
-                className="h-14 rounded-xl border-2 border-white/10 bg-white/5 text-center font-stats-xl text-2xl text-neon-green outline-none transition-colors focus:border-neon-green sm:h-16 sm:text-3xl"
+                className="h-16 rounded-xl border-2 border-white/10 bg-black/30 text-center font-stats-xl text-3xl text-neon-green outline-none transition-colors focus:border-neon-green focus:bg-black/50 sm:h-18"
                 value={digit.trim()}
                 onChange={(event) => updatePinAt(index, event.target.value)}
                 onKeyDown={(event) => handlePinKeyDown(event, index)}
@@ -323,40 +354,29 @@ export default function GuestJoinScreen() {
           </div>
         </section>
 
-        <section className="w-full">
-          <label htmlFor="guest-name" className="font-label-caps text-on-surface-variant text-xs mb-2 block">TU ALIAS (MAX. 12)</label>
-          <input
-            id="guest-name"
-            type="text"
-            maxLength={18}
-            className="h-13 w-full rounded-xl border border-white/10 bg-white/5 px-4 text-center text-base font-bold text-on-surface outline-none transition-colors focus:border-neon-green focus:ring-2 focus:ring-neon-green/30 sm:h-14"
-            value={name}
-            onChange={(event) => { hasEditedNameRef.current = true; setName(event.target.value); }}
-            placeholder="DJ Invitado"
-          />
-        </section>
-
-        <section className="w-full">
-          <label className="font-label-caps text-on-surface-variant text-xs mb-2 block">ELIGE TU IDENTIDAD</label>
-          {avatar?.startsWith?.('http') && (
-            <div className="mb-2 flex items-center justify-center">
-              <img src={avatar} alt="Avatar Google" className="h-12 w-12 rounded-full border-2 border-electric-purple object-cover" />
+        {/* Google login (secundario) */}
+        <section className="w-full rounded-2xl border border-white/8 bg-white/[0.03] p-3 text-left">
+          <div className="flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <p className="font-label-caps text-[10px] tracking-[0.18em] text-on-surface-variant">OPCIONAL · GUARDAR PERFIL</p>
+              <p className="mt-0.5 text-sm font-bold text-white/80">
+                {googleUser ? '✓ Google conectado' : 'Recupera tu perfil con Gmail'}
+              </p>
             </div>
-          )}
-          <div className="grid max-h-[28svh] grid-cols-5 gap-2 overflow-y-auto rounded-xl border border-white/10 bg-white/5 p-3 no-scrollbar sm:max-h-none sm:grid-cols-6 sm:p-4">
-            {EMOJI_AVATARS.map((emoji) => (
-              <motion.button
-                key={emoji}
-                type="button"
-                onClick={() => { hasEditedAvatarRef.current = true; setAvatar(emoji); }}
-                whileTap={{ scale: 0.9 }}
-                whileHover={{ scale: 1.06 }}
-                className={`flex h-10 items-center justify-center rounded-lg text-2xl transition-all ${avatar === emoji ? 'bg-primary/40 border border-primary scale-110 shadow-[0_0_18px_rgba(57,255,20,0.22)]' : 'hover:bg-white/10 border border-transparent'}`}
-              >
-                {emoji}
-              </motion.button>
-            ))}
+            <button
+              type="button"
+              onClick={handleGoogleLogin}
+              disabled={authStatus === 'loading' || Boolean(googleUser)}
+              className="min-h-touch shrink-0 rounded-xl border border-white/10 bg-white px-4 font-label-caps text-[10px] font-black text-black disabled:opacity-60 active:scale-95 transition-transform"
+            >
+              {googleUser ? 'LISTO' : authStatus === 'loading' ? '...' : 'GMAIL'}
+            </button>
           </div>
+          {authMessage && (
+            <p className={`mt-2 text-xs ${authStatus === 'error' ? 'text-intense-red' : 'text-on-surface-variant'}`}>
+              {authMessage}
+            </p>
+          )}
         </section>
 
         {joinError && (
@@ -373,7 +393,7 @@ export default function GuestJoinScreen() {
           primary={true}
           onClick={handleJoin}
           disabled={!canJoin}
-          className="mt-2"
+          className="mt-1"
         >
           {isLoading ? 'CONECTANDO...' : 'ENTRAR A JUGAR'}
         </NeonButton>

@@ -16,28 +16,54 @@ function RankingPeek({ players, guestId, targetYears = 12 }) {
   const sorted = [...players].sort((a, b) => getTimelineProgress(b) - getTimelineProgress(a));
   const myRank = sorted.findIndex((p) => p.id === guestId) + 1;
   const leader = sorted[0];
+  const ownPlayer = sorted.find((p) => p.id === guestId);
+  const myYears = getTimelineProgress(ownPlayer);
 
   return (
-    <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-black/30 text-left overflow-hidden shadow-[0_18px_40px_rgba(0,0,0,0.22)]">
+    <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-black/35 text-left overflow-hidden shadow-[0_18px_40px_rgba(0,0,0,0.28)]">
+      {/* Always-visible strip: position + years */}
       <button
         type="button"
         onClick={() => setRankOpen((prev) => !prev)}
-        className="w-full p-4 flex items-center justify-between gap-3"
+        className="w-full px-4 py-3 flex items-center justify-between gap-3"
+        aria-expanded={rankOpen}
       >
-        <div>
-          <p className="font-label-caps text-neon-green text-sm tracking-[0.16em]">RANKING · CANCIONES</p>
-          <p className="text-base font-bold text-white">
-            {myRank ? `Posición ${myRank} de ${sorted.length}` : 'Ver progreso'}
-          </p>
+        <div className="flex items-center gap-3 min-w-0">
+          {/* Position badge */}
+          <div className="flex flex-col items-center shrink-0">
+            <span className={`w-10 h-10 rounded-xl text-base font-black flex items-center justify-center ${myRank === 1 ? 'bg-neon-green text-black shadow-[0_0_16px_rgba(57,255,20,0.4)]' : myRank === 2 ? 'bg-white/20 text-white' : 'bg-white/10 text-on-surface-variant'}`}>
+              {myRank || '?'}
+            </span>
+            <span className="mt-0.5 font-label-caps text-[9px] tracking-[0.12em] text-on-surface-variant">POS</span>
+          </div>
+          {/* Years progress */}
+          <div className="min-w-0">
+            <p className="font-label-caps text-[10px] tracking-[0.18em] text-neon-green">TUS AÑOS · META</p>
+            <div className="mt-0.5 flex items-baseline gap-1">
+              <span className="font-stats-xl text-2xl font-black text-white leading-none">{myYears}</span>
+              <span className="text-sm text-on-surface-variant font-bold">/{targetYears}</span>
+            </div>
+            {/* Mini progress bar */}
+            <div className="mt-1 h-1.5 w-28 overflow-hidden rounded-full bg-white/10">
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-neon-green to-electric-purple transition-all duration-500"
+                style={{ width: `${Math.min(100, (myYears / targetYears) * 100)}%` }}
+              />
+            </div>
+          </div>
         </div>
-        <motion.span
-          animate={{ rotate: rankOpen ? 180 : 0 }}
-          transition={{ duration: 0.22 }}
-          className="material-symbols-outlined text-neon-green text-2xl"
-        >
-          expand_more
-        </motion.span>
+        <div className="flex items-center gap-2 shrink-0">
+          <span className="font-label-caps text-xs text-on-surface-variant hidden sm:inline">RANKING</span>
+          <motion.span
+            animate={{ rotate: rankOpen ? 180 : 0 }}
+            transition={{ duration: 0.22 }}
+            className="material-symbols-outlined text-neon-green text-2xl"
+          >
+            expand_more
+          </motion.span>
+        </div>
       </button>
+
       <AnimatePresence initial={false}>
         {rankOpen && (
           <motion.div
@@ -47,28 +73,29 @@ function RankingPeek({ players, guestId, targetYears = 12 }) {
             transition={{ duration: 0.24, ease: 'easeInOut' }}
             className="overflow-hidden"
           >
-            <div className="px-3 pb-3 flex flex-col gap-2.5">
+            <div className="border-t border-white/8 px-3 pb-3 pt-2 flex flex-col gap-2">
               {sorted.map((player, index) => {
                 const progress = getTimelineProgress(player);
                 const missing = Math.max(0, targetYears - progress);
+                const isMe = player.id === guestId;
                 return (
                   <div
                     key={player.id}
-                    className={`flex items-center gap-2.5 rounded-xl px-3 py-2.5 ${player.id === guestId ? 'bg-neon-green/10 border border-neon-green/25' : 'bg-white/5'}`}
+                    className={`flex items-center gap-2.5 rounded-xl px-3 py-2.5 ${isMe ? 'bg-neon-green/12 border border-neon-green/30' : 'bg-white/5'}`}
                   >
-                    <span className={`w-8 h-8 rounded-lg text-sm font-black flex items-center justify-center shrink-0 ${index === 0 ? 'bg-neon-green text-black' : 'bg-white/10 text-white'}`}>
+                    <span className={`w-8 h-8 rounded-lg text-sm font-black flex items-center justify-center shrink-0 ${index === 0 ? 'bg-neon-green text-black' : index === 1 ? 'bg-white/25 text-white' : 'bg-white/10 text-white'}`}>
                       {index + 1}
                     </span>
                     {player.avatar?.startsWith?.('http') ? (
-                      <img src={player.avatar} alt={player.name} className="w-9 h-9 rounded-full object-cover shrink-0" />
+                      <img src={player.avatar} alt={player.name} className="w-8 h-8 rounded-full object-cover shrink-0" />
                     ) : (
-                      <span className="w-7 h-7 rounded-full bg-black/20 flex items-center justify-center text-sm shrink-0">{player.avatar || '•'}</span>
+                      <span className="w-8 h-8 rounded-full bg-black/20 flex items-center justify-center text-base shrink-0">{player.avatar || '•'}</span>
                     )}
-                    <span className="text-base font-bold text-white truncate flex-1">{player.name}</span>
+                    <span className="text-sm font-bold text-white truncate flex-1">{player.name}{isMe ? ' (tú)' : ''}</span>
                     <div className="text-right shrink-0">
                       <p className="text-base font-black text-neon-green leading-none">{progress}/{targetYears}</p>
-                      <p className="mt-0.5 text-xs font-bold text-on-surface-variant leading-none">
-                        {missing === 0 ? '¡Meta!' : player === leader ? 'Va primero' : `Faltan ${missing}`}
+                      <p className="mt-0.5 text-[10px] font-bold text-on-surface-variant leading-none">
+                        {missing === 0 ? '¡Meta!' : player === leader ? 'Lidera' : `Faltan ${missing}`}
                       </p>
                     </div>
                   </div>
@@ -121,8 +148,8 @@ function VinylYearChip({ year, isScrambled, wobble }) {
   const label = isScrambled ? scrambleYear(year) : year;
   return (
     <div
-      className="relative w-20 h-20 shrink-0 snap-center"
-      style={{ transform: `translateY(${wobble}px)` }}
+      className="relative shrink-0 snap-center"
+      style={{ width: 'var(--vinyl-size, 6.5rem)', height: 'var(--vinyl-size, 6.5rem)', transform: `translateY(${wobble}px)` }}
     >
       <div
         className={`absolute inset-0 rounded-full border-2 shadow-[0_10px_22px_rgba(0,0,0,0.4)] ${isScrambled ? 'border-error/50' : 'border-black/60'}`}
@@ -134,8 +161,11 @@ function VinylYearChip({ year, isScrambled, wobble }) {
       >
         <div className="absolute inset-0 rounded-full bg-[conic-gradient(from_20deg,transparent_0_20deg,rgba(255,255,255,0.14)_20deg_26deg,transparent_26deg_170deg,rgba(255,255,255,0.08)_170deg_176deg,transparent_176deg_360deg)]" />
       </div>
-      <div className={`absolute inset-[16%] rounded-full flex items-center justify-center border-2 border-black/50 shadow-[inset_0_2px_4px_rgba(0,0,0,0.35)] ${isScrambled ? 'bg-error animate-pulse' : 'bg-electric-purple'}`}>
-        <span className={`font-stats-xl font-black leading-none text-white text-sm ${isScrambled ? 'tracking-widest' : ''}`}>
+      <div className={`absolute inset-[15%] rounded-full flex items-center justify-center border-2 border-black/50 shadow-[inset_0_2px_4px_rgba(0,0,0,0.35)] ${isScrambled ? 'bg-error animate-pulse' : 'bg-electric-purple'}`}>
+        <span
+          className={`font-stats-xl font-black leading-none text-white ${isScrambled ? 'tracking-widest' : ''}`}
+          style={{ fontSize: 'clamp(1rem, 4.5vw, 1.35rem)' }}
+        >
           {label}
         </span>
       </div>
@@ -150,8 +180,8 @@ function VinylYearChip({ year, isScrambled, wobble }) {
 function WildcardChip({ wobble }) {
   return (
     <div
-      className="relative w-20 h-20 shrink-0 snap-center"
-      style={{ transform: `translateY(${wobble}px)` }}
+      className="relative shrink-0 snap-center"
+      style={{ width: 'var(--vinyl-size, 6.5rem)', height: 'var(--vinyl-size, 6.5rem)', transform: `translateY(${wobble}px)` }}
     >
       <div
         className="absolute inset-0 rounded-full border-2 border-black/60 shadow-[0_10px_22px_rgba(0,0,0,0.4)]"
@@ -159,8 +189,8 @@ function WildcardChip({ wobble }) {
       >
         <div className="absolute inset-0 rounded-full bg-[conic-gradient(from_20deg,transparent_0_20deg,rgba(255,255,255,0.14)_20deg_26deg,transparent_26deg_170deg,rgba(255,255,255,0.08)_170deg_176deg,transparent_176deg_360deg)]" />
       </div>
-      <div className="absolute inset-[16%] rounded-full flex items-center justify-center border-2 border-black/50 bg-chaos-gold shadow-[inset_0_2px_4px_rgba(0,0,0,0.35)]">
-        <span className="material-symbols-outlined text-black text-xl">star</span>
+      <div className="absolute inset-[15%] rounded-full flex items-center justify-center border-2 border-black/50 bg-chaos-gold shadow-[inset_0_2px_4px_rgba(0,0,0,0.35)]">
+        <span className="material-symbols-outlined text-black text-2xl">star</span>
       </div>
     </div>
   );
@@ -177,10 +207,11 @@ function VinylSlotButton({ label, disabled, onClick }) {
       disabled={disabled}
       onClick={onClick}
       aria-label={`Colocar canción: ${label}`}
-      className="group relative w-20 h-20 shrink-0 snap-center rounded-full border-2 border-dashed border-neon-green/50 bg-neon-green/5 text-neon-green flex flex-col items-center justify-center active:scale-90 transition-transform hover:bg-neon-green/15 hover:border-neon-green focus:outline-none focus:ring-2 focus:ring-neon-green disabled:opacity-40"
+      className="group relative shrink-0 snap-center rounded-full border-2 border-dashed border-neon-green/50 bg-neon-green/5 text-neon-green flex flex-col items-center justify-center active:scale-90 transition-transform hover:bg-neon-green/15 hover:border-neon-green focus:outline-none focus:ring-2 focus:ring-neon-green disabled:opacity-40"
+      style={{ width: 'var(--vinyl-size, 6.5rem)', height: 'var(--vinyl-size, 6.5rem)' }}
     >
-      <span className="material-symbols-outlined text-2xl leading-none">add</span>
-      <span className="absolute -bottom-9 w-32 text-center text-sm font-bold font-label-caps leading-tight text-white group-hover:text-neon-green transition-colors">
+      <span className="material-symbols-outlined text-3xl leading-none">add</span>
+      <span className="absolute -bottom-11 w-36 text-center text-[clamp(0.7rem,2.8vw,0.85rem)] font-bold font-label-caps leading-tight text-white group-hover:text-neon-green transition-colors">
         {label}
       </span>
     </button>
@@ -192,43 +223,67 @@ function AttackWarningOverlay({ attack, onClose }) {
   const attackCopy = getAttackCopy(attack);
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 1.04 }}
+      initial={{ opacity: 0, scale: 1.06 }}
       animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.96 }}
-      transition={{ duration: 0.24 }}
-      className="fixed inset-0 z-[260] flex items-center justify-center overflow-hidden bg-[#7c1cff] px-5 text-center text-white"
+      exit={{ opacity: 0, scale: 0.94 }}
+      transition={{ duration: 0.28 }}
+      className="fixed inset-0 z-[260] flex items-center justify-center overflow-hidden px-5 text-center text-white"
+      style={{ background: 'linear-gradient(160deg, #4a00b8 0%, #8b00ff 40%, #c0007a 80%, #ff4400 100%)' }}
     >
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(255,255,255,0.26),transparent_28%),radial-gradient(circle_at_20%_80%,rgba(255,122,26,0.22),transparent_32%),linear-gradient(160deg,rgba(255,0,170,0.42),rgba(68,20,180,0.72))]" />
-      <div className="absolute inset-x-0 top-0 h-32 bg-white/10 blur-3xl" />
+      {/* Ambient fx layers */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_15%,rgba(255,255,255,0.30),transparent_30%),radial-gradient(circle_at_20%_85%,rgba(255,122,26,0.25),transparent_35%)]" />
+      <div className="absolute inset-x-0 top-0 h-40 bg-white/12 blur-3xl" />
       <motion.div
-        initial={{ y: 24, opacity: 0 }}
+        animate={{ opacity: [0.35, 0.65, 0.35] }}
+        transition={{ repeat: Infinity, duration: 1.8 }}
+        className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.06),transparent_60%)]"
+      />
+
+      <motion.div
+        initial={{ y: 32, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.06, type: 'spring', stiffness: 180, damping: 18 }}
+        transition={{ delay: 0.08, type: 'spring', stiffness: 160, damping: 18 }}
         className="relative mx-auto w-full max-w-sm"
       >
+        {/* Icon */}
         <motion.div
-          animate={{ rotate: [-2, 2, -2], scale: [1, 1.04, 1] }}
-          transition={{ repeat: Infinity, duration: 0.7 }}
-          className="mx-auto flex h-24 w-24 items-center justify-center rounded-full border-4 border-white/70 bg-black/25 shadow-[0_0_70px_rgba(255,255,255,0.45)]"
+          animate={{ rotate: [-3, 3, -3], scale: [1, 1.06, 1] }}
+          transition={{ repeat: Infinity, duration: 0.65 }}
+          className="mx-auto flex h-28 w-28 items-center justify-center rounded-full border-4 border-white/80 bg-black/30 shadow-[0_0_80px_rgba(255,255,255,0.50),0_0_140px_rgba(200,0,255,0.35)]"
         >
-          <span className="material-symbols-outlined text-6xl">{attackCopy.icon}</span>
+          <span className="material-symbols-outlined text-7xl drop-shadow-[0_0_20px_rgba(255,255,255,0.6)]">{attackCopy.icon}</span>
         </motion.div>
-        <p className="mt-6 font-label-caps text-sm tracking-[0.28em] text-white/80">ALERTA DE CABINA</p>
-        <h2 className="mt-2 font-headline-lg text-5xl font-black leading-[0.9] drop-shadow-[0_8px_26px_rgba(0,0,0,0.35)]">
-          TE ATACARON
+
+        {/* Labels */}
+        <p className="mt-6 font-label-caps text-xs tracking-[0.36em] text-white/70">⚡ ALERTA DE SABOTAJE ⚡</p>
+        <h2
+          className="mt-2 font-headline-lg font-black leading-[0.88] drop-shadow-[0_8px_30px_rgba(0,0,0,0.40)]"
+          style={{ fontSize: 'clamp(3.2rem, 14vw, 5.5rem)' }}
+        >
+          TE<br />ATACARON
         </h2>
-        <p className="mx-auto mt-4 max-w-xs text-lg font-black leading-tight">
-          {attack.from || 'Un rival'} lanzo: {attackCopy.title}.
+
+        {/* Who & what */}
+        <div className="mx-auto mt-5 max-w-xs rounded-2xl border border-white/25 bg-black/30 px-4 py-3 backdrop-blur-sm">
+          <p className="text-base font-black leading-snug text-white">
+            <span className="text-chaos-gold">{attack.from || 'Un rival'}</span> lanzó:{' '}
+            <span className="text-white">{attackCopy.title}</span>
+          </p>
+          <p className="mt-2 text-sm leading-relaxed text-white/80">
+            {attackCopy.description}
+          </p>
+        </div>
+
+        <p className="mx-auto mt-3 max-w-xs text-sm leading-relaxed text-white/65">
+          Respira, mira el ritmo y coloca la canción igual de siempre.
         </p>
-        <p className="mx-auto mt-2 max-w-xs text-sm leading-relaxed text-white/78">
-          {attackCopy.description} Respira, mira el ritmo y coloca la cancion igual.
-        </p>
+
         <button
           type="button"
           onClick={onClose}
-          className="mt-7 min-h-touch w-full rounded-2xl bg-white px-5 font-label-caps text-sm font-black tracking-[0.16em] text-[#6b10e8] shadow-[0_8px_0_rgba(53,8,118,0.65)] active:translate-y-1 active:shadow-[0_4px_0_rgba(53,8,118,0.65)]"
+          className="mt-6 min-h-[3.5rem] w-full rounded-2xl bg-white px-5 font-label-caps text-base font-black tracking-[0.18em] text-[#6b10e8] shadow-[0_8px_0_rgba(53,8,118,0.70)] active:translate-y-1 active:shadow-[0_4px_0_rgba(53,8,118,0.70)] transition-all"
         >
-          JUGAR IGUAL
+          ¡LO TENGO! JUGAR
         </button>
       </motion.div>
     </motion.div>
@@ -278,7 +333,7 @@ function TimelinePlacementQuestion({ question, playerYears = [], wildcards = 0, 
         {/* Estante de vinilos: riel horizontal con snap-scroll, discos y huecos
             alternados en un leve vaivén vertical para que se lea como una
             colección real y no una grilla rígida. */}
-        <div className="relative mt-6 overflow-x-auto overflow-y-visible pb-12 pt-2 snap-x no-scrollbar sm:mt-8">
+        <div className="relative mt-6 overflow-x-auto overflow-y-visible pb-16 pt-2 snap-x no-scrollbar sm:mt-8">
           <div className="absolute left-0 right-0 top-1/2 h-px bg-gradient-to-r from-transparent via-white/12 to-transparent" />
           <div className="relative min-w-max flex items-center gap-3 px-2">
             {slots.map((slot, index) => (
