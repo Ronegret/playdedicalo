@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import NeonButton from '../components/NeonButton';
 import SupportButton from '../components/SupportButton';
 import { getPlaylistRequestUrl, openMailto, SUPPORT_EMAIL } from '../config/support';
-import { ATTACK_COST, TIMELINE_GOAL_YEARS } from '../store/useGameStore';
+import { ATTACK_COST, REDEEM_YEAR_COST, TIMELINE_GOAL_YEARS } from '../store/useGameStore';
 
 const HOW_TO_STEPS = [
   {
@@ -34,8 +34,8 @@ const HOW_TO_STEPS = [
   },
   {
     icon: 'bolt',
-    title: '6. Sabotea con estilo',
-    text: `Gasta ${ATTACK_COST} pts para complicarle la siguiente ronda a un rival.`
+    title: '6. Sabotea o canjea puntos',
+    text: `Con ${ATTACK_COST} pts saboteas a un rival. Con ${REDEEM_YEAR_COST} pts te compras una canción de progreso.`
   }
 ];
 
@@ -49,24 +49,20 @@ const SCORE_RULES = [
   { value: '10', label: 'Inicio', text: 'Todos empiezan con los mismos puntos.', color: '#ffffff' },
   { value: '+5', label: 'Acierto', text: 'Colocaste bien el año de la canción.', color: '#39ff14' },
   { value: '-3', label: 'Fallo', text: 'La canción iba en otro lugar de tu ruta.', color: '#ff4f8b' },
-  { value: `${ATTACK_COST}`, label: 'Sabotaje', text: 'Coste para atacar a otro jugador.', color: '#b96cff' }
+  { value: `${ATTACK_COST}`, label: 'Sabotaje', text: 'Coste para atacar a otro jugador.', color: '#b96cff' },
+  { value: `${REDEEM_YEAR_COST}`, label: 'Canje', text: 'Coste para comprar una canción de progreso.', color: '#ffbf4d' }
 ];
 
 const SABOTAGE_CARDS = [
   {
-    icon: 'swap_vert',
-    title: 'Orden cambiado',
-    text: 'Los años pueden verse de mayor a menor o al revés para despistar.'
+    icon: 'block',
+    title: 'Bloqueo',
+    text: 'El rival queda bloqueado y no puede responder esta ronda. Cuenta como fallo para él.'
   },
   {
-    icon: 'shuffle',
-    title: 'Años revueltos',
-    text: 'Los dígitos se mezclan visualmente. El año real no cambia.'
-  },
-  {
-    icon: 'ads_click',
-    title: 'Toque traicionero',
-    text: 'La pantalla puede intentar confundirte justo cuando vas a responder.'
+    icon: 'move_down',
+    title: 'Robo de año',
+    text: 'Si el rival acierta igual, ese año pasa a tu ruta y él pierde uno de los que ya tenía.'
   }
 ];
 
@@ -75,7 +71,9 @@ const FAQ = [
   ['¿Qué pasa si dos canciones son del mismo año?', 'Está bien. Si el año correcto coincide con un año que ya tienes, la respuesta se acepta como válida.'],
   ['¿Se ve el ranking?', 'Sí. Durante la partida puedes revisar quién va ganando y al final aparece el ranking completo.'],
   ['¿Y si alguien se desconecta?', 'Tiene 30 segundos para volver antes de salir de la partida. Su sitio se mantiene durante ese tiempo.'],
-  ['¿La canción se reproduce sola al inicio?', 'No. En la pantalla principal la música de Dedícalo solo suena cuando tocas el botón de reproducir.']
+  ['¿La canción se reproduce sola al inicio?', 'No. En la pantalla principal la música de Dedícalo solo suena cuando tocas el botón de reproducir.'],
+  ['¿Para qué sirven los puntos si no ganan la partida?', `Solo para dos cosas: sabotear a un rival (${ATTACK_COST} pts) o canjearlos por una canción de progreso (${REDEEM_YEAR_COST} pts). Lo que decide quién gana es la ruta de años, nunca los puntos por sí solos.`],
+  ['¿Puedo elegir a quién sabotear?', 'Sí, y también qué golpe usar: "Bloqueo" (no responde esa ronda) o "Robo de año" (si acierta, te quedas con su año). No puedes sabotear a alguien desconectado ni que ya esté saboteado en esa ronda.']
 ];
 
 const fadeUp = {
@@ -286,10 +284,10 @@ export default function HowToPlayScreen() {
         <section className="mt-6 rounded-[28px] border border-[#b96cff]/35 bg-[#20072f]/75 p-4 shadow-[0_22px_60px_rgba(185,108,255,0.16)] sm:p-6">
           <SectionTitle
             eyebrow="Sabotajes"
-            title="Cuando alguien te ataca, se tiene que notar"
-            text={`El sabotaje cuesta ${ATTACK_COST} pts. No borra años ni destruye progreso: solo mete presión visual para que la ronda sea más épica.`}
+            title="Cuando alguien te ataca, sí se nota"
+            text={`Antes de que suene la pregunta, por ${ATTACK_COST} pts puedes sabotear a un rival conectado. Elige uno de los dos golpes — sí tienen consecuencia real en su ruta de años, no es solo un susto visual.`}
           />
-          <div className="grid gap-3 sm:grid-cols-3">
+          <div className="grid gap-3 sm:grid-cols-2">
             {SABOTAGE_CARDS.map((item) => (
               <SabotageCard key={item.title} item={item} />
             ))}
@@ -297,7 +295,29 @@ export default function HowToPlayScreen() {
           <div className="mt-4 rounded-2xl border border-white/12 bg-black/25 p-4">
             <p className="text-lg font-black text-white">Pantalla de ataque</p>
             <p className="mt-1 text-base leading-relaxed text-on-surface-variant">
-              Cuando recibes un sabotaje, la app muestra una alerta grande en lila: quién te atacó, qué te hizo y qué pasará en tu siguiente respuesta.
+              Cuando recibes un sabotaje, la app muestra una alerta grande: quién te atacó, cuál de los dos golpes usó y qué pasará en tu siguiente respuesta. Con "Bloqueo" ya sabes que no podrás jugar esa ronda. Con "Robo de año" puedes intentarlo igual, solo que si aciertas, el año se lo lleva quien te saboteó.
+            </p>
+          </div>
+        </section>
+
+        <section className="mt-6 rounded-[28px] border border-chaos-gold/35 bg-[#2a1c05]/75 p-4 shadow-[0_22px_60px_rgba(255,191,77,0.14)] sm:p-6">
+          <SectionTitle
+            eyebrow="Canjear puntos"
+            title="Los puntos también se pueden gastar en progreso"
+            text={`Los puntos de acierto (+5/-3) nunca ganan la partida por sí solos — solo sirven para sabotear o para esto: con ${REDEEM_YEAR_COST} pts ahorrados, compras directamente una canción de progreso hacia la meta, sin tener que acertarla de oído.`}
+          />
+          <div className="rounded-2xl border border-white/12 bg-black/25 p-4">
+            <div className="flex items-center gap-3">
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-chaos-gold text-black">
+                <span className="material-symbols-outlined text-2xl">star</span>
+              </span>
+              <div>
+                <p className="text-lg font-black text-white">Botón "CANJEAR"</p>
+                <p className="text-base text-on-surface-variant">Aparece junto a "SABOTEAR" mientras suena la música.</p>
+              </div>
+            </div>
+            <p className="mt-3 text-base leading-relaxed text-on-surface-variant">
+              La canción canjeada se ve en tu ruta como un círculo dorado con una estrella, en vez de un año — así todos ven de un vistazo cuánto de tu progreso es "de oído" y cuánto compraste. Cuenta igual para llegar a la meta.
             </p>
           </div>
         </section>

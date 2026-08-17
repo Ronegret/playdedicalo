@@ -57,38 +57,37 @@ function armPresenceDisconnect(pin, playerId) {
     .catch(() => {});
 }
 
-// Cuesta puntos, no progreso: el sabotaje nunca toca los años ya conseguidos
-// de nadie, solo le complica la próxima ronda al objetivo. Así se mantiene
-// el filo competitivo sin arriesgar la condición de victoria de nadie.
-export const ATTACK_COST = 8;
-
 // Los puntos de acierto (+5/-3) nunca ganan la partida por sí solos — solo
 // sirven para dos cosas: sabotear (ATTACK_COST) o canjearlos por progreso
-// real hacia la meta. Con REDEEM_YEAR_COST puntos ahorrados, un jugador
+// real hacia la meta (REDEEM_YEAR_COST). Con puntos ahorrados, un jugador
 // puede comprar directamente una "canción" de progreso sin tener que
 // acertarla, para quien vaya atrás en el conteo de canciones.
+export const ATTACK_COST = 8;
 export const REDEEM_YEAR_COST = 40;
+
+// El sabotaje tiene consecuencia real en la ruta de años, no solo un efecto
+// visual — a pedido explícito del usuario:
+//  - block_vote: el objetivo queda bloqueado y no puede responder esta
+//    ronda. Cuenta como fallo (igual que no contestar a tiempo).
+//  - year_steal: el objetivo sigue respondiendo normal. Si acierta, el año
+//    que hubiera ganado se lo lleva quien lo saboteó, y además pierde uno
+//    de los años que ya tenía en su ruta — un robo de verdad, no solo
+//    presión visual. Se avisa antes de responder para que decida si igual
+//    quiere arriesgarse a acertar.
 export const ATTACK_TYPES = {
-  reverse_order: {
-    id: 'reverse_order',
-    icon: 'swap_vert',
-    name: 'Modo espejo',
-    short: 'Ruta de mayor a menor',
-    description: 'Sus discos se muestran al revés durante una ronda.'
+  block_vote: {
+    id: 'block_vote',
+    icon: 'block',
+    name: 'Bloqueo',
+    short: 'No puede responder esta ronda',
+    description: 'Queda bloqueado y no puede votar en esta ronda — cuenta como fallo.'
   },
-  mirror_year: {
-    id: 'mirror_year',
-    icon: 'shuffle',
-    name: 'Año remix',
-    short: 'Dígitos cambiados',
-    description: 'Los años se ven con los dígitos revueltos para distraer.'
-  },
-  slippery_tap: {
-    id: 'slippery_tap',
-    icon: 'ads_click',
-    name: 'Toque falso',
-    short: 'El botón vecino responde',
-    description: 'Al tocar un hueco, la selección se puede mover al hueco de al lado.'
+  year_steal: {
+    id: 'year_steal',
+    icon: 'move_down',
+    name: 'Robo de año',
+    short: 'Si acierta, te regala un año',
+    description: 'Si acierta esta ronda, ese año pasa a ti y él pierde uno de los que ya tenía.'
   }
 };
 
@@ -441,33 +440,66 @@ export const useGameStore = create((setStore, getStore) => ({
     const remoteUpdates = {};
     const revealResults = {};
 
+    const goalYears = room?.settings?.targetYears || getStore().targetYears;
+
     Object.values(playersById).forEach((player) => {
       const answer = answers[player.id];
-      const isCorrect = Boolean(answer?.isCorrect);
-      const delta = answer ? (isCorrect ? 5 : -3) : (player.isHost ? 0 : -3);
+      // Bloqueado por sabotaje: no puede responder esta ronda, cuenta como
+      // fallo aunque hubiera alcanzado a tocar algo antes de enterarse.
+      const isBlocked = player.activeAttack?.type === 'block_vote';
+      const isCorrect = !isBlocked && Boolean(answer?.isCorrect);
+      const delta = (!isBlocked && answer) ? (isCorrect ? 5 : -3) : (player.isHost ? 0 : -3);
       const nextPoints = clampPoints(Number(player.points || 0) + delta);
+      // Robo de año: si acertó y lo saboteó un "year_steal", el año no se le
+      // suma a él — se resuelve en el segundo paso, junto con quitarle uno
+      // de los que ya tenía.
+      const isStolen = isCorrect && player.activeAttack?.type === 'year_steal';
 
       remoteUpdates[`players/${player.id}/points`] = nextPoints;
       revealResults[player.id] = {
-        resultType: isCorrect ? 'success' : 'fail',
+        resultType: isBlocked ? 'blocked' : (isCorrect ? 'success' : 'fail'),
         isCorrect,
-        answered: Boolean(answer),
+        answered: Boolean(answer) && !isBlocked,
+        blocked: isBlocked,
+        stolen: isStolen,
+        stolenBy: isStolen ? (player.activeAttack.from || null) : null,
         delta,
         points: nextPoints
       };
 
-      if (currentQuestion?.answerType === 'timeline-placement' && isCorrect) {
+      if (currentQuestion?.answerType === 'timeline-placement' && isCorrect && !isStolen) {
         remoteUpdates[`players/${player.id}/timelineYears`] = normalizeTimelineYears([
           ...(player.timelineYears || []),
           currentQuestion.songYear
-        ], room?.settings?.targetYears || getStore().targetYears);
+        ], goalYears);
       }
     });
+
+    // Robo de año — se resuelve aparte porque mueve progreso entre DOS
+    // jugadores a la vez: el atacante nunca respondió esta ronda, pero de
+    // todas formas gana un año, y el objetivo pierde uno de los suyos.
+    if (currentQuestion?.answerType === 'timeline-placement') {
+      Object.values(playersById).forEach((player) => {
+        if (player.activeAttack?.type !== 'year_steal') return;
+        if (!revealResults[player.id]?.stolen) return;
+        const attackerId = player.activeAttack.attackerId;
+        const attacker = attackerId ? playersById[attackerId] : null;
+        if (!attacker) return;
+
+        const targetYearsLeft = normalizeTimelineYears(player.timelineYears || [], goalYears).slice(0, -1);
+        remoteUpdates[`players/${player.id}/timelineYears`] = targetYearsLeft;
+
+        remoteUpdates[`players/${attackerId}/timelineYears`] = normalizeTimelineYears([
+          ...(attacker.timelineYears || []),
+          currentQuestion.songYear
+        ], goalYears);
+      });
+    }
 
     const nextPlayers = sortPlayers(Object.values(playersById).map((player) => ({
       ...player,
       points: remoteUpdates[`players/${player.id}/points`] ?? player.points,
-      timelineYears: remoteUpdates[`players/${player.id}/timelineYears`] ?? normalizeTimelineYears(player.timelineYears || [], room?.settings?.targetYears || getStore().targetYears)
+      timelineYears: remoteUpdates[`players/${player.id}/timelineYears`] ?? normalizeTimelineYears(player.timelineYears || [], goalYears)
     })));
     const targetYears = clampTimelineGoal(room?.settings?.targetYears || getStore().targetYears);
     const timelineComplete = nextPlayers.some((player) => getTimelineProgress(player) >= targetYears);
@@ -522,7 +554,7 @@ export const useGameStore = create((setStore, getStore) => ({
   // revueltos visualmente en vez de que le cambien las reglas a mitad de
   // respuesta. Cuesta puntos, nunca años — no puede decidir la partida por
   // sí solo, solo complica el ranking del rival por una ronda.
-  attackOpponent: async (targetPlayerId, attackTypeId = 'reverse_order') => {
+  attackOpponent: async (targetPlayerId, attackTypeId = 'block_vote') => {
     const { pin, guestId, players, phase } = getStore();
     if (!pin || !guestId) return;
     if (phase !== 'listen') {
@@ -531,7 +563,7 @@ export const useGameStore = create((setStore, getStore) => ({
 
     const me = players.find((player) => player.id === guestId);
     const target = players.find((player) => player.id === targetPlayerId);
-    const attackType = ATTACK_TYPES[attackTypeId] || ATTACK_TYPES.reverse_order;
+    const attackType = ATTACK_TYPES[attackTypeId] || ATTACK_TYPES.block_vote;
     if (!me || !target || me.id === target.id) return;
     if (getPlayerPresence(target).status !== 'online') {
       throw new Error('Ese jugador no esta disponible ahora mismo.');
@@ -550,6 +582,7 @@ export const useGameStore = create((setStore, getStore) => ({
         title: attackType.name,
         description: attackType.description,
         from: me.name || 'Un rival',
+        attackerId: me.id,
         round: getStore().round,
         at: Date.now()
       },

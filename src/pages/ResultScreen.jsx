@@ -27,6 +27,17 @@ const RESULT_STYLES = {
     icon: 'cancel',
     title: 'FALLASTE',
     copy: 'Pierdes puntos, pero la siguiente ronda puede cambiarlo todo.'
+  },
+  blocked: {
+    bgColor: '#1a0f07',
+    glowColor: 'rgba(255,122,26,0.4)',
+    colorOverlay: 'rgba(255,122,26,0.08)',
+    border: 'border-vinyl-orange',
+    borderHex: '#ff7a1a',
+    text: 'text-vinyl-orange',
+    icon: 'block',
+    title: 'BLOQUEADO',
+    copy: 'No pudiste responder esta ronda por el sabotaje. La próxima es toda tuya.'
   }
 };
 
@@ -127,10 +138,17 @@ export default function ResultScreen() {
     : null;
   const resultType = guestReveal?.resultType || lastResultType || 'success';
   const pointDelta = guestReveal?.delta ?? lastPointDelta;
+  const wasYearStolen = Boolean(guestReveal?.stolen);
   const style = RESULT_STYLES[resultType] || RESULT_STYLES.success;
   const isSuccess = resultType === 'success';
   const isFail = resultType === 'fail';
   const resultWord = isSuccess ? 'CORRECTO' : isFail ? 'FALLASTE' : style.title;
+  // Acertaste, pero el sabotaje "Robo de año" se llevó el año igual —
+  // avisar aparte porque el estilo base sigue siendo "success" (sí sumaste
+  // puntos), solo que tu ruta no creció esta vez.
+  const resultCopy = wasYearStolen
+    ? `${guestReveal?.stolenBy || 'Un rival'} te robó el año con su sabotaje. Sumaste puntos, pero tu ruta no creció esta vez.`
+    : style.copy;
   const deltaColor = pointDelta > 0 ? 'text-neon-green' : pointDelta < 0 ? 'text-intense-red' : 'text-white/30';
   const deltaLabel = pointDelta > 0 ? `+${pointDelta}` : pointDelta !== 0 ? String(pointDelta) : null;
 
@@ -386,7 +404,7 @@ export default function ResultScreen() {
           </div>
 
           <div className="relative mt-4 mx-auto max-w-sm">
-            <p className="text-sm leading-relaxed text-white/70">{style.copy}</p>
+            <p className="text-sm leading-relaxed text-white/70">{resultCopy}</p>
           </div>
         </motion.div>
         {/* Cancion revelada */}

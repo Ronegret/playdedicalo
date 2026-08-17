@@ -111,19 +111,14 @@ function RankingPeek({ players, guestId, targetYears = 12 }) {
 
 
 
-function getTimelineSlotLabel(years, index, isReversed = false) {
-  if (isReversed) {
-    if (index === 0) return `Mas reciente que ${years[0]}`;
-    if (index === years.length) return `Mas antiguo que ${years[years.length - 1]}`;
-    return `Entre ${years[index - 1]} y ${years[index]}`;
-  }
+function getTimelineSlotLabel(years, index) {
   if (index === 0) return `Antes de ${years[0]}`;
   if (index === years.length) return `Después de ${years[years.length - 1]}`;
   return `Entre ${years[index - 1]} y ${years[index]}`;
 }
 
 function getAttackCopy(attack) {
-  const fallback = ATTACK_TYPES[attack?.type] || ATTACK_TYPES.reverse_order;
+  const fallback = ATTACK_TYPES[attack?.type] || ATTACK_TYPES.block_vote;
   return {
     title: attack?.title || fallback.name,
     short: fallback.short,
@@ -132,32 +127,19 @@ function getAttackCopy(attack) {
   };
 }
 
-// El sabotaje nunca borra ni cambia tus años reales — solo los muestra
-// desordenados en pantalla durante esta ronda. Si te los sabes de memoria,
-// el ataque no te afecta en absoluto; es presión visual, no daño real.
-function scrambleYear(year) {
-  const str = String(year);
-  if (str.length !== 4) return '????';
-  return `${str[3]}${str[1]}${str[2]}${str[0]}`;
-}
-
 // Círculo simple para un año ya conseguido: nada de textura ni relieve, solo
 // el número bien grande — se lee de un vistazo y a distancia. La versión
 // anterior (disco de vinilo con surco) se veía bonita pero ocupaba mucho
 // espacio por muy poca información real; esto deja ver más ruta a la vez y
 // prioriza el número sobre la decoración.
-function VinylYearChip({ year, isScrambled }) {
-  const label = isScrambled ? scrambleYear(year) : year;
+function VinylYearChip({ year }) {
   return (
     <div
-      className={`relative flex shrink-0 snap-center items-center justify-center rounded-full border-[3px] shadow-[0_6px_18px_rgba(0,0,0,0.35)] ${isScrambled ? 'border-error bg-error/20 animate-pulse' : 'border-electric-purple bg-electric-purple/20'}`}
+      className="relative flex shrink-0 snap-center items-center justify-center rounded-full border-[3px] border-electric-purple bg-electric-purple/20 shadow-[0_6px_18px_rgba(0,0,0,0.35)]"
       style={{ width: 'var(--vinyl-size, 4.75rem)', height: 'var(--vinyl-size, 4.75rem)' }}
     >
-      <span
-        className={`font-stats-xl font-black leading-none ${isScrambled ? 'text-error tracking-widest' : 'text-white'}`}
-        style={{ fontSize: 'clamp(1.1rem, 5.5vw, 1.5rem)' }}
-      >
-        {label}
+      <span className="font-stats-xl font-black leading-none text-white" style={{ fontSize: 'clamp(1.1rem, 5.5vw, 1.5rem)' }}>
+        {year}
       </span>
     </div>
   );
@@ -255,7 +237,9 @@ function AttackWarningOverlay({ attack, onClose }) {
         </div>
 
         <p className="mx-auto mt-3 max-w-xs text-sm leading-relaxed text-white/65">
-          Respira, mira el ritmo y coloca la canción igual de siempre.
+          {attack.type === 'block_vote'
+            ? 'No podrás responder esta ronda. Prepárate para la siguiente.'
+            : 'Si aciertas igual, respira: puedes intentarlo, solo que el año no se queda contigo.'}
         </p>
 
         <button
@@ -270,32 +254,51 @@ function AttackWarningOverlay({ attack, onClose }) {
   );
 }
 
+// Bloqueado por sabotaje: no hay nada que elegir, solo esperar. Se le avisa
+// bien claro por qué (para que no piense que la app se congeló) y se
+// muestra igual su ruta actual, sin tocar.
+function BlockedPlacement({ attackFrom, playerYears = [], wildcards = 0, targetYears = 12 }) {
+  const years = playerYears.length ? playerYears : [2000];
+  return (
+    <div className="mt-5">
+      <div className="rounded-3xl border border-vinyl-orange/40 bg-[radial-gradient(circle_at_top,rgba(255,122,26,0.16),rgba(255,255,255,0.04)_42%,rgba(0,0,0,0.24)_100%)] p-5 text-center shadow-[0_0_30px_rgba(255,122,26,0.1)]">
+        <span className="material-symbols-outlined text-vinyl-orange" style={{ fontSize: '3rem' }}>block</span>
+        <h3 className="mt-2 font-headline-lg text-2xl font-black text-white">BLOQUEADO ESTA RONDA</h3>
+        <p className="mt-2 text-base leading-relaxed text-on-surface-variant">
+          {attackFrom || 'Un rival'} te saboteó: no puedes responder. Cuenta como fallo, pero tu ruta no pierde nada.
+        </p>
+        <div className="mt-5 flex items-center justify-center gap-2">
+          {years.slice(0, targetYears).map((year, index) => (
+            <span key={`${year}-${index}`} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-white/20 bg-black/25 text-sm font-black text-white/70">
+              {String(year).slice(2)}
+            </span>
+          ))}
+          {wildcards > 0 && (
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-chaos-gold/50 bg-chaos-gold/10">
+              <span className="material-symbols-outlined text-chaos-gold text-lg">star</span>
+            </span>
+          )}
+        </div>
+        <p className="mt-4 font-label-caps text-sm tracking-[0.16em] text-vinyl-orange">ESPERANDO A QUE TERMINE LA RONDA...</p>
+      </div>
+    </div>
+  );
+}
+
 function TimelinePlacementQuestion({ question, playerYears = [], wildcards = 0, disabled, onPick, activeAttack, targetYears = 12 }) {
   const years = playerYears.length ? playerYears : [2000];
-  const attackType = activeAttack?.type;
-  const isReversed = attackType === 'reverse_order';
-  const isMirrored = attackType === 'mirror_year';
-  const isSlippery = attackType === 'slippery_tap';
-  const visibleYears = isReversed ? [...years].reverse() : years;
-  const slots = Array.from({ length: visibleYears.length + 1 }, (_, index) => index);
-  const correctSlot = isReversed
-    ? visibleYears.filter((year) => year >= question.songYear).length
-    : visibleYears.filter((year) => year <= question.songYear).length;
-  const getEffectiveSlot = (slot) => {
-    if (!isSlippery) return slot;
-    if (slots.length <= 1) return slot;
-    return slot >= slots.length - 1 ? slot - 1 : slot + 1;
-  };
-  const attackCopy = activeAttack ? getAttackCopy(activeAttack) : null;
+  const isStealThreat = activeAttack?.type === 'year_steal';
+  const slots = Array.from({ length: years.length + 1 }, (_, index) => index);
+  const correctSlot = years.filter((year) => year <= question.songYear).length;
 
   return (
     <div className="mt-5">
       <div className="rounded-3xl border border-neon-green/20 bg-[radial-gradient(circle_at_top,rgba(57,255,20,0.12),rgba(255,255,255,0.04)_42%,rgba(0,0,0,0.24)_100%)] p-4 shadow-[0_0_30px_rgba(57,255,20,0.08)]">
-        {activeAttack && (
+        {isStealThreat && (
           <div className="mb-3 rounded-xl bg-error/20 border border-error/50 p-2.5 flex items-center justify-center gap-2">
-            <span className="material-symbols-outlined text-error text-lg animate-pulse">bolt</span>
+            <span className="material-symbols-outlined text-error text-lg animate-pulse">move_down</span>
             <p className="text-sm font-bold leading-snug text-error">
-              {activeAttack.from || 'Un rival'} activo {attackCopy.title}: {attackCopy.short || attackCopy.description}
+              {activeAttack.from || 'Un rival'} te sabotó: si aciertas, ese año se lo lleva y pierdes uno de los tuyos.
             </p>
           </div>
         )}
@@ -318,24 +321,11 @@ function TimelinePlacementQuestion({ question, playerYears = [], wildcards = 0, 
             {slots.map((slot, index) => (
               <div key={slot} className="flex items-center gap-3">
                 <VinylSlotButton
-                  label={getTimelineSlotLabel(visibleYears, slot, isReversed)}
+                  label={getTimelineSlotLabel(years, slot)}
                   disabled={disabled}
-                  onClick={() => {
-                    const effectiveSlot = getEffectiveSlot(slot);
-                    onPick({
-                      isCorrect: effectiveSlot === correctSlot,
-                      timelineSlot: slot,
-                      effectiveSlot,
-                      attackType
-                    });
-                  }}
+                  onClick={() => onPick({ isCorrect: slot === correctSlot, timelineSlot: slot })}
                 />
-                {index < visibleYears.length && (
-                  <VinylYearChip
-                    year={visibleYears[index]}
-                    isScrambled={isMirrored}
-                  />
-                )}
+                {index < years.length && <VinylYearChip year={years[index]} />}
               </div>
             ))}
             {wildcards > 0 && Array.from({ length: wildcards }, (_, index) => (
@@ -350,9 +340,7 @@ function TimelinePlacementQuestion({ question, playerYears = [], wildcards = 0, 
           </p>
         )}
         <p className="mt-3 text-base leading-relaxed text-on-surface-variant">
-          {isSlippery
-            ? 'Ojo: esta ronda el toque puede saltar al hueco vecino. Juega con sangre fria.'
-            : 'Tu ruta es personal. Si no ves todos los discos, desliza la fila hacia los lados.'}
+          Tu ruta es personal. Si no ves todos los discos, desliza la fila hacia los lados.
         </p>
       </div>
     </div>
@@ -394,7 +382,7 @@ export default function GameScreen() {
   const [showAttackModal, setShowAttackModal] = useState(false);
   const [attackError, setAttackError] = useState('');
   const [attackSentTo, setAttackSentTo] = useState('');
-  const [selectedAttackType, setSelectedAttackType] = useState('reverse_order');
+  const [selectedAttackType, setSelectedAttackType] = useState('block_vote');
   const [disconnectToast, setDisconnectToast] = useState('');
   const [revealError, setRevealError] = useState('');
   const [isBlackoutPending, setIsBlackoutPending] = useState(false);
@@ -518,6 +506,7 @@ export default function GameScreen() {
   const ownPlayer = players.find((player) => player.id === guestId);
   const ownTimelineYears = getCombinedTimelineYears(ownPlayer);
   const incomingAttack = ownPlayer?.activeAttack?.round === round ? ownPlayer.activeAttack : null;
+  const isBlockedThisRound = incomingAttack?.type === 'block_vote';
   const attackKey = incomingAttack ? `${round}-${incomingAttack.from || 'rival'}` : '';
   const showIncomingAttack = Boolean(incomingAttack && dismissedAttackKey !== attackKey && (phase === 'listen' || phase === 'blackout'));
   const attackTargets = players.filter((player) => player.id !== guestId && getPlayerPresence(player).status === 'online' && !player.activeAttack);
@@ -909,6 +898,13 @@ export default function GameScreen() {
                   <RankingPeek players={players} guestId={guestId} targetYears={targetYears} />
                 </div>
               </>
+            ) : isBlockedThisRound ? (
+              <BlockedPlacement
+                attackFrom={incomingAttack?.from}
+                playerYears={ownTimelineYears}
+                wildcards={Number(ownPlayer?.wildcards || 0)}
+                targetYears={targetYears}
+              />
             ) : currentQuestion.answerType === 'timeline-placement' ? (
               <TimelinePlacementQuestion
                 question={currentQuestion}
@@ -1001,7 +997,7 @@ export default function GameScreen() {
               <span className="material-symbols-outlined text-electric-purple drop-shadow-[0_0_24px_rgba(168,85,247,0.75)]" style={{ fontSize: '3rem' }}>bolt</span>
               <h3 className="mt-3 font-headline-lg text-xl font-black text-white">SABOTEAR RIVAL</h3>
               <p className="mt-2 text-sm text-on-surface-variant">
-                Por <span className="text-vinyl-orange font-bold">{ATTACK_COST} pts</span>, eliges una trampa visual para la proxima ronda. No borra progreso: solo crea caos divertido.
+                Por <span className="text-vinyl-orange font-bold">{ATTACK_COST} pts</span>, eliges cómo saboteas su próxima ronda. Esta vez sí tiene consecuencia real en su ruta de años.
               </p>
 
               <div className="mt-4 grid gap-2">

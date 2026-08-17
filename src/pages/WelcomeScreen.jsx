@@ -34,9 +34,10 @@ export default function WelcomeScreen() {
     >
       {/* Siempre visible desde la primera pantalla — antes el tamaño de
           letra solo se podía cambiar desde el menú de perfil, que no
-          aparece hasta estar dentro de una sala. */}
+          aparece hasta estar dentro de una sala. Ahora es solo un ícono
+          discreto (sin caja propia) que despliega las opciones al tocarlo. */}
       <div
-        className="fixed right-3 z-20 rounded-2xl border border-white/10 bg-black/40 px-2.5 py-2 backdrop-blur-md"
+        className="fixed right-3 z-20"
         style={{ top: 'calc(env(safe-area-inset-top, 0px) + 12px)' }}
       >
         <FontSizeControl />
