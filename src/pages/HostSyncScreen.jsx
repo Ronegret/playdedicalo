@@ -25,61 +25,58 @@ const PLAYLIST_META = {
     icon: 'stadium',
     color: '#ff3d77',
     accent: '#ffd000',
-    format: 'VINILO POP',
-    artwork: 'ES'
+    format: 'VINILO POP'
   },
   'temazos': {
     icon: 'local_fire_department',
     color: '#ff5500',
     accent: '#39ff14',
-    format: 'CD HITS',
-    artwork: 'TM'
+    format: 'CD HITS'
   },
   'espanol-summer-party': {
     icon: 'wb_sunny',
     color: '#ffd000',
     accent: '#00c8ff',
-    format: 'SUN MIX',
-    artwork: 'SP'
+    format: 'SUN MIX'
   },
   'hits-todo-tiempo': {
     icon: 'public',
     color: '#00c8ff',
     accent: '#ff7a1a',
-    format: 'GLOBAL',
-    artwork: 'HT'
+    format: 'GLOBAL'
   },
   'hits-rock-espanol': {
     icon: 'electric_bolt',
     color: '#ffcc00',
     accent: '#ff3d77',
-    format: 'ROCK CD',
-    artwork: 'RK'
+    format: 'ROCK CD'
   },
   'mejores-todos-tiempos': {
     icon: 'emoji_events',
     color: '#39ff14',
     accent: '#a855f7',
-    format: 'LEGENDS',
-    artwork: 'GO'
+    format: 'LEGENDS'
   },
   'fiesta-mayor-verbena': {
     icon: 'celebration',
     color: '#dd44ff',
     accent: '#ffd000',
-    format: 'VERBENA',
-    artwork: 'FM'
+    format: 'VERBENA'
   },
   'fiesta-del-pueblo': {
     icon: 'nightlife',
     color: '#ff44aa',
     accent: '#00c8ff',
-    format: 'PUEBLO',
-    artwork: 'FP'
+    format: 'PUEBLO'
   },
 };
 
-function PlaylistArtwork({ playlist, meta, isSelected }) {
+// La mini "carátula" solo tiene que comunicar la vibra con color + ícono —
+// el nombre y el formato de la playlist ya se leen justo al lado (pill +
+// título). Antes también metía un código de 2 letras y la etiqueta de
+// formato ABAJO en posición absoluta, que en una tarjeta de 72px de ancho
+// terminaba encimada sobre el ícono: texto ilegible sobre la carátula.
+function PlaylistArtwork({ meta, isSelected }) {
   return (
     <div className="relative h-[88px] w-[88px] shrink-0 overflow-visible sm:h-[104px] sm:w-[104px]">
       <div
@@ -91,7 +88,7 @@ function PlaylistArtwork({ playlist, meta, isSelected }) {
         }}
       />
       <div
-        className="absolute inset-y-0 left-0 my-auto h-[88px] w-[72px] overflow-hidden rounded-xl border p-2 shadow-[0_18px_45px_rgba(0,0,0,0.45)] sm:h-[104px] sm:w-[84px]"
+        className="absolute inset-y-0 left-0 my-auto flex h-[88px] w-[72px] flex-col overflow-hidden rounded-xl border p-2 shadow-[0_18px_45px_rgba(0,0,0,0.45)] sm:h-[104px] sm:w-[84px]"
         style={{
           borderColor: isSelected ? `${meta.color}cc` : 'rgba(255,255,255,0.14)',
           background: `linear-gradient(145deg, ${meta.color} 0%, #111827 48%, ${meta.accent} 145%)`
@@ -103,16 +100,10 @@ function PlaylistArtwork({ playlist, meta, isSelected }) {
           </span>
           <span className="h-2 w-2 rounded-full bg-white/80" />
         </div>
-        <div className="mt-3 flex h-9 items-center justify-center rounded-lg bg-black/25 ring-1 ring-white/10">
-          <span className="material-symbols-outlined text-[28px] text-white drop-shadow">
+        <div className="mt-2 flex flex-1 items-center justify-center rounded-lg bg-black/25 ring-1 ring-white/10">
+          <span className="material-symbols-outlined text-[30px] text-white drop-shadow">
             {meta.icon}
           </span>
-        </div>
-        <div className="absolute bottom-2 left-2 right-2">
-          <p className="font-label-caps text-[8px] tracking-[0.2em] text-white/70">{meta.format}</p>
-          <p className="mt-0.5 truncate font-headline-lg text-[18px] font-black leading-none text-white">
-            {meta.artwork || playlist.name.slice(0, 2)}
-          </p>
         </div>
       </div>
     </div>
@@ -603,8 +594,7 @@ export default function HostSyncScreen() {
                   icon: 'music_note',
                   color: '#ff7a1a',
                   accent: '#39ff14',
-                  format: 'MIX',
-                  artwork: 'DD'
+                  format: 'MIX'
                 };
                 const isSelected = playlist.id === selectedPlaylist;
 
@@ -631,7 +621,7 @@ export default function HostSyncScreen() {
                       }}
                     />
                     <div className="relative flex items-center gap-3 sm:flex-col sm:items-start sm:gap-4">
-                      <PlaylistArtwork playlist={playlist} meta={meta} isSelected={isSelected} />
+                      <PlaylistArtwork meta={meta} isSelected={isSelected} />
 
                       <div className="min-w-0 flex-1 sm:w-full">
                         <div className="mb-2 flex items-center gap-2">

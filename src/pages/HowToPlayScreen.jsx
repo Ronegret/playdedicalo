@@ -240,7 +240,7 @@ export default function HowToPlayScreen() {
             <p className="mt-4 max-w-2xl text-[clamp(1rem,3.5vw,1.18rem)] leading-relaxed text-white/82">
               Escuchas una canción, adivinas dónde encaja su año y miras cómo subes en el ranking. Se aprende en una ronda. Se pica en dos.
             </p>
-            <div className="mt-6 grid gap-3 sm:grid-cols-3">
+            <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
               {PLAYER_RULES.map(([title, text]) => (
                 <div key={title} className="rounded-2xl border border-white/12 bg-black/40 p-4">
                   <p className="text-[clamp(1rem,3.5vw,1.12rem)] font-black text-white">{title}</p>
@@ -257,14 +257,14 @@ export default function HowToPlayScreen() {
             title="Sin líos, sin manual eterno"
             text="Esto es lo que necesita entender cualquier persona antes de jugar, incluso si nunca ha probado Dedícalo."
           />
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {HOW_TO_STEPS.map((step, index) => (
               <StepCard key={step.title} step={step} index={index} />
             ))}
           </div>
         </section>
 
-        <section className="mt-6 grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
+        <section className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-[1.15fr_0.85fr]">
           <TimelineDemo />
 
           <div className="rounded-[24px] border border-white/10 bg-white/[0.055] p-4 sm:p-5">
@@ -287,7 +287,7 @@ export default function HowToPlayScreen() {
             title="Cuando alguien te ataca, sí se nota"
             text={`Antes de que suene la pregunta, por ${ATTACK_COST} pts puedes sabotear a un rival conectado. Elige uno de los dos golpes — sí tienen consecuencia real en su ruta de años, no es solo un susto visual.`}
           />
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {SABOTAGE_CARDS.map((item) => (
               <SabotageCard key={item.title} item={item} />
             ))}
@@ -327,7 +327,7 @@ export default function HowToPlayScreen() {
             eyebrow="Dudas rápidas"
             title="Respuestas claras para jugar sin parar"
           />
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {FAQ.map(([question, answer]) => (
               <details key={question} className="group rounded-2xl border border-white/10 bg-white/[0.045]">
                 <summary className="flex cursor-pointer list-none items-center gap-3 px-4 py-5" style={{ minHeight: '3.5rem' }}>
@@ -347,7 +347,7 @@ export default function HowToPlayScreen() {
           <p className="mx-auto mt-2 max-w-2xl text-base leading-relaxed text-on-surface-variant">
             Las playlists oficiales ya vienen listas. Si quieres añadir una propia, escríbenos con el link y la revisamos para cuidar años, repetidas y calidad.
           </p>
-          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
             <SupportButton compact className="w-full border-white/10 bg-black/20 text-white/85" />
             <button
               type="button"
@@ -366,7 +366,7 @@ export default function HowToPlayScreen() {
           </p>
         </section>
 
-        <div className="mt-6 grid gap-3 sm:grid-cols-2">
+        <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
           <NeonButton primary color="vinyl-orange" onClick={() => navigate('/role-selection')}>
             ¡Ya sé jugar!
           </NeonButton>

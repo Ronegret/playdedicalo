@@ -72,15 +72,29 @@ function TimelineYears({ years = [], wildcards = 0, goalYears = 12 }) {
   );
 }
 
-function RankingList({ players, final = false, showTimeline = false, goalYears = 12 }) {
+function PlayerAvatar({ player, className = 'w-10 h-10 text-xl' }) {
+  return player.avatar?.startsWith?.('http') ? (
+    <img src={player.avatar} alt={player.name} className={`${className} rounded-full object-cover border border-white/10 shrink-0`} />
+  ) : (
+    <span className={`${className} rounded-full bg-black/20 flex items-center justify-center shrink-0`}>
+      {player.avatar || '•'}
+    </span>
+  );
+}
+
+// startRank: cuando esta lista muestra solo "el resto" (a partir del 4to
+// puesto), el número de cada fila tiene que seguir la numeración real del
+// ranking completo, no reiniciar en 1.
+function RankingList({ players, final = false, showTimeline = false, goalYears = 12, startRank = 0, muted = false }) {
   if (!players.length) return null;
   return (
     <div className="flex flex-col gap-2 w-full">
       {players.map((player, index) => {
-        const medalClass = index === 0
+        const rank = startRank + index;
+        const medalClass = rank === 0
           ? 'bg-neon-green text-black'
-          : index === 1 ? 'bg-white/20 text-white'
-            : index === 2 ? 'bg-electric-purple/30 text-white'
+          : rank === 1 ? 'bg-white/20 text-white'
+            : rank === 2 ? 'bg-electric-purple/30 text-white'
               : 'bg-black/20 text-on-surface-variant';
         return (
           <motion.div
@@ -88,12 +102,12 @@ function RankingList({ players, final = false, showTimeline = false, goalYears =
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.04 }}
-            className={`p-4 rounded-2xl border ${final && index === 0 ? 'bg-neon-green/10 border-neon-green/50' : 'bg-white/5 border-white/10'}`}
+            className={`p-4 rounded-2xl border ${final && rank === 0 ? 'bg-neon-green/10 border-neon-green/50' : muted ? 'bg-white/[0.03] border-white/5 opacity-70' : 'bg-white/5 border-white/10'}`}
           >
             <div className="flex justify-between items-center gap-3">
               <div className="flex items-center gap-3 min-w-0">
                 <span className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-base shrink-0 ${medalClass}`}>
-                  {index + 1}
+                  {rank + 1}
                 </span>
                 {player.avatar?.startsWith?.('http') ? (
                   <img src={player.avatar} alt={player.name} className="w-10 h-10 rounded-full object-cover border border-white/10 shrink-0" />
@@ -117,7 +131,130 @@ function RankingList({ players, final = false, showTimeline = false, goalYears =
   );
 }
 
+const CONFETTI_COLORS = ['#39ff14', '#ffbf4d', '#a855f7', '#ff7a1a', '#ff6b8b', '#3f78ff', '#ffffff'];
 
+// Piezas generadas una sola vez (useMemo) para que no se recalculen en cada
+// re-render — cada una lleva su propia posición/color/duración vía CSS
+// custom properties, así la animación corre en el compositor y no en React.
+function ConfettiField({ count = 30 }) {
+  // Estado con inicializador perezoso, no useMemo: es el único lugar donde
+  // React permite generar un valor aleatorio una sola vez "durante" el
+  // render sin violar la regla de pureza (no vuelve a ejecutarse en
+  // re-renders posteriores, a diferencia del cuerpo del componente).
+  const [pieces] = useState(() => Array.from({ length: count }, (_, i) => ({
+    id: i,
+    left: `${Math.round(Math.random() * 100)}%`,
+    size: `${6 + Math.round(Math.random() * 6)}px`,
+    color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
+    duration: `${3.5 + Math.random() * 3}s`,
+    delay: `${-Math.random() * 6}s`,
+    drift: `${Math.round((Math.random() - 0.5) * 160)}px`,
+    spin: `${Math.round(320 + Math.random() * 400)}deg`
+  })));
+
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+      {pieces.map((p) => (
+        <span
+          key={p.id}
+          className="confetti-piece"
+          style={{
+            '--left': p.left,
+            '--size': p.size,
+            '--color': p.color,
+            '--duration': p.duration,
+            '--delay': p.delay,
+            '--drift': p.drift,
+            '--spin': p.spin
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+// Ondas musicales celebrando — reusa el mismo lenguaje visual del
+// ecualizador que ya aparece durante la partida, pero cicla por los colores
+// de fiesta en vez de un solo color fijo.
+function CelebrationWaves({ className = '' }) {
+  const bars = [30, 62, 42, 84, 52, 96, 46, 74, 38, 80, 56, 90, 42];
+  return (
+    <div className={`flex items-end justify-center gap-1 ${className}`} aria-hidden="true">
+      {bars.map((height, index) => (
+        <span
+          key={index}
+          className="eq-bar w-1.5 rounded-t-full"
+          style={{
+            height: `${height}%`,
+            maxHeight: '100%',
+            backgroundColor: CONFETTI_COLORS[index % CONFETTI_COLORS.length],
+            boxShadow: `0 0 12px ${CONFETTI_COLORS[index % CONFETTI_COLORS.length]}`,
+            animationDelay: `${index * 0.05}s`
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+const PODIUM_STYLE = {
+  0: { order: 'order-2', avatarSize: 'w-24 h-24 text-5xl', stepHeight: 'h-28', color: '#ffbf4d', label: '1°', ring: '0 0 55px rgba(255,191,77,0.55)' },
+  1: { order: 'order-1', avatarSize: 'w-16 h-16 text-3xl', stepHeight: 'h-16', color: '#e2e8f0', label: '2°', ring: '0 0 30px rgba(226,232,240,0.35)' },
+  2: { order: 'order-3', avatarSize: 'w-14 h-14 text-2xl', stepHeight: 'h-10', color: '#ff7a1a', label: '3°', ring: '0 0 30px rgba(255,122,26,0.35)' }
+};
+
+function PodiumSlot({ player, rank, goalYears }) {
+  const style = PODIUM_STYLE[rank];
+  const isChampion = rank === 0;
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30, scale: 0.8 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ delay: rank === 1 ? 0.1 : rank === 2 ? 0.3 : 0.55, type: 'spring', stiffness: 160, damping: 16 }}
+      className={`flex flex-1 flex-col items-center ${style.order}`}
+    >
+      {isChampion && (
+        <motion.span
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.75 }}
+          className="crown-bounce-anim -mb-2 text-4xl drop-shadow-[0_0_16px_rgba(255,191,77,0.8)]"
+        >
+          👑
+        </motion.span>
+      )}
+      <div className="relative z-10" style={{ filter: `drop-shadow(${style.ring})` }}>
+        <PlayerAvatar player={player} className={`${style.avatarSize} border-2`} />
+        {isChampion && (
+          <>
+            <span className="absolute -left-5 top-1/2 -translate-y-1/2 text-lg float-slow">🎶</span>
+            <span className="absolute -right-5 top-1/2 -translate-y-1/2 text-lg float-medium">🎵</span>
+          </>
+        )}
+      </div>
+      <p className="mt-2 max-w-[6rem] truncate text-center font-black text-white" style={{ fontSize: isChampion ? '1.05rem' : '0.9rem' }}>
+        {player.name}
+      </p>
+      <p className="text-xs text-on-surface-variant">{getTimelineProgress(player)}/{goalYears} · {player.points} pts</p>
+      <div
+        className={`mt-2 flex w-full items-start justify-center rounded-t-2xl ${style.stepHeight}`}
+        style={{ background: `linear-gradient(180deg, ${style.color}33, ${style.color}0d)`, border: `1px solid ${style.color}55` }}
+      >
+        <span className="mt-2 font-headline-lg text-2xl font-black" style={{ color: style.color }}>{style.label}</span>
+      </div>
+    </motion.div>
+  );
+}
+
+function Podium({ podium, goalYears }) {
+  return (
+    <div className="mt-2 flex w-full items-end justify-center gap-2 px-1">
+      {podium.map((player, index) => (
+        <PodiumSlot key={player.id} player={player} rank={index} goalYears={goalYears} />
+      ))}
+    </div>
+  );
+}
 
 export default function ResultScreen() {
   const navigate = useNavigate();
@@ -185,15 +322,34 @@ export default function ResultScreen() {
   };
 
 
-  // FINAL screen — Años Locos
+  // FINAL screen — Años Locos. Se ve exactamente igual tanto si la partida
+  // terminó porque alguien llegó a la meta, como si el anfitrión cerró la
+  // sala antes de tiempo (hostCloseRoom ya manda phase:'final' con el
+  // ranking tal cual iba en ese momento) — siempre hay podio y celebración.
   if (isFinal) {
+    const ranked = [...players].sort((a, b) => getTimelineProgress(b) - getTimelineProgress(a));
+    const podium = ranked.slice(0, 3);
+    const rest = ranked.slice(3);
+
     return (
       <motion.main
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="fixed inset-0 z-50 overflow-y-auto bg-surface text-white"
+        className="fixed inset-0 z-50 overflow-y-auto bg-[#0a0616] text-white"
         style={{ overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' }}
       >
+        <div
+          className="disco-lights pointer-events-none absolute inset-0"
+          style={{
+            background: [
+              'radial-gradient(circle at 18% 12%, rgba(255,191,77,0.28) 0%, transparent 38%)',
+              'radial-gradient(circle at 82% 18%, rgba(168,85,247,0.26) 0%, transparent 40%)',
+              'radial-gradient(circle at 50% 85%, rgba(57,255,20,0.18) 0%, transparent 45%)'
+            ].join(',')
+          }}
+        />
+        <ConfettiField />
+
         <div className="mx-auto flex min-h-full max-w-lg flex-col items-center px-5 pb-[calc(2rem+env(safe-area-inset-bottom,0px))] pt-[calc(4.5rem+env(safe-area-inset-top,0px))]">
           <button
             type="button"
@@ -206,27 +362,36 @@ export default function ResultScreen() {
           <div className="absolute top-4 right-4 z-[100]">
             <ProfileMenu user={role === 'host' ? auth.currentUser : null} guestAvatar={role === 'guest' ? guestAvatar : null} />
           </div>
+
           <motion.div
             initial={{ scale: 0.92, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="w-full text-center"
+            className="relative z-10 w-full text-center"
           >
             <p className="font-label-caps text-electric-purple tracking-widest text-xs">
               META {targetYears} CANCIONES
             </p>
-            <h1 className="font-headline-lg text-3xl font-black mt-1 mb-4">RANKING FINAL</h1>
+            <h1 className="font-headline-lg text-3xl font-black mt-1 mb-1">¡SE ACABÓ LA FIESTA!</h1>
+            {podium[0] && (
+              <p className="text-sm text-on-surface-variant">
+                <span className="font-black text-chaos-gold">{podium[0].name}</span> se queda con la cabina 🎧
+              </p>
+            )}
 
-            {winner && (
-              <div className="mb-4 overflow-hidden rounded-3xl border border-neon-green/50 bg-[linear-gradient(145deg,rgba(57,255,20,0.16),rgba(168,85,247,0.12))] p-5 shadow-[0_0_50px_rgba(57,255,20,0.16)]">
-                <p className="font-label-caps text-neon-green text-xs tracking-[0.22em]">DUEÑO DE LA CABINA</p>
-                <p className="mt-1 font-headline-lg-mobile text-3xl text-white">{winner.name}</p>
-                <p className="mt-1 text-sm text-on-surface-variant">{getTimelineProgress(winner)}/{targetYears} canciones · {winner.points} pts</p>
+            {podium.length > 0 && <Podium podium={podium} goalYears={targetYears} />}
+
+            <CelebrationWaves className="mt-6 h-14" />
+
+            {rest.length > 0 && (
+              <div className="mt-6 w-full text-left">
+                <p className="mb-2 flex items-center gap-1.5 font-label-caps text-xs tracking-[0.18em] text-white/45">
+                  😅 PERDEDORES — próxima vez será
+                </p>
+                <RankingList players={rest} startRank={3} goalYears={targetYears} muted />
               </div>
             )}
 
-            <RankingList players={players} final showTimeline goalYears={targetYears} />
-
-            <div className="mt-5 flex flex-col gap-2">
+            <div className="mt-6 flex flex-col gap-2">
               {role === 'host' && (
                 <button
                   onClick={handleFinish}
