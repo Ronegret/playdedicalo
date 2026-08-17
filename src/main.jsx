@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import App from './App.jsx'
 import './index.css'
+// Aplica la preferencia de tamaño de letra guardada antes de pintar nada.
+import './hooks/useFontScale.js'
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
