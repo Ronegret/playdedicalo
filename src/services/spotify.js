@@ -21,6 +21,7 @@ let spotifyDeviceId = null;
 let lastSpotifySdkError = '';
 let catalogPromise = null;
 let tokenRefreshPromise = null;
+let notReadyTimer = null;
 
 // Tracks which artists have appeared (correct or distractor) since the current game playlist started.
 // Cleared when the active playlist changes (= new game) or when all playlist tracks are exhausted.
@@ -170,16 +171,32 @@ export async function getSpotifyAccessToken() {
   return refreshed.access_token;
 }
 
-async function spotifyFetch(url, options = {}) {
+// En una fiesta la wifi suele estar saturada (muchos móviles a la vez) y
+// eso produce fallos de red o 502/503 momentáneos contra la API de
+// Spotify — sin retry, cualquiera de esos blips cortaba la partida con un
+// error visible aunque Spotify en sí seguía perfectamente disponible un
+// segundo después. Un solo reintento corto absorbe la inmensa mayoría de
+// esos casos sin arriesgar bucles ni esconder errores reales (401/403/404
+// siguen fallando de inmediato, no son problemas de red).
+async function spotifyFetch(url, options = {}, attempt = 0) {
   const accessToken = await getSpotifyAccessToken();
-  const response = await fetch(url, {
-    ...options,
-    headers: {
-      ...(options.headers || {}),
-      Authorization: `Bearer ${accessToken}`,
-      'Content-Type': 'application/json'
+  let response;
+  try {
+    response = await fetch(url, {
+      ...options,
+      headers: {
+        ...(options.headers || {}),
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
+      }
+    });
+  } catch (networkError) {
+    if (attempt < 1) {
+      await new Promise((resolve) => window.setTimeout(resolve, 800));
+      return spotifyFetch(url, options, attempt + 1);
     }
-  });
+    throw networkError;
+  }
 
   if (!response.ok && response.status !== 204) {
     const text = await response.text();
@@ -189,6 +206,12 @@ async function spotifyFetch(url, options = {}) {
       window.localStorage.removeItem(TOKEN_KEY);
       spotifyPlayerPromise = null;
       spotifyDeviceId = null;
+    }
+    // 502/503/504 de Spotify son casi siempre momentáneos (mantenimiento
+    // interno o saturación), no un problema del lado del anfitrión.
+    if (attempt < 1 && [502, 503, 504].includes(response.status)) {
+      await new Promise((resolve) => window.setTimeout(resolve, 800));
+      return spotifyFetch(url, options, attempt + 1);
     }
     throw new Error(`Spotify error ${response.status}: ${text}`);
   }
@@ -246,10 +269,23 @@ async function getSpotifyPlayer() {
 
     player.addListener('ready', ({ device_id }) => {
       spotifyDeviceId = device_id;
+      if (notReadyTimer) {
+        window.clearTimeout(notReadyTimer);
+        notReadyTimer = null;
+      }
     });
 
+    // El SDK dispara not_ready/ready seguidos por blips de red normales en
+    // una fiesta (wifi saturada, refresco de token) sin que el dispositivo
+    // realmente se haya perdido — invalidarlo al instante forzaba una
+    // "desconexión" visible aunque Spotify se recuperara solo un segundo
+    // después. Se da un margen corto antes de darlo por perdido de verdad.
     player.addListener('not_ready', () => {
-      spotifyDeviceId = null;
+      if (notReadyTimer) window.clearTimeout(notReadyTimer);
+      notReadyTimer = window.setTimeout(() => {
+        spotifyDeviceId = null;
+        notReadyTimer = null;
+      }, 4000);
     });
 
     player.addListener('initialization_error', ({ message }) => {

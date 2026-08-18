@@ -295,6 +295,16 @@ export default function ResultScreen() {
     if (phase === 'countdown' || phase === 'listen' || phase === 'blackout') navigate('/game');
   }, [phase, navigate]);
 
+  // Refuerzo háptico del resultado — la ronda ya vibra al tocar la
+  // respuesta (GameScreen), pero acá se confirma con el resultado OFICIAL
+  // del anfitrión (puede diferir si hubo bloqueo/robo de año), y solo en
+  // esta pantalla de ronda, no en el podio final.
+  useEffect(() => {
+    if (isFinal || !navigator.vibrate) return;
+    if (resultType === 'success') navigator.vibrate([15, 55, 15]);
+    else if (resultType === 'fail') navigator.vibrate([70, 40, 70, 40, 130]);
+  }, [isFinal, resultType]);
+
   useEffect(() => {
     if (roomError) { clearRoomError(); navigate('/role-selection'); }
   }, [roomError, clearRoomError, navigate]);
@@ -542,8 +552,10 @@ export default function ResultScreen() {
           />
           <motion.div
             initial={{ rotate: -18, scale: 0.6, opacity: 0 }}
-            animate={{ rotate: 0, scale: 1, opacity: 1 }}
-            transition={{ delay: 0.08, type: 'spring', stiffness: 160, damping: 15 }}
+            animate={isFail ? { rotate: [0, -6, 6, -4, 4, 0], scale: 1, opacity: 1 } : { rotate: 0, scale: 1, opacity: 1 }}
+            transition={isFail
+              ? { delay: 0.08, duration: 0.5, ease: 'easeInOut' }
+              : { delay: 0.08, type: 'spring', stiffness: 160, damping: 15 }}
             className="relative mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-[repeating-radial-gradient(circle,#050505_0_4px,#171717_5px_7px,#050505_8px_12px)]"
             style={{ border: `3px solid ${style.borderHex}`, boxShadow: `0 0 45px ${style.glowColor}` }}
           >
@@ -555,6 +567,43 @@ export default function ResultScreen() {
             >
               {style.icon}
             </motion.span>
+
+            {/* Ganaste: te pones las gafas de campeón. */}
+            {isSuccess && !wasYearStolen && (
+              <motion.span
+                aria-hidden="true"
+                initial={{ y: -46, opacity: 0, rotate: -20, scale: 0.4 }}
+                animate={{ y: -14, opacity: 1, rotate: -8, scale: 1 }}
+                transition={{ delay: 0.5, type: 'spring', stiffness: 220, damping: 12 }}
+                className="absolute left-1/2 top-0 -translate-x-1/2 text-4xl drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)]"
+              >
+                😎
+              </motion.span>
+            )}
+
+            {/* Fallaste: el juego se ríe un poco de ti. */}
+            {isFail && (
+              <>
+                <motion.span
+                  aria-hidden="true"
+                  initial={{ opacity: 0, scale: 0.3, y: 6 }}
+                  animate={{ opacity: 1, scale: 1, y: 0, rotate: [0, -12, 12, -8, 0] }}
+                  transition={{ delay: 0.3, duration: 0.9, repeat: Infinity, repeatDelay: 0.6 }}
+                  className="absolute -right-2 -top-2 text-3xl"
+                >
+                  🤣
+                </motion.span>
+                <motion.span
+                  aria-hidden="true"
+                  initial={{ opacity: 0, scale: 0.3, y: 6 }}
+                  animate={{ opacity: 1, scale: 1, y: 0, rotate: [0, 10, -10, 6, 0] }}
+                  transition={{ delay: 0.55, duration: 0.9, repeat: Infinity, repeatDelay: 0.6 }}
+                  className="absolute -left-3 bottom-1 text-2xl"
+                >
+                  😂
+                </motion.span>
+              </>
+            )}
           </motion.div>
 
           <p className="relative mt-5 font-label-caps text-[11px] tracking-[0.28em] text-white/55">RESULTADO</p>

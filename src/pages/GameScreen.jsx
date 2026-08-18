@@ -257,7 +257,7 @@ function AttackWarningOverlay({ attack, onClose }) {
 // Bloqueado por sabotaje: no hay nada que elegir, solo esperar. Se le avisa
 // bien claro por qué (para que no piense que la app se congeló) y se
 // muestra igual su ruta actual, sin tocar.
-function BlockedPlacement({ attackFrom, playerYears = [], wildcards = 0, targetYears = 12 }) {
+function BlockedPlacement({ attackFrom, playerYears = [], wildcards = 0, targetYears = 12, isHost = false }) {
   const years = playerYears.length ? playerYears : [2000];
   return (
     <div className="mt-5">
@@ -279,7 +279,9 @@ function BlockedPlacement({ attackFrom, playerYears = [], wildcards = 0, targetY
             </span>
           )}
         </div>
-        <p className="mt-4 font-label-caps text-sm tracking-[0.16em] text-vinyl-orange">ESPERANDO A QUE TERMINE LA RONDA...</p>
+        <p className="mt-4 font-label-caps text-sm tracking-[0.16em] text-vinyl-orange">
+          {isHost ? 'TÚ SIGUES AL MANDO — REVELA CUANDO QUIERAS' : 'ESPERANDO A QUE TERMINE LA RONDA...'}
+        </p>
       </div>
     </div>
   );
@@ -498,7 +500,11 @@ export default function GameScreen() {
   const hasRemoteAnswer = Boolean(guestId && roundAnswers?.[guestId] && roundAnswers[guestId].round === round);
   const hasAnswered = answeredQuestionKey === questionKey || hasRemoteAnswer;
   const answerCount = Object.keys(roundAnswers || {}).length;
-  const expectedVotes = players.filter((player) => getPlayerPresence(player).status !== 'kicked').length || players.length;
+  const isPlayerBlockedThisRound = (player) => player.activeAttack?.type === 'block_vote' && player.activeAttack?.round === round;
+  // Un jugador bloqueado nunca va a votar esta ronda — si se cuenta en el
+  // total, "X/Y votos" se queda pegado para siempre y el anfitrión (o
+  // cualquiera) espera un voto que jamás va a llegar.
+  const expectedVotes = players.filter((player) => getPlayerPresence(player).status !== 'kicked' && !isPlayerBlockedThisRound(player)).length || players.length;
   const mode = GAME_MODES[gameMode] || GAME_MODES.timeline;
   const activePlaylist = DEDICALO_PLAYLISTS.find((playlist) => (
     normalizeSpotifyPlaylistUrl(playlist.url) === normalizeSpotifyPlaylistUrl(spotifyPlaylistUrl)
@@ -733,16 +739,25 @@ export default function GameScreen() {
             <RankingPeek players={players} guestId={guestId} targetYears={targetYears} />
 
             {(canAttack || canRedeem) && (
-              <div className="flex flex-wrap items-center justify-center gap-2">
+              <div className="flex flex-wrap items-center justify-center gap-3">
                 {canAttack && (
-                  <button
+                  <motion.button
                     type="button"
                     onClick={() => { setAttackError(''); setShowAttackModal(true); }}
-                    className="min-h-touch rounded-full border border-vinyl-orange/40 bg-vinyl-orange/10 px-4 flex items-center gap-2 text-vinyl-orange font-label-caps text-sm font-bold active:scale-95 transition-all"
+                    whileTap={{ scale: 0.93 }}
+                    animate={{ boxShadow: ['0 0 0px rgba(255,90,20,0)', '0 0 28px rgba(255,90,20,0.65)', '0 0 0px rgba(255,90,20,0)'] }}
+                    transition={{ repeat: Infinity, duration: 1.7, ease: 'easeInOut' }}
+                    className="min-h-[3.25rem] rounded-full border-2 border-vinyl-orange bg-gradient-to-r from-vinyl-orange to-intense-red px-6 flex items-center gap-2.5 text-white font-label-caps text-base font-black"
                   >
-                    <span className="material-symbols-outlined text-base">bolt</span>
-                    SABOTEAR ({ATTACK_COST} PTS)
-                  </button>
+                    <motion.span
+                      animate={{ rotate: [0, -14, 14, -8, 0] }}
+                      transition={{ repeat: Infinity, duration: 1.6, repeatDelay: 0.5 }}
+                      className="material-symbols-outlined text-2xl drop-shadow-[0_0_6px_rgba(255,255,255,0.7)]"
+                    >
+                      bolt
+                    </motion.span>
+                    SABOTEAR · {ATTACK_COST} PTS
+                  </motion.button>
                 )}
                 {canRedeem && (
                   <button
@@ -831,32 +846,41 @@ export default function GameScreen() {
                   <div className="mt-3 flex flex-wrap justify-center gap-3">
                     {players.map((player) => {
                       const answered = Boolean(roundAnswers?.[player.id]);
+                      const blocked = isPlayerBlockedThisRound(player);
                       return (
                         <div key={player.id} className="relative flex flex-col items-center gap-1">
                           {player.avatar?.startsWith?.('http') ? (
                             <img
                               src={player.avatar}
                               alt={player.name}
-                              className={`w-10 h-10 rounded-full object-cover border-2 transition-all ${answered ? 'border-neon-green shadow-[0_0_10px_rgba(57,255,20,0.5)]' : 'border-white/15 opacity-35'}`}
+                              className={`w-10 h-10 rounded-full object-cover border-2 transition-all ${blocked ? 'border-vinyl-orange opacity-70' : answered ? 'border-neon-green shadow-[0_0_10px_rgba(57,255,20,0.5)]' : 'border-white/15 opacity-35'}`}
                             />
                           ) : (
-                            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-xl bg-black/20 border-2 transition-all ${answered ? 'border-neon-green shadow-[0_0_10px_rgba(57,255,20,0.5)]' : 'border-white/15 opacity-35'}`}>
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-xl bg-black/20 border-2 transition-all ${blocked ? 'border-vinyl-orange opacity-70' : answered ? 'border-neon-green shadow-[0_0_10px_rgba(57,255,20,0.5)]' : 'border-white/15 opacity-35'}`}>
                               {player.avatar || '•'}
                             </div>
                           )}
-                          {answered && (
+                          {blocked ? (
+                            <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-vinyl-orange">
+                              <span className="material-symbols-outlined text-black" style={{ fontSize: '10px', lineHeight: 1 }}>block</span>
+                            </span>
+                          ) : answered && (
                             <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-neon-green flex items-center justify-center">
                               <span className="material-symbols-outlined text-black" style={{ fontSize: '10px', lineHeight: 1 }}>check</span>
                             </span>
                           )}
-                          <span className="max-w-[3.75rem] truncate font-label-caps text-xs text-on-surface-variant">{player.name}</span>
+                          <span className={`max-w-[3.75rem] truncate font-label-caps text-xs ${blocked ? 'text-vinyl-orange' : 'text-on-surface-variant'}`}>
+                            {blocked ? 'BLOQUEADO' : player.name}
+                          </span>
                         </div>
                       );
                     })}
                   </div>
                 )}
 
-                {!hasAnswered && (
+                {isBlockedThisRound ? (
+                  <p className="mt-2 text-sm text-vinyl-orange">Te sabotearon esta ronda — igual puedes revelar cuando estén los votos.</p>
+                ) : !hasAnswered && (
                   <p className="mt-2 text-sm text-on-surface-variant">Responde primero. Tu voto también cuenta.</p>
                 )}
                 <button
@@ -870,7 +894,7 @@ export default function GameScreen() {
                       setRevealError('No se pudieron revelar los resultados. Inténtalo de nuevo.');
                     }
                   }}
-                  disabled={!hasAnswered}
+                  disabled={!hasAnswered && !isBlockedThisRound}
                   className="mt-4 w-full h-14 rounded-xl bg-neon-green text-black font-label-caps text-sm font-bold active:scale-95 transition-transform disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   REVELAR RESULTADOS
@@ -904,6 +928,7 @@ export default function GameScreen() {
                 playerYears={ownTimelineYears}
                 wildcards={Number(ownPlayer?.wildcards || 0)}
                 targetYears={targetYears}
+                isHost={role === 'host'}
               />
             ) : currentQuestion.answerType === 'timeline-placement' ? (
               <TimelinePlacementQuestion
