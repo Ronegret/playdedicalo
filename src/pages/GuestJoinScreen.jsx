@@ -7,13 +7,9 @@ import { useGameStore } from '../store/useGameStore';
 import NeonButton from '../components/NeonButton';
 import ProfileMenu from '../components/ProfileMenu';
 import FontSizeControl from '../components/FontSizeControl';
+import AvatarPicker from '../components/AvatarPicker';
+import { isImageAvatar } from '../data/characterAvatars';
 import { auth, authReady, googleProvider } from '../firebase';
-
-const EMOJI_AVATARS = [
-  '😎', '🎸', '🎧', '👽', '🤠', '👾', '🥳', '🔥', '🎤', '🎹',
-  '🎵', '🎶', '🕺', '💃', '🦄', '🦊', '🦈', '👻', '🤡', '🤖',
-  '🎃', '⚡', '🏆', '🎭', '🎨', '🚀', '⭐', '🌈', '🎲', '💎'
-];
 
 function getPinFromQrValue(value) {
   const text = String(value || '');
@@ -265,16 +261,16 @@ export default function GuestJoinScreen() {
           </p>
         </section>
 
-        {/* STEP 1 — Elige tu icono (icon first, with default) */}
+        {/* STEP 1 — Elige tu personaje (icon first, with default) */}
         <section className="w-full rounded-2xl border border-electric-purple/30 bg-electric-purple/8 p-4">
-          <p className="font-label-caps text-[11px] tracking-[0.22em] text-electric-purple mb-3">① ELIGE TU ÍCONO</p>
+          <p className="font-label-caps text-[11px] tracking-[0.22em] text-electric-purple mb-3">① ELIGE TU PERSONAJE</p>
 
           {/* Preview del avatar seleccionado */}
           <div className="flex items-center justify-center mb-4">
             <div className="relative">
-              <div className="flex h-20 w-20 items-center justify-center rounded-full border-4 border-electric-purple bg-electric-purple/20 text-4xl shadow-[0_0_28px_rgba(168,85,247,0.35)]">
-                {avatar?.startsWith?.('http') ? (
-                  <img src={avatar} alt="Avatar" className="h-full w-full rounded-full object-cover" />
+              <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-4 border-electric-purple bg-electric-purple/20 text-4xl shadow-[0_0_28px_rgba(168,85,247,0.35)]">
+                {isImageAvatar(avatar) ? (
+                  <img src={avatar} alt="Avatar" className="h-full w-full object-cover" />
                 ) : (
                   avatar || '😎'
                 )}
@@ -285,26 +281,10 @@ export default function GuestJoinScreen() {
             </div>
           </div>
 
-          {/* Grid de emojis — prominente, filas legibles */}
-          <div className="grid grid-cols-6 gap-2 sm:grid-cols-8">
-            {EMOJI_AVATARS.map((emoji) => (
-              <motion.button
-                key={emoji}
-                type="button"
-                onClick={() => { hasEditedAvatarRef.current = true; setAvatar(emoji); }}
-                whileTap={{ scale: 0.88 }}
-                whileHover={{ scale: 1.08 }}
-                aria-label={`Elegir ${emoji} como avatar`}
-                className={`flex h-12 items-center justify-center rounded-xl text-3xl transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-neon-green ${
-                  avatar === emoji
-                    ? 'border-2 border-neon-green bg-neon-green/15 shadow-[0_0_20px_rgba(57,255,20,0.30)] scale-110'
-                    : 'border border-white/8 bg-white/5 hover:bg-white/12'
-                }`}
-              >
-                {emoji}
-              </motion.button>
-            ))}
-          </div>
+          <AvatarPicker
+            value={avatar}
+            onChange={(nextAvatar) => { hasEditedAvatarRef.current = true; setAvatar(nextAvatar); }}
+          />
         </section>
 
         {/* STEP 2 — Tu alias */}

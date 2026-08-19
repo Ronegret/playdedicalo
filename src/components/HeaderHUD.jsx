@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { getPlayerPresence, getTimelineProgress, useGameStore } from '../store/useGameStore';
+import { isImageAvatar } from '../data/characterAvatars';
 import ProfileMenu from './ProfileMenu';
 import { auth } from '../firebase';
 
@@ -17,7 +18,7 @@ function PlayerAvatar({ player, presence, size = 'w-6 h-6' }) {
   return (
     <div className={`relative ${size} shrink-0`}>
       <div className={`h-full w-full overflow-hidden rounded-full border ${styles.ring}`}>
-        {player.avatar?.startsWith?.('http') ? (
+        {isImageAvatar(player.avatar) ? (
           <img src={player.avatar} alt={player.name} className="h-full w-full object-cover" />
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-surface-bright text-xs font-bold text-on-surface">
@@ -145,10 +146,10 @@ export default function HeaderHUD({ onExit }) {
                   const styles = PRESENCE_STYLES[presence.status] || PRESENCE_STYLES.offline;
                   const seconds = Math.ceil((presence.remainingMs || 0) / 1000);
                   return (
-                    <div key={player.id} className="flex items-center gap-2.5 rounded-xl px-2 py-2">
-                      <PlayerAvatar player={player} presence={presence.status} size="w-8 h-8" />
+                    <div key={player.id} className="flex items-center gap-3 rounded-xl px-2 py-2.5">
+                      <PlayerAvatar player={player} presence={presence.status} size="w-12 h-12" />
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-bold text-white">{player.name}{player.id === guestId ? ' (tu)' : ''}</p>
+                        <p className="truncate text-base font-black text-white">{player.name}{player.id === guestId ? ' (tú)' : ''}</p>
                         <p className="text-xs text-on-surface-variant">
                           {presence.status === 'reconnecting' ? `${styles.label} ${seconds}s` : styles.label}
                         </p>

@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCombinedTimelineYears, getTimelineProgress, useGameStore } from '../store/useGameStore';
+import { isImageAvatar } from '../data/characterAvatars';
 import ProfileMenu from '../components/ProfileMenu';
 import { auth } from '../firebase';
 
@@ -73,7 +74,7 @@ function TimelineYears({ years = [], wildcards = 0, goalYears = 12 }) {
 }
 
 function PlayerAvatar({ player, className = 'w-10 h-10 text-xl' }) {
-  return player.avatar?.startsWith?.('http') ? (
+  return isImageAvatar(player.avatar) ? (
     <img src={player.avatar} alt={player.name} className={`${className} rounded-full object-cover border border-white/10 shrink-0`} />
   ) : (
     <span className={`${className} rounded-full bg-black/20 flex items-center justify-center shrink-0`}>
@@ -109,14 +110,8 @@ function RankingList({ players, final = false, showTimeline = false, goalYears =
                 <span className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-base shrink-0 ${medalClass}`}>
                   {rank + 1}
                 </span>
-                {player.avatar?.startsWith?.('http') ? (
-                  <img src={player.avatar} alt={player.name} className="w-10 h-10 rounded-full object-cover border border-white/10 shrink-0" />
-                ) : (
-                  <span className="w-10 h-10 rounded-full bg-black/20 flex items-center justify-center text-xl shrink-0">
-                    {player.avatar || '•'}
-                  </span>
-                )}
-                <span className="font-bold text-base truncate">{player.name}</span>
+                <PlayerAvatar player={player} className="w-12 h-12 text-2xl border border-white/10" />
+                <span className="font-black text-lg truncate">{player.name}</span>
               </div>
               <div className="text-right shrink-0">
                 <p className="font-black text-base text-neon-green leading-none">{getTimelineProgress(player)}/{goalYears}</p>
@@ -719,14 +714,8 @@ export default function ResultScreen() {
                   }`}>
                     {index + 1}
                   </span>
-                  {player.avatar?.startsWith?.('http') ? (
-                    <img src={player.avatar} alt={player.name} className="w-9 h-9 rounded-full object-cover shrink-0" />
-                  ) : (
-                    <span className="w-9 h-9 rounded-full bg-black/20 flex items-center justify-center text-lg shrink-0">
-                      {player.avatar || '•'}
-                    </span>
-                  )}
-                  <span className="text-base font-bold text-white truncate flex-1">{player.name}</span>
+                  <PlayerAvatar player={player} className="w-12 h-12 text-2xl" />
+                  <span className="text-lg font-black text-white truncate flex-1">{player.name}</span>
                   <div className="text-right shrink-0">
                     <p className="text-sm font-black text-neon-green">
                       {getTimelineProgress(player)}/{targetYears} CANCIONES

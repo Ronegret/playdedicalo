@@ -6,12 +6,11 @@ import { auth } from '../firebase';
 import { useGameStore } from '../store/useGameStore';
 import { resetSpotifyConnection } from '../services/spotify';
 import FontSizeControl from './FontSizeControl';
-
-const QUICK_AVATARS = ['DJ', 'VIP', 'POP', '90s', 'ROCK', 'GO'];
-const EMOJI_AVATARS = ['😎', '🕺', '💃', '🎧', '🎤', '🎸', '🥁', '🎹', '🔥', '⚡', '🌟', '🚀', '👑', '🪩', '🎵', '🍻', '🥳', '🤘'];
+import AvatarPicker from './AvatarPicker';
+import { isImageAvatar } from '../data/characterAvatars';
 
 function AvatarBubble({ avatar, fallback = 'person', className = 'h-8 w-8' }) {
-  const isImage = avatar?.startsWith?.('http');
+  const isImage = isImageAvatar(avatar);
   return (
     <span className={`${className} overflow-hidden rounded-full border-2 border-electric-purple bg-electric-purple/20 flex items-center justify-center`}>
       {isImage ? (
@@ -154,42 +153,9 @@ export default function ProfileMenu({ user, guestAvatar }) {
                 />
 
                 <label className="mt-3 block font-label-caps text-xs tracking-[0.16em] text-on-surface-variant">
-                  Avatar o URL
+                  Tu personaje
                 </label>
-                <input
-                  value={profileAvatar}
-                  onChange={(event) => setProfileAvatar(event.target.value)}
-                  maxLength={80}
-                  className="mt-1 h-12 w-full rounded-xl border border-white/10 bg-black/25 px-3 text-base font-bold text-white outline-none focus:border-electric-purple/60"
-                  placeholder="Elige un emoji, DJ, VIP o una URL"
-                />
-
-                <div className="mt-2 grid grid-cols-6 gap-1.5">
-                  {QUICK_AVATARS.map((avatar) => (
-                    <button
-                      key={avatar}
-                      type="button"
-                      onClick={() => setProfileAvatar(avatar)}
-                      className="h-10 rounded-lg border border-white/10 bg-white/5 text-xs font-black text-white active:scale-95"
-                    >
-                      {avatar}
-                    </button>
-                  ))}
-                </div>
-
-                <div className="mt-2 grid max-h-28 grid-cols-6 gap-1.5 overflow-y-auto rounded-xl border border-white/10 bg-black/20 p-1.5">
-                  {EMOJI_AVATARS.map((avatar) => (
-                    <button
-                      key={avatar}
-                      type="button"
-                      onClick={() => setProfileAvatar(avatar)}
-                      className={`h-10 rounded-lg border text-2xl active:scale-95 ${profileAvatar === avatar ? 'border-neon-green bg-neon-green/15 shadow-[0_0_14px_rgba(57,255,20,0.22)]' : 'border-white/10 bg-white/5'}`}
-                      aria-label={`Usar avatar ${avatar}`}
-                    >
-                      {avatar}
-                    </button>
-                  ))}
-                </div>
+                <AvatarPicker value={profileAvatar} onChange={setProfileAvatar} className="mt-1.5" />
 
                 {profileError && <p className="mt-2 text-sm text-intense-red">{profileError}</p>}
 

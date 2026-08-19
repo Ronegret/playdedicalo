@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MusicNotesBubbles from '../components/MusicNotesBubbles';
 import { DEDICALO_PLAYLISTS, MAX_TIMELINE_GOAL_YEARS, MIN_TIMELINE_GOAL_YEARS, PLAYLIST_META, getCombinedTimelineYears, getPlayerPresence, getTimelineProgress, normalizeSpotifyPlaylistUrl, useGameStore } from '../store/useGameStore';
+import { isImageAvatar } from '../data/characterAvatars';
 import { explainSpotifyError, prepareSpotifyPlayback } from '../services/spotify';
 import ProfileMenu from '../components/ProfileMenu';
 import { auth } from '../firebase';
@@ -392,15 +393,15 @@ export default function LobbyScreen() {
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3 min-w-0">
                   <span className="w-6 text-center font-label-caps text-xs text-on-surface-variant">#{index + 1}</span>
-                  {player.avatar?.startsWith?.('http') ? (
-                    <img src={player.avatar} alt={player.name} className="w-10 h-10 rounded-full object-cover border-2 border-electric-purple/60 shadow-[0_0_12px_rgba(168,85,247,0.3)]" />
+                  {isImageAvatar(player.avatar) ? (
+                    <img src={player.avatar} alt={player.name} className="w-14 h-14 rounded-full object-cover border-2 border-electric-purple/60 shadow-[0_0_12px_rgba(168,85,247,0.3)] shrink-0" />
                   ) : (
-                    <div className="w-10 h-10 rounded-full flex items-center justify-center text-2xl bg-white/10 border border-white/10 shrink-0">
+                    <div className="w-14 h-14 rounded-full flex items-center justify-center text-3xl bg-white/10 border border-white/10 shrink-0">
                       {player.avatar || '•'}
                     </div>
                   )}
                   <div className="min-w-0">
-                    <span className="block truncate font-body-md font-bold text-white">{player.name}</span>
+                    <span className="block truncate text-lg font-black text-white">{player.name}</span>
                     <span className={`mt-0.5 block font-label-caps text-[10px] ${
                       presence.status === 'online'
                         ? 'text-neon-green'

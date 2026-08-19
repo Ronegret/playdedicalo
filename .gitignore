@@ -14,6 +14,11 @@ dist-ssr
 .vercel
 catalog-output/
 .spotify-user-token.json
+
+# Fuentes sin optimizar de los avatares de personajes (~150MB de PNG). Los
+# WebP ya procesados sí se versionan en public/images/avatars/. Si hace
+# falta reprocesar, los originales quedan en la carpeta local del anfitrión.
+assets-source/
 *.local
 .env
 .env.*

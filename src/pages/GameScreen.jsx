@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ATTACK_COST, ATTACK_TYPES, DEDICALO_PLAYLISTS, GAME_MODES, REDEEM_YEAR_COST, getCombinedTimelineYears, getPlayerPresence, getTimelineProgress, normalizeSpotifyPlaylistUrl, useGameStore } from '../store/useGameStore';
+import { isImageAvatar } from '../data/characterAvatars';
 import HeaderHUD from '../components/HeaderHUD';
 import { createQuestionFromTrack, explainSpotifyError, getCurrentHiddenTrack, getSpotifyStatus, pauseSpotifyPlayback, startRandomPlaylistTrack } from '../services/spotify';
 
@@ -86,12 +87,12 @@ function RankingPeek({ players, guestId, targetYears = 12 }) {
                     <span className={`w-8 h-8 rounded-lg text-sm font-black flex items-center justify-center shrink-0 ${index === 0 ? 'bg-neon-green text-black' : index === 1 ? 'bg-white/25 text-white' : 'bg-white/10 text-white'}`}>
                       {index + 1}
                     </span>
-                    {player.avatar?.startsWith?.('http') ? (
-                      <img src={player.avatar} alt={player.name} className="w-8 h-8 rounded-full object-cover shrink-0" />
+                    {isImageAvatar(player.avatar) ? (
+                      <img src={player.avatar} alt={player.name} className="w-11 h-11 rounded-full object-cover shrink-0" />
                     ) : (
-                      <span className="w-8 h-8 rounded-full bg-black/20 flex items-center justify-center text-base shrink-0">{player.avatar || '•'}</span>
+                      <span className="w-11 h-11 rounded-full bg-black/20 flex items-center justify-center text-xl shrink-0">{player.avatar || '•'}</span>
                     )}
-                    <span className="text-sm font-bold text-white truncate flex-1">{player.name}{isMe ? ' (tú)' : ''}</span>
+                    <span className="text-base font-black text-white truncate flex-1">{player.name}{isMe ? ' (tú)' : ''}</span>
                     <div className="text-right shrink-0">
                       <p className="text-base font-black text-neon-green leading-none">{progress}/{targetYears}</p>
                       <p className="mt-0.5 text-[10px] font-bold text-on-surface-variant leading-none">
@@ -843,33 +844,33 @@ export default function GameScreen() {
                 </motion.p>
 
                 {players.length > 0 && (
-                  <div className="mt-3 flex flex-wrap justify-center gap-3">
+                  <div className="mt-3 flex flex-wrap justify-center gap-3.5">
                     {players.map((player) => {
                       const answered = Boolean(roundAnswers?.[player.id]);
                       const blocked = isPlayerBlockedThisRound(player);
                       return (
                         <div key={player.id} className="relative flex flex-col items-center gap-1">
-                          {player.avatar?.startsWith?.('http') ? (
+                          {isImageAvatar(player.avatar) ? (
                             <img
                               src={player.avatar}
                               alt={player.name}
-                              className={`w-10 h-10 rounded-full object-cover border-2 transition-all ${blocked ? 'border-vinyl-orange opacity-70' : answered ? 'border-neon-green shadow-[0_0_10px_rgba(57,255,20,0.5)]' : 'border-white/15 opacity-35'}`}
+                              className={`w-14 h-14 rounded-full object-cover border-2 transition-all ${blocked ? 'border-vinyl-orange opacity-70' : answered ? 'border-neon-green shadow-[0_0_10px_rgba(57,255,20,0.5)]' : 'border-white/15 opacity-35'}`}
                             />
                           ) : (
-                            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-xl bg-black/20 border-2 transition-all ${blocked ? 'border-vinyl-orange opacity-70' : answered ? 'border-neon-green shadow-[0_0_10px_rgba(57,255,20,0.5)]' : 'border-white/15 opacity-35'}`}>
+                            <div className={`w-14 h-14 rounded-full flex items-center justify-center text-2xl bg-black/20 border-2 transition-all ${blocked ? 'border-vinyl-orange opacity-70' : answered ? 'border-neon-green shadow-[0_0_10px_rgba(57,255,20,0.5)]' : 'border-white/15 opacity-35'}`}>
                               {player.avatar || '•'}
                             </div>
                           )}
                           {blocked ? (
-                            <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-vinyl-orange">
-                              <span className="material-symbols-outlined text-black" style={{ fontSize: '10px', lineHeight: 1 }}>block</span>
+                            <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-vinyl-orange">
+                              <span className="material-symbols-outlined text-black" style={{ fontSize: '12px', lineHeight: 1 }}>block</span>
                             </span>
                           ) : answered && (
-                            <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-neon-green flex items-center justify-center">
-                              <span className="material-symbols-outlined text-black" style={{ fontSize: '10px', lineHeight: 1 }}>check</span>
+                            <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-neon-green flex items-center justify-center">
+                              <span className="material-symbols-outlined text-black" style={{ fontSize: '12px', lineHeight: 1 }}>check</span>
                             </span>
                           )}
-                          <span className={`max-w-[3.75rem] truncate font-label-caps text-xs ${blocked ? 'text-vinyl-orange' : 'text-on-surface-variant'}`}>
+                          <span className={`max-w-[4.5rem] truncate font-label-caps text-xs font-bold ${blocked ? 'text-vinyl-orange' : 'text-white/80'}`}>
                             {blocked ? 'BLOQUEADO' : player.name}
                           </span>
                         </div>
