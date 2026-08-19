@@ -53,7 +53,13 @@ const SOURCE_FILE_BY_SLUG = {
   'pretzel': 'PRETZEL', 'psg': 'PSG', 'pulpo': 'PULPO', 'real-madrid': 'REALMADRID',
   'rodri': 'RODRI', 'rusa': 'RUSA', 'sandia': 'SANDIA', 'sevilla': 'SEVILLA',
   'taco': 'TACO', 'tiburon': 'TIBURON', 'uk': 'UK', 'unicornio': 'UNICORNIO',
-  'usa': 'USA', 'usam': 'USAM', 'vasca': 'VASCA', 'zorro': 'ZORRO'
+  'usa': 'USA', 'usam': 'USAM', 'vasca': 'VASCA', 'zorro': 'ZORRO',
+  // Segunda tanda (NUEVOS1)
+  'alberto': 'ALBERTO', 'alex': 'ALEX', 'angeles': 'ANGELES', 'armando': 'ARMANDO',
+  'carol': 'CAROL', 'dani': 'DANI', 'frank': 'FRANK', 'juanpi': 'JUANPI',
+  'miguel': 'MIGUEL', 'noe-2': 'NOE 2', 'nora': 'NORA', 'pau': 'PAU',
+  'rodri-2': 'RODRI 2', 'roger': 'ROGER', 'rosa': 'ROSA', 'teresa': 'TERESA',
+  'toni': 'TONI', 'yone': 'YONE'
 };
 
 const CATALOG = CHARACTER_AVATARS.map((entry) => ({

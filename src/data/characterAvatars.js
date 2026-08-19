@@ -92,7 +92,28 @@ export const CHARACTER_AVATARS = [
   { slug: 'usa', name: 'USA', category: 'paises' },
   { slug: 'usam', name: 'USA M', category: 'paises' },
   { slug: 'vasca', name: 'Vasca', category: 'paises' },
-  { slug: 'zorro', name: 'Zorro', category: 'animales' }
+  { slug: 'zorro', name: 'Zorro', category: 'animales' },
+
+  // Segunda tanda (NUEVOS1) — mismo estilo de retrato DJ, todos con nombre
+  // propio, así que van a "especiales" junto con Rodri/Peré/Noé.
+  { slug: 'alberto', name: 'Alberto', category: 'especiales' },
+  { slug: 'alex', name: 'Álex', category: 'especiales' },
+  { slug: 'angeles', name: 'Ángeles', category: 'especiales' },
+  { slug: 'armando', name: 'Armando', category: 'especiales' },
+  { slug: 'carol', name: 'Carol', category: 'especiales' },
+  { slug: 'dani', name: 'Dani', category: 'especiales' },
+  { slug: 'frank', name: 'Frank', category: 'especiales' },
+  { slug: 'juanpi', name: 'Juanpi', category: 'especiales' },
+  { slug: 'miguel', name: 'Miguel', category: 'especiales' },
+  { slug: 'noe-2', name: 'Noé II', category: 'especiales' },
+  { slug: 'nora', name: 'Nora', category: 'especiales' },
+  { slug: 'pau', name: 'Pau', category: 'especiales' },
+  { slug: 'rodri-2', name: 'Rodri II', category: 'especiales' },
+  { slug: 'roger', name: 'Roger', category: 'especiales' },
+  { slug: 'rosa', name: 'Rosa', category: 'especiales' },
+  { slug: 'teresa', name: 'Teresa', category: 'especiales' },
+  { slug: 'toni', name: 'Toni', category: 'especiales' },
+  { slug: 'yone', name: 'Yone', category: 'especiales' }
 ];
 
 const AVATAR_BY_SLUG = new Map(CHARACTER_AVATARS.map((entry) => [entry.slug, entry]));
