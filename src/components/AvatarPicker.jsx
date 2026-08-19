@@ -80,7 +80,7 @@ export default function AvatarPicker({ value, onChange, className = '' }) {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -6 }}
           transition={{ duration: 0.16 }}
-          className="grid max-h-64 grid-cols-4 gap-2.5 overflow-y-auto rounded-2xl border border-white/10 bg-black/20 p-2.5 sm:grid-cols-5"
+          className="grid max-h-80 grid-cols-3 gap-3 overflow-y-auto rounded-2xl border border-white/10 bg-black/20 p-3 sm:grid-cols-4"
         >
           {isClassicTab ? (
             CLASSIC_EMOJIS.map((emoji) => (
@@ -89,7 +89,7 @@ export default function AvatarPicker({ value, onChange, className = '' }) {
                 type="button"
                 onClick={() => handlePickEmoji(emoji)}
                 aria-label={`Elegir ${emoji} como avatar`}
-                className={`flex aspect-square items-center justify-center rounded-2xl border text-3xl transition-all active:scale-90 ${
+                className={`flex aspect-square items-center justify-center rounded-2xl border text-4xl transition-all active:scale-90 ${
                   value === emoji
                     ? 'border-neon-green bg-neon-green/15 shadow-[0_0_18px_rgba(57,255,20,0.28)] scale-105'
                     : 'border-white/10 bg-white/5 hover:bg-white/10'
@@ -130,13 +130,13 @@ export default function AvatarPicker({ value, onChange, className = '' }) {
                       <motion.span
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
-                        className="absolute bottom-0 right-0 flex h-5 w-5 items-center justify-center rounded-full bg-neon-green shadow-[0_0_8px_rgba(57,255,20,0.6)]"
+                        className="absolute bottom-0.5 right-0.5 flex h-6 w-6 items-center justify-center rounded-full bg-neon-green shadow-[0_0_10px_rgba(57,255,20,0.6)]"
                       >
-                        <span className="material-symbols-outlined text-black" style={{ fontSize: '13px' }}>check</span>
+                        <span className="material-symbols-outlined text-black" style={{ fontSize: '15px' }}>check</span>
                       </motion.span>
                     )}
                   </span>
-                  <span className="max-w-full truncate text-[10px] font-bold leading-tight text-white/70">
+                  <span className="max-w-full truncate text-xs font-bold leading-tight text-white/75">
                     {entry.name}
                   </span>
                 </motion.button>

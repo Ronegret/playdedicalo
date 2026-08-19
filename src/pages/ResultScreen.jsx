@@ -110,7 +110,7 @@ function RankingList({ players, final = false, showTimeline = false, goalYears =
                 <span className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-base shrink-0 ${medalClass}`}>
                   {rank + 1}
                 </span>
-                <PlayerAvatar player={player} className="w-16 h-16 text-3xl border-2 border-white/15" />
+                <PlayerAvatar player={player} className="w-20 h-20 text-4xl border-2 border-white/15" />
                 <span className="font-black text-xl truncate">{player.name}</span>
               </div>
               <div className="text-right shrink-0">
@@ -196,9 +196,9 @@ function CelebrationWaves({ className = '' }) {
 // viewport angosto (360-390px) un w-32 fijo se desborda de su columna; el
 // clamp crece en pantallas más anchas pero nunca pasa del hueco disponible.
 const PODIUM_STYLE = {
-  0: { order: 'order-2', avatarSize: 'clamp(5.5rem, 24vw, 8rem)', stepHeight: 'h-28', color: '#ffbf4d', label: '1°', ring: '0 0 55px rgba(255,191,77,0.55)' },
-  1: { order: 'order-1', avatarSize: 'clamp(4.25rem, 18vw, 6rem)', stepHeight: 'h-16', color: '#e2e8f0', label: '2°', ring: '0 0 30px rgba(226,232,240,0.35)' },
-  2: { order: 'order-3', avatarSize: 'clamp(3.75rem, 16vw, 5rem)', stepHeight: 'h-10', color: '#ff7a1a', label: '3°', ring: '0 0 30px rgba(255,122,26,0.35)' }
+  0: { order: 'order-2', avatarSize: 'clamp(6rem, 27vw, 9rem)', stepHeight: 'h-28', color: '#ffbf4d', label: '1°', ring: '0 0 55px rgba(255,191,77,0.55)' },
+  1: { order: 'order-1', avatarSize: 'clamp(4.75rem, 20vw, 6.75rem)', stepHeight: 'h-16', color: '#e2e8f0', label: '2°', ring: '0 0 30px rgba(226,232,240,0.35)' },
+  2: { order: 'order-3', avatarSize: 'clamp(4.25rem, 17.5vw, 5.75rem)', stepHeight: 'h-10', color: '#ff7a1a', label: '3°', ring: '0 0 30px rgba(255,122,26,0.35)' }
 };
 
 function PodiumSlot({ player, rank, goalYears }) {
@@ -263,7 +263,7 @@ export default function ResultScreen() {
   const [shareCopied, setShareCopied] = useState(false);
   const {
     role, phase, players,
-    hostNextRound, hostCloseRoom, hostRestartGame, guestLeaveRoom, guestId,
+    hostNextRound, hostCloseRoom, hostEndGame, hostRestartGame, guestLeaveRoom, guestId,
     lastResultType, lastPointDelta, revealResults, currentTrack, roomError, clearRoomError, guestAvatar,
     targetYears
   } = useGameStore();
@@ -315,6 +315,16 @@ export default function ResultScreen() {
     if (role === 'host') hostCloseRoom();
     if (role === 'guest') guestLeaveRoom();
     navigate('/role-selection');
+  };
+
+  // Confirmar salida desde el resultado DE RONDA (no el podio final todavía)
+  // — el anfitrión también tiene que ver el ranking antes de irse, no
+  // saltárselo. hostEndGame solo marca fase 'final' sin cerrar la sesión;
+  // como seguimos en esta misma pantalla, el componente re-renderiza solo
+  // hacia el podio (isFinal) apenas llega el cambio de fase.
+  const handleHostEndFromRound = async () => {
+    setShowExitConfirm(false);
+    await hostEndGame();
   };
 
   // Mismo pin, mismo grupo, marcador en cero — el anfitrión puede cambiar
@@ -472,7 +482,7 @@ export default function ResultScreen() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       className="fixed inset-0 z-50 overflow-y-auto text-white"
-      style={{ backgroundColor: style.bgColor }}
+      style={{ backgroundColor: style.bgColor, overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' }}
     >
       {/* Blurred album art backdrop */}
       {currentTrack?.albumImage && (
@@ -522,10 +532,7 @@ export default function ResultScreen() {
       </div>
 
       {/* Scrollable content */}
-      <div
-        className="relative z-10 mx-auto flex min-h-full w-full max-w-lg flex-col px-4 pb-[calc(1.25rem+env(safe-area-inset-bottom,0px))] pt-[calc(4.5rem+env(safe-area-inset-top,0px))]"
-        style={{ overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' }}
-      >
+      <div className="relative z-10 mx-auto flex min-h-full w-full max-w-lg flex-col px-4 pb-[calc(1.25rem+env(safe-area-inset-bottom,0px))] pt-[calc(4.5rem+env(safe-area-inset-top,0px))]">
         <button
           type="button"
           onClick={() => setShowExitConfirm(true)}
@@ -721,7 +728,7 @@ export default function ResultScreen() {
                   }`}>
                     {index + 1}
                   </span>
-                  <PlayerAvatar player={player} className="w-16 h-16 text-3xl border-2 border-white/10" />
+                  <PlayerAvatar player={player} className="w-20 h-20 text-4xl border-2 border-white/10" />
                   <span className="text-xl font-black text-white truncate flex-1">{player.name}</span>
                   <div className="text-right shrink-0">
                     <p className="text-sm font-black text-neon-green">
@@ -784,20 +791,20 @@ export default function ResultScreen() {
                 {role === 'host' ? 'emoji_events' : 'logout'}
               </span>
               <h3 className="mt-3 font-headline-lg text-xl font-black text-white">
-                {role === 'host' ? '¿Cerrar la partida' : '¿Salir de la partida'}
+                {role === 'host' ? '¿Terminar la partida' : '¿Salir de la partida'}
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-on-surface-variant">
                 {role === 'host'
-                  ? 'Se cerrará la sala y todos volverán al inicio.'
+                  ? 'Verás el ranking final con todos, y desde ahí podrás cerrar la sala.'
                   : 'Saldrás de la sala y perderás tu lugar en la partida.'}
               </p>
               <div className="mt-5 flex flex-col gap-2">
                 <button
                   type="button"
-                  onClick={handleFinish}
+                  onClick={role === 'host' ? handleHostEndFromRound : handleFinish}
                   className="h-12 rounded-xl bg-intense-red text-white font-label-caps text-sm font-bold active:scale-95 transition-all"
                 >
-                  {role === 'host' ? 'SÍ, CERRAR' : 'SÍ, SALIR'}
+                  {role === 'host' ? 'SÍ, TERMINAR' : 'SÍ, SALIR'}
                 </button>
                 <button
                   type="button"

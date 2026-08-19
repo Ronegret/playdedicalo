@@ -21,7 +21,7 @@ function PlayerAvatar({ player, presence, size = 'w-6 h-6' }) {
         {isImageAvatar(player.avatar) ? (
           <img src={player.avatar} alt={player.name} className="h-full w-full object-cover" />
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-surface-bright text-xs font-bold text-on-surface">
+          <div className="flex h-full w-full items-center justify-center bg-surface-bright text-2xl font-bold text-on-surface">
             {player.avatar || initials}
           </div>
         )}
@@ -147,7 +147,7 @@ export default function HeaderHUD({ onExit }) {
                   const seconds = Math.ceil((presence.remainingMs || 0) / 1000);
                   return (
                     <div key={player.id} className="flex items-center gap-3 rounded-xl px-2 py-2.5">
-                      <PlayerAvatar player={player} presence={presence.status} size="w-16 h-16" />
+                      <PlayerAvatar player={player} presence={presence.status} size="w-20 h-20" />
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-lg font-black text-white">{player.name}{player.id === guestId ? ' (tú)' : ''}</p>
                         <p className="text-xs text-on-surface-variant">

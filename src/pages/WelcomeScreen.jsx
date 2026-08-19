@@ -161,11 +161,11 @@ export default function WelcomeScreen() {
             className="max-w-[21rem] space-y-2 md:max-w-md lg:max-w-lg"
           >
             <h1 className="heading-impact font-black uppercase text-white">
-              La música como nunca{' '}
-              <span className="text-animated-gradient">la habías jugado</span>
+              Junta a tu gente y que{' '}
+              <span className="text-animated-gradient">suene la fiesta</span>
             </h1>
             <p className="copy-readable text-on-surface-variant">
-              Escucha la música, adivina la época y construye tu ruta musical en Años Locos. 12 canciones es el ritmo recomendado, pero el anfitrión puede cambiarlo.
+              Suena una canción, ustedes adivinan el año y arman su ruta musical en Años Locos. Se entiende en una ronda, se disfruta toda la noche.
             </p>
           </motion.div>
 

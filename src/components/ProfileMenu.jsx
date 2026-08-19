@@ -16,9 +16,9 @@ function AvatarBubble({ avatar, fallback = 'person', className = 'h-8 w-8' }) {
       {isImage ? (
         <img src={avatar} alt="Avatar" className="h-full w-full object-cover" />
       ) : avatar ? (
-        <span className="px-1 text-sm font-black leading-none text-white">{avatar}</span>
+        <span className="px-1 text-lg font-black leading-none text-white">{avatar}</span>
       ) : (
-        <span className="material-symbols-outlined text-sm text-electric-purple">{fallback}</span>
+        <span className="material-symbols-outlined text-lg text-electric-purple">{fallback}</span>
       )}
     </span>
   );
@@ -123,7 +123,7 @@ export default function ProfileMenu({ user, guestAvatar }) {
         aria-label="Menu de perfil"
         aria-expanded={isOpen}
       >
-        <AvatarBubble avatar={displayAvatar} className="h-11 w-11" />
+        <AvatarBubble avatar={displayAvatar} className="h-14 w-14" />
       </button>
 
       <AnimatePresence>
@@ -137,7 +137,7 @@ export default function ProfileMenu({ user, guestAvatar }) {
           >
             <div className="border-b border-white/10 bg-white/5 p-3">
               <div className="flex items-center gap-3">
-                <AvatarBubble avatar={displayAvatar} className="h-16 w-16 border-[3px]" />
+                <AvatarBubble avatar={displayAvatar} className="h-20 w-20 border-[3px]" />
                 <div className="min-w-0">
                   <p className="truncate text-lg font-black text-white">{displayName}</p>
                   <p className="mt-0.5 truncate font-label-caps text-xs text-on-surface-variant">

@@ -268,15 +268,15 @@ export default function GuestJoinScreen() {
           {/* Preview del avatar seleccionado */}
           <div className="flex items-center justify-center mb-4">
             <div className="relative">
-              <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-4 border-electric-purple bg-electric-purple/20 text-4xl shadow-[0_0_28px_rgba(168,85,247,0.35)]">
+              <div className="flex h-36 w-36 items-center justify-center overflow-hidden rounded-full border-4 border-electric-purple bg-electric-purple/20 text-6xl shadow-[0_0_32px_rgba(168,85,247,0.4)]">
                 {isImageAvatar(avatar) ? (
                   <img src={avatar} alt="Avatar" className="h-full w-full object-cover" />
                 ) : (
                   avatar || '😎'
                 )}
               </div>
-              <div className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-neon-green shadow-[0_0_12px_rgba(57,255,20,0.5)]">
-                <span className="material-symbols-outlined text-black" style={{ fontSize: '14px' }}>check</span>
+              <div className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-full bg-neon-green shadow-[0_0_14px_rgba(57,255,20,0.55)]">
+                <span className="material-symbols-outlined text-black" style={{ fontSize: '18px' }}>check</span>
               </div>
             </div>
           </div>

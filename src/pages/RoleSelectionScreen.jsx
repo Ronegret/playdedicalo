@@ -205,32 +205,19 @@ export default function RoleSelectionScreen() {
         <FontSizeControl />
       </header>
 
-      <section className="mb-5 flex w-full flex-col items-center gap-4 sm:mb-7 sm:gap-5">
-        <AlbumTrackHero paused={bgPaused} onToggle={toggleBg} />
-
-        <div>
-          <p className="font-label-caps text-xs tracking-[0.28em] text-neon-green">ELIGE CÓMO ENTRAS</p>
-          <h1 className="heading-page mt-2 font-headline-lg font-black uppercase text-on-surface">
-            A jugar
-          </h1>
-          <p className="mx-auto mt-2 max-w-xs text-sm leading-relaxed text-on-surface-variant">
-            Todos participan. El anfitrión pone la música, comparte la sala y también suma puntos.
-          </p>
-        </div>
+      <section className="mb-5 flex w-full flex-col items-center gap-2 sm:mb-7">
+        <p className="font-label-caps text-xs tracking-[0.28em] text-neon-green">ELIGE CÓMO ENTRAS</p>
+        <h1 className="heading-page mt-1 font-headline-lg font-black uppercase text-on-surface">
+          A jugar
+        </h1>
+        <p className="mx-auto mt-1 max-w-xs text-sm leading-relaxed text-on-surface-variant">
+          Todos participan. El anfitrión pone la música, comparte la sala y también suma puntos.
+        </p>
       </section>
 
+      {/* La mayoría de las personas que abren esto van a unirse a una sala
+          ya creada por otro, no a crear una — "Unirme" va primero. */}
       <section className="flex w-full flex-col gap-4">
-        <RoleCard
-          type="ANFITRIÓN"
-          title="Crear sala"
-          text="Conecta Google, elige playlist y muestra el PIN para que entren tus amigos."
-          action="CREAR"
-          icon="headphones"
-          color="#ff7a1a"
-          glow="rgba(255,122,26,0.16)"
-          onClick={() => navigate('/host/sync')}
-        />
-
         <RoleCard
           type="INVITADO"
           title="Unirme"
@@ -241,6 +228,23 @@ export default function RoleSelectionScreen() {
           glow="rgba(63,120,255,0.14)"
           onClick={() => navigate('/guest/join')}
         />
+
+        <RoleCard
+          type="ANFITRIÓN"
+          title="Crear sala"
+          text="Conecta Google, elige playlist y muestra el PIN para que entren tus amigos."
+          action="CREAR"
+          icon="headphones"
+          color="#ff7a1a"
+          glow="rgba(255,122,26,0.16)"
+          onClick={() => navigate('/host/sync')}
+        />
+      </section>
+
+      {/* La vista previa de la canción es lo menos urgente de la pantalla
+          — va al final, debajo de los dos botones de entrada. */}
+      <section className="mt-6 flex w-full flex-col items-center sm:mt-8">
+        <AlbumTrackHero paused={bgPaused} onToggle={toggleBg} />
       </section>
     </motion.main>
   );

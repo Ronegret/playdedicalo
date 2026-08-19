@@ -212,7 +212,7 @@ function AttackWarningOverlay({ attack, onClose }) {
         <motion.div
           animate={{ rotate: [-3, 3, -3], scale: [1, 1.06, 1] }}
           transition={{ repeat: Infinity, duration: 0.65 }}
-          className="relative mx-auto flex h-32 w-32 items-center justify-center rounded-full border-4 border-white/80 bg-black/30 shadow-[0_0_80px_rgba(255,255,255,0.50),0_0_140px_rgba(200,0,255,0.35)]"
+          className="relative mx-auto flex h-40 w-40 items-center justify-center rounded-full border-4 border-white/80 bg-black/30 shadow-[0_0_80px_rgba(255,255,255,0.50),0_0_140px_rgba(200,0,255,0.35)]"
         >
           {isImageAvatar(attack.fromAvatar) ? (
             <img src={attack.fromAvatar} alt={attack.from || 'Rival'} className="h-full w-full rounded-full object-cover" />
@@ -271,7 +271,7 @@ function BlockedPlacement({ attackFrom, attackFromAvatar, playerYears = [], wild
     <div className="mt-5">
       <div className="rounded-3xl border border-vinyl-orange/40 bg-[radial-gradient(circle_at_top,rgba(255,122,26,0.16),rgba(255,255,255,0.04)_42%,rgba(0,0,0,0.24)_100%)] p-5 text-center shadow-[0_0_30px_rgba(255,122,26,0.1)]">
         {isImageAvatar(attackFromAvatar) ? (
-          <img src={attackFromAvatar} alt={attackFrom || 'Rival'} className="mx-auto h-16 w-16 rounded-full border-2 border-vinyl-orange object-cover shadow-[0_0_18px_rgba(255,122,26,0.4)]" />
+          <img src={attackFromAvatar} alt={attackFrom || 'Rival'} className="mx-auto h-24 w-24 rounded-full border-2 border-vinyl-orange object-cover shadow-[0_0_20px_rgba(255,122,26,0.45)]" />
         ) : (
           <span className="material-symbols-outlined text-vinyl-orange" style={{ fontSize: '3rem' }}>block</span>
         )}
@@ -311,7 +311,7 @@ function TimelinePlacementQuestion({ question, playerYears = [], wildcards = 0, 
         {isStealThreat && (
           <div className="mb-3 rounded-xl bg-error/20 border border-error/50 p-2.5 flex items-center gap-2.5">
             {isImageAvatar(activeAttack.fromAvatar) ? (
-              <img src={activeAttack.fromAvatar} alt={activeAttack.from || 'Rival'} className="h-9 w-9 shrink-0 rounded-full border-2 border-error object-cover" />
+              <img src={activeAttack.fromAvatar} alt={activeAttack.from || 'Rival'} className="h-12 w-12 shrink-0 rounded-full border-2 border-error object-cover" />
             ) : (
               <span className="material-symbols-outlined text-error text-lg animate-pulse shrink-0">move_down</span>
             )}
@@ -377,7 +377,7 @@ export default function GameScreen() {
     spotifyPlaylistUrl,
     hostTriggerBlackout,
     hostRevealResults,
-    hostCloseRoom,
+    hostEndGame,
     guestAnswer,
     guestLeaveRoom,
     guestId,
@@ -869,10 +869,10 @@ export default function GameScreen() {
                             <img
                               src={player.avatar}
                               alt={player.name}
-                              className={`w-[4.5rem] h-[4.5rem] rounded-full object-cover border-2 transition-all ${blocked ? 'border-vinyl-orange opacity-70' : answered ? 'border-neon-green shadow-[0_0_12px_rgba(57,255,20,0.5)]' : 'border-white/15 opacity-35'}`}
+                              className={`w-[5.5rem] h-[5.5rem] rounded-full object-cover border-2 transition-all ${blocked ? 'border-vinyl-orange opacity-70' : answered ? 'border-neon-green shadow-[0_0_12px_rgba(57,255,20,0.5)]' : 'border-white/15 opacity-35'}`}
                             />
                           ) : (
-                            <div className={`w-[4.5rem] h-[4.5rem] rounded-full flex items-center justify-center text-3xl bg-black/20 border-2 transition-all ${blocked ? 'border-vinyl-orange opacity-70' : answered ? 'border-neon-green shadow-[0_0_12px_rgba(57,255,20,0.5)]' : 'border-white/15 opacity-35'}`}>
+                            <div className={`w-[5.5rem] h-[5.5rem] rounded-full flex items-center justify-center text-3xl bg-black/20 border-2 transition-all ${blocked ? 'border-vinyl-orange opacity-70' : answered ? 'border-neon-green shadow-[0_0_12px_rgba(57,255,20,0.5)]' : 'border-white/15 opacity-35'}`}>
                               {player.avatar || '•'}
                             </div>
                           )}
@@ -1092,11 +1092,11 @@ export default function GameScreen() {
                     className="min-h-touch rounded-2xl border border-white/12 bg-white/8 pl-2.5 pr-4 py-2 flex items-center gap-3 text-white font-bold text-sm active:scale-95 transition-all hover:border-electric-purple/60 hover:bg-electric-purple/15"
                   >
                     {isImageAvatar(target.avatar) ? (
-                      <img src={target.avatar} alt={target.name} className="h-11 w-11 shrink-0 rounded-full border-2 border-white/15 object-cover" />
+                      <img src={target.avatar} alt={target.name} className="h-14 w-14 shrink-0 rounded-full border-2 border-white/15 object-cover" />
                     ) : (
-                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-black/25 text-xl">{target.avatar || '•'}</span>
+                      <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-black/25 text-2xl">{target.avatar || '•'}</span>
                     )}
-                    <span className="flex-1 truncate text-base">{target.name}</span>
+                    <span className="flex-1 truncate text-lg font-bold">{target.name}</span>
                     <span className="material-symbols-outlined text-vinyl-orange text-lg shrink-0">bolt</span>
                   </button>
                 ))}
@@ -1144,7 +1144,7 @@ export default function GameScreen() {
               </h3>
               <p className="mt-2 text-sm text-on-surface-variant">
                 {role === 'host'
-                  ? 'Se mostrará el ranking final a todos los jugadores. ¿Estás seguro'
+                  ? 'Se mostrará el ranking final a todos, tú incluido. Desde ahí podrás cerrar la sala.'
                   : 'Perderás tu progreso en esta ronda.'}
               </p>
               <div className="mt-5 flex flex-col gap-2">
@@ -1153,8 +1153,13 @@ export default function GameScreen() {
                     setShowExitConfirm(false);
                     if (role === 'host') {
                       await pauseSpotifyPlayback().catch(() => {});
-                      hostCloseRoom();
-                      navigate('/role-selection');
+                      // No cierra la sala de inmediato — el anfitrión también
+                      // tiene que ver el ranking final antes de irse, igual
+                      // que los demás. hostEndGame solo marca fase 'final'
+                      // (con la puntuación tal cual iba) sin borrar su sesión;
+                      // "CERRAR SALA" en esa pantalla es el paso que sí cierra.
+                      await hostEndGame();
+                      navigate('/game/result');
                     } else {
                       guestLeaveRoom();
                       navigate('/role-selection');
