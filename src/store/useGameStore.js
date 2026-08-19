@@ -596,6 +596,10 @@ export const useGameStore = create((setStore, getStore) => ({
         title: attackType.name,
         description: attackType.description,
         from: me.name || 'Un rival',
+        // Se guarda junto al nombre (no se busca por attackerId al mostrar)
+        // para que la pantalla de ataque siga mostrando el avatar correcto
+        // aunque el atacante cambie el suyo después o se desconecte.
+        fromAvatar: me.avatar || null,
         attackerId: me.id,
         round: getStore().round,
         at: Date.now()

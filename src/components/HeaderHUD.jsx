@@ -147,9 +147,9 @@ export default function HeaderHUD({ onExit }) {
                   const seconds = Math.ceil((presence.remainingMs || 0) / 1000);
                   return (
                     <div key={player.id} className="flex items-center gap-3 rounded-xl px-2 py-2.5">
-                      <PlayerAvatar player={player} presence={presence.status} size="w-12 h-12" />
+                      <PlayerAvatar player={player} presence={presence.status} size="w-16 h-16" />
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-base font-black text-white">{player.name}{player.id === guestId ? ' (tú)' : ''}</p>
+                        <p className="truncate text-lg font-black text-white">{player.name}{player.id === guestId ? ' (tú)' : ''}</p>
                         <p className="text-xs text-on-surface-variant">
                           {presence.status === 'reconnecting' ? `${styles.label} ${seconds}s` : styles.label}
                         </p>

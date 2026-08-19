@@ -40,10 +40,17 @@ export default function ProfileMenu({ user, guestAvatar }) {
   const role = useGameStore((state) => state.role);
   const guestId = useGameStore((state) => state.guestId);
   const players = useGameStore((state) => state.players);
+  // profileName/profileAvatar del store: el perfil "de dispositivo" que se
+  // guarda apenas se edita, ANTES de tener sala (guestId/currentPlayer
+  // todavía no existen ahí). Sin este fallback, guardar un avatar nuevo
+  // antes de crear/unirse a una sala no se veía reflejado en ningún lado
+  // — parecía que "no guardaba" aunque sí había quedado guardado.
+  const storedProfileName = useGameStore((state) => state.profileName);
+  const storedProfileAvatar = useGameStore((state) => state.profileAvatar);
   const currentPlayer = players.find((player) => player.id === guestId);
   const canEditProfile = Boolean(guestId || user);
-  const displayName = currentPlayer?.name || user?.displayName || 'Jugador';
-  const displayAvatar = currentPlayer?.avatar || user?.photoURL || guestAvatar;
+  const displayName = currentPlayer?.name || storedProfileName || user?.displayName || 'Jugador';
+  const displayAvatar = currentPlayer?.avatar || storedProfileAvatar || user?.photoURL || guestAvatar;
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -116,7 +123,7 @@ export default function ProfileMenu({ user, guestAvatar }) {
         aria-label="Menu de perfil"
         aria-expanded={isOpen}
       >
-        <AvatarBubble avatar={displayAvatar} />
+        <AvatarBubble avatar={displayAvatar} className="h-11 w-11" />
       </button>
 
       <AnimatePresence>
@@ -126,13 +133,13 @@ export default function ProfileMenu({ user, guestAvatar }) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
             transition={{ duration: 0.15 }}
-            className="absolute top-12 right-0 w-72 overflow-hidden rounded-2xl border border-white/10 bg-surface-container/95 shadow-[0_10px_40px_rgba(0,0,0,0.8)] backdrop-blur-xl"
+            className="absolute top-12 right-0 w-[min(22rem,calc(100vw-1.5rem))] overflow-hidden rounded-2xl border border-white/10 bg-surface-container/95 shadow-[0_10px_40px_rgba(0,0,0,0.8)] backdrop-blur-xl"
           >
             <div className="border-b border-white/10 bg-white/5 p-3">
               <div className="flex items-center gap-3">
-                <AvatarBubble avatar={displayAvatar} className="h-11 w-11" />
+                <AvatarBubble avatar={displayAvatar} className="h-16 w-16 border-[3px]" />
                 <div className="min-w-0">
-                  <p className="truncate text-sm font-black text-white">{displayName}</p>
+                  <p className="truncate text-lg font-black text-white">{displayName}</p>
                   <p className="mt-0.5 truncate font-label-caps text-xs text-on-surface-variant">
                     {role === 'host' ? 'ANFITRION' : 'INVITADO'}
                   </p>

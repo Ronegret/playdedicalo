@@ -394,14 +394,14 @@ export default function LobbyScreen() {
                 <div className="flex items-center gap-3 min-w-0">
                   <span className="w-6 text-center font-label-caps text-xs text-on-surface-variant">#{index + 1}</span>
                   {isImageAvatar(player.avatar) ? (
-                    <img src={player.avatar} alt={player.name} className="w-14 h-14 rounded-full object-cover border-2 border-electric-purple/60 shadow-[0_0_12px_rgba(168,85,247,0.3)] shrink-0" />
+                    <img src={player.avatar} alt={player.name} className="w-[4.5rem] h-[4.5rem] rounded-full object-cover border-2 border-electric-purple/60 shadow-[0_0_14px_rgba(168,85,247,0.35)] shrink-0" />
                   ) : (
-                    <div className="w-14 h-14 rounded-full flex items-center justify-center text-3xl bg-white/10 border border-white/10 shrink-0">
+                    <div className="w-[4.5rem] h-[4.5rem] rounded-full flex items-center justify-center text-4xl bg-white/10 border border-white/10 shrink-0">
                       {player.avatar || '•'}
                     </div>
                   )}
                   <div className="min-w-0">
-                    <span className="block truncate text-lg font-black text-white">{player.name}</span>
+                    <span className="block truncate text-xl font-black text-white">{player.name}</span>
                     <span className={`mt-0.5 block font-label-caps text-[10px] ${
                       presence.status === 'online'
                         ? 'text-neon-green'

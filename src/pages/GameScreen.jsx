@@ -88,11 +88,11 @@ function RankingPeek({ players, guestId, targetYears = 12 }) {
                       {index + 1}
                     </span>
                     {isImageAvatar(player.avatar) ? (
-                      <img src={player.avatar} alt={player.name} className="w-11 h-11 rounded-full object-cover shrink-0" />
+                      <img src={player.avatar} alt={player.name} className="w-14 h-14 rounded-full object-cover shrink-0" />
                     ) : (
-                      <span className="w-11 h-11 rounded-full bg-black/20 flex items-center justify-center text-xl shrink-0">{player.avatar || '•'}</span>
+                      <span className="w-14 h-14 rounded-full bg-black/20 flex items-center justify-center text-2xl shrink-0">{player.avatar || '•'}</span>
                     )}
-                    <span className="text-base font-black text-white truncate flex-1">{player.name}{isMe ? ' (tú)' : ''}</span>
+                    <span className="text-lg font-black text-white truncate flex-1">{player.name}{isMe ? ' (tú)' : ''}</span>
                     <div className="text-right shrink-0">
                       <p className="text-base font-black text-neon-green leading-none">{progress}/{targetYears}</p>
                       <p className="mt-0.5 text-[10px] font-bold text-on-surface-variant leading-none">
@@ -208,13 +208,20 @@ function AttackWarningOverlay({ attack, onClose }) {
         transition={{ delay: 0.08, type: 'spring', stiffness: 160, damping: 18 }}
         className="relative mx-auto w-full max-w-sm"
       >
-        {/* Icon */}
+        {/* Avatar del atacante — quién te atacó tiene que reconocerse al toque */}
         <motion.div
           animate={{ rotate: [-3, 3, -3], scale: [1, 1.06, 1] }}
           transition={{ repeat: Infinity, duration: 0.65 }}
-          className="mx-auto flex h-28 w-28 items-center justify-center rounded-full border-4 border-white/80 bg-black/30 shadow-[0_0_80px_rgba(255,255,255,0.50),0_0_140px_rgba(200,0,255,0.35)]"
+          className="relative mx-auto flex h-32 w-32 items-center justify-center rounded-full border-4 border-white/80 bg-black/30 shadow-[0_0_80px_rgba(255,255,255,0.50),0_0_140px_rgba(200,0,255,0.35)]"
         >
-          <span className="material-symbols-outlined text-7xl drop-shadow-[0_0_20px_rgba(255,255,255,0.6)]">{attackCopy.icon}</span>
+          {isImageAvatar(attack.fromAvatar) ? (
+            <img src={attack.fromAvatar} alt={attack.from || 'Rival'} className="h-full w-full rounded-full object-cover" />
+          ) : (
+            <span className="material-symbols-outlined text-7xl drop-shadow-[0_0_20px_rgba(255,255,255,0.6)]">{attackCopy.icon}</span>
+          )}
+          <span className="absolute -bottom-2 -right-2 flex h-11 w-11 items-center justify-center rounded-full border-2 border-white/80 bg-[#6b10e8] shadow-[0_0_16px_rgba(0,0,0,0.4)]">
+            <span className="material-symbols-outlined text-2xl text-white">{attackCopy.icon}</span>
+          </span>
         </motion.div>
 
         {/* Labels */}
@@ -228,7 +235,7 @@ function AttackWarningOverlay({ attack, onClose }) {
 
         {/* Who & what */}
         <div className="mx-auto mt-5 max-w-xs rounded-2xl border border-white/25 bg-black/30 px-4 py-3 backdrop-blur-sm">
-          <p className="text-base font-black leading-snug text-white">
+          <p className="text-lg font-black leading-snug text-white">
             <span className="text-chaos-gold">{attack.from || 'Un rival'}</span> lanzó:{' '}
             <span className="text-white">{attackCopy.title}</span>
           </p>
@@ -258,15 +265,19 @@ function AttackWarningOverlay({ attack, onClose }) {
 // Bloqueado por sabotaje: no hay nada que elegir, solo esperar. Se le avisa
 // bien claro por qué (para que no piense que la app se congeló) y se
 // muestra igual su ruta actual, sin tocar.
-function BlockedPlacement({ attackFrom, playerYears = [], wildcards = 0, targetYears = 12, isHost = false }) {
+function BlockedPlacement({ attackFrom, attackFromAvatar, playerYears = [], wildcards = 0, targetYears = 12, isHost = false }) {
   const years = playerYears.length ? playerYears : [2000];
   return (
     <div className="mt-5">
       <div className="rounded-3xl border border-vinyl-orange/40 bg-[radial-gradient(circle_at_top,rgba(255,122,26,0.16),rgba(255,255,255,0.04)_42%,rgba(0,0,0,0.24)_100%)] p-5 text-center shadow-[0_0_30px_rgba(255,122,26,0.1)]">
-        <span className="material-symbols-outlined text-vinyl-orange" style={{ fontSize: '3rem' }}>block</span>
+        {isImageAvatar(attackFromAvatar) ? (
+          <img src={attackFromAvatar} alt={attackFrom || 'Rival'} className="mx-auto h-16 w-16 rounded-full border-2 border-vinyl-orange object-cover shadow-[0_0_18px_rgba(255,122,26,0.4)]" />
+        ) : (
+          <span className="material-symbols-outlined text-vinyl-orange" style={{ fontSize: '3rem' }}>block</span>
+        )}
         <h3 className="mt-2 font-headline-lg text-2xl font-black text-white">BLOQUEADO ESTA RONDA</h3>
         <p className="mt-2 text-base leading-relaxed text-on-surface-variant">
-          {attackFrom || 'Un rival'} te saboteó: no puedes responder. Cuenta como fallo, pero tu ruta no pierde nada.
+          <span className="font-black text-vinyl-orange">{attackFrom || 'Un rival'}</span> te saboteó: no puedes responder. Cuenta como fallo, pero tu ruta no pierde nada.
         </p>
         <div className="mt-5 flex items-center justify-center gap-2">
           {years.slice(0, targetYears).map((year, index) => (
@@ -298,10 +309,14 @@ function TimelinePlacementQuestion({ question, playerYears = [], wildcards = 0, 
     <div className="mt-5">
       <div className="rounded-3xl border border-neon-green/20 bg-[radial-gradient(circle_at_top,rgba(57,255,20,0.12),rgba(255,255,255,0.04)_42%,rgba(0,0,0,0.24)_100%)] p-4 shadow-[0_0_30px_rgba(57,255,20,0.08)]">
         {isStealThreat && (
-          <div className="mb-3 rounded-xl bg-error/20 border border-error/50 p-2.5 flex items-center justify-center gap-2">
-            <span className="material-symbols-outlined text-error text-lg animate-pulse">move_down</span>
+          <div className="mb-3 rounded-xl bg-error/20 border border-error/50 p-2.5 flex items-center gap-2.5">
+            {isImageAvatar(activeAttack.fromAvatar) ? (
+              <img src={activeAttack.fromAvatar} alt={activeAttack.from || 'Rival'} className="h-9 w-9 shrink-0 rounded-full border-2 border-error object-cover" />
+            ) : (
+              <span className="material-symbols-outlined text-error text-lg animate-pulse shrink-0">move_down</span>
+            )}
             <p className="text-sm font-bold leading-snug text-error">
-              {activeAttack.from || 'Un rival'} te sabotó: si aciertas, ese año se lo lleva y pierdes uno de los tuyos.
+              <span className="font-black">{activeAttack.from || 'Un rival'}</span> te sabotó: si aciertas, ese año se lo lleva y pierdes uno de los tuyos.
             </p>
           </div>
         )}
@@ -854,23 +869,23 @@ export default function GameScreen() {
                             <img
                               src={player.avatar}
                               alt={player.name}
-                              className={`w-14 h-14 rounded-full object-cover border-2 transition-all ${blocked ? 'border-vinyl-orange opacity-70' : answered ? 'border-neon-green shadow-[0_0_10px_rgba(57,255,20,0.5)]' : 'border-white/15 opacity-35'}`}
+                              className={`w-[4.5rem] h-[4.5rem] rounded-full object-cover border-2 transition-all ${blocked ? 'border-vinyl-orange opacity-70' : answered ? 'border-neon-green shadow-[0_0_12px_rgba(57,255,20,0.5)]' : 'border-white/15 opacity-35'}`}
                             />
                           ) : (
-                            <div className={`w-14 h-14 rounded-full flex items-center justify-center text-2xl bg-black/20 border-2 transition-all ${blocked ? 'border-vinyl-orange opacity-70' : answered ? 'border-neon-green shadow-[0_0_10px_rgba(57,255,20,0.5)]' : 'border-white/15 opacity-35'}`}>
+                            <div className={`w-[4.5rem] h-[4.5rem] rounded-full flex items-center justify-center text-3xl bg-black/20 border-2 transition-all ${blocked ? 'border-vinyl-orange opacity-70' : answered ? 'border-neon-green shadow-[0_0_12px_rgba(57,255,20,0.5)]' : 'border-white/15 opacity-35'}`}>
                               {player.avatar || '•'}
                             </div>
                           )}
                           {blocked ? (
-                            <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-vinyl-orange">
-                              <span className="material-symbols-outlined text-black" style={{ fontSize: '12px', lineHeight: 1 }}>block</span>
+                            <span className="absolute -top-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-vinyl-orange">
+                              <span className="material-symbols-outlined text-black" style={{ fontSize: '14px', lineHeight: 1 }}>block</span>
                             </span>
                           ) : answered && (
-                            <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-neon-green flex items-center justify-center">
-                              <span className="material-symbols-outlined text-black" style={{ fontSize: '12px', lineHeight: 1 }}>check</span>
+                            <span className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-neon-green flex items-center justify-center">
+                              <span className="material-symbols-outlined text-black" style={{ fontSize: '14px', lineHeight: 1 }}>check</span>
                             </span>
                           )}
-                          <span className={`max-w-[4.5rem] truncate font-label-caps text-xs font-bold ${blocked ? 'text-vinyl-orange' : 'text-white/80'}`}>
+                          <span className={`max-w-[5.5rem] truncate font-label-caps text-sm font-bold ${blocked ? 'text-vinyl-orange' : 'text-white/85'}`}>
                             {blocked ? 'BLOQUEADO' : player.name}
                           </span>
                         </div>
@@ -926,6 +941,7 @@ export default function GameScreen() {
             ) : isBlockedThisRound ? (
               <BlockedPlacement
                 attackFrom={incomingAttack?.from}
+                attackFromAvatar={incomingAttack?.fromAvatar}
                 playerYears={ownTimelineYears}
                 wildcards={Number(ownPlayer?.wildcards || 0)}
                 targetYears={targetYears}
@@ -1073,9 +1089,14 @@ export default function GameScreen() {
                         setAttackError(error.message || 'No se pudo sabotear. Inténtalo de nuevo.');
                       }
                     }}
-                    className="min-h-touch rounded-2xl border border-white/12 bg-white/8 px-4 flex items-center justify-between gap-2 text-white font-bold text-sm active:scale-95 transition-all hover:border-electric-purple/60 hover:bg-electric-purple/15"
+                    className="min-h-touch rounded-2xl border border-white/12 bg-white/8 pl-2.5 pr-4 py-2 flex items-center gap-3 text-white font-bold text-sm active:scale-95 transition-all hover:border-electric-purple/60 hover:bg-electric-purple/15"
                   >
-                    <span className="truncate">{target.name}</span>
+                    {isImageAvatar(target.avatar) ? (
+                      <img src={target.avatar} alt={target.name} className="h-11 w-11 shrink-0 rounded-full border-2 border-white/15 object-cover" />
+                    ) : (
+                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-black/25 text-xl">{target.avatar || '•'}</span>
+                    )}
+                    <span className="flex-1 truncate text-base">{target.name}</span>
                     <span className="material-symbols-outlined text-vinyl-orange text-lg shrink-0">bolt</span>
                   </button>
                 ))}

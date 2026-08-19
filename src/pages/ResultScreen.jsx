@@ -73,11 +73,11 @@ function TimelineYears({ years = [], wildcards = 0, goalYears = 12 }) {
   );
 }
 
-function PlayerAvatar({ player, className = 'w-10 h-10 text-xl' }) {
+function PlayerAvatar({ player, className = 'w-10 h-10 text-xl', style }) {
   return isImageAvatar(player.avatar) ? (
-    <img src={player.avatar} alt={player.name} className={`${className} rounded-full object-cover border border-white/10 shrink-0`} />
+    <img src={player.avatar} alt={player.name} className={`${className} rounded-full object-cover border border-white/10 shrink-0`} style={style} />
   ) : (
-    <span className={`${className} rounded-full bg-black/20 flex items-center justify-center shrink-0`}>
+    <span className={`${className} rounded-full bg-black/20 flex items-center justify-center shrink-0`} style={style}>
       {player.avatar || '•'}
     </span>
   );
@@ -110,8 +110,8 @@ function RankingList({ players, final = false, showTimeline = false, goalYears =
                 <span className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-base shrink-0 ${medalClass}`}>
                   {rank + 1}
                 </span>
-                <PlayerAvatar player={player} className="w-12 h-12 text-2xl border border-white/10" />
-                <span className="font-black text-lg truncate">{player.name}</span>
+                <PlayerAvatar player={player} className="w-16 h-16 text-3xl border-2 border-white/15" />
+                <span className="font-black text-xl truncate">{player.name}</span>
               </div>
               <div className="text-right shrink-0">
                 <p className="font-black text-base text-neon-green leading-none">{getTimelineProgress(player)}/{goalYears}</p>
@@ -192,10 +192,13 @@ function CelebrationWaves({ className = '' }) {
   );
 }
 
+// clamp() en vez de un ancho Tailwind fijo — con 3 columnas flex-1 en un
+// viewport angosto (360-390px) un w-32 fijo se desborda de su columna; el
+// clamp crece en pantallas más anchas pero nunca pasa del hueco disponible.
 const PODIUM_STYLE = {
-  0: { order: 'order-2', avatarSize: 'w-24 h-24 text-5xl', stepHeight: 'h-28', color: '#ffbf4d', label: '1°', ring: '0 0 55px rgba(255,191,77,0.55)' },
-  1: { order: 'order-1', avatarSize: 'w-16 h-16 text-3xl', stepHeight: 'h-16', color: '#e2e8f0', label: '2°', ring: '0 0 30px rgba(226,232,240,0.35)' },
-  2: { order: 'order-3', avatarSize: 'w-14 h-14 text-2xl', stepHeight: 'h-10', color: '#ff7a1a', label: '3°', ring: '0 0 30px rgba(255,122,26,0.35)' }
+  0: { order: 'order-2', avatarSize: 'clamp(5.5rem, 24vw, 8rem)', stepHeight: 'h-28', color: '#ffbf4d', label: '1°', ring: '0 0 55px rgba(255,191,77,0.55)' },
+  1: { order: 'order-1', avatarSize: 'clamp(4.25rem, 18vw, 6rem)', stepHeight: 'h-16', color: '#e2e8f0', label: '2°', ring: '0 0 30px rgba(226,232,240,0.35)' },
+  2: { order: 'order-3', avatarSize: 'clamp(3.75rem, 16vw, 5rem)', stepHeight: 'h-10', color: '#ff7a1a', label: '3°', ring: '0 0 30px rgba(255,122,26,0.35)' }
 };
 
 function PodiumSlot({ player, rank, goalYears }) {
@@ -219,7 +222,11 @@ function PodiumSlot({ player, rank, goalYears }) {
         </motion.span>
       )}
       <div className="relative z-10" style={{ filter: `drop-shadow(${style.ring})` }}>
-        <PlayerAvatar player={player} className={`${style.avatarSize} border-2`} />
+        <PlayerAvatar
+          player={player}
+          className="border-2"
+          style={{ width: style.avatarSize, height: style.avatarSize, fontSize: isChampion ? '3rem' : '2rem' }}
+        />
         {isChampion && (
           <>
             <span className="absolute -left-5 top-1/2 -translate-y-1/2 text-lg float-slow">🎶</span>
@@ -227,7 +234,7 @@ function PodiumSlot({ player, rank, goalYears }) {
           </>
         )}
       </div>
-      <p className="mt-2 max-w-[6rem] truncate text-center font-black text-white" style={{ fontSize: isChampion ? '1.05rem' : '0.9rem' }}>
+      <p className="mt-2 max-w-[7rem] truncate text-center font-black text-white" style={{ fontSize: isChampion ? '1.2rem' : '1rem' }}>
         {player.name}
       </p>
       <p className="text-xs text-on-surface-variant">{getTimelineProgress(player)}/{goalYears} · {player.points} pts</p>
@@ -714,8 +721,8 @@ export default function ResultScreen() {
                   }`}>
                     {index + 1}
                   </span>
-                  <PlayerAvatar player={player} className="w-12 h-12 text-2xl" />
-                  <span className="text-lg font-black text-white truncate flex-1">{player.name}</span>
+                  <PlayerAvatar player={player} className="w-16 h-16 text-3xl border-2 border-white/10" />
+                  <span className="text-xl font-black text-white truncate flex-1">{player.name}</span>
                   <div className="text-right shrink-0">
                     <p className="text-sm font-black text-neon-green">
                       {getTimelineProgress(player)}/{targetYears} CANCIONES
