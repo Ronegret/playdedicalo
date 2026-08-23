@@ -1,8 +1,8 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
-import { onAuthStateChanged, signInAnonymously } from 'firebase/auth';
-import { auth } from './firebase';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth, ensureAuthenticated } from './firebase';
 import ShaderBackground from './components/ShaderBackground';
 import ErrorBoundary from './components/ErrorBoundary';
 import OfflineBanner from './components/OfflineBanner';
@@ -102,7 +102,10 @@ function App() {
         // An anonymous session is enough to satisfy the database rules' `auth != null`
         // check without asking guests to log in. If the host later signs in with
         // Google, that call replaces this anonymous session on its own.
-        signInAnonymously(auth).catch((error) => console.error('No se pudo iniciar sesión anónima:', error));
+        // ensureAuthenticated reintenta con backoff — sin esto, un error
+        // transitorio (común cuando muchos dispositivos se conectan a la vez
+        // desde la misma red) dejaba a esa persona sin poder unirse nunca.
+        ensureAuthenticated().catch((error) => console.error('No se pudo iniciar sesión anónima:', error));
         return;
       }
 

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { getCombinedTimelineYears, getTimelineProgress, useGameStore } from '../store/useGameStore';
 import { isImageAvatar } from '../data/characterAvatars';
 import ProfileMenu from '../components/ProfileMenu';
+import JoinRequestBanner from '../components/JoinRequestBanner';
 import { auth } from '../firebase';
 
 const RESULT_STYLES = {
@@ -375,6 +376,7 @@ export default function ResultScreen() {
         className="fixed inset-0 z-50 overflow-y-auto bg-[#0a0616] text-white"
         style={{ overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' }}
       >
+        <JoinRequestBanner />
         <div
           className="disco-lights pointer-events-none absolute inset-0"
           style={{
@@ -484,6 +486,7 @@ export default function ResultScreen() {
       className="fixed inset-0 z-50 overflow-y-auto text-white"
       style={{ backgroundColor: style.bgColor, overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' }}
     >
+      <JoinRequestBanner />
       {/* Blurred album art backdrop */}
       {currentTrack?.albumImage && (
         <div

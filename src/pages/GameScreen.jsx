@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { ATTACK_COST, ATTACK_TYPES, DEDICALO_PLAYLISTS, GAME_MODES, REDEEM_YEAR_COST, getCombinedTimelineYears, getPlayerPresence, getTimelineProgress, normalizeSpotifyPlaylistUrl, useGameStore } from '../store/useGameStore';
 import { isImageAvatar } from '../data/characterAvatars';
 import HeaderHUD from '../components/HeaderHUD';
+import JoinRequestBanner from '../components/JoinRequestBanner';
 import { createQuestionFromTrack, explainSpotifyError, getCurrentHiddenTrack, getSpotifyStatus, pauseSpotifyPlayback, startRandomPlaylistTrack } from '../services/spotify';
 
 const EQUALIZER_BARS = [0.35, 0.58, 0.42, 0.71, 0.49, 0.64, 0.39];
@@ -705,6 +706,8 @@ export default function GameScreen() {
         )}
       </AnimatePresence>
 
+      <JoinRequestBanner />
+
       <AnimatePresence>
         {disconnectToast && (
           <motion.div
@@ -1115,7 +1118,8 @@ export default function GameScreen() {
               animate={{ y: 0, scale: 1 }}
               exit={{ y: 40, scale: 0.96 }}
               transition={{ type: 'spring', stiffness: 260, damping: 28 }}
-              className="relative w-full max-w-sm overflow-hidden rounded-3xl border border-electric-purple/40 bg-[#160725] p-6 text-center shadow-[0_0_80px_rgba(168,85,247,0.42)]"
+              className="relative w-full max-w-sm max-h-[85dvh] overflow-y-auto overscroll-contain rounded-3xl border border-electric-purple/40 bg-[#160725] p-6 text-center shadow-[0_0_80px_rgba(168,85,247,0.42)]"
+              style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-y' }}
               onClick={(e) => e.stopPropagation()}
             >
               <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_0%,rgba(168,85,247,0.34),transparent_38%),radial-gradient(circle_at_15%_90%,rgba(255,122,26,0.18),transparent_35%)]" />

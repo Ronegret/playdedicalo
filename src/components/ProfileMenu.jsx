@@ -133,7 +133,8 @@ export default function ProfileMenu({ user, guestAvatar }) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
             transition={{ duration: 0.15 }}
-            className="absolute top-12 right-0 w-[min(22rem,calc(100vw-1.5rem))] overflow-hidden rounded-2xl border border-white/10 bg-surface-container/95 shadow-[0_10px_40px_rgba(0,0,0,0.8)] backdrop-blur-xl"
+            className="absolute top-12 right-0 w-[min(22rem,calc(100vw-1.5rem))] max-h-[min(34rem,calc(100dvh-6rem))] overflow-y-auto overscroll-contain rounded-2xl border border-white/10 bg-surface-container/95 shadow-[0_10px_40px_rgba(0,0,0,0.8)] backdrop-blur-xl"
+            style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-y' }}
           >
             <div className="border-b border-white/10 bg-white/5 p-3">
               <div className="flex items-center gap-3">

@@ -8,7 +8,7 @@ import NeonButton from '../components/NeonButton';
 import ProfileMenu from '../components/ProfileMenu';
 import FontSizeControl from '../components/FontSizeControl';
 import AvatarPicker from '../components/AvatarPicker';
-import { isImageAvatar } from '../data/characterAvatars';
+import { findCharacterAvatarByUrl, isImageAvatar } from '../data/characterAvatars';
 import { auth, authReady, googleProvider } from '../firebase';
 
 function getPinFromQrValue(value) {
@@ -26,6 +26,8 @@ export default function GuestJoinScreen() {
   const [searchParams] = useSearchParams();
   const guestJoinRoom = useGameStore((state) => state.guestJoinRoom);
   const loadUserProfile = useGameStore((state) => state.loadUserProfile);
+  const cancelJoinRequest = useGameStore((state) => state.cancelJoinRequest);
+  const pendingJoinStatus = useGameStore((state) => state.pendingJoinStatus);
   const inputRefs = useRef([]);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -42,7 +44,10 @@ export default function GuestJoinScreen() {
   const [scannerOpen, setScannerOpen] = useState(false);
   const [scannerError, setScannerError] = useState('');
 
-  const canJoin = pin.length === 4 && name.trim().length > 0 && !isLoading;
+  // El nombre es opcional: si la persona no escribe nada, se usa el nombre
+  // de su personaje elegido (o un alias genérico) — no debe bloquear la
+  // entrada a la sala solo por no haber escrito un alias.
+  const canJoin = pin.length === 4 && !isLoading;
   const pinDigits = pin.padEnd(4, ' ').split('').slice(0, 4);
 
   // Cada invitado también recibe una sesión anónima automática (la necesita
@@ -226,19 +231,52 @@ export default function GuestJoinScreen() {
     }
   };
 
+  // Cuando la partida ya empezó, guestJoinRoom no entra directo: manda un
+  // pedido y queda esperando que el anfitrión lo acepte. awaitingApproval
+  // controla la pantalla de espera; el useEffect de abajo navega solo en
+  // cuanto el store detecta que el pedido fue aceptado (pendingJoinStatus
+  // vuelve a null porque ya quedó suscripto a la sala como jugador).
+  const [awaitingApproval, setAwaitingApproval] = useState(false);
+
+  useEffect(() => {
+    if (!awaitingApproval || pendingJoinStatus !== null) return;
+    // navigate() desmonta esta pantalla, así que no hace falta (ni conviene)
+    // apagar awaitingApproval acá mismo — evita el setState síncrono dentro
+    // del efecto.
+    const { phase: roomPhase } = useGameStore.getState();
+    navigate(roomPhase === 'lobby' ? '/lobby' : '/game');
+  }, [awaitingApproval, pendingJoinStatus, navigate]);
+
   const handleJoin = async () => {
     if (!canJoin) return;
+
+    // Si no escribió nombre, usar el nombre del personaje elegido como
+    // alias por defecto en vez de forzarlos a escribir algo.
+    const fallbackName = findCharacterAvatarByUrl(avatar)?.name || 'DJ Invitado';
+    const finalName = name.trim() || fallbackName;
 
     setIsLoading(true);
     setJoinError('');
     try {
-      await guestJoinRoom(pin, name, avatar, googleUser);
-      navigate('/lobby');
+      await guestJoinRoom(pin, finalName, avatar, googleUser);
+      const { pendingJoinStatus: status, phase: roomPhase } = useGameStore.getState();
+      if (status === 'pending') {
+        setAwaitingApproval(true);
+      } else {
+        // Sala en lobby (entrada normal) o reconexión a una partida en
+        // curso donde ya era jugador — no hace falta esperar aprobación.
+        navigate(roomPhase === 'lobby' ? '/lobby' : '/game');
+      }
     } catch (error) {
       setJoinError(error.message || 'No pudimos unirte a la sala. Revisa el PIN e inténtalo de nuevo.');
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleCancelPending = async () => {
+    setAwaitingApproval(false);
+    await cancelJoinRequest();
   };
 
   return (
@@ -287,9 +325,9 @@ export default function GuestJoinScreen() {
           />
         </section>
 
-        {/* STEP 2 — Tu alias */}
+        {/* STEP 2 — Tu alias (opcional) */}
         <section className="w-full rounded-2xl border border-white/10 bg-white/5 p-4">
-          <p className="font-label-caps text-[11px] tracking-[0.22em] text-vinyl-orange mb-3">② TU NOMBRE EN EL JUEGO</p>
+          <p className="font-label-caps text-[11px] tracking-[0.22em] text-vinyl-orange mb-3">② TU NOMBRE EN EL JUEGO · OPCIONAL</p>
           <input
             id="guest-name"
             type="text"
@@ -297,10 +335,10 @@ export default function GuestJoinScreen() {
             className="h-16 w-full rounded-xl border border-white/10 bg-black/30 px-4 text-center text-2xl font-black text-on-surface outline-none transition-colors focus:border-neon-green focus:ring-2 focus:ring-neon-green/30 placeholder:text-on-surface-variant/50"
             value={name}
             onChange={(event) => { hasEditedNameRef.current = true; setName(event.target.value); }}
-            placeholder="DJ Invitado"
+            placeholder={findCharacterAvatarByUrl(avatar)?.name || 'DJ Invitado'}
             autoComplete="nickname"
           />
-          <p className="mt-2 text-center font-label-caps text-[10px] text-on-surface-variant">Máximo 18 caracteres · Visible para todos</p>
+          <p className="mt-2 text-center font-label-caps text-[10px] text-on-surface-variant">Si lo dejas vacío, usamos el nombre de tu personaje · Máx. 18 caracteres</p>
         </section>
 
         {/* STEP 3 — PIN de la sala */}
@@ -379,6 +417,83 @@ export default function GuestJoinScreen() {
           {isLoading ? 'CONECTANDO...' : 'ENTRAR A JUGAR'}
         </NeonButton>
       </div>
+
+      {/* La partida ya empezó: espera a que el anfitrión acepte el pedido
+          de ingreso en vez de dejarla afuera sin más. */}
+      <AnimatePresence>
+        {awaitingApproval && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[250] flex items-center justify-center bg-black/90 px-6 backdrop-blur-md"
+          >
+            <motion.div
+              initial={{ scale: 0.94, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.94, y: 20 }}
+              className="w-full max-w-sm rounded-3xl border border-electric-purple/40 bg-[#160725] p-6 text-center shadow-[0_0_80px_rgba(168,85,247,0.42)]"
+            >
+              {pendingJoinStatus === 'denied' ? (
+                <>
+                  <span className="material-symbols-outlined text-intense-red" style={{ fontSize: '3rem' }}>block</span>
+                  <h3 className="mt-3 font-headline-lg text-xl font-black text-white">El anfitrión no aceptó tu ingreso</h3>
+                  <p className="mt-2 text-sm text-on-surface-variant">La partida ya está en curso y esta vez prefirió no sumarte a mitad de ronda. Puedes intentarlo de nuevo más tarde.</p>
+                  <button
+                    type="button"
+                    onClick={handleCancelPending}
+                    className="mt-5 w-full min-h-touch rounded-xl bg-white/8 border border-white/10 text-white font-label-caps text-sm font-bold active:scale-95 transition-all"
+                  >
+                    ENTENDIDO
+                  </button>
+                </>
+              ) : pendingJoinStatus === 'expired' ? (
+                <>
+                  <span className="material-symbols-outlined text-vinyl-orange" style={{ fontSize: '3rem' }}>error</span>
+                  <h3 className="mt-3 font-headline-lg text-xl font-black text-white">No pudimos confirmar tu ingreso</h3>
+                  <p className="mt-2 text-sm text-on-surface-variant">Puede que la sala haya cerrado. Revisa el PIN y vuelve a intentarlo.</p>
+                  <button
+                    type="button"
+                    onClick={handleCancelPending}
+                    className="mt-5 w-full min-h-touch rounded-xl bg-white/8 border border-white/10 text-white font-label-caps text-sm font-bold active:scale-95 transition-all"
+                  >
+                    REINTENTAR
+                  </button>
+                </>
+              ) : (
+                <>
+                  <div className="mx-auto flex h-20 w-20 items-center justify-center overflow-hidden rounded-full border-4 border-electric-purple bg-electric-purple/20 text-4xl">
+                    {isImageAvatar(avatar) ? (
+                      <img src={avatar} alt="Avatar" className="h-full w-full object-cover" />
+                    ) : (
+                      avatar || '😎'
+                    )}
+                  </div>
+                  <motion.span
+                    animate={{ rotate: 360 }}
+                    transition={{ repeat: Infinity, duration: 1.1, ease: 'linear' }}
+                    className="material-symbols-outlined mt-4 inline-block text-electric-purple"
+                    style={{ fontSize: '2.5rem' }}
+                  >
+                    progress_activity
+                  </motion.span>
+                  <h3 className="mt-2 font-headline-lg text-xl font-black text-white">La partida ya empezó</h3>
+                  <p className="mt-2 text-sm text-on-surface-variant">
+                    Le avisamos al anfitrión que <span className="text-white font-bold">{name.trim() || findCharacterAvatarByUrl(avatar)?.name || 'DJ Invitado'}</span> quiere sumarse. Espera su confirmación...
+                  </p>
+                  <button
+                    type="button"
+                    onClick={handleCancelPending}
+                    className="mt-5 w-full min-h-touch rounded-xl border border-white/10 bg-white/5 text-white font-label-caps text-sm font-bold active:scale-95 transition-all"
+                  >
+                    CANCELAR
+                  </button>
+                </>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <AnimatePresence>
         {scannerOpen && (

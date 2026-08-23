@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { ref, onValue, onDisconnect, get, set, update, remove, serverTimestamp } from 'firebase/database';
-import { database } from '../firebase';
+import { database, ensureAuthenticated } from '../firebase';
 
 // Cuánto tiempo se muestra a un jugador como "Reconectando" antes de darlo
 // por perdido en la UI. No lo saca de la sala — solo cambia el indicador de
@@ -272,6 +272,12 @@ export const useGameStore = create((setStore, getStore) => ({
   timelineYears: [],
   roomSubscription: null,
   lastDisconnectedPlayer: null,
+  // Pedidos de ingreso a mitad de partida: `joinRequests` es la lista que ve
+  // el anfitrión (pendientes de aceptar/rechazar); `pendingJoinStatus` es el
+  // estado del invitado que está esperando esa respuesta.
+  joinRequests: [],
+  pendingJoinStatus: null,
+  joinRequestSubscription: null,
 
   isAudioPlaying: false,
   isAudioMuted: false,
@@ -380,6 +386,11 @@ export const useGameStore = create((setStore, getStore) => ({
     };
 
     try {
+      // Asegura la sesión (anónima o Google) antes de escribir — si el
+      // listener de fondo todavía no terminó de autenticar (frecuente
+      // cuando muchos dispositivos entran a la vez desde la misma red),
+      // esto reintenta en vez de fallar directo con "permiso denegado".
+      await ensureAuthenticated();
       await writeData(`rooms/${newPin}`, roomData);
       armPresenceDisconnect(newPin, hostId);
 
@@ -403,7 +414,10 @@ export const useGameStore = create((setStore, getStore) => ({
       getStore()._subscribeToRoom(newPin);
     } catch (error) {
       console.error('Error al crear la sala:', error);
-      throw new Error('No pudimos crear la sala. Intentalo otra vez.', { cause: error });
+      const message = /auth|permission/i.test(error?.code || error?.message || '')
+        ? 'Hay mucha gente conectándose a la vez. Espera unos segundos y vuelve a intentarlo.'
+        : 'No pudimos crear la sala. Intentalo otra vez.';
+      throw new Error(message, { cause: error });
     }
   },
 
@@ -762,24 +776,72 @@ export const useGameStore = create((setStore, getStore) => ({
 
   guestJoinRoom: async (enteredPin, guestName, guestAvatar, authUser = null) => {
     const cleanPin = String(enteredPin || '').replace(/\D/g, '').slice(0, 4);
-    const room = await readData(`rooms/${cleanPin}`);
+
+    // Igual que en hostCreateRoom: si la sesión anónima todavía no terminó
+    // de armarse (carga de red, muchos dispositivos a la vez), esto
+    // reintenta antes de leer la sala en vez de fallar con un mensaje que
+    // parece "PIN incorrecto" sin serlo.
+    try {
+      await ensureAuthenticated();
+    } catch (error) {
+      throw new Error('Hay mucha gente conectándose a la vez. Espera unos segundos y vuelve a intentarlo.', { cause: error });
+    }
+
+    let room;
+    try {
+      room = await readData(`rooms/${cleanPin}`);
+    } catch (error) {
+      throw new Error('No pudimos conectar con la sala. Revisa tu conexión e intenta de nuevo.', { cause: error });
+    }
 
     if (!room) {
       throw new Error('PIN incorrecto o sala no existe.');
     }
 
-    if (room.phase && room.phase !== 'lobby') {
-      throw new Error('La partida ya comenzó. Pide al anfitrión que abra una nueva sala.');
+    const registeredProfile = authUser?.uid ? await getStore().loadUserProfile(authUser) : null;
+    let guestId = authUser?.uid || localStorage.getItem('dedicalo_player_id');
+    if (!guestId) guestId = `guest_${Math.random().toString(36).slice(2, 11)}`;
+    const existingPlayer = room.players?.[guestId];
+
+    // La partida ya empezó y esta persona todavía no es jugador de esta
+    // sala: en vez de bloquearla, se manda un pedido de ingreso que el
+    // anfitrión acepta o rechaza desde el juego — así sí puede sumarse a
+    // mitad de partida. Si ya era jugador (se le cortó y vuelve a entrar),
+    // no hace falta pedir permiso de nuevo.
+    if (room.phase && room.phase !== 'lobby' && !existingPlayer) {
+      try {
+        const nextName = cleanProfileName(registeredProfile?.name || guestName, 'Invitado');
+        const nextAvatar = cleanProfileAvatar(registeredProfile?.avatar || guestAvatar, 'DJ');
+        persistSession('guest', cleanPin, guestId);
+        await writeData(`rooms/${cleanPin}/joinRequests/${guestId}`, {
+          id: guestId,
+          authUid: authUser?.uid || null,
+          email: authUser?.email || null,
+          name: nextName,
+          avatar: nextAvatar,
+          requestedAt: Date.now(),
+          status: 'pending'
+        });
+        setStore({
+          role: 'guest',
+          pin: cleanPin,
+          guestId,
+          guestName: nextName,
+          guestAvatar: nextAvatar,
+          pendingJoinStatus: 'pending'
+        });
+        getStore()._subscribeToJoinRequest(cleanPin, guestId);
+      } catch (error) {
+        console.error('Error al pedir ingreso a la sala:', error);
+        throw new Error('No pudimos enviar tu pedido de ingreso. Intentalo otra vez.', { cause: error });
+      }
+      return;
     }
 
     try {
-      const registeredProfile = authUser?.uid ? await getStore().loadUserProfile(authUser) : null;
-      let guestId = authUser?.uid || localStorage.getItem('dedicalo_player_id');
-      if (!guestId) guestId = `guest_${Math.random().toString(36).slice(2, 11)}`;
       persistSession('guest', cleanPin, guestId);
 
       // Restore existing data if any, else create a new player
-      const existingPlayer = room.players?.[guestId];
       const nextName = cleanProfileName(existingPlayer?.name || registeredProfile?.name || guestName, 'Invitado');
       const nextAvatar = cleanProfileAvatar(existingPlayer?.avatar || registeredProfile?.avatar || guestAvatar, 'DJ');
       const newPlayer = {
@@ -1039,7 +1101,8 @@ export const useGameStore = create((setStore, getStore) => ({
         currentTrack: data.currentTrack || null,
         roundAnswers: data.roundAnswers || {},
         revealResults: data.revealResults || {},
-        timelineYears: data.timelineYears || []
+        timelineYears: data.timelineYears || [],
+        joinRequests: data.joinRequests ? Object.values(data.joinRequests) : []
       });
 
       if (data.audio) {
@@ -1054,5 +1117,133 @@ export const useGameStore = create((setStore, getStore) => ({
     });
 
     setStore({ roomSubscription: unsubscribe });
+  },
+
+  // Escucha SOLO el pedido de ingreso propio mientras se espera respuesta
+  // del anfitrión — a propósito no usa _subscribeToRoom todavía: esta
+  // persona no es jugador de la sala aún, así que no debe ver pantallas de
+  // juego ni el estado de la ronda en curso.
+  _subscribeToJoinRequest: (pin, guestId) => {
+    const existingSubscription = getStore().joinRequestSubscription;
+    if (typeof existingSubscription === 'function') existingSubscription();
+
+    const reqRef = ref(database, `rooms/${pin}/joinRequests/${guestId}`);
+    const unsubscribe = onValue(reqRef, async (snapshot) => {
+      const data = snapshot.val();
+
+      if (!data) {
+        // El pedido desapareció: si ya existe como jugador, el anfitrión lo
+        // aceptó y creó su ficha — completar el ingreso normal. Si no,
+        // fue rechazado y limpiado, o la sala cerró.
+        let player = null;
+        try {
+          player = await readData(`rooms/${pin}/players/${guestId}`);
+        } catch {
+          // ignore — se trata como "no es jugador" más abajo
+        }
+
+        if (player) {
+          const currentUnsub = getStore().joinRequestSubscription;
+          if (currentUnsub) currentUnsub();
+          armPresenceDisconnect(pin, guestId);
+          setStore({
+            role: 'guest',
+            pin,
+            guestId,
+            guestAvatar: player.avatar,
+            guestName: player.name,
+            profileName: player.name,
+            profileAvatar: player.avatar,
+            gameMode: 'timeline',
+            lastResultType: null,
+            lastPointDelta: 0,
+            pendingJoinStatus: null,
+            joinRequestSubscription: null
+          });
+          getStore()._subscribeToRoom(pin);
+        } else {
+          setStore({ pendingJoinStatus: 'expired' });
+        }
+        return;
+      }
+
+      setStore({ pendingJoinStatus: data.status === 'denied' ? 'denied' : 'pending' });
+    }, (error) => {
+      console.error('Error en la suscripción de pedido de ingreso:', error);
+    });
+
+    setStore({ joinRequestSubscription: unsubscribe });
+  },
+
+  // El invitado cancela su propio pedido (se arrepiente, o quiere reintentar
+  // tras un rechazo) y vuelve a la pantalla de entrada limpia.
+  cancelJoinRequest: async () => {
+    const { pin, guestId, joinRequestSubscription } = getStore();
+    if (typeof joinRequestSubscription === 'function') joinRequestSubscription();
+    if (pin && guestId) {
+      await deleteData(`rooms/${pin}/joinRequests/${guestId}`).catch(() => {});
+    }
+    clearPersistedSession();
+    setStore({
+      role: null,
+      pin: null,
+      guestId: null,
+      pendingJoinStatus: null,
+      joinRequestSubscription: null
+    });
+  },
+
+  // El anfitrión acepta a alguien que pidió entrar a mitad de partida: crea
+  // su ficha de jugador (arranca con la misma base que un jugador nuevo) y
+  // borra el pedido — eso es lo que el listener del invitado detecta como
+  // "me aceptaron".
+  approveJoinRequest: async (requestId) => {
+    const { pin, joinRequests } = getStore();
+    if (!pin) return;
+    const request = joinRequests.find((entry) => entry.id === requestId);
+    if (!request) return;
+
+    try {
+      const room = await readData(`rooms/${pin}`);
+      const existingPlayer = room?.players?.[requestId];
+      const nextName = cleanProfileName(existingPlayer?.name || request.name, 'Invitado');
+      const nextAvatar = cleanProfileAvatar(existingPlayer?.avatar || request.avatar, 'DJ');
+      const newPlayer = {
+        id: requestId,
+        authUid: request.authUid || existingPlayer?.authUid || null,
+        email: request.email || existingPlayer?.email || null,
+        name: nextName,
+        avatar: nextAvatar,
+        points: existingPlayer ? existingPlayer.points : 10,
+        isHost: false,
+        status: 'online',
+        lastSeenAt: Date.now(),
+        offlineSince: null,
+        kicked: false,
+        timelineBaseYear: existingPlayer ? existingPlayer.timelineBaseYear : getTimelineBaseYear(requestId),
+        timelineYears: existingPlayer ? (existingPlayer.timelineYears || []) : [],
+        wildcards: existingPlayer ? Number(existingPlayer.wildcards || 0) : 0
+      };
+      await writeData(`rooms/${pin}/players/${requestId}`, newPlayer);
+      await deleteData(`rooms/${pin}/joinRequests/${requestId}`);
+    } catch (error) {
+      console.error('Error al aceptar el pedido de ingreso:', error);
+      throw new Error('No pudimos aceptar a ese jugador. Intentalo otra vez.', { cause: error });
+    }
+  },
+
+  // El anfitrión rechaza el pedido — se marca como rechazado (para que el
+  // invitado que está escuchando lo vea) y se borra unos segundos después.
+  denyJoinRequest: async (requestId) => {
+    const { pin } = getStore();
+    if (!pin) return;
+    try {
+      await patchData(`rooms/${pin}/joinRequests/${requestId}`, { status: 'denied' });
+      window.setTimeout(() => {
+        deleteData(`rooms/${pin}/joinRequests/${requestId}`).catch(() => {});
+      }, 6000);
+    } catch (error) {
+      console.error('Error al rechazar el pedido de ingreso:', error);
+    }
   }
 }));
