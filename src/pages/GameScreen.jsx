@@ -1213,51 +1213,31 @@ export default function GameScreen() {
                 Por <span className="text-vinyl-orange font-bold">{ATTACK_COST} pts</span>, eliges cómo saboteas su próxima ronda. Esta vez sí tiene consecuencia real en su ruta de años.
               </p>
 
-              {/* El Bloqueo se destaca mucho más grande que el Robo de año a
-                  propósito — es la opción que se quiere incentivar: más
-                  simple, más directa, sin el riesgo de que el objetivo
-                  igual acierte y termine ganando. El Robo de año queda como
-                  alternativa secundaria, chica, debajo. */}
+              {/* Bloqueo y Robo de año tienen la misma importancia — ninguno
+                  se dibuja más chico que el otro. Ambos con letra grande. */}
               <div className="mt-4 flex flex-col gap-2.5">
-                <button
-                  type="button"
-                  onClick={() => setSelectedAttackType('block_vote')}
-                  className={`min-h-[6.5rem] rounded-3xl border-2 px-4 py-3 text-left transition-all active:scale-95 ${
-                    selectedAttackType === 'block_vote'
-                      ? 'border-neon-green bg-neon-green/14 shadow-[0_0_32px_rgba(57,255,20,0.22)]'
-                      : 'border-white/15 bg-white/5'
-                  }`}
-                >
-                  <div className="flex items-center gap-4">
-                    <span className={`material-symbols-outlined shrink-0 ${selectedAttackType === 'block_vote' ? 'text-neon-green' : 'text-electric-purple'}`} style={{ fontSize: '2.75rem' }}>
-                      {ATTACK_TYPES.block_vote.icon}
-                    </span>
-                    <div className="min-w-0">
-                      <p className="font-label-caps text-lg font-black text-white">{ATTACK_TYPES.block_vote.name}</p>
-                      <p className="mt-0.5 text-base leading-snug text-on-surface-variant">{ATTACK_TYPES.block_vote.short}</p>
+                {Object.values(ATTACK_TYPES).map((attackType) => (
+                  <button
+                    key={attackType.id}
+                    type="button"
+                    onClick={() => setSelectedAttackType(attackType.id)}
+                    className={`min-h-[6.5rem] rounded-3xl border-2 px-4 py-3 text-left transition-all active:scale-95 ${
+                      selectedAttackType === attackType.id
+                        ? 'border-neon-green bg-neon-green/14 shadow-[0_0_32px_rgba(57,255,20,0.22)]'
+                        : 'border-white/15 bg-white/5'
+                    }`}
+                  >
+                    <div className="flex items-center gap-4">
+                      <span className={`material-symbols-outlined shrink-0 ${selectedAttackType === attackType.id ? 'text-neon-green' : 'text-electric-purple'}`} style={{ fontSize: '2.75rem' }}>
+                        {attackType.icon}
+                      </span>
+                      <div className="min-w-0">
+                        <p className="font-label-caps text-xl font-black text-white">{attackType.name}</p>
+                        <p className="mt-0.5 text-lg leading-snug text-on-surface-variant">{attackType.short}</p>
+                      </div>
                     </div>
-                  </div>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setSelectedAttackType('year_steal')}
-                  className={`min-h-touch rounded-xl border px-3 py-2 text-left transition-all active:scale-95 ${
-                    selectedAttackType === 'year_steal'
-                      ? 'border-neon-green bg-neon-green/10'
-                      : 'border-white/10 bg-white/[0.03]'
-                  }`}
-                >
-                  <div className="flex items-center gap-2.5">
-                    <span className={`material-symbols-outlined text-lg ${selectedAttackType === 'year_steal' ? 'text-neon-green' : 'text-on-surface-variant'}`}>
-                      {ATTACK_TYPES.year_steal.icon}
-                    </span>
-                    <div className="min-w-0">
-                      <p className="font-label-caps text-xs font-bold text-white/85">{ATTACK_TYPES.year_steal.name}</p>
-                      <p className="text-xs leading-snug text-on-surface-variant">{ATTACK_TYPES.year_steal.short}</p>
-                    </div>
-                  </div>
-                </button>
+                  </button>
+                ))}
               </div>
 
               <p className="mt-4 font-label-caps text-xs tracking-[0.18em] text-on-surface-variant">ELIGE OBJETIVO</p>

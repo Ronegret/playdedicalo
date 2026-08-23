@@ -9,24 +9,33 @@
    necesita tanto espacio).
    --font-scale amplifica el tamaño de fuente para mejor legibilidad.
    Para cambiar tamaño: aplicar clase .fs-large o .fs-xl en el <html>.
+
+   La base "normal" (sin clase) ya no es el 16px por defecto del navegador:
+   subida a 18px porque para buena parte del público (fiestas, distintas
+   edades, luz de exterior) 16px se leía chico incluso en el tamaño
+   "normal". Como casi todo el layout usa rem (Tailwind por defecto, más
+   --vinyl-size), este único cambio agranda texto Y espaciados/botones
+   de forma proporcional en toda la app sin tener que tocar cada
+   componente. fs-large/fs-xl suben en la misma proporción.
 ─────────────────────────────────────────────────────────────────────────── */
 :root {
   --vinyl-size: 4.75rem;
   --font-scale: 1;
+  font-size: 18px;
 }
 
 /* Tamaño de fuente grande (accesibilidad) */
 html.fs-large {
   --vinyl-size: 5.5rem;
   --font-scale: 1.15;
-  font-size: calc(16px * 1.15);
+  font-size: 21px;
 }
 
 /* Tamaño de fuente muy grande */
 html.fs-xl {
   --vinyl-size: 6.25rem;
   --font-scale: 1.3;
-  font-size: calc(16px * 1.3);
+  font-size: 24px;
 }
 
 @layer base {
@@ -101,13 +110,13 @@ html.fs-xl {
   }
 
   /* Reserva espacio para una barra de acción fija al fondo (p. ej. "PARAR
-     MÚSICA" en GameScreen). Antes eran 5.5rem fijos: con letra grande
-     (fs-large/fs-xl) el texto de esa barra puede pasar a dos líneas y
-     crecer más que ese hueco reservado, quedando encima de los botones de
-     arriba (SABOTEAR/CANJEAR) y volviéndolos difíciles de tocar. 7.5rem da
-     margen de sobra incluso con el texto más grande. */
+     MÚSICA" en GameScreen). Con la letra base ahora más grande (18px en
+     vez de 16px) esa barra ocupa más alto por defecto, no solo con
+     fs-large/fs-xl — 8.5rem da margen de sobra para que nunca quede
+     encima de los botones de arriba (SABOTEAR/CANJEAR), incluso si el
+     texto pasa a dos líneas. */
   .safe-bottom-action {
-    padding-bottom: calc(7.5rem + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(8.5rem + env(safe-area-inset-bottom, 0px));
   }
 
   .heading-impact {

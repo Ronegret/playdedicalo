@@ -77,13 +77,13 @@ export default {
         "gutter": "16px",
         "stack-sm": "8px",
         "stack-lg": "48px",
-        "touch": "48px"
+        "touch": "52px"
       },
       "minWidth": {
-        "touch": "48px"
+        "touch": "52px"
       },
       "minHeight": {
-        "touch": "48px"
+        "touch": "52px"
       },
       "fontFamily": {
         "headline-xl": ["Montserrat", "Arial", "sans-serif"],
@@ -95,13 +95,17 @@ export default {
         "label-caps": ["Barlow Condensed", "Montserrat", "Arial", "sans-serif"]
       },
       "fontSize": {
-        "headline-xl": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "900"}],
-        "stats-xl": ["64px", {"lineHeight": "1", "letterSpacing": "-0.02em", "fontWeight": "900"}],
-        "body-sm": ["14px", {"lineHeight": "1.4", "fontWeight": "400"}],
-        "headline-lg-mobile": ["28px", {"lineHeight": "1.2", "fontWeight": "800"}],
-        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
-        "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "800"}],
-        "label-caps": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.14em", "fontWeight": "800"}]
+        /* En rem (no px): así estos tamaños también crecen con la escala de
+           letra global (--root font-size en index.css / fs-large / fs-xl)
+           en vez de quedar congelados a un tamaño fijo mientras el resto de
+           la app crece a su alrededor. */
+        "headline-xl": ["3rem", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "900"}],
+        "stats-xl": ["4rem", {"lineHeight": "1", "letterSpacing": "-0.02em", "fontWeight": "900"}],
+        "body-sm": ["0.875rem", {"lineHeight": "1.4", "fontWeight": "400"}],
+        "headline-lg-mobile": ["1.75rem", {"lineHeight": "1.2", "fontWeight": "800"}],
+        "body-md": ["1rem", {"lineHeight": "1.5", "fontWeight": "400"}],
+        "headline-lg": ["2rem", {"lineHeight": "1.2", "fontWeight": "800"}],
+        "label-caps": ["0.875rem", {"lineHeight": "1.2", "letterSpacing": "0.14em", "fontWeight": "800"}]
       }
     },
   },
