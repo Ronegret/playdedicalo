@@ -14,24 +14,31 @@ const CLASSIC_EMOJIS = [
 ];
 
 // Selector de avatar tipo app móvil: categorías en pestañas horizontales,
-// grid de miniaturas circulares (WebP livianos), animación de "elegido"
-// con resorte + check, y una pestaña extra "Clásicos" que conserva los
-// emoji de siempre para quien prefiera algo simple.
+// grid de miniaturas circulares (WebP livianos), y una pestaña extra
+// "Clásicos" con los emoji de siempre para quien prefiera algo simple.
+// Tocar un personaje abre una vista ampliada (foto grande + nombre bien
+// grande) antes de confirmar — así se ve bien de cerca antes de elegirlo,
+// no solo la miniatura chica del grid.
 export default function AvatarPicker({ value, onChange, className = '' }) {
   const selectedCharacter = useMemo(() => findCharacterAvatarByUrl(value), [value]);
   const [activeCategory, setActiveCategory] = useState(selectedCharacter?.category || AVATAR_CATEGORIES[0].id);
-  const [justPicked, setJustPicked] = useState('');
+  const [previewEntry, setPreviewEntry] = useState(null);
 
   const isClassicTab = activeCategory === 'clasicos';
   const itemsInCategory = isClassicTab
     ? []
     : CHARACTER_AVATARS.filter((entry) => entry.category === activeCategory);
 
-  const handlePickCharacter = (entry) => {
-    if (navigator.vibrate) navigator.vibrate(18);
-    setJustPicked(entry.slug);
-    onChange(getCharacterAvatarLargeUrl(entry.slug));
-    window.setTimeout(() => setJustPicked(''), 500);
+  const handleOpenPreview = (entry) => {
+    if (navigator.vibrate) navigator.vibrate(12);
+    setPreviewEntry(entry);
+  };
+
+  const handleConfirmPreview = () => {
+    if (!previewEntry) return;
+    if (navigator.vibrate) navigator.vibrate([18, 30, 18]);
+    onChange(getCharacterAvatarLargeUrl(previewEntry.slug));
+    setPreviewEntry(null);
   };
 
   const handlePickEmoji = (emoji) => {
@@ -105,11 +112,9 @@ export default function AvatarPicker({ value, onChange, className = '' }) {
                 <motion.button
                   key={entry.slug}
                   type="button"
-                  onClick={() => handlePickCharacter(entry)}
-                  whileTap={{ scale: 0.88 }}
-                  animate={justPicked === entry.slug ? { scale: [1, 1.18, 1] } : { scale: 1 }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 12 }}
-                  aria-label={`Elegir ${entry.name} como avatar`}
+                  onClick={() => handleOpenPreview(entry)}
+                  whileTap={{ scale: 0.92 }}
+                  aria-label={`Ver a ${entry.name} en grande`}
                   className="relative flex flex-col items-center gap-1"
                 >
                   <span
@@ -127,14 +132,13 @@ export default function AvatarPicker({ value, onChange, className = '' }) {
                       className="h-full w-full object-cover"
                     />
                     {isSelected && (
-                      <motion.span
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        className="absolute bottom-0.5 right-0.5 flex h-6 w-6 items-center justify-center rounded-full bg-neon-green shadow-[0_0_10px_rgba(57,255,20,0.6)]"
-                      >
+                      <span className="absolute bottom-0.5 right-0.5 flex h-6 w-6 items-center justify-center rounded-full bg-neon-green shadow-[0_0_10px_rgba(57,255,20,0.6)]">
                         <span className="material-symbols-outlined text-black" style={{ fontSize: '15px' }}>check</span>
-                      </motion.span>
+                      </span>
                     )}
+                    <span className="absolute left-0.5 top-0.5 flex h-6 w-6 items-center justify-center rounded-full bg-black/55 text-white backdrop-blur-sm">
+                      <span className="material-symbols-outlined" style={{ fontSize: '15px' }}>zoom_in</span>
+                    </span>
                   </span>
                   <span className="max-w-full truncate text-xs font-bold leading-tight text-white/75">
                     {entry.name}
@@ -144,6 +148,56 @@ export default function AvatarPicker({ value, onChange, className = '' }) {
             })
           )}
         </motion.div>
+      </AnimatePresence>
+
+      {/* Vista ampliada — foto grande + nombre grande antes de confirmar */}
+      <AnimatePresence>
+        {previewEntry && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[300] flex items-center justify-center bg-black/85 px-6 backdrop-blur-md"
+            onClick={() => setPreviewEntry(null)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.85, y: 24 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 12 }}
+              transition={{ type: 'spring', stiffness: 280, damping: 22 }}
+              className="relative flex w-full max-w-xs flex-col items-center gap-4 rounded-[2rem] border border-white/15 bg-surface-container p-6 shadow-[0_30px_90px_rgba(0,0,0,0.65)]"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <button
+                type="button"
+                onClick={() => setPreviewEntry(null)}
+                aria-label="Cerrar"
+                className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white active:scale-90"
+              >
+                <span className="material-symbols-outlined">close</span>
+              </button>
+
+              <div className="h-56 w-56 max-w-full overflow-hidden rounded-full border-4 border-neon-green shadow-[0_0_50px_rgba(57,255,20,0.4)]">
+                <img
+                  src={getCharacterAvatarLargeUrl(previewEntry.slug)}
+                  alt={previewEntry.name}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+
+              <p className="text-center text-3xl font-black text-white">{previewEntry.name}</p>
+
+              <button
+                type="button"
+                onClick={handleConfirmPreview}
+                className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-neon-green font-label-caps text-base font-black text-black active:scale-95"
+              >
+                <span className="material-symbols-outlined text-xl">check_circle</span>
+                {selectedCharacter?.slug === previewEntry.slug ? 'YA ES TU PERSONAJE' : `ELEGIR A ${previewEntry.name.toUpperCase()}`}
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
       </AnimatePresence>
     </div>
   );

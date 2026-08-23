@@ -268,15 +268,15 @@ export default function GuestJoinScreen() {
           {/* Preview del avatar seleccionado */}
           <div className="flex items-center justify-center mb-4">
             <div className="relative">
-              <div className="flex h-36 w-36 items-center justify-center overflow-hidden rounded-full border-4 border-electric-purple bg-electric-purple/20 text-6xl shadow-[0_0_32px_rgba(168,85,247,0.4)]">
+              <div className="flex h-44 w-44 items-center justify-center overflow-hidden rounded-full border-4 border-electric-purple bg-electric-purple/20 text-7xl shadow-[0_0_36px_rgba(168,85,247,0.45)]">
                 {isImageAvatar(avatar) ? (
                   <img src={avatar} alt="Avatar" className="h-full w-full object-cover" />
                 ) : (
                   avatar || '😎'
                 )}
               </div>
-              <div className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-full bg-neon-green shadow-[0_0_14px_rgba(57,255,20,0.55)]">
-                <span className="material-symbols-outlined text-black" style={{ fontSize: '18px' }}>check</span>
+              <div className="absolute -bottom-1 -right-1 flex h-9 w-9 items-center justify-center rounded-full bg-neon-green shadow-[0_0_16px_rgba(57,255,20,0.6)]">
+                <span className="material-symbols-outlined text-black" style={{ fontSize: '20px' }}>check</span>
               </div>
             </div>
           </div>
@@ -294,7 +294,7 @@ export default function GuestJoinScreen() {
             id="guest-name"
             type="text"
             maxLength={18}
-            className="h-14 w-full rounded-xl border border-white/10 bg-black/30 px-4 text-center text-xl font-black text-on-surface outline-none transition-colors focus:border-neon-green focus:ring-2 focus:ring-neon-green/30 placeholder:text-on-surface-variant/50"
+            className="h-16 w-full rounded-xl border border-white/10 bg-black/30 px-4 text-center text-2xl font-black text-on-surface outline-none transition-colors focus:border-neon-green focus:ring-2 focus:ring-neon-green/30 placeholder:text-on-surface-variant/50"
             value={name}
             onChange={(event) => { hasEditedNameRef.current = true; setName(event.target.value); }}
             placeholder="DJ Invitado"

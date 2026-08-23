@@ -113,7 +113,17 @@ export const CHARACTER_AVATARS = [
   { slug: 'rosa', name: 'Rosa', category: 'especiales' },
   { slug: 'teresa', name: 'Teresa', category: 'especiales' },
   { slug: 'toni', name: 'Toni', category: 'especiales' },
-  { slug: 'yone', name: 'Yone', category: 'especiales' }
+  { slug: 'yone', name: 'Yone', category: 'especiales' },
+
+  // Tercera tanda (nuevos)
+  { slug: 'alfonso', name: 'Alfonso', category: 'especiales' },
+  { slug: 'erick', name: 'Erick', category: 'especiales' },
+  { slug: 'isa', name: 'Isa', category: 'especiales' },
+  { slug: 'lucia', name: 'Lucía', category: 'especiales' },
+  { slug: 'luisi', name: 'Luisi', category: 'especiales' },
+  { slug: 'matias', name: 'Matías', category: 'especiales' },
+  { slug: 'noa', name: 'Noa', category: 'especiales' },
+  { slug: 'don-dj', name: 'Don DJ', category: 'especiales' }
 ];
 
 const AVATAR_BY_SLUG = new Map(CHARACTER_AVATARS.map((entry) => [entry.slug, entry]));

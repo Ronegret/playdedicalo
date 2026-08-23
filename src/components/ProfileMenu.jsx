@@ -137,9 +137,9 @@ export default function ProfileMenu({ user, guestAvatar }) {
           >
             <div className="border-b border-white/10 bg-white/5 p-3">
               <div className="flex items-center gap-3">
-                <AvatarBubble avatar={displayAvatar} className="h-20 w-20 border-[3px]" />
+                <AvatarBubble avatar={displayAvatar} className="h-24 w-24 border-[3px]" />
                 <div className="min-w-0">
-                  <p className="truncate text-lg font-black text-white">{displayName}</p>
+                  <p className="truncate text-xl font-black text-white">{displayName}</p>
                   <p className="mt-0.5 truncate font-label-caps text-xs text-on-surface-variant">
                     {role === 'host' ? 'ANFITRION' : 'INVITADO'}
                   </p>
@@ -156,7 +156,7 @@ export default function ProfileMenu({ user, guestAvatar }) {
                   value={profileName}
                   onChange={(event) => setProfileName(event.target.value)}
                   maxLength={18}
-                  className="mt-1 h-12 w-full rounded-xl border border-white/10 bg-black/25 px-3 text-base font-bold text-white outline-none focus:border-neon-green/60"
+                  className="mt-1 h-14 w-full rounded-xl border border-white/10 bg-black/25 px-3 text-xl font-black text-white outline-none focus:border-neon-green/60"
                 />
 
                 <label className="mt-3 block font-label-caps text-xs tracking-[0.16em] text-on-surface-variant">

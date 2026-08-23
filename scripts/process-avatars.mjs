@@ -59,7 +59,12 @@ const SOURCE_FILE_BY_SLUG = {
   'carol': 'CAROL', 'dani': 'DANI', 'frank': 'FRANK', 'juanpi': 'JUANPI',
   'miguel': 'MIGUEL', 'noe-2': 'NOE 2', 'nora': 'NORA', 'pau': 'PAU',
   'rodri-2': 'RODRI 2', 'roger': 'ROGER', 'rosa': 'ROSA', 'teresa': 'TERESA',
-  'toni': 'TONI', 'yone': 'YONE'
+  'toni': 'TONI', 'yone': 'YONE',
+  // Tercera tanda (nuevos) — estos archivos llegaron con nombre en
+  // mayúscula/minúscula mixta, no en MAYÚSCULAS como el resto.
+  'alfonso': 'Alfonso', 'erick': 'Erick', 'isa': 'Isa', 'lucia': 'Lucia',
+  'luisi': 'Luisi', 'matias': 'Matias', 'noa': 'Noa',
+  'don-dj': 'Retrato DJ neón con auriculares y ecualizador'
 };
 
 const CATALOG = CHARACTER_AVATARS.map((entry) => ({
