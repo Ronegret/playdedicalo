@@ -401,7 +401,7 @@ export default function LobbyScreen() {
                     </div>
                   )}
                   <div className="min-w-0">
-                    <span className="block truncate text-xl font-black text-white">{player.name}</span>
+                    <span className="block truncate font-label-caps text-xl font-black uppercase tracking-wide text-white">{player.name}</span>
                     <span className={`mt-0.5 block font-label-caps text-[10px] ${
                       presence.status === 'online'
                         ? 'text-neon-green'

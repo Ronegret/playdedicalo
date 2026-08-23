@@ -111,7 +111,7 @@ function RankingList({ players, final = false, showTimeline = false, goalYears =
                   {rank + 1}
                 </span>
                 <PlayerAvatar player={player} className="w-20 h-20 text-4xl border-2 border-white/15" />
-                <span className="font-black text-xl truncate">{player.name}</span>
+                <span className="font-label-caps text-xl font-black uppercase tracking-wide truncate">{player.name}</span>
               </div>
               <div className="text-right shrink-0">
                 <p className="font-black text-base text-neon-green leading-none">{getTimelineProgress(player)}/{goalYears}</p>
@@ -234,7 +234,7 @@ function PodiumSlot({ player, rank, goalYears }) {
           </>
         )}
       </div>
-      <p className="mt-2 max-w-[7rem] truncate text-center font-black text-white" style={{ fontSize: isChampion ? '1.2rem' : '1rem' }}>
+      <p className="mt-2 max-w-[7rem] truncate text-center font-label-caps font-black uppercase tracking-wide text-white" style={{ fontSize: isChampion ? '1.2rem' : '1rem' }}>
         {player.name}
       </p>
       <p className="text-xs text-on-surface-variant">{getTimelineProgress(player)}/{goalYears} · {player.points} pts</p>
@@ -729,7 +729,7 @@ export default function ResultScreen() {
                     {index + 1}
                   </span>
                   <PlayerAvatar player={player} className="w-20 h-20 text-4xl border-2 border-white/10" />
-                  <span className="text-xl font-black text-white truncate flex-1">{player.name}</span>
+                  <span className="font-label-caps text-xl font-black uppercase tracking-wide text-white truncate flex-1">{player.name}</span>
                   <div className="text-right shrink-0">
                     <p className="text-sm font-black text-neon-green">
                       {getTimelineProgress(player)}/{targetYears} CANCIONES

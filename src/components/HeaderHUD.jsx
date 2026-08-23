@@ -137,24 +137,30 @@ export default function HeaderHUD({ onExit }) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.18 }}
-              className="absolute right-2 top-[calc(64px+env(safe-area-inset-top,0px)+18px)] z-[101] max-h-[60vh] w-72 overflow-y-auto rounded-2xl border border-white/10 bg-surface-container/95 p-2 shadow-[0_20px_50px_rgba(0,0,0,0.45)] backdrop-blur-xl"
+              className="absolute right-2 top-[calc(64px+env(safe-area-inset-top,0px)+18px)] z-[101] max-h-[65vh] w-[min(21rem,calc(100vw-1rem))] overflow-y-auto rounded-2xl border border-white/10 bg-surface-container/95 p-2 shadow-[0_20px_50px_rgba(0,0,0,0.45)] backdrop-blur-xl"
             >
               <p className="px-2 py-1 font-label-caps text-xs tracking-widest text-on-surface-variant">JUGADORES</p>
               <div className="flex flex-col gap-1">
-                {players.map((player) => {
+                {players.map((player, index) => {
                   const presence = getPlayerPresence(player, now);
                   const styles = PRESENCE_STYLES[presence.status] || PRESENCE_STYLES.offline;
                   const seconds = Math.ceil((presence.remainingMs || 0) / 1000);
                   return (
-                    <div key={player.id} className="flex items-center gap-3 rounded-xl px-2 py-2.5">
+                    <motion.div
+                      key={player.id}
+                      initial={{ opacity: 0, x: 10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.04 }}
+                      className="flex items-center gap-3 rounded-xl px-2 py-2.5"
+                    >
                       <PlayerAvatar player={player} presence={presence.status} size="w-20 h-20" />
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-lg font-black text-white">{player.name}{player.id === guestId ? ' (tú)' : ''}</p>
+                        <p className="truncate font-label-caps text-lg font-black uppercase tracking-wide text-white">{player.name}{player.id === guestId ? ' (tú)' : ''}</p>
                         <p className="text-xs text-on-surface-variant">
                           {presence.status === 'reconnecting' ? `${styles.label} ${seconds}s` : styles.label}
                         </p>
                       </div>
-                    </div>
+                    </motion.div>
                   );
                 })}
               </div>

@@ -92,7 +92,7 @@ function RankingPeek({ players, guestId, targetYears = 12 }) {
                     ) : (
                       <span className="w-14 h-14 rounded-full bg-black/20 flex items-center justify-center text-2xl shrink-0">{player.avatar || '•'}</span>
                     )}
-                    <span className="text-lg font-black text-white truncate flex-1">{player.name}{isMe ? ' (tú)' : ''}</span>
+                    <span className="font-label-caps text-lg font-black uppercase tracking-wide text-white truncate flex-1">{player.name}{isMe ? ' (tú)' : ''}</span>
                     <div className="text-right shrink-0">
                       <p className="text-base font-black text-neon-green leading-none">{progress}/{targetYears}</p>
                       <p className="mt-0.5 text-[10px] font-bold text-on-surface-variant leading-none">
@@ -181,15 +181,58 @@ function VinylSlotButton({ label, disabled, onClick }) {
   );
 }
 
+const BURST_EMOJI = ['🎵', '🎶', '⚡', '💥', '🔊', '🎧', '✨'];
+
+// Ráfaga de partículas que salen disparadas del centro una sola vez al
+// aparecer el ataque — la "explosión musical" en sí. useState perezoso
+// (no useMemo) para generar los ángulos/tamaños aleatorios una única vez
+// sin violar las reglas de pureza de React.
+function MusicBurst() {
+  const [particles] = useState(() => Array.from({ length: 16 }, (_, i) => {
+    const angle = (i / 16) * Math.PI * 2 + (Math.random() - 0.5) * 0.4;
+    const distance = 100 + Math.random() * 90;
+    return {
+      id: i,
+      icon: BURST_EMOJI[i % BURST_EMOJI.length],
+      x: Math.round(Math.cos(angle) * distance),
+      y: Math.round(Math.sin(angle) * distance),
+      rotate: Math.round((Math.random() - 0.5) * 360),
+      delay: Math.random() * 0.12,
+      size: 18 + Math.round(Math.random() * 16)
+    };
+  }));
+
+  return (
+    <div className="pointer-events-none absolute inset-0 flex items-center justify-center" aria-hidden="true">
+      {particles.map((p) => (
+        <motion.span
+          key={p.id}
+          initial={{ x: 0, y: 0, opacity: 0, scale: 0.2, rotate: 0 }}
+          animate={{ x: p.x, y: p.y, opacity: [0, 1, 1, 0], scale: [0.2, 1.15, 1, 0.6], rotate: p.rotate }}
+          transition={{ duration: 1.1, delay: p.delay, ease: 'easeOut' }}
+          className="absolute drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]"
+          style={{ fontSize: p.size }}
+        >
+          {p.icon}
+        </motion.span>
+      ))}
+    </div>
+  );
+}
+
 function AttackWarningOverlay({ attack, onClose }) {
+  useEffect(() => {
+    if (attack && navigator.vibrate) navigator.vibrate([40, 30, 40, 30, 90]);
+  }, [attack]);
+
   if (!attack) return null;
   const attackCopy = getAttackCopy(attack);
   return (
     <motion.div
       initial={{ opacity: 0, scale: 1.06 }}
-      animate={{ opacity: 1, scale: 1 }}
+      animate={{ opacity: 1, scale: 1, x: [0, -10, 9, -7, 5, -2, 0] }}
       exit={{ opacity: 0, scale: 0.94 }}
-      transition={{ duration: 0.28 }}
+      transition={{ opacity: { duration: 0.28 }, scale: { duration: 0.28 }, x: { duration: 0.55, ease: 'easeOut' } }}
       className="fixed inset-0 z-[260] flex items-center justify-center overflow-hidden px-5 text-center text-white"
       style={{ background: 'linear-gradient(160deg, #4a00b8 0%, #8b00ff 40%, #c0007a 80%, #ff4400 100%)' }}
     >
@@ -209,20 +252,34 @@ function AttackWarningOverlay({ attack, onClose }) {
         className="relative mx-auto w-full max-w-sm"
       >
         {/* Avatar del atacante — quién te atacó tiene que reconocerse al toque */}
-        <motion.div
-          animate={{ rotate: [-3, 3, -3], scale: [1, 1.06, 1] }}
-          transition={{ repeat: Infinity, duration: 0.65 }}
-          className="relative mx-auto flex h-40 w-40 items-center justify-center rounded-full border-4 border-white/80 bg-black/30 shadow-[0_0_80px_rgba(255,255,255,0.50),0_0_140px_rgba(200,0,255,0.35)]"
-        >
-          {isImageAvatar(attack.fromAvatar) ? (
-            <img src={attack.fromAvatar} alt={attack.from || 'Rival'} className="h-full w-full rounded-full object-cover" />
-          ) : (
-            <span className="material-symbols-outlined text-7xl drop-shadow-[0_0_20px_rgba(255,255,255,0.6)]">{attackCopy.icon}</span>
-          )}
-          <span className="absolute -bottom-2 -right-2 flex h-11 w-11 items-center justify-center rounded-full border-2 border-white/80 bg-[#6b10e8] shadow-[0_0_16px_rgba(0,0,0,0.4)]">
-            <span className="material-symbols-outlined text-2xl text-white">{attackCopy.icon}</span>
-          </span>
-        </motion.div>
+        <div className="relative mx-auto flex h-40 w-40 items-center justify-center">
+          {/* Ondas de choque — expanden y se apagan una sola vez, como el
+              golpe de un bombo al caer el sabotaje */}
+          {[0, 0.12, 0.24].map((delay) => (
+            <motion.div
+              key={delay}
+              initial={{ scale: 0.5, opacity: 0.85 }}
+              animate={{ scale: 2.4, opacity: 0 }}
+              transition={{ duration: 1, delay, ease: 'easeOut' }}
+              className="absolute inset-0 rounded-full border-2 border-white/70"
+            />
+          ))}
+          <MusicBurst />
+          <motion.div
+            animate={{ rotate: [-3, 3, -3], scale: [1, 1.06, 1] }}
+            transition={{ repeat: Infinity, duration: 0.65 }}
+            className="relative z-10 flex h-40 w-40 items-center justify-center rounded-full border-4 border-white/80 bg-black/30 shadow-[0_0_80px_rgba(255,255,255,0.50),0_0_140px_rgba(200,0,255,0.35)]"
+          >
+            {isImageAvatar(attack.fromAvatar) ? (
+              <img src={attack.fromAvatar} alt={attack.from || 'Rival'} className="h-full w-full rounded-full object-cover" />
+            ) : (
+              <span className="material-symbols-outlined text-7xl drop-shadow-[0_0_20px_rgba(255,255,255,0.6)]">{attackCopy.icon}</span>
+            )}
+            <span className="absolute -bottom-2 -right-2 flex h-11 w-11 items-center justify-center rounded-full border-2 border-white/80 bg-[#6b10e8] shadow-[0_0_16px_rgba(0,0,0,0.4)]">
+              <span className="material-symbols-outlined text-2xl text-white">{attackCopy.icon}</span>
+            </span>
+          </motion.div>
+        </div>
 
         {/* Labels */}
         <p className="mt-6 font-label-caps text-xs tracking-[0.36em] text-white/70">⚡ ALERTA DE SABOTAJE ⚡</p>
@@ -232,6 +289,22 @@ function AttackWarningOverlay({ attack, onClose }) {
         >
           TE<br />ATACARON
         </h2>
+
+        {/* Ecualizador de impacto — refuerza el "explosión musical" del golpe */}
+        <div className="mx-auto mt-3 flex h-8 items-end justify-center gap-1" aria-hidden="true">
+          {[0.4, 0.85, 0.55, 1, 0.45, 0.9, 0.6, 0.75, 0.35].map((h, i) => (
+            <span
+              key={i}
+              className="eq-bar w-1.5 rounded-full bg-white/85"
+              style={{
+                height: `${h * 100}%`,
+                animationDelay: `${i * 0.05}s`,
+                animationDuration: `${0.35 + (i % 3) * 0.1}s`,
+                boxShadow: '0 0 10px rgba(255,255,255,0.6)'
+              }}
+            />
+          ))}
+        </div>
 
         {/* Who & what */}
         <div className="mx-auto mt-5 max-w-xs rounded-2xl border border-white/25 bg-black/30 px-4 py-3 backdrop-blur-sm">
@@ -860,22 +933,33 @@ export default function GameScreen() {
 
                 {players.length > 0 && (
                   <div className="mt-3 flex flex-wrap justify-center gap-3.5">
-                    {players.map((player) => {
+                    {players.map((player, index) => {
                       const answered = Boolean(roundAnswers?.[player.id]);
                       const blocked = isPlayerBlockedThisRound(player);
                       return (
-                        <div key={player.id} className="relative flex flex-col items-center gap-1">
-                          {isImageAvatar(player.avatar) ? (
-                            <img
-                              src={player.avatar}
-                              alt={player.name}
-                              className={`w-[5.5rem] h-[5.5rem] rounded-full object-cover border-2 transition-all ${blocked ? 'border-vinyl-orange opacity-70' : answered ? 'border-neon-green shadow-[0_0_12px_rgba(57,255,20,0.5)]' : 'border-white/15 opacity-35'}`}
-                            />
-                          ) : (
-                            <div className={`w-[5.5rem] h-[5.5rem] rounded-full flex items-center justify-center text-3xl bg-black/20 border-2 transition-all ${blocked ? 'border-vinyl-orange opacity-70' : answered ? 'border-neon-green shadow-[0_0_12px_rgba(57,255,20,0.5)]' : 'border-white/15 opacity-35'}`}>
-                              {player.avatar || '•'}
-                            </div>
-                          )}
+                        <motion.div
+                          key={player.id}
+                          initial={{ opacity: 0, y: 10, scale: 0.85 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          transition={{ delay: index * 0.05, type: 'spring', stiffness: 220, damping: 18 }}
+                          className="relative flex flex-col items-center gap-1"
+                        >
+                          <motion.div
+                            animate={answered && !blocked ? { scale: [1, 1.05, 1] } : {}}
+                            transition={{ repeat: answered && !blocked ? Infinity : 0, duration: 1.6, ease: 'easeInOut' }}
+                          >
+                            {isImageAvatar(player.avatar) ? (
+                              <img
+                                src={player.avatar}
+                                alt={player.name}
+                                className={`w-[5.5rem] h-[5.5rem] rounded-full object-cover border-2 transition-all ${blocked ? 'border-vinyl-orange opacity-70' : answered ? 'border-neon-green shadow-[0_0_14px_rgba(57,255,20,0.55)]' : 'border-white/15 opacity-35'}`}
+                              />
+                            ) : (
+                              <div className={`w-[5.5rem] h-[5.5rem] rounded-full flex items-center justify-center text-3xl bg-black/20 border-2 transition-all ${blocked ? 'border-vinyl-orange opacity-70' : answered ? 'border-neon-green shadow-[0_0_14px_rgba(57,255,20,0.55)]' : 'border-white/15 opacity-35'}`}>
+                                {player.avatar || '•'}
+                              </div>
+                            )}
+                          </motion.div>
                           {blocked ? (
                             <span className="absolute -top-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-vinyl-orange">
                               <span className="material-symbols-outlined text-black" style={{ fontSize: '14px', lineHeight: 1 }}>block</span>
@@ -885,10 +969,10 @@ export default function GameScreen() {
                               <span className="material-symbols-outlined text-black" style={{ fontSize: '14px', lineHeight: 1 }}>check</span>
                             </span>
                           )}
-                          <span className={`max-w-[5.5rem] truncate font-label-caps text-sm font-bold ${blocked ? 'text-vinyl-orange' : 'text-white/85'}`}>
+                          <span className={`max-w-[5.5rem] truncate font-label-caps text-sm font-bold uppercase tracking-wide ${blocked ? 'text-vinyl-orange' : 'text-white/90'}`}>
                             {blocked ? 'BLOQUEADO' : player.name}
                           </span>
-                        </div>
+                        </motion.div>
                       );
                     })}
                   </div>
@@ -1096,7 +1180,7 @@ export default function GameScreen() {
                     ) : (
                       <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-black/25 text-2xl">{target.avatar || '•'}</span>
                     )}
-                    <span className="flex-1 truncate text-lg font-bold">{target.name}</span>
+                    <span className="flex-1 truncate font-label-caps text-lg font-black uppercase tracking-wide">{target.name}</span>
                     <span className="material-symbols-outlined text-vinyl-orange text-lg shrink-0">bolt</span>
                   </button>
                 ))}
