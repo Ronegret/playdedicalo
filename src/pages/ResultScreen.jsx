@@ -373,7 +373,7 @@ export default function ResultScreen() {
       <motion.main
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="fixed inset-0 z-50 overflow-y-auto bg-[#0a0616] text-white"
+        className="fixed inset-0 z-50 overflow-x-hidden overflow-y-auto bg-[#0a0616] text-white"
         style={{ overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' }}
       >
         <JoinRequestBanner />
@@ -483,7 +483,7 @@ export default function ResultScreen() {
     <motion.main
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="fixed inset-0 z-50 overflow-y-auto text-white"
+      className="fixed inset-0 z-50 overflow-x-hidden overflow-y-auto text-white"
       style={{ backgroundColor: style.bgColor, overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' }}
     >
       <JoinRequestBanner />

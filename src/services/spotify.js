@@ -1,6 +1,7 @@
 const SPOTIFY_CLIENT_ID = import.meta.env.VITE_SPOTIFY_CLIENT_ID || '8d753e32e5c34713baa3cee821bb85ad';
 const TOKEN_KEY = 'dedicalo_spotify_token';
 const VERIFIER_KEY = 'dedicalo_spotify_verifier';
+const SPOTIFY_RETURN_KEY = 'dedicalo_spotify_return_to';
 const TRACK_KEY = 'dedicalo_current_spotify_track';
 const PLAYED_TRACKS_KEY = 'dedicalo_played_spotify_tracks';
 const CATALOG_URL = '/data/dedicalo-song-catalog.full.clean.json';
@@ -105,6 +106,15 @@ export function resetSpotifyConnection() {
   spotifyDeviceId = null;
 }
 
+// Leído una sola vez por SpotifyCallbackScreen al volver del login — con
+// qué pantalla se hizo connectSpotify(returnTo). Se borra al leerlo para
+// que una vuelta futura sin returnTo explícito no reutilice uno viejo.
+export function consumeSpotifyReturnPath() {
+  const path = window.localStorage.getItem(SPOTIFY_RETURN_KEY) || '/host/sync';
+  window.localStorage.removeItem(SPOTIFY_RETURN_KEY);
+  return path;
+}
+
 export function getSpotifyStatus() {
   const token = readToken();
   return {
@@ -114,7 +124,15 @@ export function getSpotifyStatus() {
   };
 }
 
-export async function connectSpotify() {
+// returnTo: a dónde volver después del login de Spotify. Antes siempre
+// volvía a /host/sync — bien para la configuración inicial, pero si el
+// anfitrión reconecta Spotify a mitad de partida (p. ej. el teléfono se
+// bloqueó y el reproductor se cayó) lo mandaba a la pantalla de "crear
+// sala", lejos de su partida en curso y con riesgo de crear una sala
+// nueva sin querer. SpotifyCallbackScreen lee este valor para volver al
+// lugar correcto.
+export async function connectSpotify(returnTo = '/host/sync') {
+  window.localStorage.setItem(SPOTIFY_RETURN_KEY, returnTo);
   const verifier = randomString();
   const challenge = base64UrlEncode(await sha256(verifier));
   window.localStorage.setItem(VERIFIER_KEY, verifier);

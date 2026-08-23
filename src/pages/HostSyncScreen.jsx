@@ -330,7 +330,7 @@ export default function HostSyncScreen() {
                   </div>
                   <motion.button
                     type="button"
-                    onClick={connectSpotify}
+                    onClick={() => connectSpotify('/host/sync')}
                     whileTap={{ scale: 0.94 }}
                     className={`min-h-touch px-3 rounded-xl font-label-caps text-[10px] tracking-[0.15em] shrink-0 ${
                       spotifyStatus.connected

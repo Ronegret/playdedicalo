@@ -1,6 +1,6 @@
 ﻿import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { completeSpotifyLogin } from '../services/spotify';
+import { completeSpotifyLogin, consumeSpotifyReturnPath } from '../services/spotify';
 
 export default function SpotifyCallbackScreen() {
   const navigate = useNavigate();
@@ -24,7 +24,10 @@ export default function SpotifyCallbackScreen() {
     completeSpotifyLogin(code)
       .then(() => {
         setMessage('Spotify conectado.');
-        window.setTimeout(() => navigate('/host/sync'), 900);
+        // Vuelve a donde el anfitrión estaba antes de reconectar — si fue a
+        // mitad de partida (returnTo '/game'), no lo manda a la pantalla de
+        // crear sala nueva.
+        window.setTimeout(() => navigate(consumeSpotifyReturnPath()), 900);
       })
       .catch((spotifyError) => {
         console.error(spotifyError);

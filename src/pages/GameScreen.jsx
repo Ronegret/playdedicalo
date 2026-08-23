@@ -5,9 +5,57 @@ import { ATTACK_COST, ATTACK_TYPES, DEDICALO_PLAYLISTS, GAME_MODES, REDEEM_YEAR_
 import { isImageAvatar } from '../data/characterAvatars';
 import HeaderHUD from '../components/HeaderHUD';
 import JoinRequestBanner from '../components/JoinRequestBanner';
-import { createQuestionFromTrack, explainSpotifyError, getCurrentHiddenTrack, getSpotifyStatus, pauseSpotifyPlayback, startRandomPlaylistTrack } from '../services/spotify';
+import { connectSpotify, createQuestionFromTrack, explainSpotifyError, getCurrentHiddenTrack, getSpotifyStatus, pauseSpotifyPlayback, prepareSpotifyPlayback, startRandomPlaylistTrack } from '../services/spotify';
 
 const EQUALIZER_BARS = [0.35, 0.58, 0.42, 0.71, 0.49, 0.64, 0.39];
+
+// Fila compacta de "quién respondió / está bloqueado" durante la ronda,
+// para TODOS los jugadores (antes solo lo veía el anfitrión). A propósito
+// chica y en una sola fila deslizable — no la lista grande de avatares del
+// anfitrión — para no tapar ni empujar lejos el riel donde tienen que
+// colocar su respuesta.
+function VoteStatusStrip({ players, roundAnswers, isPlayerBlockedThisRound, answerCount, expectedVotes, guestId }) {
+  if (!players.length) return null;
+  return (
+    <div className="w-full max-w-sm rounded-xl border border-white/10 bg-black/25 px-3 py-2">
+      <div className="flex items-center justify-between gap-2">
+        <p className="font-label-caps text-[10px] tracking-[0.16em] text-on-surface-variant">RESPONDIERON</p>
+        <p className="font-label-caps text-[10px] font-black text-neon-green">{answerCount}/{expectedVotes}</p>
+      </div>
+      <div className="mt-1.5 flex items-center gap-2 overflow-x-auto no-scrollbar pb-0.5">
+        {players.map((player) => {
+          const answered = Boolean(roundAnswers?.[player.id]);
+          const blocked = isPlayerBlockedThisRound(player);
+          const isMe = player.id === guestId;
+          return (
+            <div key={player.id} className="relative shrink-0" title={`${player.name}${blocked ? ' · bloqueado' : answered ? ' · respondió' : ' · esperando'}`}>
+              {isImageAvatar(player.avatar) ? (
+                <img
+                  src={player.avatar}
+                  alt={player.name}
+                  className={`h-9 w-9 rounded-full object-cover border-2 transition-all ${blocked ? 'border-vinyl-orange opacity-70' : answered ? 'border-neon-green' : 'border-white/15 opacity-40'} ${isMe ? 'ring-2 ring-offset-1 ring-offset-black ring-white/40' : ''}`}
+                />
+              ) : (
+                <div className={`h-9 w-9 rounded-full flex items-center justify-center text-sm bg-black/30 border-2 transition-all ${blocked ? 'border-vinyl-orange opacity-70' : answered ? 'border-neon-green' : 'border-white/15 opacity-40'} ${isMe ? 'ring-2 ring-offset-1 ring-offset-black ring-white/40' : ''}`}>
+                  {player.avatar || '•'}
+                </div>
+              )}
+              {blocked ? (
+                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-vinyl-orange">
+                  <span className="material-symbols-outlined text-black" style={{ fontSize: '10px', lineHeight: 1 }}>block</span>
+                </span>
+              ) : answered && (
+                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-neon-green">
+                  <span className="material-symbols-outlined text-black" style={{ fontSize: '10px', lineHeight: 1 }}>check</span>
+                </span>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 function RankingPeek({ players, guestId, targetYears = 12 }) {
   const [rankOpen, setRankOpen] = useState(false);
@@ -410,16 +458,26 @@ function TimelinePlacementQuestion({ question, playerYears = [], wildcards = 0, 
         <div className="relative mt-6 overflow-x-auto overflow-y-visible pb-12 pt-2 snap-x no-scrollbar sm:mt-8">
           <div className="absolute left-0 right-0 top-1/2 h-px bg-gradient-to-r from-transparent via-white/12 to-transparent" />
           <div className="relative min-w-max flex items-center gap-3 px-2">
-            {slots.map((slot, index) => (
-              <div key={slot} className="flex items-center gap-3">
-                <VinylSlotButton
-                  label={getTimelineSlotLabel(years, slot)}
-                  disabled={disabled}
-                  onClick={() => onPick({ isCorrect: slot === correctSlot, timelineSlot: slot })}
-                />
-                {index < years.length && <VinylYearChip year={years[index]} />}
-              </div>
-            ))}
+            {slots.map((slot, index) => {
+              // Entre dos años iguales (dos canciones del mismo año en la
+              // ruta) no tiene sentido ofrecer un hueco "Entre 2008 y 2008"
+              // — nunca puede ser la respuesta correcta (colocar ahí
+              // siempre cuenta como error) y solo confunde. Se omite ese
+              // botón y los dos discos quedan juntos, sin nada en medio.
+              const isRedundantTieGap = slot > 0 && slot < years.length && years[slot - 1] === years[slot];
+              return (
+                <div key={slot} className="flex items-center gap-3">
+                  {!isRedundantTieGap && (
+                    <VinylSlotButton
+                      label={getTimelineSlotLabel(years, slot)}
+                      disabled={disabled}
+                      onClick={() => onPick({ isCorrect: slot === correctSlot, timelineSlot: slot })}
+                    />
+                  )}
+                  {index < years.length && <VinylYearChip year={years[index]} />}
+                </div>
+              );
+            })}
             {wildcards > 0 && Array.from({ length: wildcards }, (_, index) => (
               <WildcardChip key={`wildcard-${index}`} />
             ))}
@@ -671,13 +729,25 @@ export default function GameScreen() {
 
   const handleSpotifyRetry = () => {
     if (spotifyNeedsReconnect) {
-      navigate('/host/sync');
+      // Antes esto mandaba a /host/sync (la pantalla de "crear sala"),
+      // lejos de la partida en curso y con riesgo de armar una sala nueva
+      // sin querer. connectSpotify('/game') hace el login de Spotify y
+      // vuelve derecho aquí — la ronda retoma sola al recargar.
+      setSpotifyMessage('Abriendo Spotify...');
+      connectSpotify('/game').catch(() => setSpotifyMessage('No pudimos abrir Spotify. Inténtalo de nuevo.'));
       return;
     }
     setSpotifyError(false);
     setSpotifyNeedsReconnect(false);
     setSpotifyMessage('Reintentando...');
-    startRandomPlaylistTrack(spotifyPlaylistUrl)
+    // prepareSpotifyPlayback() llama a activateElement() — hace falta lo
+    // más cerca posible de un toque real (como este) para que el navegador
+    // deje reanudar audio después de que la pestaña estuvo en segundo
+    // plano (pantalla bloqueada), que es la causa más común de que el
+    // reproductor se caiga a mitad de partida.
+    prepareSpotifyPlayback()
+      .catch(() => {})
+      .then(() => startRandomPlaylistTrack(spotifyPlaylistUrl))
       .then(() => {
         setSpotifyMessage('Música sonando. Para cuando quieras.');
         setAudioPlaying(true);
@@ -813,9 +883,9 @@ export default function GameScreen() {
                 {spotifyError && (
                   <button
                     onClick={handleSpotifyRetry}
-                    className="flex items-center gap-2 px-4 py-2 rounded-xl border border-vinyl-orange/50 bg-vinyl-orange/15 text-vinyl-orange font-label-caps text-sm font-bold active:scale-95 transition-all"
+                    className="flex min-h-touch items-center gap-2 rounded-xl border-2 border-vinyl-orange bg-vinyl-orange/20 px-5 py-3 text-base font-label-caps font-black text-vinyl-orange shadow-[0_0_20px_rgba(255,122,26,0.25)] transition-all active:scale-95"
                   >
-                    <span className="material-symbols-outlined text-sm">
+                    <span className="material-symbols-outlined text-xl">
                       {spotifyNeedsReconnect ? 'login' : 'refresh'}
                     </span>
                     {spotifyNeedsReconnect ? 'RECONECTAR SPOTIFY' : 'REINTENTAR SPOTIFY'}
@@ -921,6 +991,19 @@ export default function GameScreen() {
                 <span className="font-label-caps text-[11px] text-intense-red">-3 FALLO</span>
               </motion.div>
             </div>
+
+            {role !== 'host' && (
+              <div className="mt-4 flex justify-center">
+                <VoteStatusStrip
+                  players={players}
+                  roundAnswers={roundAnswers}
+                  isPlayerBlockedThisRound={isPlayerBlockedThisRound}
+                  answerCount={answerCount}
+                  expectedVotes={expectedVotes}
+                  guestId={guestId}
+                />
+              </div>
+            )}
 
             {role === 'host' && (
               <div className="mt-4 rounded-2xl border border-white/10 bg-white/5 p-4 text-center">
@@ -1130,29 +1213,51 @@ export default function GameScreen() {
                 Por <span className="text-vinyl-orange font-bold">{ATTACK_COST} pts</span>, eliges cómo saboteas su próxima ronda. Esta vez sí tiene consecuencia real en su ruta de años.
               </p>
 
-              <div className="mt-4 grid gap-2">
-                {Object.values(ATTACK_TYPES).map((attackType) => (
-                  <button
-                    key={attackType.id}
-                    type="button"
-                    onClick={() => setSelectedAttackType(attackType.id)}
-                    className={`min-h-[4.25rem] rounded-2xl border px-3 text-left transition-all active:scale-95 ${
-                      selectedAttackType === attackType.id
-                        ? 'border-neon-green bg-neon-green/12 shadow-[0_0_24px_rgba(57,255,20,0.16)]'
-                        : 'border-white/10 bg-white/5'
-                    }`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <span className={`material-symbols-outlined text-2xl ${selectedAttackType === attackType.id ? 'text-neon-green' : 'text-electric-purple'}`}>
-                        {attackType.icon}
-                      </span>
-                      <div className="min-w-0">
-                        <p className="font-label-caps text-sm font-black text-white">{attackType.name}</p>
-                        <p className="mt-0.5 text-sm leading-snug text-on-surface-variant">{attackType.short}</p>
-                      </div>
+              {/* El Bloqueo se destaca mucho más grande que el Robo de año a
+                  propósito — es la opción que se quiere incentivar: más
+                  simple, más directa, sin el riesgo de que el objetivo
+                  igual acierte y termine ganando. El Robo de año queda como
+                  alternativa secundaria, chica, debajo. */}
+              <div className="mt-4 flex flex-col gap-2.5">
+                <button
+                  type="button"
+                  onClick={() => setSelectedAttackType('block_vote')}
+                  className={`min-h-[6.5rem] rounded-3xl border-2 px-4 py-3 text-left transition-all active:scale-95 ${
+                    selectedAttackType === 'block_vote'
+                      ? 'border-neon-green bg-neon-green/14 shadow-[0_0_32px_rgba(57,255,20,0.22)]'
+                      : 'border-white/15 bg-white/5'
+                  }`}
+                >
+                  <div className="flex items-center gap-4">
+                    <span className={`material-symbols-outlined shrink-0 ${selectedAttackType === 'block_vote' ? 'text-neon-green' : 'text-electric-purple'}`} style={{ fontSize: '2.75rem' }}>
+                      {ATTACK_TYPES.block_vote.icon}
+                    </span>
+                    <div className="min-w-0">
+                      <p className="font-label-caps text-lg font-black text-white">{ATTACK_TYPES.block_vote.name}</p>
+                      <p className="mt-0.5 text-base leading-snug text-on-surface-variant">{ATTACK_TYPES.block_vote.short}</p>
                     </div>
-                  </button>
-                ))}
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setSelectedAttackType('year_steal')}
+                  className={`min-h-touch rounded-xl border px-3 py-2 text-left transition-all active:scale-95 ${
+                    selectedAttackType === 'year_steal'
+                      ? 'border-neon-green bg-neon-green/10'
+                      : 'border-white/10 bg-white/[0.03]'
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <span className={`material-symbols-outlined text-lg ${selectedAttackType === 'year_steal' ? 'text-neon-green' : 'text-on-surface-variant'}`}>
+                      {ATTACK_TYPES.year_steal.icon}
+                    </span>
+                    <div className="min-w-0">
+                      <p className="font-label-caps text-xs font-bold text-white/85">{ATTACK_TYPES.year_steal.name}</p>
+                      <p className="text-xs leading-snug text-on-surface-variant">{ATTACK_TYPES.year_steal.short}</p>
+                    </div>
+                  </div>
+                </button>
               </div>
 
               <p className="mt-4 font-label-caps text-xs tracking-[0.18em] text-on-surface-variant">ELIGE OBJETIVO</p>

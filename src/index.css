@@ -100,8 +100,14 @@ html.fs-xl {
     margin-right: auto;
   }
 
+  /* Reserva espacio para una barra de acción fija al fondo (p. ej. "PARAR
+     MÚSICA" en GameScreen). Antes eran 5.5rem fijos: con letra grande
+     (fs-large/fs-xl) el texto de esa barra puede pasar a dos líneas y
+     crecer más que ese hueco reservado, quedando encima de los botones de
+     arriba (SABOTEAR/CANJEAR) y volviéndolos difíciles de tocar. 7.5rem da
+     margen de sobra incluso con el texto más grande. */
   .safe-bottom-action {
-    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(7.5rem + env(safe-area-inset-bottom, 0px));
   }
 
   .heading-impact {
