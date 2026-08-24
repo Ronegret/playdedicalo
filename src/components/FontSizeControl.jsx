@@ -7,9 +7,9 @@ import { useFontScale } from '../hooks/useFontScale';
 // visión tendría que leer para entender qué hace — el tamaño ES la
 // explicación.
 const OPTIONS = [
-  { id: 'normal', title: 'Letra normal', textClass: 'text-base' },
-  { id: 'large', title: 'Letra grande', textClass: 'text-xl' },
-  { id: 'xl', title: 'Letra muy grande', textClass: 'text-3xl' }
+  { id: 'normal', title: 'Letra normal', label: 'NORMAL', textClass: 'text-base' },
+  { id: 'large', title: 'Letra grande', label: 'GRANDE', textClass: 'text-xl' },
+  { id: 'xl', title: 'Letra muy grande', label: 'MUY GRANDE', textClass: 'text-3xl' }
 ];
 
 // Colapsado por defecto — solo un ícono discreto, del mismo tamaño y peso
@@ -38,14 +38,18 @@ export default function FontSizeControl({ className = '' }) {
 
   return (
     <div className={`relative ${className}`} ref={ref}>
+      {/* Antes era solo un icono "T" suelto — nadie sabía qué hacía. Ahora
+          lleva la etiqueta "LETRA" al lado (se oculta solo en pantallas muy
+          angostas, donde el aria-label sigue explicándolo). */}
       <button
         type="button"
         onClick={() => setOpen((prev) => !prev)}
-        aria-label="Tamaño de letra"
+        aria-label="Cambiar tamaño de letra"
         aria-expanded={open}
-        className="flex min-h-touch min-w-touch items-center justify-center rounded-xl text-on-surface-variant transition-colors active:scale-95 hover:text-white"
+        className="flex min-h-touch items-center gap-1.5 rounded-xl border border-white/12 bg-white/5 px-2.5 text-on-surface-variant transition-colors active:scale-95 hover:text-white"
       >
-        <span className="material-symbols-outlined text-xl">text_fields</span>
+        <span className="material-symbols-outlined text-xl">format_size</span>
+        <span className="font-label-caps text-xs font-bold tracking-wide">LETRA</span>
       </button>
 
       <AnimatePresence>
@@ -55,27 +59,38 @@ export default function FontSizeControl({ className = '' }) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -6, scale: 0.96 }}
             transition={{ duration: 0.15 }}
-            className="absolute right-0 top-full z-30 mt-2 flex items-center gap-1.5 rounded-2xl border border-white/10 bg-surface-container/95 p-2 shadow-[0_10px_30px_rgba(0,0,0,0.5)] backdrop-blur-xl"
+            className="absolute right-0 top-full z-30 mt-2 w-[13.5rem] rounded-2xl border border-white/10 bg-surface-container/95 p-2 shadow-[0_10px_30px_rgba(0,0,0,0.5)] backdrop-blur-xl"
             role="group"
             aria-label="Elegir tamaño de letra"
           >
-            {OPTIONS.map((option) => (
-              <button
-                key={option.id}
-                type="button"
-                onClick={() => { setScale(option.id); setOpen(false); }}
-                aria-pressed={scale === option.id}
-                aria-label={option.title}
-                title={option.title}
-                className={`flex min-w-touch min-h-touch items-center justify-center rounded-xl border font-black leading-none transition-all active:scale-95 ${option.textClass} ${
-                  scale === option.id
-                    ? 'border-neon-green bg-neon-green/15 text-neon-green'
-                    : 'border-white/12 bg-white/5 text-white/70'
-                }`}
-              >
-                A
-              </button>
-            ))}
+            <p className="px-2 pb-1.5 pt-1 font-label-caps text-[11px] tracking-[0.16em] text-on-surface-variant">
+              TAMAÑO DE LETRA
+            </p>
+            <div className="flex flex-col gap-1">
+              {OPTIONS.map((option) => (
+                <button
+                  key={option.id}
+                  type="button"
+                  onClick={() => { setScale(option.id); setOpen(false); }}
+                  aria-pressed={scale === option.id}
+                  title={option.title}
+                  className={`flex min-h-touch items-center gap-2.5 rounded-xl border px-3 transition-all active:scale-95 ${
+                    scale === option.id
+                      ? 'border-neon-green bg-neon-green/15 text-neon-green'
+                      : 'border-white/12 bg-white/5 text-white/70'
+                  }`}
+                >
+                  {/* La "A" se dibuja al tamaño real de cada opción: el
+                      tamaño ES la explicación, y ahora además va con su
+                      nombre escrito al lado. */}
+                  <span className={`w-7 shrink-0 text-center font-black leading-none ${option.textClass}`}>A</span>
+                  <span className="font-label-caps text-xs font-bold">{option.label}</span>
+                  {scale === option.id && (
+                    <span className="material-symbols-outlined ml-auto text-base">check</span>
+                  )}
+                </button>
+              ))}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

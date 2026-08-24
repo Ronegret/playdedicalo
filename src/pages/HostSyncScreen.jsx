@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getRedirectResult, onAuthStateChanged, signInWithPopup, signInWithRedirect } from 'firebase/auth';
@@ -9,6 +9,13 @@ import VinylVisualizer from '../components/VinylVisualizer';
 import NeonButton from '../components/NeonButton';
 import ProfileMenu from '../components/ProfileMenu';
 import FontSizeControl from '../components/FontSizeControl';
+import { StepActionBar, StepPanel, StepProgress } from '../components/WizardSteps';
+
+// Crear sala en pasos en vez de un solo muro con todo a la vez: primero
+// los requisitos (cuentas), después la música, después la duración. El PIN
+// aparece en el lobby, donde además se puede seguir cambiando playlist y
+// duración antes de arrancar.
+const HOST_STEPS = ['Conectar cuentas', 'Elige la música', 'Duración'];
 import {
   connectSpotify,
   explainSpotifyError,
@@ -78,6 +85,7 @@ export default function HostSyncScreen() {
   const [spotifyCheck, setSpotifyCheck] = useState(null);
   const [isTestingSpotify, setIsTestingSpotify] = useState(false);
   const [isSpotifyPlaying, setIsSpotifyPlaying] = useState(false);
+  const [step, setStep] = useState(0);
   const createStartedRef = useRef(false);
 
   const selectedPlaylistData = DEDICALO_PLAYLISTS.find((p) => p.id === selectedPlaylist) || DEDICALO_PLAYLISTS[0];
@@ -271,9 +279,15 @@ export default function HostSyncScreen() {
         {googleUser ? <ProfileMenu user={googleUser} /> : <FontSizeControl />}
       </header>
 
-            <div className={`app-shell-wide flex ${googleUser ? 'flex-col gap-6 md:flex-row md:items-start md:gap-10' : 'flex-col items-center'}`}>
+      <div className="app-shell mx-auto flex w-full flex-col items-center gap-5">
+        <StepProgress steps={HOST_STEPS} current={step} onGoTo={setStep} />
 
-                <div className={`flex flex-col items-center gap-4 ${googleUser ? 'w-full md:w-80 md:self-start md:sticky md:top-24 lg:w-96' : 'w-full max-w-sm'}`}>
+        <AnimatePresence mode="wait">
+        {/* PASO 1 — Conectar (Google + Spotify). Son requisitos: sin
+            esto no hay sala posible, así que van primero y solos. */}
+        {step === 0 && (
+        <StepPanel stepKey="connect">
+        <div className="flex w-full flex-col items-center gap-4">
 
           <div className="mt-1">
             <VinylVisualizer rotating={spotifyStatus.connected} size="compact" logoSrc="/images/icon-app.png" />
@@ -285,7 +299,7 @@ export default function HostSyncScreen() {
               Tú mandas la música y también juegas
             </h2>
             <p className="text-on-surface-variant text-sm mt-2 leading-relaxed">
-              Elige una lista, comparte el PIN y responde como todos.
+              Conecta tu cuenta y tu Spotify Premium para tomar la cabina.
             </p>
           </div>
 
@@ -449,12 +463,26 @@ export default function HostSyncScreen() {
               </div>
             )}
 
-            {googleUser && (
+          </div>
+        </div>
+        </StepPanel>
+        )}
+
+        {/* PASO 3 — Duración (cuántas canciones para ganar) */}
+        {step === 2 && (
+        <StepPanel stepKey="years">
+          <div className="w-full">
+            <div className="mb-4 text-center">
+              <h2 className="heading-page font-headline-lg font-black uppercase text-on-surface">¿Cuánto dura?</h2>
+              <p className="copy-readable mx-auto mt-2 max-w-md text-on-surface-variant">
+                Cuántas canciones hay que acertar para ganar la partida.
+              </p>
+            </div>
               <div className="rounded-3xl border border-electric-purple/35 bg-electric-purple/10 p-4 text-left shadow-[0_0_34px_rgba(168,85,247,0.10)]">
                 <div className="flex items-center justify-between gap-3">
                   <div>
-                    <p className="font-label-caps text-[10px] tracking-[0.2em] text-electric-purple">DURACIÓN</p>
-                    <h3 className="mt-1 text-lg font-black text-white">{targetYears} canciones para ganar</h3>
+                    <p className="font-label-caps text-xs tracking-[0.2em] text-electric-purple">DURACIÓN</p>
+                    <h3 className="mt-1 text-xl font-black text-white">{targetYears} canciones para ganar</h3>
                   </div>
                   <div className="flex items-center gap-2">
                     <button
@@ -491,37 +519,37 @@ export default function HostSyncScreen() {
                     </button>
                   ))}
                 </div>
-                <p className="mt-3 text-xs leading-relaxed text-on-surface-variant">
+                <p className="mt-3 text-sm leading-relaxed text-on-surface-variant">
                   12 es el ritmo recomendado. Baja para una partida rápida o sube si la noche pide más música.
                 </p>
               </div>
-            )}
 
-                        {googleUser && (
-              <motion.button
-                type="button"
-                onClick={handleHostCreate}
-                disabled={isCreating || !canCreateRoom}
-                whileTap={{ scale: 0.96 }}
-                whileHover={{ scale: 1.02 }}
-                className="w-full h-14 border-2 border-electric-purple/50 rounded-2xl flex items-center justify-center gap-2 text-white font-label-caps text-sm uppercase tracking-[0.2em] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-electric-purple/10 transition-colors bg-transparent"
-              >
-                {isCreating
-                  ? 'CREANDO SALA...'
-                  : !spotifyStatus.connected
-                    ? 'CONECTA SPOTIFY PRIMERO'
-                    : <>CREAR SALA <span className="material-symbols-outlined text-base">arrow_forward</span></>}
-              </motion.button>
-            )}
+              {/* Resumen de lo elegido antes de crear — para que se vea de
+                  un vistazo qué sala se va a crear, sin volver atrás. */}
+              <div className="mt-4 rounded-2xl border border-white/10 bg-white/5 p-4 text-left">
+                <p className="font-label-caps text-xs tracking-[0.2em] text-neon-green">RESUMEN</p>
+                <div className="mt-2 flex items-center gap-3">
+                  <span className="material-symbols-outlined text-2xl" style={{ color: selectedMeta.color }}>
+                    {selectedMeta.icon}
+                  </span>
+                  <div className="min-w-0">
+                    <p className="truncate text-base font-black uppercase text-white">{selectedPlaylistData.name}</p>
+                    <p className="text-sm text-on-surface-variant">{targetYears} canciones para ganar</p>
+                  </div>
+                </div>
+              </div>
           </div>
-        </div>
+        </StepPanel>
+        )}
 
-                {googleUser && (
-          <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between gap-3 mb-4">
+        {/* PASO 2 — Playlist */}
+        {step === 1 && (
+        <StepPanel stepKey="playlist">
+          <div className="w-full min-w-0">
+                        <div className="mb-4 text-center">
               <div>
-                <p className="font-label-caps text-xs tracking-[0.22em] text-neon-green">ELIGE LA PLAYLIST</p>
-                <p className="mt-0.5 text-sm text-on-surface-variant">Define la vibra de la partida: una sola mecánica, muchas energías.</p>
+                <h2 className="heading-page font-headline-lg font-black uppercase text-on-surface">Elige la música</h2>
+                <p className="copy-readable mx-auto mt-2 max-w-md text-on-surface-variant">Define la vibra de la partida: una sola mecánica, muchas energías.</p>
               </div>
               <div
                 className="h-9 px-3 rounded-xl flex items-center gap-2 font-label-caps text-[11px] text-white border shrink-0"
@@ -636,8 +664,8 @@ export default function HostSyncScreen() {
               </div>
             </div>
 
-            <p className="mt-3 text-center text-[11px] text-on-surface-variant">
-              ¿No está tu playlist Con una donación voluntaria la incluimos.{' '}
+            <p className="mt-3 text-center text-sm text-on-surface-variant">
+              ¿No está tu playlist? Con una donación voluntaria la incluimos.{' '}
               <button
                 type="button"
                 onClick={() => openMailto(getPlaylistRequestUrl())}
@@ -647,8 +675,29 @@ export default function HostSyncScreen() {
               </button>
             </p>
           </div>
+        </StepPanel>
         )}
+        </AnimatePresence>
       </div>
+
+      <StepActionBar
+        onBack={step > 0 ? () => setStep((prev) => prev - 1) : undefined}
+        onNext={step === HOST_STEPS.length - 1 ? handleHostCreate : () => setStep((prev) => prev + 1)}
+        nextLabel={
+          step === HOST_STEPS.length - 1
+            ? (isCreating ? 'CREANDO SALA...' : 'CREAR SALA')
+            : 'SIGUIENTE'
+        }
+        nextIcon={step === HOST_STEPS.length - 1 ? 'meeting_room' : 'arrow_forward'}
+        nextDisabled={step === 0 ? !canCreateRoom : (step === HOST_STEPS.length - 1 ? (isCreating || !canCreateRoom) : false)}
+        hint={
+          step === 0 && !googleUser
+            ? 'Entra con Google para continuar'
+            : step === 0 && !spotifyStatus.connected
+              ? 'Conecta Spotify Premium para continuar'
+              : undefined
+        }
+      />
     </motion.main>
   );
 }
