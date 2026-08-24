@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
@@ -194,16 +195,26 @@ export default function ProfileMenu({ user, guestAvatar }) {
           debajo del selector de avatar, y costaba encontrarlo ("muy
           escondido"). Ahora el pie con CANCELAR/GUARDAR es fijo (no
           scrollea con el contenido) — siempre está a la vista, sin
-          importar cuánto haya que bajar para elegir personaje. */}
-      <AnimatePresence>
-        {isEditing && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[310] flex items-end justify-center bg-black/85 backdrop-blur-sm sm:items-center"
-            onClick={() => setIsEditing(false)}
-          >
+          importar cuánto haya que bajar para elegir personaje.
+
+          Va en un portal a <body> a propósito: este componente se renderiza
+          dentro del <header fixed> de cada pantalla, y ese header tiene
+          backdrop-blur. Un ancestro con backdrop-filter (igual que uno con
+          transform) se vuelve el bloque contenedor de sus descendientes
+          position:fixed — sin el portal, este `fixed inset-0` se resolvía
+          contra la franja de 64px del header en vez del viewport y el
+          editor aparecía aplastado ahí arriba, mostrando solo el pie con
+          GUARDAR. */}
+      {createPortal(
+        <AnimatePresence>
+          {isEditing && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[310] flex items-end justify-center bg-black/85 backdrop-blur-sm sm:items-center"
+              onClick={() => setIsEditing(false)}
+            >
             <motion.div
               initial={{ y: 40, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
@@ -265,9 +276,11 @@ export default function ProfileMenu({ user, guestAvatar }) {
                 </button>
               </div>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </>
   );
 }

@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   AVATAR_CATEGORIES,
@@ -150,16 +151,23 @@ export default function AvatarPicker({ value, onChange, className = '' }) {
         </motion.div>
       </AnimatePresence>
 
-      {/* Vista ampliada — foto grande + nombre grande antes de confirmar */}
-      <AnimatePresence>
-        {previewEntry && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[300] flex items-center justify-center bg-black/85 px-6 backdrop-blur-md"
-            onClick={() => setPreviewEntry(null)}
-          >
+      {/* Vista ampliada — foto grande + nombre grande antes de confirmar.
+          En un portal a <body>: este selector puede vivir dentro de un
+          contenedor animado (el editor de perfil) o bajo un header con
+          backdrop-blur, y cualquier ancestro con transform/backdrop-filter
+          se vuelve el bloque contenedor de un position:fixed — sin el
+          portal, esta vista ampliada quedaría encerrada en esa caja en vez
+          de cubrir la pantalla. */}
+      {createPortal(
+        <AnimatePresence>
+          {previewEntry && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[320] flex items-center justify-center bg-black/85 px-6 backdrop-blur-md"
+              onClick={() => setPreviewEntry(null)}
+            >
             <motion.div
               initial={{ opacity: 0, scale: 0.85, y: 24 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -196,9 +204,11 @@ export default function AvatarPicker({ value, onChange, className = '' }) {
                 {selectedCharacter?.slug === previewEntry.slug ? 'YA ES TU PERSONAJE' : `ELEGIR A ${previewEntry.name.toUpperCase()}`}
               </button>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </div>
   );
 }
