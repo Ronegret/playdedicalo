@@ -9,6 +9,7 @@ import VinylVisualizer from '../components/VinylVisualizer';
 import NeonButton from '../components/NeonButton';
 import ProfileMenu from '../components/ProfileMenu';
 import FontSizeControl from '../components/FontSizeControl';
+import AlertDialog from '../components/AlertDialog';
 import { StepActionBar, StepPanel, StepProgress } from '../components/WizardSteps';
 
 // Crear sala en pasos en vez de un solo muro con todo a la vez: primero
@@ -86,6 +87,7 @@ export default function HostSyncScreen() {
   const [isTestingSpotify, setIsTestingSpotify] = useState(false);
   const [isSpotifyPlaying, setIsSpotifyPlaying] = useState(false);
   const [step, setStep] = useState(0);
+  const [alert, setAlert] = useState(null);
   const createStartedRef = useRef(false);
 
   const selectedPlaylistData = DEDICALO_PLAYLISTS.find((p) => p.id === selectedPlaylist) || DEDICALO_PLAYLISTS[0];
@@ -203,8 +205,45 @@ export default function HostSyncScreen() {
       setAuthMessage(msg[error.code] || 'No pudimos entrar con Google. Inténtalo de nuevo.');
     }
   };
+  // Igual que en el flujo de invitado: en vez de dejar el botón apagado sin
+  // explicación, se deja pulsar y el aviso emergente dice exactamente qué
+  // falta.
+  const handleNextStep = () => {
+    if (step === 0) {
+      if (!googleUser) {
+        setAlert({
+          tone: 'warning',
+          title: 'Falta tu cuenta de Google',
+          message: 'El anfitrión entra con Google para que la sala quede ligada a su perfil. Toca "Entrar con Google" para continuar.'
+        });
+        return;
+      }
+      if (!spotifyStatus.connected) {
+        setAlert({
+          tone: 'warning',
+          title: 'Falta conectar Spotify',
+          message: 'Necesitas una cuenta de Spotify Premium conectada para poner la música. Toca "Conectar" en la tarjeta verde.'
+        });
+        return;
+      }
+    }
+    setStep((prev) => prev + 1);
+  };
+
   const handleHostCreate = async () => {
-    if (!canCreateRoom || createStartedRef.current) return;
+    if (createStartedRef.current) return;
+    if (!canCreateRoom) {
+      setAlert({
+        tone: 'warning',
+        title: 'Faltan datos',
+        message: !googleUser
+          ? 'Vuelve al primer paso y entra con Google.'
+          : !spotifyStatus.connected
+            ? 'Vuelve al primer paso y conecta tu Spotify Premium.'
+            : 'Elige una playlist antes de crear la sala.'
+      });
+      return;
+    }
     createStartedRef.current = true;
     setIsCreating(true);
     if (isSpotifyPlaying) {
@@ -216,7 +255,11 @@ export default function HostSyncScreen() {
       await hostCreateRoom(googleUser);
       navigate('/lobby');
     } catch (error) {
-      setSpotifyCheck({ type: 'error', message: error.message || 'No se pudo crear la sala. Inténtalo otra vez.' });
+      setAlert({
+        tone: 'error',
+        title: 'No se pudo crear la sala',
+        message: error.message || 'No se pudo crear la sala. Inténtalo otra vez.'
+      });
       createStartedRef.current = false;
     } finally {
       setIsCreating(false);
@@ -682,14 +725,14 @@ export default function HostSyncScreen() {
 
       <StepActionBar
         onBack={step > 0 ? () => setStep((prev) => prev - 1) : undefined}
-        onNext={step === HOST_STEPS.length - 1 ? handleHostCreate : () => setStep((prev) => prev + 1)}
+        onNext={step === HOST_STEPS.length - 1 ? handleHostCreate : handleNextStep}
         nextLabel={
           step === HOST_STEPS.length - 1
             ? (isCreating ? 'CREANDO SALA...' : 'CREAR SALA')
             : 'SIGUIENTE'
         }
         nextIcon={step === HOST_STEPS.length - 1 ? 'meeting_room' : 'arrow_forward'}
-        nextDisabled={step === 0 ? !canCreateRoom : (step === HOST_STEPS.length - 1 ? (isCreating || !canCreateRoom) : false)}
+        nextDisabled={isCreating}
         hint={
           step === 0 && !googleUser
             ? 'Entra con Google para continuar'
@@ -697,6 +740,14 @@ export default function HostSyncScreen() {
               ? 'Conecta Spotify Premium para continuar'
               : undefined
         }
+      />
+
+      <AlertDialog
+        open={Boolean(alert)}
+        tone={alert?.tone}
+        title={alert?.title}
+        message={alert?.message || ''}
+        onClose={() => setAlert(null)}
       />
     </motion.main>
   );

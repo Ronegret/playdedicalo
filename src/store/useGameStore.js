@@ -953,6 +953,37 @@ export const useGameStore = create((setStore, getStore) => ({
 
   clearRoomError: () => setStore({ roomError: null }),
 
+  // Comprueba que un PIN corresponde a una sala real ANTES de dejar avanzar
+  // al invitado por el resto del formulario. Sin esto, alguien con un PIN
+  // mal escrito llenaba nombre y personaje y recién se enteraba del error
+  // al final, teniendo que rehacer todo.
+  // Devuelve { ok: true } o { ok: false, message } — nunca lanza, para que
+  // la pantalla solo tenga que decidir si muestra el aviso.
+  checkRoomPin: async (enteredPin) => {
+    const cleanPin = String(enteredPin || '').replace(/\D/g, '').slice(0, 4);
+    if (cleanPin.length !== 4) {
+      return { ok: false, message: 'El PIN tiene que tener 4 dígitos.' };
+    }
+
+    try {
+      await ensureAuthenticated();
+    } catch {
+      return { ok: false, message: 'Hay mucha gente conectándose a la vez. Espera unos segundos y vuelve a intentarlo.' };
+    }
+
+    let room;
+    try {
+      room = await readData(`rooms/${cleanPin}`);
+    } catch {
+      return { ok: false, message: 'No pudimos comprobar el PIN. Revisa tu conexión e inténtalo otra vez.' };
+    }
+
+    if (!room) {
+      return { ok: false, message: `No existe ninguna sala con el PIN ${cleanPin}. Revísalo con el anfitrión.` };
+    }
+    return { ok: true, phase: room.phase || 'lobby' };
+  },
+
   // Se llama al volver a primer plano (pantalla desbloqueada, app recuperada
   // de una llamada, wifi que vuelve). Re-marca al jugador como online y
   // vuelve a armar el onDisconnect, porque cada conexión de socket nueva

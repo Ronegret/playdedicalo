@@ -7,6 +7,8 @@ import { useGameStore } from '../store/useGameStore';
 import ProfileMenu from '../components/ProfileMenu';
 import FontSizeControl from '../components/FontSizeControl';
 import AvatarPicker from '../components/AvatarPicker';
+import AlertDialog from '../components/AlertDialog';
+import HeaderLogo from '../components/HeaderLogo';
 import { StepActionBar, StepPanel, StepProgress } from '../components/WizardSteps';
 import { findCharacterAvatarByUrl, isImageAvatar } from '../data/characterAvatars';
 import { auth, authReady, googleProvider } from '../firebase';
@@ -33,6 +35,7 @@ export default function GuestJoinScreen() {
   const loadUserProfile = useGameStore((state) => state.loadUserProfile);
   const cancelJoinRequest = useGameStore((state) => state.cancelJoinRequest);
   const pendingJoinStatus = useGameStore((state) => state.pendingJoinStatus);
+  const checkRoomPin = useGameStore((state) => state.checkRoomPin);
   const inputRefs = useRef([]);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -42,7 +45,6 @@ export default function GuestJoinScreen() {
   const [name, setName] = useState('');
   const [avatar, setAvatar] = useState('😎');
   const [isLoading, setIsLoading] = useState(false);
-  const [joinError, setJoinError] = useState('');
   const [googleUser, setGoogleUser] = useState(null);
   const [authStatus, setAuthStatus] = useState('idle');
   const [authMessage, setAuthMessage] = useState('');
@@ -51,6 +53,9 @@ export default function GuestJoinScreen() {
   // Si llega con ?pin=... (enlace compartido) ya tiene el paso 1 resuelto,
   // así que arranca directamente en "tu nombre".
   const [step, setStep] = useState(() => (searchParams.get('pin')?.replace(/\D/g, '').length === 4 ? 1 : 0));
+  // Aviso emergente para errores / datos que faltan: { title, message, tone }
+  const [alert, setAlert] = useState(null);
+  const [isCheckingPin, setIsCheckingPin] = useState(false);
 
   // El nombre es opcional: si la persona no escribe nada, se usa el nombre
   // de su personaje elegido (o un alias genérico) — no debe bloquear la
@@ -268,7 +273,6 @@ export default function GuestJoinScreen() {
     const finalName = name.trim() || fallbackName;
 
     setIsLoading(true);
-    setJoinError('');
     try {
       await guestJoinRoom(pin, finalName, avatar, googleUser);
       const { pendingJoinStatus: status, phase: roomPhase } = useGameStore.getState();
@@ -280,7 +284,11 @@ export default function GuestJoinScreen() {
         navigate(roomPhase === 'lobby' ? '/lobby' : '/game');
       }
     } catch (error) {
-      setJoinError(error.message || 'No pudimos unirte a la sala. Revisa el PIN e inténtalo de nuevo.');
+      setAlert({
+        tone: 'error',
+        title: 'No pudimos unirte',
+        message: error.message || 'No pudimos unirte a la sala. Revisa el PIN e inténtalo de nuevo.'
+      });
     } finally {
       setIsLoading(false);
     }
@@ -291,13 +299,43 @@ export default function GuestJoinScreen() {
     await cancelJoinRequest();
   };
 
+  // Avanzar de paso. El paso del PIN no se limita a contar 4 dígitos:
+  // comprueba contra la base que esa sala existe de verdad, así nadie
+  // rellena nombre y personaje para enterarse al final de que el PIN
+  // estaba mal.
+  const handleNextStep = async () => {
+    if (step === 0) {
+      if (pin.length !== 4) {
+        setAlert({
+          tone: 'warning',
+          title: 'Falta el PIN',
+          message: 'Escribe los 4 dígitos que te muestra el anfitrión, o escanea su código QR.'
+        });
+        return;
+      }
+
+      setIsCheckingPin(true);
+      try {
+        const result = await checkRoomPin(pin);
+        if (!result.ok) {
+          setAlert({ tone: 'error', title: 'PIN incorrecto', message: result.message });
+          return;
+        }
+      } finally {
+        setIsCheckingPin(false);
+      }
+    }
+
+    setStep((prev) => prev + 1);
+  };
+
   return (
     <motion.main className="app-screen safe-bottom-action app-shell relative z-10 overflow-y-auto pt-safe-header text-center">
       <header className="fixed top-0 w-full z-50 bg-glass-surface backdrop-blur-md border-b border-white/10 flex items-center justify-between px-margin-mobile h-16 left-0">
         <button onClick={() => navigate('/role-selection')} className="min-h-touch text-on-surface-variant hover:text-white transition-colors flex items-center gap-2 font-label-caps text-xs tracking-[0.18em]">
           <span className="material-symbols-outlined text-xl">arrow_back</span> VOLVER
         </button>
-        <img src="/images/logo-main.png" alt="Dedícalo" className="h-8 w-auto object-contain" />
+        <HeaderLogo />
         {googleUser ? <ProfileMenu user={googleUser} /> : <FontSizeControl />}
       </header>
 
@@ -441,28 +479,29 @@ export default function GuestJoinScreen() {
           )}
         </AnimatePresence>
 
-        {joinError && (
-          <motion.p
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="w-full rounded-xl border border-intense-red/40 bg-intense-red/10 px-4 py-3 text-sm text-intense-red text-center"
-          >
-            {joinError}
-          </motion.p>
-        )}
       </div>
 
       <StepActionBar
         onBack={step > 0 ? () => setStep((prev) => prev - 1) : undefined}
-        onNext={step === GUEST_STEPS.length - 1 ? handleJoin : () => setStep((prev) => prev + 1)}
+        onNext={step === GUEST_STEPS.length - 1 ? handleJoin : handleNextStep}
         nextLabel={
           step === GUEST_STEPS.length - 1
             ? (isLoading ? 'ENTRANDO...' : 'UNIRSE')
-            : 'SIGUIENTE'
+            : (isCheckingPin ? 'COMPROBANDO...' : 'SIGUIENTE')
         }
         nextIcon={step === GUEST_STEPS.length - 1 ? 'login' : 'arrow_forward'}
-        nextDisabled={step === 0 ? pin.length !== 4 : (step === GUEST_STEPS.length - 1 ? !canJoin : false)}
-        hint={step === 0 && pin.length !== 4 ? 'Necesitas los 4 dígitos para continuar' : undefined}
+        // El botón ya no se deshabilita por un PIN incompleto: se deja
+        // pulsar a propósito para poder explicar en el aviso qué falta,
+        // en vez de dejar a la persona mirando un botón apagado sin motivo.
+        nextDisabled={isCheckingPin || (step === GUEST_STEPS.length - 1 && !canJoin)}
+      />
+
+      <AlertDialog
+        open={Boolean(alert)}
+        tone={alert?.tone}
+        title={alert?.title}
+        message={alert?.message || ''}
+        onClose={() => setAlert(null)}
       />
 
       {/* La partida ya empezó: espera a que el anfitrión acepte el pedido

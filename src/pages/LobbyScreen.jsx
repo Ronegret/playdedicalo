@@ -6,6 +6,7 @@ import { DEDICALO_PLAYLISTS, MAX_TIMELINE_GOAL_YEARS, MIN_TIMELINE_GOAL_YEARS, P
 import { isImageAvatar } from '../data/characterAvatars';
 import { explainSpotifyError, prepareSpotifyPlayback } from '../services/spotify';
 import ProfileMenu from '../components/ProfileMenu';
+import HeaderLogo from '../components/HeaderLogo';
 import { auth } from '../firebase';
 
 
@@ -159,7 +160,7 @@ export default function LobbyScreen() {
         <button onClick={handleExit} className="min-h-touch text-on-surface-variant hover:text-white transition-colors flex items-center font-label-caps text-xs gap-2">
           <span className="material-symbols-outlined text-xl">arrow_back</span> SALIR
         </button>
-        <img src="/images/logo-main.png" alt="Dedícalo" className="h-8 w-auto object-contain" />
+        <HeaderLogo />
         <ProfileMenu user={role === 'host' ? auth.currentUser : null} guestAvatar={role === 'guest' ? guestAvatar : null} />
       </header>
 
