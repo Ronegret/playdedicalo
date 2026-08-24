@@ -992,8 +992,72 @@ export default function GameScreen() {
               </motion.div>
             </div>
 
+            {/* Zona de respuesta PRIMERO: es lo que hay que hacer en esta
+                pantalla, así que va arriba del todo, justo debajo de la
+                pregunta. El estado de votos (y el panel del anfitrión con
+                REVELAR RESULTADOS) va debajo — es información de
+                seguimiento, no la acción principal. */}
+            {hasAnswered ? (
+              <>
+                <motion.div
+                  initial={{ scale: 0.95, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  className={`rounded-2xl border p-6 text-center ${role === 'host' ? 'border-electric-purple/40 bg-electric-purple/10' : 'border-neon-green/30 bg-neon-green/10'}`}
+                >
+                  <span className="material-symbols-outlined text-neon-green" style={{ fontSize: '3.5rem' }}>check_circle</span>
+                  <p className="mt-3 text-white font-bold text-lg">¡Respuesta enviada!</p>
+                  <p className="mt-1 text-sm text-on-surface-variant">
+                    {role === 'host' ? 'Cuando todos estén listos, revela los resultados.' : 'Esperando al anfitrión...'}
+                  </p>
+                </motion.div>
+                <div className="w-full flex flex-col gap-2">
+                  <RankingPeek players={players} guestId={guestId} targetYears={targetYears} />
+                </div>
+              </>
+            ) : isBlockedThisRound ? (
+              <BlockedPlacement
+                attackFrom={incomingAttack?.from}
+                attackFromAvatar={incomingAttack?.fromAvatar}
+                playerYears={ownTimelineYears}
+                wildcards={Number(ownPlayer?.wildcards || 0)}
+                targetYears={targetYears}
+                isHost={role === 'host'}
+              />
+            ) : currentQuestion.answerType === 'timeline-placement' ? (
+              <TimelinePlacementQuestion
+                question={currentQuestion}
+                playerYears={ownTimelineYears}
+                wildcards={Number(ownPlayer?.wildcards || 0)}
+                disabled={hasAnswered}
+                onPick={handleAnswer}
+                activeAttack={incomingAttack}
+                targetYears={targetYears}
+              />
+            ) : (
+              <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                animate="show"
+                className="flex flex-col gap-3"
+              >
+                {currentQuestion.options.map((option, index) => (
+                  <motion.button
+                    key={option}
+                    variants={itemVariants}
+                    onClick={() => handleAnswer(index === currentQuestion.correct)}
+                    className="flex w-full min-h-[4.25rem] items-center gap-3 rounded-2xl border border-white/15 bg-white/8 p-3.5 text-left font-body-md text-base text-white transition-all duration-150 hover:border-neon-green/60 hover:bg-neon-green/8 active:scale-[0.97] group sm:min-h-[5rem] sm:gap-4 sm:p-4"
+                  >
+                    <span className="w-10 h-10 rounded-xl bg-black/30 border border-white/15 text-neon-green group-hover:bg-neon-green group-hover:text-black group-hover:border-neon-green flex items-center justify-center font-black text-lg shrink-0 transition-all duration-150">
+                      {String.fromCharCode(65 + index)}
+                    </span>
+                    <span className="leading-snug text-base">{option}</span>
+                  </motion.button>
+                ))}
+              </motion.div>
+            )}
+
             {role !== 'host' && (
-              <div className="mt-4 flex justify-center">
+              <div className="flex justify-center">
                 <VoteStatusStrip
                   players={players}
                   roundAnswers={roundAnswers}
@@ -1089,65 +1153,6 @@ export default function GameScreen() {
                   <p className="mt-2 text-sm text-intense-red text-center">{revealError}</p>
                 )}
               </div>
-            )}
-
-            {hasAnswered ? (
-              <>
-                <motion.div
-                  initial={{ scale: 0.95, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  className={`mt-6 rounded-2xl border p-6 text-center ${role === 'host' ? 'border-electric-purple/40 bg-electric-purple/10' : 'border-neon-green/30 bg-neon-green/10'}`}
-                >
-                  <span className="material-symbols-outlined text-neon-green" style={{ fontSize: '3.5rem' }}>check_circle</span>
-                  <p className="mt-3 text-white font-bold text-lg">¡Respuesta enviada!</p>
-                  <p className="mt-1 text-sm text-on-surface-variant">
-                    {role === 'host' ? 'Cuando todos estén listos, revela los resultados.' : 'Esperando al anfitrión...'}
-                  </p>
-                </motion.div>
-                <div className="mt-3 w-full flex flex-col gap-2">
-                  <RankingPeek players={players} guestId={guestId} targetYears={targetYears} />
-                </div>
-              </>
-            ) : isBlockedThisRound ? (
-              <BlockedPlacement
-                attackFrom={incomingAttack?.from}
-                attackFromAvatar={incomingAttack?.fromAvatar}
-                playerYears={ownTimelineYears}
-                wildcards={Number(ownPlayer?.wildcards || 0)}
-                targetYears={targetYears}
-                isHost={role === 'host'}
-              />
-            ) : currentQuestion.answerType === 'timeline-placement' ? (
-              <TimelinePlacementQuestion
-                question={currentQuestion}
-                playerYears={ownTimelineYears}
-                wildcards={Number(ownPlayer?.wildcards || 0)}
-                disabled={hasAnswered}
-                onPick={handleAnswer}
-                activeAttack={incomingAttack}
-                targetYears={targetYears}
-              />
-            ) : (
-              <motion.div
-                variants={containerVariants}
-                initial="hidden"
-                animate="show"
-                className="mt-4 flex flex-col gap-3"
-              >
-                {currentQuestion.options.map((option, index) => (
-                  <motion.button
-                    key={option}
-                    variants={itemVariants}
-                    onClick={() => handleAnswer(index === currentQuestion.correct)}
-                    className="flex w-full min-h-[4.25rem] items-center gap-3 rounded-2xl border border-white/15 bg-white/8 p-3.5 text-left font-body-md text-base text-white transition-all duration-150 hover:border-neon-green/60 hover:bg-neon-green/8 active:scale-[0.97] group sm:min-h-[5rem] sm:gap-4 sm:p-4"
-                  >
-                    <span className="w-10 h-10 rounded-xl bg-black/30 border border-white/15 text-neon-green group-hover:bg-neon-green group-hover:text-black group-hover:border-neon-green flex items-center justify-center font-black text-lg shrink-0 transition-all duration-150">
-                      {String.fromCharCode(65 + index)}
-                    </span>
-                    <span className="leading-snug text-base">{option}</span>
-                  </motion.button>
-                ))}
-              </motion.div>
             )}
           </motion.div>
         )}
