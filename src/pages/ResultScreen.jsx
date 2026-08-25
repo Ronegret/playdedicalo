@@ -263,7 +263,7 @@ export default function ResultScreen() {
   const navigate = useNavigate();
   const [shareCopied, setShareCopied] = useState(false);
   const {
-    role, phase, players,
+    role, phase, players, pin,
     hostNextRound, hostCloseRoom, hostEndGame, hostRestartGame, guestLeaveRoom, guestId,
     lastResultType, lastPointDelta, revealResults, currentTrack, roomError, clearRoomError, guestAvatar,
     targetYears
@@ -293,10 +293,17 @@ export default function ResultScreen() {
   const deltaColor = pointDelta > 0 ? 'text-neon-green' : pointDelta < 0 ? 'text-intense-red' : 'text-white/30';
   const deltaLabel = pointDelta > 0 ? `+${pointDelta}` : pointDelta !== 0 ? String(pointDelta) : null;
 
+  // Sigue a la sala cuando el anfitrión cambia de fase (empieza otra ronda,
+  // vuelve al lobby). El guard de pin/role es imprescindible: al SALIR o
+  // CERRAR SALA, el store deja phase en 'lobby' con role/pin ya en null, y
+  // sin el guard este efecto disparaba navigate('/lobby') pisando el
+  // navigate('/role-selection') de handleFinish — el anfitrión terminaba en
+  // el lobby viendo "ESPERANDO AL ANFITRIÓN", y el invitado igual.
   useEffect(() => {
+    if (!pin || !role) return;
     if (phase === 'lobby') navigate('/lobby');
     if (phase === 'countdown' || phase === 'listen' || phase === 'blackout') navigate('/game');
-  }, [phase, navigate]);
+  }, [phase, pin, role, navigate]);
 
   // Refuerzo háptico del resultado — la ronda ya vibra al tocar la
   // respuesta (GameScreen), pero acá se confirma con el resultado OFICIAL

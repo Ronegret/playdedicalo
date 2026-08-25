@@ -503,6 +503,7 @@ export default function GameScreen() {
     role,
     phase,
     round,
+    pin,
     gameMode,
     currentQuestion,
     targetYears,
@@ -553,10 +554,14 @@ export default function GameScreen() {
     };
   }, []);
 
+  // Mismo guard que en ResultScreen: salir de la sala deja phase en 'lobby'
+  // con role/pin ya en null, y sin esto el efecto redirigía al lobby en vez
+  // de dejar salir.
   useEffect(() => {
+    if (!pin || !role) return;
     if (phase === 'result' || phase === 'final') navigate('/game/result');
     if (phase === 'lobby') navigate('/lobby');
-  }, [phase, navigate]);
+  }, [phase, pin, role, navigate]);
 
   useEffect(() => {
     if (!lastDisconnectedPlayer) return;
