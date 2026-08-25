@@ -1,6 +1,6 @@
 ﻿import { AnimatePresence, motion } from 'framer-motion';
 import jsQR from 'jsqr';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { getRedirectResult, onAuthStateChanged, signInWithPopup, signInWithRedirect } from 'firebase/auth';
 import { useGameStore } from '../store/useGameStore';
@@ -147,6 +147,31 @@ export default function GuestJoinScreen() {
     }
   };
 
+  // Comprueba contra la base que esa sala existe de verdad y avanza. No se
+  // limita a contar 4 dígitos: así nadie rellena nombre y personaje para
+  // enterarse al final de que el PIN estaba mal.
+  // El guard de "ya hay una comprobación en curso" usa una ref (no el
+  // estado) para que este callback sea estable y el escáner de QR pueda
+  // depender de él sin re-montar la cámara en cada render.
+  const checkingPinRef = useRef(false);
+  const advanceFromPin = useCallback(async (candidate) => {
+    if (checkingPinRef.current) return;
+    checkingPinRef.current = true;
+    setIsCheckingPin(true);
+    try {
+      const result = await checkRoomPin(candidate);
+      if (!result.ok) {
+        setAlert({ tone: 'error', title: 'PIN incorrecto', message: result.message });
+        return;
+      }
+      if (navigator.vibrate) navigator.vibrate(20);
+      setStep(1);
+    } finally {
+      checkingPinRef.current = false;
+      setIsCheckingPin(false);
+    }
+  }, [checkRoomPin]);
+
   useEffect(() => {
     if (!scannerOpen) return undefined;
 
@@ -193,10 +218,11 @@ export default function GuestJoinScreen() {
               if (nextPin.length === 4) {
                 setPin(nextPin);
                 setScannerOpen(false);
-                // El QR ya resolvió el paso del PIN — avanzar solo, sin
-                // obligar a tocar "SIGUIENTE" para algo ya completado.
-                setStep((prev) => (prev === 0 ? 1 : prev));
                 if (navigator.vibrate) navigator.vibrate([20, 40, 20]);
+                // El QR resolvió el paso — comprobar la sala y avanzar solo
+                // (mismo camino que escribirlo a mano, así un QR de una sala
+                // ya cerrada también avisa en vez de dejar seguir).
+                advanceFromPin(nextPin);
                 return;
               }
             }
@@ -219,7 +245,7 @@ export default function GuestJoinScreen() {
       streamRef.current?.getTracks().forEach((track) => track.stop());
       streamRef.current = null;
     };
-  }, [scannerOpen]);
+  }, [scannerOpen, advanceFromPin]);
 
   const updatePinAt = (index, value) => {
     const digit = value.replace(/\D/g, '').slice(-1);
@@ -227,6 +253,17 @@ export default function GuestJoinScreen() {
     nextDigits[index] = digit || ' ';
     const nextPin = nextDigits.join('').replace(/\s/g, '').slice(0, 4);
     setPin(nextPin);
+
+    // PIN completo: el paso ya está resuelto, así que se comprueba y se
+    // avanza solo. Tener que buscar y tocar "SIGUIENTE" después de llenar
+    // el último hueco era un paso de más. Se comprueba por longitud (no
+    // por índice) para que también funcione al corregir un dígito del
+    // medio, no solo al escribir el cuarto.
+    if (digit && nextPin.length === 4) {
+      inputRefs.current[index]?.blur();
+      advanceFromPin(nextPin);
+      return;
+    }
 
     if (digit && index < 3) {
       inputRefs.current[index + 1]?.focus();
@@ -244,6 +281,11 @@ export default function GuestJoinScreen() {
     if (pastedPin) {
       event.preventDefault();
       setPin(pastedPin);
+      if (pastedPin.length === 4) {
+        // Pegar el PIN completo también resuelve el paso — avanzar solo.
+        advanceFromPin(pastedPin);
+        return;
+      }
       inputRefs.current[Math.min(pastedPin.length, 4) - 1]?.focus();
     }
   };
@@ -299,10 +341,6 @@ export default function GuestJoinScreen() {
     await cancelJoinRequest();
   };
 
-  // Avanzar de paso. El paso del PIN no se limita a contar 4 dígitos:
-  // comprueba contra la base que esa sala existe de verdad, así nadie
-  // rellena nombre y personaje para enterarse al final de que el PIN
-  // estaba mal.
   const handleNextStep = async () => {
     if (step === 0) {
       if (pin.length !== 4) {
@@ -313,17 +351,8 @@ export default function GuestJoinScreen() {
         });
         return;
       }
-
-      setIsCheckingPin(true);
-      try {
-        const result = await checkRoomPin(pin);
-        if (!result.ok) {
-          setAlert({ tone: 'error', title: 'PIN incorrecto', message: result.message });
-          return;
-        }
-      } finally {
-        setIsCheckingPin(false);
-      }
+      await advanceFromPin(pin);
+      return;
     }
 
     setStep((prev) => prev + 1);

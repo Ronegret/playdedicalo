@@ -66,7 +66,7 @@ export function StepActionBar({
             <button
               type="button"
               onClick={onBack}
-              className="flex min-h-touch items-center justify-center gap-1.5 rounded-2xl border border-white/12 bg-white/5 px-4 font-label-caps text-sm font-bold text-white active:scale-95 transition-transform"
+              className="flex h-14 items-center justify-center gap-1.5 rounded-2xl border border-white/12 bg-white/5 px-4 font-label-caps text-sm font-bold text-white active:scale-95 transition-transform"
             >
               <span className="material-symbols-outlined text-lg">arrow_back</span>
               {backLabel}
@@ -77,7 +77,7 @@ export function StepActionBar({
             onClick={onNext}
             disabled={nextDisabled}
             whileTap={nextDisabled ? {} : { scale: 0.97 }}
-            className="flex h-16 items-center justify-center gap-2 rounded-2xl bg-neon-green font-label-caps text-lg font-black text-black shadow-[0_0_28px_rgba(57,255,20,0.35)] transition-all disabled:bg-white/10 disabled:text-white/40 disabled:shadow-none"
+            className="flex h-14 items-center justify-center gap-2 rounded-2xl bg-neon-green font-label-caps text-base font-black text-black shadow-[0_0_28px_rgba(57,255,20,0.35)] transition-all disabled:bg-white/10 disabled:text-white/40 disabled:shadow-none"
           >
             {nextLabel}
             <span className="material-symbols-outlined text-xl">{nextIcon}</span>

@@ -393,12 +393,12 @@ export default function ResultScreen() {
           <button
             type="button"
             onClick={handleFinish}
-            className="absolute top-4 left-4 z-[100] min-h-touch rounded-xl border border-white/12 bg-black/35 px-3 text-white/75 font-label-caps text-[11px] tracking-[0.16em] flex items-center gap-1.5 active:scale-95 transition-all"
+            className="absolute top-safe left-4 z-[100] min-h-touch rounded-xl border border-white/12 bg-black/35 px-3 text-white/75 font-label-caps text-[11px] tracking-[0.16em] flex items-center gap-1.5 active:scale-95 transition-all"
           >
             <span className="material-symbols-outlined text-base">arrow_back</span>
             {role === 'host' ? 'CERRAR' : 'SALIR'}
           </button>
-          <div className="absolute top-4 right-4 z-[100]">
+          <div className="absolute top-safe right-4 z-[100]">
             <ProfileMenu user={role === 'host' ? auth.currentUser : null} guestAvatar={role === 'guest' ? guestAvatar : null} />
           </div>
 
@@ -539,13 +539,13 @@ export default function ResultScreen() {
         <button
           type="button"
           onClick={() => setShowExitConfirm(true)}
-          className="absolute top-4 left-4 z-[100] min-h-touch rounded-xl border border-white/12 bg-black/35 px-3 text-white/75 font-label-caps text-[11px] tracking-[0.16em] flex items-center gap-1.5 active:scale-95 transition-all"
+          className="absolute top-safe left-4 z-[100] min-h-touch rounded-xl border border-white/12 bg-black/35 px-3 text-white/75 font-label-caps text-[11px] tracking-[0.16em] flex items-center gap-1.5 active:scale-95 transition-all"
         >
           <span className="material-symbols-outlined text-base">arrow_back</span>
           {role === 'host' ? 'CERRAR' : 'SALIR'}
         </button>
 
-        <div className="absolute top-4 right-4 z-[100]">
+        <div className="absolute top-safe right-4 z-[100]">
           <ProfileMenu user={role === 'host' ? auth.currentUser : null} guestAvatar={role === 'guest' ? guestAvatar : null} />
         </div>
         {/* Resultado personal */}

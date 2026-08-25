@@ -446,7 +446,7 @@ function TimelinePlacementQuestion({ question, playerYears = [], wildcards = 0, 
         <div className="flex items-center justify-between gap-3">
           <div>
             <p className="font-label-caps text-sm text-neon-green tracking-[0.16em]">TU RUTA DE AÑOS</p>
-            <p className="mt-1 text-base text-white font-bold">Elige dónde colocar esta canción</p>
+            <p className="mt-1 text-base text-white font-bold">Toca dónde crees que va</p>
           </div>
           <span className="rounded-full border border-white/10 bg-black/25 px-3 py-1.5 text-sm font-label-caps text-on-surface-variant">
             {Math.min(years.length + wildcards, targetYears)}/{targetYears}
@@ -490,7 +490,7 @@ function TimelinePlacementQuestion({ question, playerYears = [], wildcards = 0, 
           </p>
         )}
         <p className="mt-3 text-base leading-relaxed text-on-surface-variant">
-          Tu ruta es personal. Si no ves todos los discos, desliza la fila hacia los lados.
+          Desliza la fila si no ves todos tus años.
         </p>
       </div>
     </div>
@@ -972,11 +972,15 @@ export default function GameScreen() {
               >
                 RESPONDE · {currentQuestion.type}
               </motion.p>
+              {/* Antes usaba .heading-page (clamp hasta 3.6rem): con un
+                  texto largo ocupaba media pantalla y empujaba la zona de
+                  respuesta fuera de vista. Ahora el texto es corto y el
+                  tamaño, contenido. */}
               <motion.h2
                 initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.35 }}
-                className="heading-page mt-3 font-headline-lg-mobile text-white"
+                className="mt-2 font-headline-lg-mobile text-2xl font-black leading-tight text-white sm:text-3xl"
               >
                 {currentQuestion.text}
               </motion.h2>

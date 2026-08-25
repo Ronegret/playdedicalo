@@ -731,7 +731,7 @@ export async function createQuestionFromTrack(track, gameMode, round = 1, timeli
       mode: 'timeline',
       answerType: 'timeline-placement',
       type: 'Años Locos',
-      text: '¿Dónde encaja esta canción en tu ruta de años?',
+      text: '¿De qué año es?',
       timelineYears: roundTimelineYears,
       songYear: year,
       options: Array.from({ length: roundTimelineYears.length + 1 }, (_, index) => String(index)),

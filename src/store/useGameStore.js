@@ -134,9 +134,9 @@ export const GAME_MODES = {
 // These questions are fallbacks shown only when no Spotify track is available.
 // All answers must be objectively correct for any song/situation.
 const MUSIC_QUESTIONS = [
-  { mode: 'timeline', answerType: 'timeline-placement', type: 'Años Locos', text: '¿Dónde encaja esta canción en tu ruta de años?', timelineYears: [2000], songYear: 2014, options: ['0', '1'], correct: 1 },
-  { mode: 'timeline', answerType: 'timeline-placement', type: 'Años Locos', text: '¿Dónde pondrías esta canción?', timelineYears: [1995, 2005], songYear: 2001, options: ['0', '1', '2'], correct: 1 },
-  { mode: 'timeline', answerType: 'timeline-placement', type: 'Años Locos', text: 'Escucha y colócala por año.', timelineYears: [1990, 2000, 2010], songYear: 2020, options: ['0', '1', '2', '3'], correct: 3 }
+  { mode: 'timeline', answerType: 'timeline-placement', type: 'Años Locos', text: '¿De qué año es?', timelineYears: [2000], songYear: 2014, options: ['0', '1'], correct: 1 },
+  { mode: 'timeline', answerType: 'timeline-placement', type: 'Años Locos', text: '¿De qué año es?', timelineYears: [1995, 2005], songYear: 2001, options: ['0', '1', '2'], correct: 1 },
+  { mode: 'timeline', answerType: 'timeline-placement', type: 'Años Locos', text: '¿De qué año es?', timelineYears: [1990, 2000, 2010], songYear: 2020, options: ['0', '1', '2', '3'], correct: 3 }
 ];
 
 

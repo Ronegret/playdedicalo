@@ -21,21 +21,24 @@
 :root {
   --vinyl-size: 4.75rem;
   --font-scale: 1;
-  font-size: 18px;
+  /* 16px fue "muy pequeño" y 18px quedó "muy grande" — 17px es el punto
+     medio que se sostuvo en pruebas. Quien necesite más tiene fs-large y
+     fs-xl a un toque. */
+  font-size: 17px;
 }
 
 /* Tamaño de fuente grande (accesibilidad) */
 html.fs-large {
   --vinyl-size: 5.5rem;
   --font-scale: 1.15;
-  font-size: 21px;
+  font-size: 20px;
 }
 
 /* Tamaño de fuente muy grande */
 html.fs-xl {
   --vinyl-size: 6.25rem;
   --font-scale: 1.3;
-  font-size: 24px;
+  font-size: 23px;
 }
 
 @layer base {
@@ -79,6 +82,14 @@ html.fs-xl {
   /* Padding-top que acompaña el header dinámico + respiro de 1rem */
   .pt-safe-header {
     padding-top: calc(5rem + env(safe-area-inset-top, 0px) + 12px);
+  }
+
+  /* Para controles sueltos anclados arriba (los de ResultScreen, que no
+     viven dentro de un <header fixed>). Con `top-4` a secas quedaban
+     debajo de la muesca / barra del navegador en móvil: se veían pero no
+     se podían tocar. */
+  .top-safe {
+    top: calc(1rem + env(safe-area-inset-top, 0px));
   }
 }
 
