@@ -130,22 +130,50 @@ html.fs-xl {
     padding-bottom: calc(8.5rem + env(safe-area-inset-bottom, 0px));
   }
 
+  /* ── Tipografia de titular, a prueba de desbordes ──────────────────────
+     El patron viejo era clamp(Xrem, Yvw, Zrem). Problema: el MINIMO estaba
+     en rem, y rem crece con la escala de accesibilidad — asi que al elegir
+     "letra muy grande" el minimo se disparaba por encima del ancho de
+     pantalla y el titular se salia (palabras cortadas, botones empujados
+     fuera de vista).
+     Ahora el limite superior lo pone el viewport con min(), de modo que un
+     titular JAMAS puede ser mas ancho que la pantalla. Sigue creciendo con
+     la escala del usuario, pero acotado.
+     Regla general del proyecto: texto decorativo/titular -> acotado por
+     viewport; texto funcional (cuerpo, botones, etiquetas) -> en rem puro,
+     que escala del todo. */
   .heading-impact {
-    font-size: clamp(2rem, 10vw, 4.75rem);
+    font-size: min(4.75rem, max(1.9rem, 10vw));
     line-height: 0.96;
     letter-spacing: -0.035em;
     overflow-wrap: anywhere;
+    hyphens: auto;
   }
 
   .heading-page {
-    font-size: clamp(1.9rem, 8vw, 3.6rem);
-    line-height: 1.02;
+    font-size: min(3.6rem, max(1.6rem, 8vw));
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    overflow-wrap: anywhere;
+    hyphens: auto;
+  }
+
+  /* Titular gigante de impacto (overlay de sabotaje, cuenta atras). */
+  .text-display {
+    font-size: min(4rem, max(1.75rem, 13vw));
+    line-height: 0.92;
     letter-spacing: -0.02em;
     overflow-wrap: anywhere;
   }
 
+  /* Numero enorme (cuenta atras de ronda). */
+  .text-numeric-hero {
+    font-size: min(8rem, max(3rem, 26vw));
+    line-height: 1;
+  }
+
   .copy-readable {
-    font-size: clamp(0.92rem, 3.6vw, 1rem);
+    font-size: clamp(0.92rem, 3.6vw, 1.05rem);
     line-height: 1.45;
   }
 

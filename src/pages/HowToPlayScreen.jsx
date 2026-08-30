@@ -85,8 +85,8 @@ function SectionTitle({ eyebrow, title, text }) {
   return (
     <div className="mb-5">
       <p className="font-label-caps text-sm tracking-[0.18em] text-neon-green">{eyebrow}</p>
-      <h2 className="mt-2 font-black leading-tight text-white" style={{ fontSize: 'clamp(1.6rem, 6vw, 2.4rem)' }}>{title}</h2>
-      {text && <p className="mt-2 leading-relaxed text-on-surface-variant" style={{ fontSize: 'clamp(0.95rem, 3.4vw, 1.08rem)' }}>{text}</p>}
+      <h2 className="mt-2 font-black leading-tight text-white" style={{ fontSize: 'min(2.4rem, max(1.4rem, 6vw))' }}>{title}</h2>
+      {text && <p className="mt-2 leading-relaxed text-on-surface-variant" style={{ fontSize: 'min(1.15rem, max(0.9rem, 3.4vw))' }}>{text}</p>}
     </div>
   );
 }
@@ -106,8 +106,8 @@ function StepCard({ step, index }) {
           <span className="material-symbols-outlined text-[2rem]">{step.icon}</span>
         </span>
         <div>
-          <h3 className="font-black leading-tight text-white" style={{ fontSize: 'clamp(1.05rem, 4vw, 1.2rem)' }}>{step.title}</h3>
-          <p className="mt-1 leading-relaxed text-on-surface-variant" style={{ fontSize: 'clamp(0.92rem, 3.4vw, 1.02rem)' }}>{step.text}</p>
+          <h3 className="font-black leading-tight text-white" style={{ fontSize: 'min(1.3rem, max(1rem, 4vw))' }}>{step.title}</h3>
+          <p className="mt-1 leading-relaxed text-on-surface-variant" style={{ fontSize: 'min(1.1rem, max(0.9rem, 3.4vw))' }}>{step.text}</p>
         </div>
       </div>
     </motion.article>
@@ -237,14 +237,14 @@ export default function HowToPlayScreen() {
             <h1 className="heading-impact mt-3 font-headline-lg font-black text-white">
               Dedícalo es música, memoria y risas rápidas.
             </h1>
-            <p className="mt-4 max-w-2xl text-[clamp(1rem,3.5vw,1.18rem)] leading-relaxed text-white/82">
+            <p className="mt-4 max-w-2xl text-[min(1.25rem, max(0.95rem, 3.5vw))] leading-relaxed text-white/82">
               Escuchas una canción, adivinas dónde encaja su año y miras cómo subes en el ranking. Se aprende en una ronda. Se pica en dos.
             </p>
             <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
               {PLAYER_RULES.map(([title, text]) => (
                 <div key={title} className="rounded-2xl border border-white/12 bg-black/40 p-4">
-                  <p className="text-[clamp(1rem,3.5vw,1.12rem)] font-black text-white">{title}</p>
-                  <p className="mt-1 text-[clamp(0.9rem,3.2vw,1rem)] leading-snug text-on-surface-variant">{text}</p>
+                  <p className="text-[min(1.2rem, max(0.95rem, 3.5vw))] font-black text-white">{title}</p>
+                  <p className="mt-1 text-[min(1.08rem, max(0.88rem, 3.2vw))] leading-snug text-on-surface-variant">{text}</p>
                 </div>
               ))}
             </div>
@@ -332,10 +332,10 @@ export default function HowToPlayScreen() {
               <details key={question} className="group rounded-2xl border border-white/10 bg-white/[0.045]">
                 <summary className="flex cursor-pointer list-none items-center gap-3 px-4 py-5" style={{ minHeight: '3.5rem' }}>
                   <span className="material-symbols-outlined text-2xl text-neon-green shrink-0">help</span>
-                  <span className="flex-1 font-black leading-snug text-white" style={{ fontSize: 'clamp(1rem, 3.8vw, 1.12rem)' }}>{question}</span>
+                  <span className="flex-1 font-black leading-snug text-white" style={{ fontSize: 'min(1.2rem, max(0.95rem, 3.8vw))' }}>{question}</span>
                   <span className="material-symbols-outlined text-on-surface-variant transition-transform group-open:rotate-180 shrink-0">expand_more</span>
                 </summary>
-                <p className="px-4 pb-6 pl-14 leading-relaxed text-on-surface-variant" style={{ fontSize: 'clamp(0.92rem, 3.4vw, 1rem)' }}>{answer}</p>
+                <p className="px-4 pb-6 pl-14 leading-relaxed text-on-surface-variant" style={{ fontSize: 'min(1.08rem, max(0.9rem, 3.4vw))' }}>{answer}</p>
               </details>
             ))}
           </div>

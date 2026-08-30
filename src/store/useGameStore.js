@@ -91,6 +91,16 @@ export const ATTACK_TYPES = {
   }
 };
 
+// El sabotaje es OPCIONAL: el anfitrion decide si su partida lo incluye y
+// que tipos permite. Sin esto, todas las salas lo tenian a la fuerza.
+// Se normaliza siempre contra ATTACK_TYPES para que un valor corrupto o de
+// una version vieja no rompa la partida.
+export function normalizeSabotageTypes(types) {
+  const valid = Object.keys(ATTACK_TYPES);
+  const list = Array.isArray(types) ? types.filter((t) => valid.includes(t)) : [];
+  return list.length ? list : valid;
+}
+
 export const TIMELINE_GOAL_YEARS = 12;
 export const MIN_TIMELINE_GOAL_YEARS = 6;
 export const MAX_TIMELINE_GOAL_YEARS = 20;
@@ -256,6 +266,11 @@ export const useGameStore = create((setStore, getStore) => ({
   gameMode: 'timeline',
   targetScore: 70,
   targetYears: TIMELINE_GOAL_YEARS,
+  // Sabotaje opcional (ver normalizeSabotageTypes). Por defecto activado
+  // para no cambiar el juego de quien ya lo conoce, pero el anfitrion
+  // puede apagarlo entero o dejar solo un tipo.
+  sabotageEnabled: true,
+  sabotageTypes: Object.keys(ATTACK_TYPES),
   currentQuestion: null,
   guestId: null,
   guestAvatar: null,
@@ -326,13 +341,15 @@ export const useGameStore = create((setStore, getStore) => ({
     return profile;
   },
 
-  setGameSettings: async ({ targetScore, targetYears }) => {
+  setGameSettings: async ({ targetScore, targetYears, sabotageEnabled, sabotageTypes }) => {
     const pin = getStore().pin;
     if (getStore().round > 1 || getStore().phase !== 'lobby') return;
     const nextSettings = {
       gameMode: 'timeline',
       targetScore: Number(targetScore || getStore().targetScore),
-      targetYears: clampTimelineGoal(targetYears || getStore().targetYears)
+      targetYears: clampTimelineGoal(targetYears || getStore().targetYears),
+      sabotageEnabled: typeof sabotageEnabled === 'boolean' ? sabotageEnabled : getStore().sabotageEnabled,
+      sabotageTypes: normalizeSabotageTypes(sabotageTypes || getStore().sabotageTypes)
     };
 
     setStore(nextSettings);
@@ -374,7 +391,9 @@ export const useGameStore = create((setStore, getStore) => ({
       settings: {
         gameMode: 'timeline',
         targetScore: getStore().targetScore,
-        targetYears: clampTimelineGoal(getStore().targetYears)
+        targetYears: clampTimelineGoal(getStore().targetYears),
+        sabotageEnabled: getStore().sabotageEnabled !== false,
+        sabotageTypes: normalizeSabotageTypes(getStore().sabotageTypes)
       },
       players: { [hostId]: hostPlayer },
       audio: {
@@ -583,10 +602,21 @@ export const useGameStore = create((setStore, getStore) => ({
   // respuesta. Cuesta puntos, nunca años — no puede decidir la partida por
   // sí solo, solo complica el ranking del rival por una ronda.
   attackOpponent: async (targetPlayerId, attackTypeId = 'block_vote') => {
-    const { pin, guestId, players, phase } = getStore();
+    const { pin, guestId, players, phase, sabotageEnabled, sabotageTypes } = getStore();
     if (!pin || !guestId) return;
+    // El sabotaje es opcional: si esta sala lo tiene apagado, se rechaza
+    // aqui y no solo escondiendo el boton — asi una pestaña vieja o un
+    // estado desincronizado tampoco puede colar un ataque.
+    if (sabotageEnabled === false) {
+      throw new Error('El anfitrion desactivo el sabotaje en esta partida.');
+    }
     if (phase !== 'listen') {
       throw new Error('Solo puedes sabotear antes de que salga la pregunta.');
+    }
+
+    const allowed = normalizeSabotageTypes(sabotageTypes);
+    if (!allowed.includes(attackTypeId)) {
+      throw new Error('Ese tipo de sabotaje no esta permitido en esta partida.');
     }
 
     const me = players.find((player) => player.id === guestId);
@@ -887,6 +917,8 @@ export const useGameStore = create((setStore, getStore) => ({
         gameMode: 'timeline',
         targetScore: Number(room.settings?.targetScore || 70),
         targetYears: clampTimelineGoal(room.settings?.targetYears || TIMELINE_GOAL_YEARS),
+        sabotageEnabled: room.settings?.sabotageEnabled !== false,
+        sabotageTypes: normalizeSabotageTypes(room.settings?.sabotageTypes),
         lastResultType: null,
         lastPointDelta: 0,
         timelineYears: room.timelineYears || []
@@ -1024,6 +1056,8 @@ export const useGameStore = create((setStore, getStore) => ({
         gameMode: 'timeline',
         targetScore: Number(room.settings?.targetScore || 70),
         targetYears: clampTimelineGoal(room.settings?.targetYears || TIMELINE_GOAL_YEARS),
+        sabotageEnabled: room.settings?.sabotageEnabled !== false,
+        sabotageTypes: normalizeSabotageTypes(room.settings?.sabotageTypes),
         lastResultType: null,
         lastPointDelta: 0,
         timelineYears: room.timelineYears || []
@@ -1127,6 +1161,8 @@ export const useGameStore = create((setStore, getStore) => ({
         gameMode: 'timeline',
         targetScore: Number(data.settings?.targetScore || data.targetScore || 70),
         targetYears: clampTimelineGoal(data.settings?.targetYears || TIMELINE_GOAL_YEARS),
+        sabotageEnabled: data.settings?.sabotageEnabled !== false,
+        sabotageTypes: normalizeSabotageTypes(data.settings?.sabotageTypes),
         players: normalizedPlayers,
         currentQuestion: data.currentQuestion || null,
         currentTrack: data.currentTrack || null,

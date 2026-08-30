@@ -7,6 +7,7 @@ import { isImageAvatar } from '../data/characterAvatars';
 import { explainSpotifyError, prepareSpotifyPlayback } from '../services/spotify';
 import ProfileMenu from '../components/ProfileMenu';
 import HeaderLogo from '../components/HeaderLogo';
+import SabotageSettings from '../components/SabotageSettings';
 import { auth } from '../firebase';
 
 
@@ -57,6 +58,8 @@ export default function LobbyScreen() {
     lastDisconnectedPlayer,
     targetYears,
     setGameSettings,
+    sabotageEnabled,
+    sabotageTypes,
     spotifyPlaylistUrl,
     hostSetSpotifyPlaylistUrl
   } = useGameStore();
@@ -337,6 +340,17 @@ export default function LobbyScreen() {
                 </div>
               </div>
             )}
+
+            {/* Sabotaje: se puede cambiar de opinion hasta que arranca la
+                primera ronda. */}
+            <div className="mt-4">
+              <SabotageSettings
+                enabled={sabotageEnabled}
+                types={sabotageTypes}
+                disabled={gameLocked}
+                onChange={(next) => setGameSettings(next)}
+              />
+            </div>
 
             {players.length < 2 && (
               <p className="mt-4 rounded-xl border border-vinyl-orange/30 bg-vinyl-orange/8 px-3 py-2 text-xs text-vinyl-orange/90 text-center">

@@ -10,6 +10,7 @@ import NeonButton from '../components/NeonButton';
 import ProfileMenu from '../components/ProfileMenu';
 import FontSizeControl from '../components/FontSizeControl';
 import AlertDialog from '../components/AlertDialog';
+import SabotageSettings from '../components/SabotageSettings';
 import { StepActionBar, StepPanel, StepProgress } from '../components/WizardSteps';
 
 // Crear sala en pasos en vez de un solo muro con todo a la vez: primero
@@ -69,12 +70,14 @@ function PlaylistArtwork({ meta, isSelected }) {
 
 export default function HostSyncScreen() {
   const navigate = useNavigate();
-  const { hostCreateRoom, setSpotifyPlaylistUrl, setGameSettings, targetYears, loadUserProfile } = useGameStore((state) => ({
+  const { hostCreateRoom, setSpotifyPlaylistUrl, setGameSettings, targetYears, loadUserProfile, sabotageEnabled, sabotageTypes } = useGameStore((state) => ({
     hostCreateRoom: state.hostCreateRoom,
     setSpotifyPlaylistUrl: state.setSpotifyPlaylistUrl,
     setGameSettings: state.setGameSettings,
     targetYears: state.targetYears,
     loadUserProfile: state.loadUserProfile,
+    sabotageEnabled: state.sabotageEnabled,
+    sabotageTypes: state.sabotageTypes,
   }));
 
   const [googleUser, setGoogleUser] = useState(null);
@@ -567,6 +570,16 @@ export default function HostSyncScreen() {
                 </p>
               </div>
 
+              {/* El sabotaje es opcional: se decide aqui, junto a la
+                  duracion, antes de crear la sala. */}
+              <div className="mt-4">
+                <SabotageSettings
+                  enabled={sabotageEnabled}
+                  types={sabotageTypes}
+                  onChange={(next) => setGameSettings(next)}
+                />
+              </div>
+
               {/* Resumen de lo elegido antes de crear — para que se vea de
                   un vistazo qué sala se va a crear, sin volver atrás. */}
               <div className="mt-4 rounded-2xl border border-white/10 bg-white/5 p-4 text-left">
@@ -577,7 +590,9 @@ export default function HostSyncScreen() {
                   </span>
                   <div className="min-w-0">
                     <p className="truncate text-base font-black uppercase text-white">{selectedPlaylistData.name}</p>
-                    <p className="text-sm text-on-surface-variant">{targetYears} canciones para ganar</p>
+                    <p className="text-sm text-on-surface-variant">
+                      {targetYears} canciones para ganar · {sabotageEnabled !== false ? 'con sabotaje' : 'sin sabotaje'}
+                    </p>
                   </div>
                 </div>
               </div>

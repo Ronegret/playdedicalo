@@ -197,9 +197,9 @@ function CelebrationWaves({ className = '' }) {
 // viewport angosto (360-390px) un w-32 fijo se desborda de su columna; el
 // clamp crece en pantallas más anchas pero nunca pasa del hueco disponible.
 const PODIUM_STYLE = {
-  0: { order: 'order-2', avatarSize: 'clamp(6rem, 27vw, 9rem)', stepHeight: 'h-28', color: '#ffbf4d', label: '1°', ring: '0 0 55px rgba(255,191,77,0.55)' },
-  1: { order: 'order-1', avatarSize: 'clamp(4.75rem, 20vw, 6.75rem)', stepHeight: 'h-16', color: '#e2e8f0', label: '2°', ring: '0 0 30px rgba(226,232,240,0.35)' },
-  2: { order: 'order-3', avatarSize: 'clamp(4.25rem, 17.5vw, 5.75rem)', stepHeight: 'h-10', color: '#ff7a1a', label: '3°', ring: '0 0 30px rgba(255,122,26,0.35)' }
+  0: { order: 'order-2', avatarSize: 'min(9rem, max(4.5rem, 27vw))', stepHeight: 'h-28', color: '#ffbf4d', label: '1°', ring: '0 0 55px rgba(255,191,77,0.55)' },
+  1: { order: 'order-1', avatarSize: 'min(6.75rem, max(3.6rem, 20vw))', stepHeight: 'h-16', color: '#e2e8f0', label: '2°', ring: '0 0 30px rgba(226,232,240,0.35)' },
+  2: { order: 'order-3', avatarSize: 'min(5.75rem, max(3.2rem, 17.5vw))', stepHeight: 'h-10', color: '#ff7a1a', label: '3°', ring: '0 0 30px rgba(255,122,26,0.35)' }
 };
 
 function PodiumSlot({ player, rank, goalYears }) {
@@ -632,7 +632,7 @@ export default function ResultScreen() {
             transition={{ delay: 0.16, type: 'spring', stiffness: 160, damping: 14 }}
             className={`relative mx-auto mt-1 max-w-full px-1 font-headline-lg font-black leading-[0.88] ${style.text}`}
             style={{
-              fontSize: 'clamp(2.05rem, 11.5vw, 5rem)',
+              fontSize: 'min(5rem, max(1.9rem, 11.5vw))',
               letterSpacing: '0.01em',
               textShadow: `0 0 34px ${style.glowColor}`,
               whiteSpace: 'normal'
@@ -649,7 +649,7 @@ export default function ResultScreen() {
                 animate={{ y: 0, scale: 1, opacity: 1 }}
                 transition={{ delay: 0.22, type: 'spring', stiffness: 150 }}
                 className={`font-stats-xl font-black leading-none ${style.text}`}
-                style={{ fontSize: 'clamp(3.2rem, 17vw, 4.5rem)' }}
+                style={{ fontSize: 'min(4.5rem, max(2.4rem, 17vw))' }}
               >
                 {guestPoints}
               </motion.p>

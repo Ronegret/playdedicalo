@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ATTACK_COST, ATTACK_TYPES, DEDICALO_PLAYLISTS, GAME_MODES, REDEEM_YEAR_COST, getCombinedTimelineYears, getPlayerPresence, getTimelineProgress, normalizeSpotifyPlaylistUrl, useGameStore } from '../store/useGameStore';
+import { ATTACK_COST, ATTACK_TYPES, DEDICALO_PLAYLISTS, GAME_MODES, REDEEM_YEAR_COST, getCombinedTimelineYears, getPlayerPresence, getTimelineProgress, normalizeSabotageTypes, normalizeSpotifyPlaylistUrl, useGameStore } from '../store/useGameStore';
 import { isImageAvatar } from '../data/characterAvatars';
 import HeaderHUD from '../components/HeaderHUD';
 import JoinRequestBanner from '../components/JoinRequestBanner';
@@ -188,7 +188,7 @@ function VinylYearChip({ year }) {
       className="relative flex shrink-0 snap-center items-center justify-center rounded-full border-[3px] border-electric-purple bg-electric-purple/20 shadow-[0_6px_18px_rgba(0,0,0,0.35)]"
       style={{ width: 'var(--vinyl-size, 4.75rem)', height: 'var(--vinyl-size, 4.75rem)' }}
     >
-      <span className="font-stats-xl font-black leading-none text-white" style={{ fontSize: 'clamp(1.1rem, 5.5vw, 1.5rem)' }}>
+      <span className="font-stats-xl font-black leading-none text-white" style={{ fontSize: 'min(1.6rem, max(1rem, 5.5vw))' }}>
         {year}
       </span>
     </div>
@@ -204,7 +204,7 @@ function WildcardChip() {
       className="relative flex shrink-0 snap-center items-center justify-center rounded-full border-[3px] border-chaos-gold bg-chaos-gold/20 shadow-[0_6px_18px_rgba(0,0,0,0.35)]"
       style={{ width: 'var(--vinyl-size, 4.75rem)', height: 'var(--vinyl-size, 4.75rem)' }}
     >
-      <span className="material-symbols-outlined text-chaos-gold" style={{ fontSize: 'clamp(1.6rem, 7vw, 2.1rem)' }}>star</span>
+      <span className="material-symbols-outlined text-chaos-gold" style={{ fontSize: 'min(2.2rem, max(1.4rem, 7vw))' }}>star</span>
     </div>
   );
 }
@@ -223,7 +223,7 @@ function VinylSlotButton({ label, disabled, onClick }) {
       style={{ width: 'var(--vinyl-size, 4.75rem)', height: 'var(--vinyl-size, 4.75rem)' }}
     >
       <span className="material-symbols-outlined text-2xl leading-none">add</span>
-      <span className="absolute -bottom-9 w-32 text-center text-[clamp(0.72rem,3vw,0.88rem)] font-bold font-label-caps leading-tight text-white group-hover:text-neon-green transition-colors">
+      <span className="absolute -bottom-9 w-32 text-center text-[min(0.95rem,max(0.7rem,3vw))] font-bold font-label-caps leading-tight text-white group-hover:text-neon-green transition-colors">
         {label}
       </span>
     </button>
@@ -233,13 +233,13 @@ function VinylSlotButton({ label, disabled, onClick }) {
 const BURST_EMOJI = ['🎵', '🎶', '⚡', '💥', '🔊', '🎧', '✨'];
 
 // Ráfaga de partículas que salen disparadas del centro una sola vez al
-// aparecer el ataque — la "explosión musical" en sí. useState perezoso
-// (no useMemo) para generar los ángulos/tamaños aleatorios una única vez
-// sin violar las reglas de pureza de React.
+// aparecer el ataque — la onda expansiva de la "bomba musical". useState
+// perezoso (no useMemo) para generar los ángulos/tamaños aleatorios una
+// única vez sin violar las reglas de pureza de React.
 function MusicBurst() {
-  const [particles] = useState(() => Array.from({ length: 16 }, (_, i) => {
-    const angle = (i / 16) * Math.PI * 2 + (Math.random() - 0.5) * 0.4;
-    const distance = 100 + Math.random() * 90;
+  const [particles] = useState(() => Array.from({ length: 18 }, (_, i) => {
+    const angle = (i / 18) * Math.PI * 2 + (Math.random() - 0.5) * 0.4;
+    const distance = 110 + Math.random() * 100;
     return {
       id: i,
       icon: BURST_EMOJI[i % BURST_EMOJI.length],
@@ -269,117 +269,192 @@ function MusicBurst() {
   );
 }
 
-function AttackWarningOverlay({ attack, onClose }) {
+// Cuenta atrás de la mecha antes de la detonación: 3 · 2 · 1 · BOOM. Es lo
+// que convierte el aviso en un momento de tensión en vez de un cartel que
+// aparece de golpe.
+const FUSE_TICKS = ['3', '2', '1'];
+
+function MusicBombFuse({ onDetonate }) {
+  const [tick, setTick] = useState(0);
+  const detonating = tick >= FUSE_TICKS.length;
+
   useEffect(() => {
-    if (attack && navigator.vibrate) navigator.vibrate([40, 30, 40, 30, 90]);
-  }, [attack]);
+    if (detonating) {
+      const boom = window.setTimeout(onDetonate, 280);
+      return () => window.clearTimeout(boom);
+    }
+    if (navigator.vibrate) navigator.vibrate(35);
+    const next = window.setTimeout(() => setTick((prev) => prev + 1), 430);
+    return () => window.clearTimeout(next);
+  }, [tick, detonating, onDetonate]);
+
+  return (
+    <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center" aria-hidden="true">
+      {/* La bomba: un vinilo con la mecha encendida, latiendo cada vez más
+          fuerte hasta reventar. */}
+      <motion.div
+        animate={detonating
+          ? { scale: [1, 1.7, 0], opacity: [1, 1, 0] }
+          : { scale: [1, 1.14, 1] }}
+        transition={detonating
+          ? { duration: 0.28, ease: 'easeIn' }
+          : { repeat: Infinity, duration: 0.42 }}
+        className="relative flex h-32 w-32 items-center justify-center rounded-full border-4 border-white/85 shadow-[0_0_60px_rgba(255,60,0,0.8),inset_0_0_28px_rgba(0,0,0,0.9)]"
+        style={{ background: 'repeating-radial-gradient(circle, #0a0a0a 0 4px, #1c1c1c 5px 6px, #0a0a0a 7px 10px)' }}
+      >
+        <span className="material-symbols-outlined text-white" style={{ fontSize: '3rem' }}>bomb</span>
+        {/* Chispa de la mecha */}
+        <motion.span
+          animate={{ scale: [1, 1.5, 1], opacity: [0.7, 1, 0.7] }}
+          transition={{ repeat: Infinity, duration: 0.22 }}
+          className="absolute -top-3 -right-1 h-5 w-5 rounded-full bg-chaos-gold shadow-[0_0_18px_8px_rgba(255,191,77,0.9)]"
+        />
+        {!detonating && (
+          <span className="absolute -bottom-12 font-stats-xl text-4xl font-black text-white drop-shadow-[0_0_16px_rgba(255,255,255,0.85)]">
+            {FUSE_TICKS[tick]}
+          </span>
+        )}
+      </motion.div>
+
+      {/* Destello blanco de la detonación */}
+      {detonating && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: [0, 1, 0] }}
+          transition={{ duration: 0.45, times: [0, 0.25, 1] }}
+          className="absolute inset-0 bg-white"
+        />
+      )}
+    </div>
+  );
+}
+
+function AttackWarningOverlay({ attack, onClose }) {
+  // Dos actos: la mecha (bomba + cuenta atrás) y la revelación. Antes todo
+  // aparecía de golpe y se perdía el momento.
+  const [detonated, setDetonated] = useState(false);
+  const handleDetonate = useCallback(() => setDetonated(true), []);
+
+  useEffect(() => {
+    if (detonated && navigator.vibrate) navigator.vibrate([60, 40, 60, 40, 140]);
+  }, [detonated]);
 
   if (!attack) return null;
   const attackCopy = getAttackCopy(attack);
+
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 1.06 }}
-      animate={{ opacity: 1, scale: 1, x: [0, -10, 9, -7, 5, -2, 0] }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       exit={{ opacity: 0, scale: 0.94 }}
-      transition={{ opacity: { duration: 0.28 }, scale: { duration: 0.28 }, x: { duration: 0.55, ease: 'easeOut' } }}
-      className="fixed inset-0 z-[260] flex items-center justify-center overflow-hidden px-5 text-center text-white"
-      style={{ background: 'linear-gradient(160deg, #4a00b8 0%, #8b00ff 40%, #c0007a 80%, #ff4400 100%)' }}
+      transition={{ duration: 0.2 }}
+      /* overflow-y-auto: ANTES era overflow-hidden y con la letra grande el
+         contenido no cabía — el botón de cerrar quedaba fuera de pantalla y
+         el móvil parecía bloqueado, sin nada visible y sin forma de salir.
+         Ahora siempre se puede desplazar y salir. */
+      className="fixed inset-0 z-[260] overflow-y-auto overscroll-contain text-center text-white"
+      style={{
+        background: 'linear-gradient(160deg, #4a00b8 0%, #8b00ff 40%, #c0007a 80%, #ff4400 100%)',
+        WebkitOverflowScrolling: 'touch'
+      }}
+      role="alertdialog"
+      aria-modal="true"
     >
-      {/* Ambient fx layers */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_15%,rgba(255,255,255,0.30),transparent_30%),radial-gradient(circle_at_20%_85%,rgba(255,122,26,0.25),transparent_35%)]" />
-      <div className="absolute inset-x-0 top-0 h-40 bg-white/12 blur-3xl" />
+      {/* Capas de ambiente (fixed para que no se muevan al desplazar) */}
+      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_50%_15%,rgba(255,255,255,0.30),transparent_30%),radial-gradient(circle_at_20%_85%,rgba(255,122,26,0.25),transparent_35%)]" />
       <motion.div
         animate={{ opacity: [0.35, 0.65, 0.35] }}
         transition={{ repeat: Infinity, duration: 1.8 }}
-        className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.06),transparent_60%)]"
+        className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.06),transparent_60%)]"
       />
 
-      <motion.div
-        initial={{ y: 32, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.08, type: 'spring', stiffness: 160, damping: 18 }}
-        className="relative mx-auto w-full max-w-sm"
-      >
-        {/* Avatar del atacante — quién te atacó tiene que reconocerse al toque */}
-        <div className="relative mx-auto flex h-40 w-40 items-center justify-center">
-          {/* Ondas de choque — expanden y se apagan una sola vez, como el
-              golpe de un bombo al caer el sabotaje */}
-          {[0, 0.12, 0.24].map((delay) => (
+      {!detonated && <MusicBombFuse onDetonate={handleDetonate} />}
+
+      {detonated && (
+        <motion.div
+          initial={{ scale: 1.08, opacity: 0 }}
+          animate={{ opacity: 1, scale: 1, x: [0, -10, 9, -7, 5, -2, 0] }}
+          transition={{ opacity: { duration: 0.24 }, scale: { duration: 0.24 }, x: { duration: 0.5, ease: 'easeOut' } }}
+          className="relative mx-auto flex min-h-full w-full max-w-sm flex-col items-center px-5 pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))] pt-[calc(1.5rem+env(safe-area-inset-top,0px))]"
+        >
+          {/* Avatar del atacante — quién te atacó tiene que reconocerse al toque */}
+          <div className="relative flex h-32 w-32 shrink-0 items-center justify-center">
+            {[0, 0.12, 0.24].map((delay) => (
+              <motion.div
+                key={delay}
+                initial={{ scale: 0.5, opacity: 0.85 }}
+                animate={{ scale: 2.4, opacity: 0 }}
+                transition={{ duration: 1, delay, ease: 'easeOut' }}
+                className="absolute inset-0 rounded-full border-2 border-white/70"
+              />
+            ))}
+            <MusicBurst />
             <motion.div
-              key={delay}
-              initial={{ scale: 0.5, opacity: 0.85 }}
-              animate={{ scale: 2.4, opacity: 0 }}
-              transition={{ duration: 1, delay, ease: 'easeOut' }}
-              className="absolute inset-0 rounded-full border-2 border-white/70"
-            />
-          ))}
-          <MusicBurst />
-          <motion.div
-            animate={{ rotate: [-3, 3, -3], scale: [1, 1.06, 1] }}
-            transition={{ repeat: Infinity, duration: 0.65 }}
-            className="relative z-10 flex h-40 w-40 items-center justify-center rounded-full border-4 border-white/80 bg-black/30 shadow-[0_0_80px_rgba(255,255,255,0.50),0_0_140px_rgba(200,0,255,0.35)]"
+              animate={{ rotate: [-3, 3, -3], scale: [1, 1.06, 1] }}
+              transition={{ repeat: Infinity, duration: 0.65 }}
+              className="relative z-10 flex h-32 w-32 items-center justify-center rounded-full border-4 border-white/80 bg-black/30 shadow-[0_0_80px_rgba(255,255,255,0.50)]"
+            >
+              {isImageAvatar(attack.fromAvatar) ? (
+                <img src={attack.fromAvatar} alt={attack.from || 'Rival'} className="h-full w-full rounded-full object-cover" />
+              ) : (
+                <span className="material-symbols-outlined text-6xl drop-shadow-[0_0_20px_rgba(255,255,255,0.6)]">{attackCopy.icon}</span>
+              )}
+              <span className="absolute -bottom-2 -right-2 flex h-11 w-11 items-center justify-center rounded-full border-2 border-white/80 bg-[#6b10e8]">
+                <span className="material-symbols-outlined text-2xl text-white">{attackCopy.icon}</span>
+              </span>
+            </motion.div>
+          </div>
+
+          <p className="mt-5 font-label-caps text-xs tracking-[0.3em] text-white/70">BOMBA MUSICAL</p>
+          {/* text-display: acotado por el ancho de pantalla, así nunca
+              desborda aunque el usuario tenga la letra al máximo. */}
+          <h2 className="text-display mt-1 font-headline-lg font-black leading-[0.9] drop-shadow-[0_8px_30px_rgba(0,0,0,0.40)]">
+            TE<br />ATACARON
+          </h2>
+
+          <div className="mx-auto mt-4 flex h-7 items-end justify-center gap-1" aria-hidden="true">
+            {[0.4, 0.85, 0.55, 1, 0.45, 0.9, 0.6, 0.75, 0.35].map((h, i) => (
+              <span
+                key={i}
+                className="eq-bar w-1.5 rounded-full bg-white/85"
+                style={{
+                  height: `${h * 100}%`,
+                  animationDelay: `${i * 0.05}s`,
+                  animationDuration: `${0.35 + (i % 3) * 0.1}s`,
+                  boxShadow: '0 0 10px rgba(255,255,255,0.6)'
+                }}
+              />
+            ))}
+          </div>
+
+          <div className="mt-4 w-full rounded-2xl border border-white/25 bg-black/35 px-4 py-3 backdrop-blur-sm">
+            <p className="text-base font-black leading-snug text-white">
+              <span className="text-chaos-gold">{attack.from || 'Un rival'}</span> lanzó:{' '}
+              <span className="text-white">{attackCopy.title}</span>
+            </p>
+            <p className="mt-2 text-sm leading-relaxed text-white/80">
+              {attackCopy.description}
+            </p>
+          </div>
+
+          <p className="mt-3 w-full text-sm leading-relaxed text-white/65">
+            {attack.type === 'block_vote'
+              ? 'No podrás responder esta ronda. Prepárate para la siguiente.'
+              : 'Si aciertas igual, respira: puedes intentarlo, solo que el año no se queda contigo.'}
+          </p>
+
+          {/* mt-auto empuja el botón al fondo del contenedor: queda siempre
+              al alcance del pulgar y nunca fuera de pantalla. */}
+          <button
+            type="button"
+            onClick={onClose}
+            autoFocus
+            className="mt-auto min-h-touch w-full shrink-0 rounded-2xl bg-white px-5 py-4 font-label-caps text-base font-black tracking-[0.18em] text-[#6b10e8] shadow-[0_8px_0_rgba(53,8,118,0.70)] active:translate-y-1 active:shadow-[0_4px_0_rgba(53,8,118,0.70)] transition-all"
           >
-            {isImageAvatar(attack.fromAvatar) ? (
-              <img src={attack.fromAvatar} alt={attack.from || 'Rival'} className="h-full w-full rounded-full object-cover" />
-            ) : (
-              <span className="material-symbols-outlined text-7xl drop-shadow-[0_0_20px_rgba(255,255,255,0.6)]">{attackCopy.icon}</span>
-            )}
-            <span className="absolute -bottom-2 -right-2 flex h-11 w-11 items-center justify-center rounded-full border-2 border-white/80 bg-[#6b10e8] shadow-[0_0_16px_rgba(0,0,0,0.4)]">
-              <span className="material-symbols-outlined text-2xl text-white">{attackCopy.icon}</span>
-            </span>
-          </motion.div>
-        </div>
-
-        {/* Labels */}
-        <p className="mt-6 font-label-caps text-xs tracking-[0.36em] text-white/70">⚡ ALERTA DE SABOTAJE ⚡</p>
-        <h2
-          className="mt-2 font-headline-lg font-black leading-[0.88] drop-shadow-[0_8px_30px_rgba(0,0,0,0.40)]"
-          style={{ fontSize: 'clamp(3.2rem, 14vw, 5.5rem)' }}
-        >
-          TE<br />ATACARON
-        </h2>
-
-        {/* Ecualizador de impacto — refuerza el "explosión musical" del golpe */}
-        <div className="mx-auto mt-3 flex h-8 items-end justify-center gap-1" aria-hidden="true">
-          {[0.4, 0.85, 0.55, 1, 0.45, 0.9, 0.6, 0.75, 0.35].map((h, i) => (
-            <span
-              key={i}
-              className="eq-bar w-1.5 rounded-full bg-white/85"
-              style={{
-                height: `${h * 100}%`,
-                animationDelay: `${i * 0.05}s`,
-                animationDuration: `${0.35 + (i % 3) * 0.1}s`,
-                boxShadow: '0 0 10px rgba(255,255,255,0.6)'
-              }}
-            />
-          ))}
-        </div>
-
-        {/* Who & what */}
-        <div className="mx-auto mt-5 max-w-xs rounded-2xl border border-white/25 bg-black/30 px-4 py-3 backdrop-blur-sm">
-          <p className="text-lg font-black leading-snug text-white">
-            <span className="text-chaos-gold">{attack.from || 'Un rival'}</span> lanzó:{' '}
-            <span className="text-white">{attackCopy.title}</span>
-          </p>
-          <p className="mt-2 text-sm leading-relaxed text-white/80">
-            {attackCopy.description}
-          </p>
-        </div>
-
-        <p className="mx-auto mt-3 max-w-xs text-sm leading-relaxed text-white/65">
-          {attack.type === 'block_vote'
-            ? 'No podrás responder esta ronda. Prepárate para la siguiente.'
-            : 'Si aciertas igual, respira: puedes intentarlo, solo que el año no se queda contigo.'}
-        </p>
-
-        <button
-          type="button"
-          onClick={onClose}
-          className="mt-6 min-h-[3.5rem] w-full rounded-2xl bg-white px-5 font-label-caps text-base font-black tracking-[0.18em] text-[#6b10e8] shadow-[0_8px_0_rgba(53,8,118,0.70)] active:translate-y-1 active:shadow-[0_4px_0_rgba(53,8,118,0.70)] transition-all"
-        >
-          ¡LO TENGO! JUGAR
-        </button>
-      </motion.div>
+            ¡LO TENGO! JUGAR
+          </button>
+        </motion.div>
+      )}
     </motion.div>
   );
 }
@@ -521,7 +596,9 @@ export default function GameScreen() {
     roomError,
     clearRoomError,
     attackOpponent,
-    redeemPointsForYear
+    redeemPointsForYear,
+    sabotageEnabled,
+    sabotageTypes
   } = useGameStore();
   const [answeredQuestionKey, setAnsweredQuestionKey] = useState(null);
   const [countdownValue, setCountdownValue] = useState(3);
@@ -669,7 +746,15 @@ export default function GameScreen() {
   const attackKey = incomingAttack ? `${round}-${incomingAttack.from || 'rival'}` : '';
   const showIncomingAttack = Boolean(incomingAttack && dismissedAttackKey !== attackKey && (phase === 'listen' || phase === 'blackout'));
   const attackTargets = players.filter((player) => player.id !== guestId && getPlayerPresence(player).status === 'online' && !player.activeAttack);
-  const canAttack = phase === 'listen' && Number(ownPlayer?.points || 0) >= ATTACK_COST && attackTargets.length > 0;
+  // El sabotaje es opcional: si el anfitrion lo apago, el boton no existe.
+  const allowedAttackTypes = normalizeSabotageTypes(sabotageTypes);
+  const sabotageOn = sabotageEnabled !== false && allowedAttackTypes.length > 0;
+  const canAttack = sabotageOn && phase === 'listen' && Number(ownPlayer?.points || 0) >= ATTACK_COST && attackTargets.length > 0;
+  // Si el anfitrion dejo solo un tipo, el seleccionado por defecto puede
+  // haber dejado de ser valido — se cae al primero permitido.
+  const effectiveAttackType = allowedAttackTypes.includes(selectedAttackType)
+    ? selectedAttackType
+    : allowedAttackTypes[0];
   const canRedeem = phase === 'listen' && Number(ownPlayer?.points || 0) >= REDEEM_YEAR_COST && getTimelineProgress(ownPlayer) < targetYears;
 
   const handleRedeem = async () => {
@@ -828,7 +913,7 @@ export default function GameScreen() {
                 initial={{ scale: 0.3, opacity: 0 }}
                 animate={{ scale: [0.6, 1.15, 1], opacity: 1 }}
                 transition={{ duration: 0.35, ease: 'backOut' }}
-                className="font-stats-xl text-[clamp(5rem,28vw,8rem)] leading-none text-neon-green drop-shadow-[0_0_40px_rgba(57,255,20,0.6)]"
+                className="font-stats-xl text-numeric-hero text-neon-green drop-shadow-[0_0_40px_rgba(57,255,20,0.6)]"
               >
                 {countdownValue}
               </motion.div>
@@ -1230,19 +1315,19 @@ export default function GameScreen() {
               {/* Bloqueo y Robo de año tienen la misma importancia — ninguno
                   se dibuja más chico que el otro. Ambos con letra grande. */}
               <div className="mt-4 flex flex-col gap-2.5">
-                {Object.values(ATTACK_TYPES).map((attackType) => (
+                {allowedAttackTypes.map((typeId) => ATTACK_TYPES[typeId]).filter(Boolean).map((attackType) => (
                   <button
                     key={attackType.id}
                     type="button"
                     onClick={() => setSelectedAttackType(attackType.id)}
                     className={`min-h-[6.5rem] rounded-3xl border-2 px-4 py-3 text-left transition-all active:scale-95 ${
-                      selectedAttackType === attackType.id
+                      effectiveAttackType === attackType.id
                         ? 'border-neon-green bg-neon-green/14 shadow-[0_0_32px_rgba(57,255,20,0.22)]'
                         : 'border-white/15 bg-white/5'
                     }`}
                   >
                     <div className="flex items-center gap-4">
-                      <span className={`material-symbols-outlined shrink-0 ${selectedAttackType === attackType.id ? 'text-neon-green' : 'text-electric-purple'}`} style={{ fontSize: '2.75rem' }}>
+                      <span className={`material-symbols-outlined shrink-0 ${effectiveAttackType === attackType.id ? 'text-neon-green' : 'text-electric-purple'}`} style={{ fontSize: '2.75rem' }}>
                         {attackType.icon}
                       </span>
                       <div className="min-w-0">
@@ -1267,7 +1352,7 @@ export default function GameScreen() {
                     type="button"
                     onClick={async () => {
                       try {
-                        await attackOpponent(target.id, selectedAttackType);
+                        await attackOpponent(target.id, effectiveAttackType);
                         setShowAttackModal(false);
                         setAttackSentTo(target.name);
                         if (navigator.vibrate) navigator.vibrate([20, 40, 20]);
