@@ -1,0 +1,421 @@
+0|Bad - 2012 Remaster|Michael Jackson|Bad 25th Anniversary|2012|recopilatorio,aniversario,outlier
+1|Smooth Criminal - 2012 Remaster|Michael Jackson|Bad 25th Anniversary|2012|recopilatorio,aniversario,outlier
+2|Tengo Un Trato - Remastered 2015|Mala Rodríguez|Lujo Ibérico (Edición 15 Aniversario)|2015|recopilatorio,aniversario
+3|Humanos a Marte|Chayanne|En Todo Estaré (Deluxe Edition)|2014|recopilatorio,outlier
+4|ABC|The Jackson 5|Temazos y Hitazos: 70's|2022|recopilatorio,outlier
+5|Madre Tierra (Oye)|Chayanne|En Todo Estaré (Deluxe Edition)|2014|recopilatorio,outlier
+6|Blitzkrieg Bop - 2016 Remaster|Ramones|Ramones (40th Anniversary Deluxe Edition; 2016 Remaster)|1976|recopilatorio,aniversario
+7|Summer Of '69|Bryan Adams|Reckless (30th Anniversary / Deluxe Edition)|1984|recopilatorio,aniversario
+8|Footloose - From "Footloose" Soundtrack|Kenny Loggins|Footloose (15th Anniversary Collectors' Edition)|1984|aniversario,bandaSonora
+9|You Can Call Me Al|Paul Simon|Graceland (25th Anniversary Deluxe Edition)|1986|recopilatorio,aniversario
+10|Mi Carro|Manolo Escobar|La Copla, Vol.4|1991|recopilatorio,outlier
+11|Congratulations - 1998 Remaster|Cliff Richard|The Fiftieth Anniversary Album|2008|recopilatorio,aniversario
+12|Lola|Los Brincos|Lo Mejor de los Brincos, Vol. 2|2015|recopilatorio,outlier
+13|Manhattan (First We Take Manhattan) - Remastered 2016|Enrique Morente|Omega (Edición 20º Aniversario)|2016|recopilatorio,aniversario
+14|Sheena Is a Punk Rocker - 2017 Remaster|Ramones|Rocket to Russia (40th Anniversary Deluxe Edition)|1977|recopilatorio,aniversario
+15|Sweet Jane - Full Length Version; 2015 Remaster|The Velvet Underground|Loaded: Re-Loaded 45th Anniversary Edition|1970|recopilatorio,aniversario
+16|I Fought the Law|The Clash|Hits Back|2013|recopilatorio,outlier
+17|Burn - Remastered 2004|Deep Purple|Burn (30th Anniversary Edition)|1974|recopilatorio,aniversario
+18|El Rock De Una Noche De Verano - Remastered 2005|Miguel Ríos|Lo Mejor De Miguel Rios|2013|recopilatorio,outlier
+19|Danger Zone - From "Top Gun" Original Soundtrack|Kenny Loggins|Top Gun - Motion Picture Soundtrack (Special Expanded Edition)|1999|bandaSonora,outlier
+20|The Reason|Hoobastank|The Reason (15th Anniversary Deluxe)|2003|recopilatorio,aniversario
+21|Jailhouse Rock|Elvis Presley|Elvis 30 #1 Hits|2002|recopilatorio,outlier
+22|What's Love Got to Do with It - 2015 Remaster|Tina Turner|Private Dancer (30th Anniversary Issue)|1984|recopilatorio,aniversario
+23|Believe - 2024 Remaster|Cher|Forever|2024|recopilatorio,outlier
+24|They Don't Care About Us - Remastered Version|Michael Jackson|Michael Jackson's This Is It|2009|recopilatorio,outlier
+25|The Show Must Go On - Remastered 2011|Queen|Innuendo (Deluxe Remastered Version)|1991|recopilatorio,outlier
+26|Que la Detengan|David Civera|15 Aniversario|2016|aniversario,outlier
+27|Amor De Compra Y Venta - Single Version|Los Chichos|Lo Mejor De Los Chichos|2013|recopilatorio,outlier
+28|La Leyenda Del Tiempo - Jaleos|Camaron De La Isla|La Leyenda Del Tiempo (Edicion 35º Aniversario)|2013|aniversario,outlier
+29|Amor de Hombre (De "La Leyenda del Beso") - Remasterizado|Mocedades|Amor de Hombre (Remasterizado 2023)|1992|recopilatorio,outlier
+30|La bien pagá|Miguel De Molina|Antologia De La Cancion Espanola Vol.4|1990|recopilatorio
+31|Un Sorbito de Champagne|Los Brincos|Lo Mejor de los Brincos|1964|recopilatorio
+32|Una Lagrima|Peret|Orígenes|2015|outlier
+33|María Isabel|Los Payos|Lo Mejor De Los Payos|1973|recopilatorio
+34|Mamy Panchita - Remasterizado|Marisol|Mamy Panchita (Remasterizado 2022)|1970|recopilatorio
+35|Fin de semana|Los Diablos|Fin de Semana|2013|outlier
+36|Mamy blue|Pop Tops|Leyendas Del Pop Rock Español Vol.2|2009|recopilatorio
+37|Tómame o Déjame - Remasterizado|Mocedades|Mocedades 5|1973|recopilatorio
+38|El Cristo de Palacagüina|Elsa Baeza|Todo lo Mejor de Elsa Baeza|2003|recopilatorio
+39|Hoy tengo ganas de ti|Miguel Gallardo|2 (Remasterizado 2017)|1976|recopilatorio
+40|Enseñame a Cantar|Micky|Todo Lo Mejor|2003|recopilatorio
+41|Acordes|Pecos|Concierto para Adolescentes|1980|directo
+42|Mari Pili - 2015 Remaster|Ejecutivos Agresivos|Héroes de los 80. Ejecutivos Agresivos|1986|recopilatorio
+43|Hormigon, Mujeres y Alcohol - Edición 35 aniversario|Ramoncin|Arañando La Ciudad - 35 aniversario|2015|aniversario
+44|La Gata Bajo la Lluvia|Rocío Dúrcal|Lo Mejor De Lo Mejor|1998|recopilatorio
+45|Cumpleaños Feliz|Parchis|Parchis: Todas Sus Canciones Todos Sus Exitos|2005|recopilatorio
+46|Veo veo|Teresa Rabal|Sólo para niños... y mayores, Vol. 1|2000|recopilatorio
+47|Sera Porque Te Amo|Ricchi E Poveri|Exclusive Ricchi E Poveri - 15 Exitos|2010|recopilatorio
+48|Esta Cobardía - Remasterizado|Chiquetete|Eres Mía (Remasterizado)|1984|recopilatorio
+49|Fotonovela|Ivan|Lo Mejor de Ivan|1979|recopilatorio
+50|Gracias por venir (de "Pura metalúrgica") - 2018 Remaster|Lina Morgan|En sus éxitos de las Revistas (2018 Remaster)|1980|recopilatorio
+51|Insurrección - 2008 Remaster|El Último De La Fila|Enemigos de lo ajeno (2008 Remaster)|1986|recopilatorio
+52|Espiando a mi vecina|UN PINGUINO EN MI ASCENSOR|21 Exitos Sin Fecha De Caducidad|1987|recopilatorio
+53|Mi Agüita Amarilla|Los Toreros Muertos|30 Años de Éxitos|1986|recopilatorio
+54|Camino Soria|Gabinete Caligari|Lo Mejor De Gabinete Caligari|2009|recopilatorio
+55|Corazón de neón|Orquesta Mondragon|Viaje Con Nosotros A Través De 21 Exitos Feroces|2003|recopilatorio
+56|¡Hola, Mi Amor!|Junco|Lo Mejor De Junco|2014|recopilatorio
+57|Soy Gitano - Tangos|Camaron De La Isla|Soy Gitano (Remastered)|1989|recopilatorio
+58|A bailar, a bailar|Cantores De Hispalis|Antologia - Cantores De Hispalis|2001|recopilatorio
+59|Como hemos cambiado|Presuntos Implicados|Ser De Agua (REMASTERS)|1991|recopilatorio
+60|El roce de tu piel - En directo 1993|Revolver|Revolver Basico|1993|directo
+61|Derroche|Ana Belén|Veneno Para El Corazón|1994|outlier
+62|La Barbacoa|Georgie Dann|Macumba y Otros Tremendos Exitos|2000|recopilatorio
+63|¿Y Tú de Quién Eres?|No Me Pises Que Llevo Chanclas|Los Grandisimos Exitos De Los Chanlas|1996|recopilatorio
+64|Azul|Cristian Castro|Grandes Hits|2002|recopilatorio
+65|Quiereme|El Barrio|Angel Malherido (Edición Especial)|2003|aniversario
+66|Cuatro elementos|La Musicalité|4 Elementos (Edición coleccionista)|2010|recopilatorio
+67|Solamente tú|Pablo Alborán|Pablo Alboran (Deluxe)|2011|recopilatorio
+68|Él no soy yo|Blas Cantó|Complicado (Edición Deluxe)|2018|recopilatorio
+69|Nathy Peluso: Bzrp Music Sessions, Vol. 36/66|Bizarrap|Nathy Peluso: Bzrp Music Sessions, Vol. 36/66|2020|recopilatorio
+70|Starman - 2012 Remaster|David Bowie|The Rise and Fall of Ziggy Stardust and the Spiders from Mars (2012 Remaster)|1972|recopilatorio
+71|Mi Gato|Rosario|Esencial Rosario|2013|outlier
+72|Call Me|Blondie|Atomic/Atomix|1999|outlier
+73|Story of My Life|One Direction|Midnight Memories (Deluxe)|2013|recopilatorio
+74|Hotel California - 2013 Remaster|Eagles|Hotel California (2013 Remaster)|1976|recopilatorio
+75|La Tortura (feat. Alejandro Sanz)|Shakira|Fijación Oral, Vol. 1|2005|recopilatorio
+76|A quién le importa|Alaska Y Dinarama|No Es Pecado -Remasters|1986|recopilatorio
+77|Shake It Off|Taylor Swift|1989 (Deluxe)|2014|recopilatorio
+78|Vertigo|U2|How To Dismantle An Atomic Bomb|2004|outlier
+79|Another Day in Paradise - 2016 Remaster|Phil Collins|...But Seriously (Deluxe Edition)|1989|recopilatorio
+80|Let It Be - Remastered 2009|The Beatles|Let It Be (Remastered)|1970|recopilatorio
+81|All The Things She Said|t.A.T.u.|200 KM/H In The Wrong Lane (10th Anniversary Edition)|2002|aniversario
+82|La Mordidita (feat. Yotuel)|Ricky Martin|A Quien Quiera Escuchar (Deluxe Edition)|2015|recopilatorio
+83|That's the Way (I Like It) - 2004 Remaster|KC & The Sunshine Band|KC & the Sunshine Band|1975|recopilatorio
+84|La vida pasa felizmente (remastered)|Luis Aguile|Luis Aguilé. Sus Grabaciones En Discos Showman Vol.2 (1968-1974)|2002|recopilatorio
+85|I Gotta Feeling|Black Eyed Peas|THE E.N.D. (THE ENERGY NEVER DIES) [Deluxe Version]|2009|recopilatorio
+86|Greased Lighten'|John Travolta|Greased Lightnin'|2008|outlier
+87|Bimbó 92|Georgie Dann|Macumba y Otros Tremendos Exitos|2000|recopilatorio
+88|Quevedo: Bzrp Music Sessions, Vol. 52/66|Bizarrap|Quevedo: Bzrp Music Sessions, Vol. 52/66|2022|recopilatorio
+89|There's Nothing Holdin' Me Back|Shawn Mendes|Illuminate (Deluxe)|2017|recopilatorio
+90|Johnny Techno Ska - Versión 1994 Remasterizada|Paco Pil|Energía Positiva (Remaster)|1994|recopilatorio
+91|It's a Sin - 2018 Remaster|Pet Shop Boys|Actually: Further Listening 1987 - 1988 (2018 Remaster)|1987|recopilatorio
+92|Agapimu|Ana Belén|Grandes Exitos|1979|recopilatorio
+93|Nunca volverá|El Sueño de Morfeo|El sueño de Morfeo (reedicion)|2005|aniversario
+94|Ni Mas Ni Menos|Los Chichos|Los Chicos: Todos sus Éxitos...y Más|1996|recopilatorio
+95|Stayin Alive|Bee Gees|How Can You Mend A Broken Heart|2020|outlier
+96|Baila el Chiki Chiki|Rodolfo Chikilicuatre|Hots Hits Latinos|2017|recopilatorio
+97|María Caipirinha (with Dj Dero)|Carlinhos Brown|Latin Fitness Dance 2012 - Workout Cardio Music - The Hits for Your Workout (Pop Kuduro, Cumbia, Latin House, Dembow, Merengue, Salsa, Bachata)|2011|recopilatorio
+98|Angie - Remastered 2009|The Rolling Stones|Goats Head Soup (Remastered 2009)|1973|recopilatorio
+99|El Jardín Prohibido|Sandro Giacobbe|Sandro Giacobbe: Éxitos|2016|recopilatorio
+100|Mr. Saxobeat|Alexandra Stan|Sundown (Original Motion Picture Soundtrack)|2016|bandaSonora
+101|Bang Bang|Jessie J|Sweet Talker (Deluxe Version)|2014|recopilatorio
+102|Another One Bites The Dust - Remastered 2011|Queen|The Game (2011 Remaster)|1980|recopilatorio
+103|Holding Out for a Hero - From "Footloose" Soundtrack|Bonnie Tyler|Secret Dreams and Forbidden Fire|1986|bandaSonora
+104|Just Can't Get Enough|Depeche Mode|Speak and Spell (Deluxe)|1981|recopilatorio
+105|Bad Romance|Lady Gaga|The Fame Monster (Deluxe Edition)|2009|recopilatorio
+106|Love Me Like You Do - From "Fifty Shades Of Grey"|Ellie Goulding|Delirium (Deluxe)|2015|recopilatorio
+107|Dynamite|Taio Cruz|The Rokstarr Hits Collection|2010|recopilatorio
+108|Heaven Is A Place On Earth|Belinda Carlisle|Heaven on Earth (Remastered & Expanded Special Edition)|1987|recopilatorio
+109|Love Is In The Air|John Paul Young|Classic Hits|1989|recopilatorio
+110|Mayonesa|Chocolate|2000 Grandes Exitos|2000|recopilatorio
+111|América, América|Nino Bravo|N1NO|2005|outlier
+112|Losing My Religion|R.E.M.|Out Of Time (25th Anniversary Edition)|1991|aniversario
+113|Escapar (Slipping Away) (feat. Amaral) - 2006 Remastered Version|Moby|Go - The Very Best Of Moby (Deluxe)|2006|recopilatorio
+114|Eso Que Tú Me Das|Jarabe De Palo|Eso Que Tú Me Das|2020|outlier
+115|El Chiringuito - Remasterizado|Georgie Dann|Caliente, Caliente (Remasterizado 2023)|1988|recopilatorio
+116|Summer in the City - Remastered|The Lovin' Spoonful|Hums Of The Lovin' Spoonful|1966|recopilatorio
+117|Suavemente|Elvis Crespo|Suavemente...Los Exitos|2008|recopilatorio
+118|You Know I'm No Good|Amy Winehouse|Back To Black (Deluxe Edition)|2006|recopilatorio
+119|Me Estoy Volviendo Loco|Azul Y Negro|El Color De Los Exitos|2005|recopilatorio
+120|I Want Your Love - 2018 Remaster|CHIC|C'est Chic (2018 Remaster)|1978|recopilatorio
+121|Gonna Make You Sweat (Everybody Dance Now) (feat. Freedom Williams)|C & C Music Factory|Super Hits|2000|recopilatorio
+122|Bolillón|No Me Pises Que Llevo Chanclas|Los Grandisimos Exitos De Los Chanlas|1996|recopilatorio
+123|Shiny Happy People|R.E.M.|Out Of Time (25th Anniversary Edition)|1991|aniversario
+124|Freedom! '90 - Remastered|George Michael|Listen Without Prejudice Vol. 1 (Remastered)|1990|recopilatorio
+125|Brown Sugar - Remastered 2009|The Rolling Stones|Sticky Fingers (Remastered)|1971|recopilatorio
+126|Eres|Massiel|Tiempos dificiles|1981|outlier
+127|SUBEME LA RADIO|Enrique Iglesias|FINAL (Vol.1)|2021|recopilatorio
+128|Matador - Remasterizado 2008|Los Fabulosos Cadillacs|Obras Cumbres|2021|recopilatorio
+129|Should I Stay or Should I Go - Remastered|The Clash|Combat Rock (Remastered)|1982|recopilatorio
+130|It's a Hap-Hap-Happy World|Ambrose & His Orchestra|Dancing the War Away, Vol. 2|2017|recopilatorio
+131|New Sensation|INXS|Kick (Remastered 2011)|1987|recopilatorio
+132|El rompeolas - Remaster 2017|Loquillo Y Los Trogloditas|Morir en primavera (Remaster 2017)|1988|recopilatorio
+133|Leave a Light On|Belinda Carlisle|Runaway Horses (Remastered & Expanded Special Edition)|1989|recopilatorio
+134|You Really Got Me|The Kinks|Kinks (Deluxe)|1964|recopilatorio
+135|Here Comes The Sun - Remastered 2009|The Beatles|Abbey Road (Remastered)|1969|recopilatorio
+136|La Grange - 2005 Remaster|ZZ Top|Tres Hombres (Expanded 2006 Remaster)|1973|recopilatorio
+137|Sopa de Caracol|Banda Blanca|Lo Mejor de Banda Blanca - 16 Exitos|1993|recopilatorio
+138|I Feel Love|Donna Summer|Lo Mejor De Donna Summer|2014|recopilatorio
+139|Summer Nights - From “Grease”|John Travolta|Grease (The Original Motion Picture Soundtrack)|1978|bandaSonora
+140|Blurred Lines|Robin Thicke|Blurred Lines (Deluxe)|2013|recopilatorio
+141|Stumblin' In - 2017 Remaster|Chris Norman|Stumblin' In (2017 Remaster)|1978|recopilatorio
+142|Don't Stop - 2004 Remaster|Fleetwood Mac|Rumours|1977|recopilatorio
+143|Beautiful Day|U2|All That You Can't Leave Behind|2000|outlier
+144|Levantando las Manos|El Símbolo|Éxitos|2005|recopilatorio
+145|Como un burro amarrado en la puerta del baile|El Último De La Fila|Las 101 canciones - Cinco décadas de Pop Español|2014|outlier
+146|Hips Don't Lie (feat. Wyclef Jean)|Shakira|Oral Fixation, Vol. 2 (Expanded Edition)|2005|recopilatorio
+147|Accidentally In Love - From "Shrek 2" Soundtrack|Counting Crows|Shrek 2 (Original Motion Picture Soundtrack)|2004|bandaSonora
+148|...Baby One More Time|Britney Spears|...Baby One More Time (Digital Deluxe Version)|1999|recopilatorio
+149|The Time (Dirty Bit)|Black Eyed Peas|The Beginning (Deluxe)|2010|recopilatorio
+150|Gold - 2003 Remaster|Spandau Ballet|True (Special Edition)|1983|recopilatorio
+151|Já Sei Namorar - 2004 Digital Remaster|Tribalistas|Tribalistas|2002|recopilatorio
+152|Ritmo de la Noche (Classic Version)|The Sacados|Superexitos Vol. 2|2018|recopilatorio
+153|Como Tú|Edurne|Catarsis (Deluxe)|2022|recopilatorio
+154|Smoke On The Water - Remastered 2012|Deep Purple|Machine Head (Remastered)|1972|recopilatorio
+155|Ruby|Kaiser Chiefs|Yours Truly, Angry Mob (Deluxe)|2007|recopilatorio
+156|September|Earth|September|2018|outlier
+157|Don't Stop Me Now - Remastered 2011|Queen|Jazz (2011 Remaster)|1978|recopilatorio
+158|Shakira: Bzrp Music Sessions, Vol. 53/66|Bizarrap|Shakira: Bzrp Music Sessions, Vol. 53/66|2023|recopilatorio
+159|Girls on Film - 2010 Remaster|Duran Duran|Duran Duran (Deluxe Edition)|1981|recopilatorio
+160|I Shot The Sheriff|Eric Clapton|461 Ocean Blvd. (Deluxe Edition)|1974|recopilatorio
+161|Ghostbusters|Ray Parker Jr.|Ghostbusters (Original Motion Picture Soundtrack)|1984|bandaSonora
+162|Vete - Remasterizado|Los Amaya|Nosotros los Gitanos (Remasterizado)|1977|recopilatorio
+163|Amor, Amor|Lolita|Mis Recuerdos|2013|outlier
+164|Scars To Your Beautiful|Alessia Cara|Know-It-All (Deluxe)|2016|recopilatorio
+165|Dile - Remastered|Luis Aguile|Luis Aguilé. Todas Sus Canciones Del Verano Vol.3|2008|recopilatorio
+166|We Are Family - 1995 Remaster|Sister Sledge|We Are Family (1995 Remaster)|1979|recopilatorio
+167|(I've Had) The Time of My Life - From "Dirty Dancing" Soundtrack|Bill Medley|Platinum & Gold Collection|2004|bandaSonora
+168|Resistiré|Duo Dinamico|En Forma|1988|outlier
+169|Bitter Sweet Symphony - Remastered 2016|The Verve|Urban Hymns (Remastered 2016)|1997|recopilatorio
+170|It's a Heartache|Bonnie Tyler|It's a Heartache|2006|outlier
+171|Wrecking Ball|Miley Cyrus|Bangerz (Deluxe Version)|2013|recopilatorio
+172|All About That Bass|Meghan Trainor|Title (Deluxe)|2015|recopilatorio
+173|Danza Kuduro|Don Omar|Fast Five (Original Motion Picture Soundtrack)|2011|bandaSonora
+174|Chacachá del tren (remastered)|Hermanas Fleta|Hermanas Fleta Vol.1 (1952-1955)|2005|recopilatorio
+175|Smells Like Teen Spirit|Nirvana|Nevermind (Remastered)|1991|recopilatorio
+176|In the Mood - 2006 Remastered Version|Glenn Miller|In the Mood|1939|recopilatorio
+177|Lovefool|The Cardigans|First Band On The Moon (Remastered)|1996|recopilatorio
+178|Mi gran noche|Raphael|Digan Lo Que Digan: Banda Sonora Original De La Pe|1967|bandaSonora
+179|Que Hace una Chica Como Tu en un Sitio Como Este|Burning|Burning (Singles Collection)|1999|outlier
+180|Bailando|Alaska Y Los Pegamoides|Grandes Éxitos - Edición Para Coleccionistas|1982|recopilatorio
+181|Flying Free - Original Mix|Pont Aeri|Pont Aeri, Vol. 4 EP|1999|recopilatorio
+182|Work|Rihanna|ANTI (Deluxe)|2016|recopilatorio
+183|Carolina|M-Clan|Salir De Marcha|2018|outlier
+184|Get Back - Remastered 2009|The Beatles|Let It Be (Remastered)|1970|recopilatorio
+185|Devuélveme a mi chica|Hombres G|Hombres G (Edición 30 Aniversario)|1985|aniversario
+186|Entre dos tierras|Heroes Del Silencio|Senderos De Traición - Edición Especial|1990|aniversario
+187|Enjoy the Silence - 2006 Remaster|Depeche Mode|Violator (2006 Remaster)|1990|recopilatorio
+188|La, La, La|Massiel|Lo Mejor de Massiel|1966|recopilatorio
+189|Pero a tu lado|Los Secretos|Dos Caras Distintas|1995|outlier
+190|Under the Bridge|Red Hot Chili Peppers|Blood Sugar Sex Magik (Deluxe Edition)|1991|recopilatorio
+191|Te he echado de menos - Radio Edit|Pablo Alborán|Pablo Alboran (Deluxe)|2011|recopilatorio
+192|Every Breath You Take|The Police|Synchronicity (Remastered 2003)|1983|recopilatorio
+193|DUELE EL CORAZON|Enrique Iglesias|FINAL (Vol.1)|2021|recopilatorio
+194|Las de la Intuición|Shakira|Fijación Oral, Vol. 1|2005|recopilatorio
+195|Campanera|Ana Maria|Raices de la Canción Española, Vol. 11|1993|recopilatorio
+196|Rehab|Amy Winehouse|Back To Black (Deluxe Edition)|2006|recopilatorio
+197|Shape of You|Ed Sheeran|÷ (Deluxe)|2017|recopilatorio
+198|Start Me Up - Remastered 2009|The Rolling Stones|Tattoo You (2009 Re-Mastered)|1981|recopilatorio
+199|Cadillac solitario|Loquillo|Rock & Roll Star - 30 años|2009|outlier
+200|La Escoba|Los Sirex|Lo Mejor de los Sirex|1964|recopilatorio
+201|Mis Manos en Tu Cintura|Salvatore Adamo|Adamo en Español - Cae la Nieve y Todos Sus Éxitos|1995|recopilatorio
+202|This Is The Life|Amy Macdonald|This Is The Life (eDeluxe)|2007|recopilatorio
+203|Tombola|Marisol|Tombola|2013|outlier
+204|Vivo Cantando|Salomé|Todo Lo Mejor|2003|recopilatorio
+205|Daughter - Remastered|Pearl Jam|Vs.|1993|recopilatorio
+206|Las Leyes De La Frontera|Derby Motoreta’s Burrito Kachimba|Las Leyes De La Frontera (Banda Sonora Original)|2021|bandaSonora
+207|Gold on the Ceiling - 2021 Remaster|The Black Keys|El Camino (2021 Remaster)|2011|recopilatorio
+208|Los Toreros Muertos|Los Toreros Muertos|30 Años de Éxitos|1986|recopilatorio
+209|Beetlebum - 2012 Remaster|Blur|Blur (Special Edition)|1997|recopilatorio
+210|Jugando al amor|Ángeles Del Infierno|Lo Mejor De Los Ángeles Del Infierno|1987|recopilatorio
+211|Que No|Deluxe|If Things Were to Go Wrong (Edición Especial)|2003|aniversario
+212|Big City Nights - 2015 - Remaster|Scorpions|Love At First Sting|1984|recopilatorio
+213|You're in Love with a Psycho|Kasabian|For Crying Out Loud (Deluxe)|2017|recopilatorio
+214|La chispa adecuada|Heroes Del Silencio|90's Rock Bands|2020|outlier
+215|Can't Stop|Red Hot Chili Peppers|By the Way (Deluxe Edition)|2002|recopilatorio
+216|21st Century Schizoid Man - Including "Mirrors"|King Crimson|In The Court Of The Crimson King (Expanded & Remastered Original Album Mix)|1969|recopilatorio
+217|.intoodeep.|Dead Poet Society|-!- (Deluxe)|2021|recopilatorio
+218|Mystify|INXS|Kick (Remastered 2011)|1987|recopilatorio
+219|Mi vida rosa - 2016 Remastered Version|Los Romeos|Los Romeos (Remasterizado 2016)|1990|recopilatorio
+220|Next To You|The Police|Outlandos D'Amour (Remastered 2003)|1978|recopilatorio
+221|Machinehead - Remastered 2014|Bush|Sixteen Stone (Remastered)|1994|recopilatorio
+222|You Learn - 2015 Remaster|Alanis Morissette|Jagged Little Pill (2015 Remaster)|1995|recopilatorio
+223|Helter Skelter - Remastered 2009|The Beatles|The Beatles (Remastered)|1968|recopilatorio
+224|Good Times Bad Times - 1993 Remaster|Led Zeppelin|Led Zeppelin|1969|recopilatorio
+225|War Pigs - 2009 Remaster|Black Sabbath|Paranoid|1970|recopilatorio
+226|Señora azul|Canovas|Señora Azul (40 Aniversario)|2014|aniversario
+227|Know Your Enemy|Rage Against The Machine|Rage Against The Machine - XX (20th Anniversary Special Edition)|1992|aniversario
+228|Si tú no estás aquí|Ángeles Del Infierno|Lo Mejor De Los Ángeles Del Infierno|1987|recopilatorio
+229|Stand By Me - Remastered|Oasis|Be Here Now (Deluxe Remastered Edition)|1997|recopilatorio
+230|Vasoline - 2019 Remaster|Stone Temple Pilots|Purple (2019 Remaster)|1994|recopilatorio
+231|Cold Hard Bitch|Jet|Get Born (Deluxe Edition)|2003|recopilatorio
+232|Mescalina|Los Rebeldes|Rebeldes y Rebeldes|2003|outlier
+233|Best of You|Foo Fighters|In Your Honor|2005|recopilatorio
+234|Querida Milagros - 2008 Remaster|El Último De La Fila|Cuando la pobreza entra por la puerta, el amor salta por la ventana (2008 Remaster)|1985|recopilatorio
+235|Tush (2006 Remaster)|ZZ Top|Fandango! (Expanded 2006 Remaster)|1975|recopilatorio
+236|Indestructibles|La Habitación Roja|Fue Eléctrico (Edicion Deluxe)|2012|recopilatorio
+237|Spoonman|Soundgarden|Superunknown (20th Anniversary)|1994|aniversario
+238|Disarm - 2011 Remaster|The Smashing Pumpkins|Siamese Dream (Deluxe Edition)|1993|recopilatorio
+239|Jesus, Etc. - 2022 Remaster|Wilco|Yankee Hotel Foxtrot (Expanded Edition)|2002|recopilatorio
+240|Jet - 2010 Remaster|Paul McCartney|Band On The Run|1973|recopilatorio
+241|Jailbreak|Thin Lizzy|Jailbreak (Deluxe Edition)|1976|recopilatorio
+242|Wanted Dead Or Alive|Bon Jovi|Slippery When Wet (Deluxe Edition)|1986|recopilatorio
+243|Más Sexy - Remasterizado|COZ|Las Chicas Son Guerreras (Remasterizado)|1980|recopilatorio
+244|Héroe de leyenda|Heroes Del Silencio|El Mar No Cesa- Edición Especial|1988|aniversario
+245|Go Your Own Way - 2004 Remaster|Fleetwood Mac|Rumours|1977|recopilatorio
+246|Beast Of Burden - Remastered 1994|The Rolling Stones|Some Girls|1978|recopilatorio
+247|Before I Forget|Slipknot|Vol. 3: The Subliminal Verses (Special Edition)|2004|recopilatorio
+248|Rebel Rebel - 2016 Remaster|David Bowie|Diamond Dogs (2016 Remaster)|1974|recopilatorio
+249|Caperucita feroz|Orquesta Mondragon|Viaje Con Nosotros A Través De 21 Exitos Feroces|2003|recopilatorio
+250|Run to the Hills - 2015 Remaster|Iron Maiden|The Number of the Beast (2015 Remaster)|1982|recopilatorio
+251|haz lo que quieras conmigo|Walls|LUNA 18 (Deluxe)|2024|recopilatorio
+252|Hammer To Fall - Remastered 2011|Queen|The Works (Deluxe Edition 2011 Remaster)|1984|recopilatorio
+253|Won't Get Fooled Again - Original Album Version|The Who|Who's Next (Deluxe Edition)|1971|recopilatorio
+254|Murder On The Dancefloor|Sophie Ellis-Bextor|Read My Lips (Deluxe Version)|2002|recopilatorio
+255|I Will Survive - Extended Version|Gloria Gaynor|Love Tracks (Deluxe Edition)|1978|recopilatorio
+256|Hall of Fame (feat. will.i.am)|The Script|#3 Deluxe Version|2012|recopilatorio
+257|Bitter Sweet Symphony - Extended Version|The Verve|Urban Hymns (Super Deluxe / Remastered 2016)|1997|recopilatorio
+258|Buttons|The Pussycat Dolls|Pop Anthems|2021|outlier
+259|Here Comes the Hotstepper|iNi Kamoze|Hits Of The 90's|1999|recopilatorio
+260|Style|Taylor Swift|1989 (Deluxe)|2014|recopilatorio
+261|I Will Always Love You|Whitney Houston|The Bodyguard - Original Soundtrack Album|1992|bandaSonora
+262|You Spin Me Round (Like a Record)|Dead Or Alive|Evolution: The Hits|2003|recopilatorio
+263|September|Earth|The Best Of Earth, Wind & Fire Vol. 1|1978|recopilatorio
+264|What Do You Mean?|Justin Bieber|Purpose (Deluxe)|2015|recopilatorio
+265|Silly Love Songs - 2014 Remaster|Wings|At the Speed of Sound (Archive Collection)|1976|recopilatorio
+266|The Sound of Silence|Simon & Garfunkel|The Singer|2012|outlier
+267|I Want to Know What Love Is - 1999 Remaster|Foreigner|Agent Provocateur|1984|recopilatorio
+268|A Horse with No Name - 2006 Remaster|America|Definitive Pop: America|2007|recopilatorio
+269|Sweet Dreams (Are Made of This) - 2005 Remaster|Eurythmics|Sweet Dreams (Are Made Of This)|1983|recopilatorio
+270|Sorry|Justin Bieber|Purpose (Deluxe)|2015|recopilatorio
+271|(I've Had) The Time Of My Life - From "Dirty Dancing" Soundtrack|Bill Medley|Dirty Dancing (Original Motion Picture Soundtrack)|1987|bandaSonora
+272|Macarena|Los Del Rio|Las Favoritas Del Mistico|2007|outlier
+273|We Are The Champions - Remastered 2011|Queen|News Of The World (2011 Remaster)|1977|recopilatorio
+274|Call Me Maybe|Carly Rae Jepsen|Kiss (Deluxe)|2012|recopilatorio
+275|Radio Ga Ga - Remastered 2011|Queen|The Works (2011 Remaster)|1984|recopilatorio
+276|Imagine - Remastered 2010|John Lennon|Imagine|1971|recopilatorio
+277|Let Her Go|Passenger|All the Little Lights (Deluxe Version)|2013|recopilatorio
+278|Killer Queen - Remastered 2011|Queen|Sheer Heart Attack (Deluxe Edition 2011 Remaster)|1974|recopilatorio
+279|Superstition - Single Version|Stevie Wonder|The Definitive Collection|2002|outlier
+280|Blank Space|Taylor Swift|1989 (Deluxe)|2014|recopilatorio
+281|Take My Breath Away - Love Theme from "Top Gun"|Berlin|Top Gun - Motion Picture Soundtrack (Special Expanded Edition)|1999|bandaSonora
+282|Somebody To Love - Remastered 2011|Queen|A Day At The Races (Deluxe Edition 2011 Remaster)|1976|recopilatorio
+283|The Logical Song - Remastered 2010|Supertramp|Breakfast In America (Deluxe Edition)|1979|recopilatorio
+284|Con Te Partirò|Andrea Bocelli|Bocelli (Remastered)|1995|recopilatorio
+285|We Will Rock You - Remastered 2011|Queen|News Of The World (2011 Remaster)|1977|recopilatorio
+286|Sunflower - Spider-Man: Into the Spider-Verse|Post Malone|Spider-Man: Into the Spider-Verse (Soundtrack From & Inspired by the Motion Picture)|2018|bandaSonora
+287|Work from Home (feat. Ty Dolla $ign)|Fifth Harmony|7/27 (Deluxe)|2016|recopilatorio
+288|Girls Like You (feat. Cardi B)|Maroon 5|Red Pill Blues (Deluxe)|2018|recopilatorio
+289|Thinking out Loud|Ed Sheeran|x (Deluxe Edition)|2014|recopilatorio
+290|Rock Around the Clock|Bill Haley|La discothèque idéale / Nos années 60 !: Vol. 3 "Les rockers", Pt. 1|2012|recopilatorio
+291|Crazy Train|Ozzy Osbourne|Blizzard Of Ozz (40th Anniversary Expanded Edition)|2020|aniversario
+292|Californication|Red Hot Chili Peppers|Californication (Deluxe Edition)|1999|recopilatorio
+293|Highway to Hell|AC/DC|Iron Man 2|2010|outlier
+294|Good Vibrations|The Beach Boys|The Smile Sessions|2011|outlier
+295|Everybody Wants To Rule The World|Tears For Fears|Songs From The Big Chair (Super Deluxe Edition)|1985|recopilatorio
+296|New Rules|Dua Lipa|Dua Lipa (Deluxe)|2017|recopilatorio
+297|It's My Life|Bon Jovi|Crush|2000|outlier
+298|Dark Horse|Katy Perry|PRISM (Deluxe)|2013|recopilatorio
+299|Get Up Offa That Thing|James Brown|The 50th Anniversary Collection|2003|aniversario
+300|Axel F|Crazy Frog|Crazy Frog presents Crazy Hits|2005|recopilatorio
+301|Photograph|Ed Sheeran|x (Deluxe Edition)|2014|recopilatorio
+302|Timber|Pitbull|Global Warming: Meltdown (Deluxe Version)|2012|recopilatorio
+303|Perfect|Ed Sheeran|÷ (Deluxe)|2017|recopilatorio
+304|The Tide Is High - Remastered 2001|Blondie|Autoamerican (Remastered 2001)|1980|recopilatorio
+305|More Than A Woman - From "Saturday Night Fever" Soundtrack|Bee Gees|Greatest|1979|bandaSonora
+306|Love Me Like You Do - From "Fifty Shades Of Grey"|Ellie Goulding|Fifty Shades Of Grey (Original Motion Picture Soundtrack)|2015|bandaSonora
+307|Hungry Eyes|Eric Carmen|Dirty Dancing: Anniversary Edition|2012|aniversario
+308|You're The One That I Want - From “Grease”|John Travolta|Grease (The Original Motion Picture Soundtrack)|1978|bandaSonora
+309|Worth It (feat. Kid Ink)|Fifth Harmony|Reflection (Deluxe)|2015|recopilatorio
+310|Dance Monkey|Tones And I|Welcome To The Madhouse (Deluxe)|2021|recopilatorio
+311|I Still Haven't Found What I'm Looking For|U2|The Joshua Tree (Super Deluxe)|1987|recopilatorio
+312|Payphone|Maroon 5|Overexposed (Deluxe)|2012|recopilatorio
+313|Lonely|Akon|Trouble Deluxe Edition|2005|recopilatorio
+314|Love Yourself|Justin Bieber|Purpose (Deluxe)|2015|recopilatorio
+315|Always Remember Us This Way|Lady Gaga|A Star Is Born Soundtrack|2018|bandaSonora
+316|Changes|2Pac|Greatest Hits|1998|recopilatorio
+317|I Just Called To Say I Love You|Stevie Wonder|At The Close Of A Century|1999|outlier
+318|A Hard Day's Night - Remastered 2009|The Beatles|A Hard Day's Night (Remastered)|1964|recopilatorio
+319|Enjoy the Silence|Depeche Mode|Violator | The 12" Singles|2022|outlier
+320|With Or Without You|U2|The Joshua Tree (Super Deluxe)|1987|recopilatorio
+321|Cathy's Clown - 2007 Remaster|The Everly Brothers|A Date with The Everly Brothers|1960|recopilatorio
+322|Night Changes|One Direction|FOUR (Deluxe)|2014|recopilatorio
+323|I Don't Want to Miss a Thing - From "Armageddon" Soundtrack|Aerosmith|Armageddon - The Album|1998|bandaSonora
+324|Walking On A Dream|Empire Of The Sun|Walking On A Dream (10th Anniversary Edition)|2008|aniversario
+325|Father And Son|Yusuf / Cat Stevens|Tea For The Tillerman (Remastered 2020)|1970|recopilatorio
+326|Otherside|Red Hot Chili Peppers|Californication (Deluxe Edition)|1999|recopilatorio
+327|Goodbye Yellow Brick Road - Remastered 2014|Elton John|Goodbye Yellow Brick Road (Remastered)|1973|recopilatorio
+328|Youngblood|5 Seconds of Summer|Youngblood (Deluxe)|2018|recopilatorio
+329|Spirit In The Sky - Deluxe Edition|Norman Greenbaum|Spirit In The Sky (Deluxe Edition)|1969|recopilatorio
+330|Another Love|Tom Odell|Long Way Down (Deluxe)|2013|recopilatorio
+331|We Found Love|Rihanna|Talk That Talk (Deluxe)|2012|recopilatorio
+332|Dreams - 2004 Remaster|Fleetwood Mac|Rumours (Super Deluxe)|1977|recopilatorio
+333|One Last Time|Ariana Grande|My Everything (Deluxe)|2014|recopilatorio
+334|Jumpin' Jack Flash|The Rolling Stones|Jumpin' Jack Flash / Child Of The Moon|2021|outlier
+335|Please Please Me - Remastered 2009|The Beatles|Please Please Me (Remastered)|1963|recopilatorio
+336|Don't Look Back in Anger - Remastered|Oasis|(What's The Story) Morning Glory? [Remastered]|1995|recopilatorio
+337|Mockingbird|Eminem|Encore (Deluxe Version)|2004|recopilatorio
+338|Scar Tissue|Red Hot Chili Peppers|Californication (Deluxe Edition)|1999|recopilatorio
+339|Karma Chameleon - Remastered 2002|Culture Club|Colour By Numbers (Remastered / Expanded Edition)|1983|recopilatorio
+340|Wonderwall - Remastered|Oasis|(What's The Story) Morning Glory? [Remastered]|1995|recopilatorio
+341|Shallow|Lady Gaga|A Star Is Born Soundtrack|2018|bandaSonora
+342|Crazy Little Thing Called Love - Remastered 2011|Queen|The Game (2011 Remaster)|1980|recopilatorio
+343|Norwegian Wood (This Bird Has Flown) - Remastered 2009|The Beatles|Rubber Soul (Remastered 2009)|1965|recopilatorio
+344|IDGAF|Dua Lipa|Dua Lipa (Deluxe)|2017|recopilatorio
+345|Come Together - Remastered 2009|The Beatles|Abbey Road (Remastered)|1969|recopilatorio
+346|This Love|Maroon 5|Songs About Jane: 10th Anniversary Edition|2002|aniversario
+347|Don't You (Forget About Me)|Simple Minds|Once Upon A Time (Super Deluxe)|1985|recopilatorio
+348|In My Life - Remastered 2009|The Beatles|Rubber Soul (Remastered 2009)|1965|recopilatorio
+349|Strawberry Fields Forever - Remastered 2009|The Beatles|Magical Mystery Tour (Remastered)|1967|recopilatorio
+350|Stay|Rihanna|Unapologetic (Deluxe)|2012|recopilatorio
+351|We Are The People|Empire Of The Sun|Walking On A Dream (10th Anniversary Edition)|2008|aniversario
+352|A Little Less Conversation - JXL Radio Edit Remix|Elvis Presley|Elvis 30 #1 Hits|2002|recopilatorio
+353|My Universe|Coldplay|Music Of The Spheres|2021|outlier
+354|Help! - Remastered 2009|The Beatles|Help! (Remastered)|1965|recopilatorio
+355|Memories|Maroon 5|JORDI (Deluxe)|2021|recopilatorio
+356|Godzilla (feat. Juice WRLD)|Eminem|Music To Be Murdered By|2020|outlier
+357|A Day In The Life - Remastered 2009|The Beatles|Sgt. Pepper's Lonely Hearts Club Band (Remastered)|1967|recopilatorio
+358|Mrs. Robinson - From "The Graduate" Soundtrack|Simon & Garfunkel|Bookends|1968|bandaSonora
+359|Love On The Brain|Rihanna|ANTI (Deluxe)|2016|recopilatorio
+360|Can't Buy Me Love - Remastered 2009|The Beatles|A Hard Day's Night (Remastered)|1964|recopilatorio
+361|Maniac|Michael Sembello|Flashdance (Original Soundtrack From The Motion Picture)|1983|bandaSonora
+362|Call Me|Blondie|Call Me|2004|outlier
+363|Die With A Smile|Lady Gaga|Die With A Smile|2024|outlier
+364|Wild World|Yusuf / Cat Stevens|Tea For The Tillerman (Remastered 2020)|1970|recopilatorio
+365|Bennie And The Jets - Remastered 2014|Elton John|Goodbye Yellow Brick Road (Remastered)|1973|recopilatorio
+366|Roxanne|The Police|Outlandos D'Amour (Remastered 2003)|1978|recopilatorio
+367|Congratulations|Post Malone|Stoney (Deluxe)|2016|recopilatorio
+368|Mercy|Shawn Mendes|Illuminate (Deluxe)|2017|recopilatorio
+369|Dai Dai|Shakira|Dai Dai|2026|outlier
+370|Torero|Chayanne|Grandes Exitos|2002|recopilatorio
+371|Hay Quel Venir al Sur|Raffaella Carrà|Raffaella Carrà: Sensational Hits|2024|recopilatorio
+372|Ayer La Vi (BPA26)|Juan Magán|Ayer La Vi (BPA26)|2026|outlier
+373|Bohemian Rhapsody - Remastered 2011|Queen|A Night At The Opera (2011 Remaster)|1975|recopilatorio
+374|El Toro Guapo|El Fary|Menudo Es El Fary (New Recording)|1996|outlier
+375|Adrenalina (feat. Jennifer Lopez & Ricky Martin)|Wisin|El Regreso del Sobreviviente (Deluxe Edition)|2014|recopilatorio
+376|Noche de Travesura|Héctor "El Father"|Goldstar Music La Familia Reggaeton Hits|2019|recopilatorio
+377|Escándalo|Raphael|Ave Fénix|1992|outlier
+378|La ramona (remastered)|Fernando Esteso|Fernando Esteso. Sus Mejores Grabaciones En Discos Discophon (1975-1976)|1998|recopilatorio
+379|El Negro No Puede|Georgie Dann|Verbenas de Pueblo Bizarras|2024|outlier
+380|Amigos para Siempre - 2017 Edition|Los Manolos|Manolos, Suban al Escenario!|2017|outlier
+381|Que Difícil es Hacer el Amor en un Simca 1000|Los Inhumanos|Verbenas de Pueblo Bizarras|2024|outlier
+382|Me Duele La Cara De Ser Tan Guapo|Los Inhumanos|Verbenas de Pueblo Bizarras|2024|outlier
+383|Pilar|Los Toreros Muertos|Verbenas de Pueblo Bizarras|2024|outlier
+384|Quiero Verte|Los Sobraos|20 Aniversario - Reset|2016|aniversario
+385|Gitana Hechicera|Peret|Els 18 Èxits Essencials|2014|outlier
+386|Maneras de vivir - Versión 2004-directo México|Rosendo|Salud y buenos alimentos|2004|outlier
+387|La Cerveza|Georgie Dann|La Cerveza|2013|outlier
+388|Dance Again (feat. Pitbull)|Jennifer Lopez|Dance Again...The Hits|2012|recopilatorio
+389|Give Me Everything (feat. Nayer)|Pitbull|Planet Pit (Deluxe Version)|2011|recopilatorio
+390|Barbie de extrarradio|Melendi|Volvamos a empezar (Deluxe edition)|2010|recopilatorio
+391|No Dudaría - Remasterizado|Antonio Flores|Antonio (Remasterizado 2022)|1980|recopilatorio
+392|Carolina - En directo 2000|M-Clan|Sin Enchufe|2001|directo
+393|A quién le importa|Alaska Y Dinarama|The Platinum Collection: Alaska|2007|outlier
+394|Voy a pasármelo bien|Hombres G|Lo Mejor De Los Hombres G|1999|recopilatorio
+395|No Dudaria|Antonio Flores|Lo Mejor de Antonio|1994|recopilatorio
+396|Devuélveme a mi chica|Hombres G|Lo Mejor De Los Hombres G|1999|recopilatorio
+397|Eso Que Tú Me Das|Jarabe De Palo|Tragas o Escupes|2020|outlier
+398|El Taxi|Pitbull|El Taxi 2016 - Compilation (Reggaeton Dembow Urbano Latin Hits)|2015|recopilatorio
+399|Presiento|Morat|Balas Perdidas (Edición Especial)|2018|aniversario
+400|A Partir De Hoy|David Bisbal|En Tus Planes|2020|outlier
+401|Ni Más Ni Menos|Los Chichos|Reyes de la Rumba: Lo Mejor de...|2001|recopilatorio
+402|Bésame|David Bisbal|En Tus Planes|2020|outlier
+403|Cuando zarpa el amor (feat. Juan Magán)|Camela|Rebobinando (25 Años)|2019|outlier
+404|Si Tú La Quieres|David Bisbal|En Tus Planes|2020|outlier
+405|No Dudaria|Antonio Flores|Esencial Antonio Flores|2013|outlier
+406|Una Estrella Chiquitita - Bulerías|Camaron De La Isla|Camaron - Bulerias 1|2011|outlier
+407|La Niña|Ecos del Rocío|Exitos por Sevillanas|1997|recopilatorio
+408|Libre Soy|Tijeritas|"Leyenda Viva" 30 Aniversario Tijeritas|2017|aniversario
+409|Por eso canto (feat. Melendi)|Los Galvan|Compartiendo (Edición Especial)|2004|aniversario
+410|La Despedida|Daddy Yankee|Mundial (Deluxe Version)|2010|recopilatorio
+411|Travesuras|Nicky Jam|Nicky Jam Hits|2014|recopilatorio
+412|Superman Sin Capa|El Super Nuevo|Exitos 2016|2016|recopilatorio
+413|Danza Kuduro|DJ Caribe Dance Mix|Summer Hits|2014|recopilatorio
+414|Fuego|Estopa|Fuego|2019|outlier
+415|Me sabe a humo|Los Chunguitos|iCollection|2016|outlier
+416|Fandango de Huéscar|Coros y Danzas de Granada|Folclore de nuestra tierra, Vol.1|1999|recopilatorio
+417|Hablando en plata - 2003 Remastered Version|Melendi|Sin Noticias De Holanda|2006|recopilatorio
+418|No Dudaría - En Directo En El Liceu / 2008|Rosario|Parte De Mí|2008|directo
+419|EL BAÑO|Enrique Iglesias|FINAL (Vol.1)|2021|recopilatorio
+420|Son Ilusiones|Los Chichos|Reyes de la Rumba: Lo Mejor de...|2001|recopilatorio

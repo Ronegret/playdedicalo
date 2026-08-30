@@ -1,0 +1,586 @@
+[
+  {
+    "id": "hits-todo-tiempo-055-palito-ortega-la-felicidad-2Hdf9j",
+    "artist": "Palito Ortega",
+    "title": "La Felicidad",
+    "antes": 2001,
+    "despues": 1967,
+    "album": "Colecccion de Oro"
+  },
+  {
+    "id": "fiesta-del-pueblo-241-paco-de-lucia-entre-dos-aguas-0bV0jA",
+    "artist": "Paco de Lucía",
+    "title": "Entre Dos Aguas",
+    "antes": 1981,
+    "despues": 1973,
+    "album": "Entre Dos Aguas"
+  },
+  {
+    "id": "espanol-100-053-los-chichos-son-ilusiones-single-version-577k3H",
+    "artist": "Los Chichos",
+    "title": "Son Ilusiones - Single Version",
+    "antes": 2012,
+    "despues": 1977,
+    "album": "Los Chichos 30 Canciones De Oro"
+  },
+  {
+    "id": "fiesta-del-pueblo-222-los-chichos-son-ilusiones-single-version-577k3H",
+    "artist": "Los Chichos",
+    "title": "Son Ilusiones - Single Version",
+    "antes": 2012,
+    "despues": 1977,
+    "album": "Los Chichos 30 Canciones De Oro"
+  },
+  {
+    "id": "espanol-100-097-el-fary-el-toro-guapo-6D3YqQ",
+    "artist": "El Fary",
+    "title": "El Toro Guapo",
+    "antes": 1984,
+    "despues": 1979,
+    "album": "Como un Gigante"
+  },
+  {
+    "id": "fiesta-del-pueblo-321-el-fary-el-toro-guapo-6D3YqQ",
+    "artist": "El Fary",
+    "title": "El Toro Guapo",
+    "antes": 1984,
+    "despues": 1979,
+    "album": "Como un Gigante"
+  },
+  {
+    "id": "temazos-149-chimo-bayo-asi-me-gusta-a-mi-4yu6Gh",
+    "artist": "Chimo Bayo",
+    "title": "Asi Me Gusta a Mi",
+    "antes": 2014,
+    "despues": 2009,
+    "album": "Techno Valencia Mix (The History) Back to the 90's"
+  },
+  {
+    "id": "fiesta-mayor-verbena-131-estopa-el-run-run-with-rosario-7FXZbH",
+    "artist": "Estopa",
+    "title": "El Run Run (with Rosario)",
+    "antes": 2009,
+    "despues": 2008,
+    "album": "X Anniversarivm"
+  },
+  {
+    "id": "fiesta-del-pueblo-022-estopa-el-run-run-with-rosario-7FXZbH",
+    "artist": "Estopa",
+    "title": "El Run Run (with Rosario)",
+    "antes": 2009,
+    "despues": 2008,
+    "album": "X Anniversarivm"
+  },
+  {
+    "id": "espanol-100-257-joey-montana-picky-4tPL9P",
+    "artist": "Joey Montana",
+    "title": "Picky",
+    "antes": 2016,
+    "despues": 2015,
+    "album": "Picky Back To The Roots"
+  },
+  {
+    "id": "fiesta-del-pueblo-276-joey-montana-picky-2p8ltf",
+    "artist": "Joey Montana",
+    "title": "Picky",
+    "antes": 2016,
+    "despues": 2015,
+    "album": "Picky Back To The Roots"
+  },
+  {
+    "id": "espanol-100-263-luis-fonsi-despacito-6habFh",
+    "artist": "Luis Fonsi",
+    "title": "Despacito",
+    "antes": 2019,
+    "despues": 2017,
+    "album": "VIDA"
+  },
+  {
+    "id": "hits-todo-tiempo-077-luis-fonsi-despacito-6habFh",
+    "artist": "Luis Fonsi",
+    "title": "Despacito",
+    "antes": 2019,
+    "despues": 2017,
+    "album": "VIDA"
+  },
+  {
+    "id": "mejores-todos-tiempos-089-luis-fonsi-despacito-6habFh",
+    "artist": "Luis Fonsi",
+    "title": "Despacito",
+    "antes": 2019,
+    "despues": 2017,
+    "album": "VIDA"
+  },
+  {
+    "id": "fiesta-del-pueblo-182-luis-fonsi-despacito-6habFh",
+    "artist": "Luis Fonsi",
+    "title": "Despacito",
+    "antes": 2019,
+    "despues": 2017,
+    "album": "VIDA"
+  },
+  {
+    "id": "fiesta-del-pueblo-262-becky-g-sin-pijama-62vDrk",
+    "artist": "Becky G",
+    "title": "Sin Pijama",
+    "antes": 2019,
+    "despues": 2018,
+    "album": "MALA SANTA"
+  },
+  {
+    "id": "espanol-100-295-beret-porfa-no-te-vayas-2XA5q5",
+    "artist": "Beret",
+    "title": "Porfa no te vayas",
+    "antes": 2022,
+    "despues": 2021,
+    "album": "Resiliencia"
+  },
+  {
+    "id": "espanol-100-301-manuel-turizo-la-bachata-3tt9i3",
+    "artist": "Manuel Turizo",
+    "title": "La Bachata",
+    "antes": 2023,
+    "despues": 2022,
+    "album": "2000"
+  },
+  {
+    "id": "temazos-004-bombai-solo-si-es-contigo-5JBnFO",
+    "artist": "Bombai",
+    "title": "Solo Si Es Contigo",
+    "antes": 2025,
+    "despues": 2017,
+    "album": "10 Años Contigo"
+  },
+  {
+    "id": "mejores-todos-tiempos-101-lipps-inc-funkytown-single-version-0B5kY9",
+    "artist": "Lipps Inc.",
+    "title": "Funkytown - Single Version",
+    "antes": 2007,
+    "despues": 1979,
+    "album": "'80s Pop #1's"
+  },
+  {
+    "id": "espanol-summer-party-205-los-rebeldes-mediterraneo-remasterizado-6inenm",
+    "artist": "Los Rebeldes",
+    "title": "Mediterraneo - Remasterizado",
+    "antes": 1988,
+    "despues": 1986,
+    "album": "Corazón de Rock and Roll (Remasterizado) [Boxset]"
+  },
+  {
+    "id": "temazos-106-sophie-ellis-bextor-murder-on-the-dancefloor-2Za2mU",
+    "artist": "Sophie Ellis-Bextor",
+    "title": "Murder On The Dancefloor",
+    "antes": 2002,
+    "despues": 2001,
+    "album": "Read My Lips"
+  },
+  {
+    "id": "temazos-144-becky-g-mayores-2AY1UA",
+    "artist": "Becky G",
+    "title": "Mayores",
+    "antes": 2019,
+    "despues": 2017,
+    "album": "MALA SANTA"
+  },
+  {
+    "id": "mejores-todos-tiempos-191-becky-g-mayores-2AY1UA",
+    "artist": "Becky G",
+    "title": "Mayores",
+    "antes": 2019,
+    "despues": 2017,
+    "album": "MALA SANTA"
+  },
+  {
+    "id": "fiesta-del-pueblo-165-becky-g-mayores-2AY1UA",
+    "artist": "Becky G",
+    "title": "Mayores",
+    "antes": 2019,
+    "despues": 2017,
+    "album": "MALA SANTA"
+  },
+  {
+    "id": "temazos-171-ini-kamoze-here-comes-the-hotstepper-4vfzRO",
+    "artist": "iNi Kamoze",
+    "title": "Here Comes the Hotstepper",
+    "antes": 2001,
+    "despues": 1994,
+    "album": "On Your 90's Radio"
+  },
+  {
+    "id": "fiesta-del-pueblo-363-michel-telo-ai-se-eu-te-pego-0INaMq",
+    "artist": "Michel Teló",
+    "title": "Ai Se Eu Te Pego",
+    "antes": 2019,
+    "despues": 2015,
+    "album": "Só Sucesso 40+"
+  },
+  {
+    "id": "mejores-todos-tiempos-118-survivor-eye-of-the-tiger-2KH16W",
+    "artist": "Survivor",
+    "title": "Eye of the Tiger",
+    "antes": 1985,
+    "despues": 1982,
+    "album": "Rocky IV"
+  },
+  {
+    "id": "temazos-261-gnarls-barkley-crazy-1vxw6a",
+    "artist": "Gnarls Barkley",
+    "title": "Crazy",
+    "antes": 2007,
+    "despues": 2006,
+    "album": "St. Elsewhere"
+  },
+  {
+    "id": "fiesta-mayor-verbena-185-los-sencillos-bonito-es-3F7LwU",
+    "artist": "Los Sencillos",
+    "title": "Bonito Es",
+    "antes": 2001,
+    "despues": 1991,
+    "album": "Doctor Amor"
+  },
+  {
+    "id": "espanol-summer-party-027-la-la-love-you-el-fin-del-mundo-70JnnN",
+    "artist": "La La Love You",
+    "title": "El Fin del Mundo",
+    "antes": 2020,
+    "despues": 2019,
+    "album": "La la Love You Bonus"
+  },
+  {
+    "id": "mejores-todos-tiempos-046-bee-gees-you-should-be-dancing-6BOTFS",
+    "artist": "Bee Gees",
+    "title": "You Should Be Dancing",
+    "antes": 1979,
+    "despues": 1976,
+    "album": "Greatest"
+  },
+  {
+    "id": "espanol-summer-party-060-luis-fonsi-echame-la-culpa-0mlAOS",
+    "artist": "Luis Fonsi",
+    "title": "Échame La Culpa",
+    "antes": 2019,
+    "despues": 2017,
+    "album": "VIDA"
+  },
+  {
+    "id": "fiesta-del-pueblo-377-alvaro-de-luna-juramento-eterno-de-sal-0tu5F0",
+    "artist": "Álvaro De Luna",
+    "title": "Juramento eterno de sal",
+    "antes": 2022,
+    "despues": 2020,
+    "album": "Levantaremos al sol"
+  },
+  {
+    "id": "espanol-summer-party-099-jose-el-frances-ya-no-quiero-tu-querer-3f43MH",
+    "artist": "José El Francés",
+    "title": "Ya No Quiero Tu Querer",
+    "antes": 2000,
+    "despues": 1993,
+    "album": "Alma"
+  },
+  {
+    "id": "espanol-summer-party-138-tini-mienteme-6ebo7C",
+    "artist": "TINI",
+    "title": "Miénteme",
+    "antes": 2023,
+    "despues": 2021,
+    "album": "Cupido"
+  },
+  {
+    "id": "fiesta-del-pueblo-168-king-africa-la-bomba-39SBuN",
+    "artist": "King Africa",
+    "title": "La Bomba",
+    "antes": 2020,
+    "despues": 2009,
+    "album": "Obsesiones de Latinos"
+  },
+  {
+    "id": "fiesta-mayor-verbena-197-marisol-corazon-contento-5r5hCj",
+    "artist": "Marisol",
+    "title": "Corazón Contento",
+    "antes": 1999,
+    "despues": 1968,
+    "album": "De Marisol A Pepa Flores"
+  },
+  {
+    "id": "espanol-summer-party-261-the-ronettes-be-my-baby-1WN4uN",
+    "artist": "The Ronettes",
+    "title": "Be My Baby",
+    "antes": 1964,
+    "despues": 1963,
+    "album": "Presenting the Fabulous Ronettes Featuring Veronica"
+  },
+  {
+    "id": "hits-todo-tiempo-052-j-balvin-mi-gente-7COfe3",
+    "artist": "J Balvin",
+    "title": "Mi Gente",
+    "antes": 2018,
+    "despues": 2017,
+    "album": "Vibras"
+  },
+  {
+    "id": "hits-todo-tiempo-065-enrique-iglesias-bailando-spanish-version-0bEA0m",
+    "artist": "Enrique Iglesias",
+    "title": "Bailando - Spanish Version",
+    "antes": 2015,
+    "despues": 2014,
+    "album": "SEX AND LOVE"
+  },
+  {
+    "id": "fiesta-del-pueblo-131-enrique-iglesias-bailando-spanish-version-0bEA0m",
+    "artist": "Enrique Iglesias",
+    "title": "Bailando - Spanish Version",
+    "antes": 2015,
+    "despues": 2014,
+    "album": "SEX AND LOVE"
+  },
+  {
+    "id": "mejores-todos-tiempos-255-nirvana-smells-like-teen-spirit-6y1etH",
+    "artist": "Nirvana",
+    "title": "Smells Like Teen Spirit",
+    "antes": 2002,
+    "despues": 1991,
+    "album": "Nirvana"
+  },
+  {
+    "id": "hits-todo-tiempo-079-rocio-durcal-me-gustas-mucho-2i7SlE",
+    "artist": "Rocío Dúrcal",
+    "title": "Me Gustas Mucho",
+    "antes": 1992,
+    "despues": 1978,
+    "album": "Mis Mejores Canciones"
+  },
+  {
+    "id": "fiesta-del-pueblo-082-the-refrescos-aqui-no-hay-playa-2Qjq1o",
+    "artist": "The Refrescos",
+    "title": "Aquí No Hay Playa",
+    "antes": 2000,
+    "despues": 1989,
+    "album": "Pongamos Que Hablo de Madrid"
+  },
+  {
+    "id": "hits-todo-tiempo-114-elvis-presley-jailhouse-rock-4gphxU",
+    "artist": "Elvis Presley",
+    "title": "Jailhouse Rock",
+    "antes": 1958,
+    "despues": 1957,
+    "album": "Elvis' Golden Records"
+  },
+  {
+    "id": "hits-todo-tiempo-181-lmfao-party-rock-anthem-7mitXL",
+    "artist": "LMFAO",
+    "title": "Party Rock Anthem",
+    "antes": 2011,
+    "despues": 2010,
+    "album": "Sorry For Party Rocking"
+  },
+  {
+    "id": "fiesta-del-pueblo-135-maldita-nerea-el-secreto-de-las-tortugas-version-2010-3hlYxs",
+    "artist": "Maldita Nerea",
+    "title": "El Secreto de las Tortugas - Version 2010",
+    "antes": 2010,
+    "despues": 2009,
+    "album": "El Secreto de las Tortugas (Version 2010)"
+  },
+  {
+    "id": "mejores-todos-tiempos-302-roy-orbison-oh-pretty-woman-52HAHV",
+    "artist": "Roy Orbison",
+    "title": "Oh, Pretty Woman",
+    "antes": 1964,
+    "despues": 1962,
+    "album": "The Essential Roy Orbison"
+  },
+  {
+    "id": "mejores-todos-tiempos-635-mungo-jerry-in-the-summertime-2uzlv8",
+    "artist": "Mungo Jerry",
+    "title": "In the Summertime",
+    "antes": 2000,
+    "despues": 1971,
+    "album": "In the Summertime"
+  },
+  {
+    "id": "fiesta-mayor-verbena-205-julio-iglesias-soy-un-truhan-soy-un-senor-3R8rzN",
+    "artist": "Julio Iglesias",
+    "title": "Soy un Truhán, Soy un Señor",
+    "antes": 1978,
+    "despues": 1977,
+    "album": "Begin the Beguine"
+  },
+  {
+    "id": "fiesta-mayor-verbena-204-marisol-tombola-2NUTJK",
+    "artist": "Marisol",
+    "title": "Tómbola",
+    "antes": 2008,
+    "despues": 1962,
+    "album": "Marisol. La Pequeña Estrella"
+  },
+  {
+    "id": "fiesta-del-pueblo-180-marisol-tombola-2NUTJK",
+    "artist": "Marisol",
+    "title": "Tómbola",
+    "antes": 2008,
+    "despues": 1962,
+    "album": "Marisol. La Pequeña Estrella"
+  },
+  {
+    "id": "hits-rock-espanol-073-kortatu-sarri-sarri-38PND0",
+    "artist": "Kortatu",
+    "title": "Sarri Sarri",
+    "antes": 1985,
+    "despues": 1983,
+    "album": "Aizkolari"
+  },
+  {
+    "id": "hits-rock-espanol-216-reincidentes-vicio-7c9sDy",
+    "artist": "Reincidentes",
+    "title": "Vicio",
+    "antes": 1998,
+    "despues": 1994,
+    "album": "Algazara"
+  },
+  {
+    "id": "mejores-todos-tiempos-053-sam-smith-unholy-feat-kim-petras-0NZPBY",
+    "artist": "Sam Smith",
+    "title": "Unholy (feat. Kim Petras)",
+    "antes": 2023,
+    "despues": 2022,
+    "album": "Gloria"
+  },
+  {
+    "id": "mejores-todos-tiempos-074-nicky-jam-x-5YUyW9",
+    "artist": "Nicky Jam",
+    "title": "X",
+    "antes": 2019,
+    "despues": 2018,
+    "album": "Intimo"
+  },
+  {
+    "id": "fiesta-del-pueblo-359-nicky-jam-x-5YUyW9",
+    "artist": "Nicky Jam",
+    "title": "X",
+    "antes": 2019,
+    "despues": 2018,
+    "album": "Intimo"
+  },
+  {
+    "id": "fiesta-del-pueblo-354-danny-ocean-me-rehuso-6ifUES",
+    "artist": "Danny Ocean",
+    "title": "Me Rehúso",
+    "antes": 2019,
+    "despues": 2016,
+    "album": "54+1"
+  },
+  {
+    "id": "mejores-todos-tiempos-121-shakira-chantaje-feat-maluma-6mICuA",
+    "artist": "Shakira",
+    "title": "Chantaje (feat. Maluma)",
+    "antes": 2017,
+    "despues": 2016,
+    "album": "El Dorado"
+  },
+  {
+    "id": "fiesta-del-pueblo-174-shakira-chantaje-feat-maluma-6mICuA",
+    "artist": "Shakira",
+    "title": "Chantaje (feat. Maluma)",
+    "antes": 2017,
+    "despues": 2016,
+    "album": "El Dorado"
+  },
+  {
+    "id": "mejores-todos-tiempos-215-dj-snake-taki-taki-feat-selena-gomez-ozuna-cardi-b-0KoiMH",
+    "artist": "DJ Snake",
+    "title": "Taki Taki (feat. Selena Gomez, Ozuna & Cardi B)",
+    "antes": 2019,
+    "despues": 2018,
+    "album": "Carte Blanche"
+  },
+  {
+    "id": "fiesta-mayor-verbena-015-chayanne-torero-709Cnd",
+    "artist": "Chayanne",
+    "title": "Torero",
+    "antes": 2002,
+    "despues": 1998,
+    "album": "Grandes Exitos"
+  },
+  {
+    "id": "fiesta-del-pueblo-074-chayanne-torero-709Cnd",
+    "artist": "Chayanne",
+    "title": "Torero",
+    "antes": 2002,
+    "despues": 1998,
+    "album": "Grandes Exitos"
+  },
+  {
+    "id": "fiesta-mayor-verbena-229-wisin-vacaciones-1rXojd",
+    "artist": "Wisin",
+    "title": "Vacaciones",
+    "antes": 2017,
+    "despues": 2016,
+    "album": "Victory"
+  },
+  {
+    "id": "fiesta-del-pueblo-278-wisin-vacaciones-1rXojd",
+    "artist": "Wisin",
+    "title": "Vacaciones",
+    "antes": 2017,
+    "despues": 2016,
+    "album": "Victory"
+  },
+  {
+    "id": "fiesta-del-pueblo-353-becky-g-cuando-te-bese-74wEiO",
+    "artist": "Becky G",
+    "title": "Cuando Te Besé",
+    "antes": 2019,
+    "despues": 2018,
+    "album": "MALA SANTA"
+  },
+  {
+    "id": "fiesta-del-pueblo-061-los-rebujitos-todos-los-besos-5Tqzff",
+    "artist": "Los Rebujitos",
+    "title": "Todos los Besos",
+    "antes": 2016,
+    "despues": 2010,
+    "album": "Tras la Máscara"
+  },
+  {
+    "id": "fiesta-del-pueblo-232-manuel-carrasco-tan-solo-tu-6t9hq2",
+    "artist": "Manuel Carrasco",
+    "title": "Tan Solo Tú",
+    "antes": 2013,
+    "despues": 2006,
+    "album": "Confieso Que He Sentido"
+  },
+  {
+    "id": "fiesta-del-pueblo-344-juan-magan-mal-de-amores-0uolNh",
+    "artist": "Juan Magán",
+    "title": "Mal De Amores",
+    "antes": 2015,
+    "despues": 2013,
+    "album": "The King Is Back (#LatinIBIZAte)"
+  },
+  {
+    "id": "fiesta-del-pueblo-279-sebastian-yatra-traicionera-4Ft039",
+    "artist": "Sebastian Yatra",
+    "title": "Traicionera",
+    "antes": 2018,
+    "despues": 2016,
+    "album": "MANTRA"
+  },
+  {
+    "id": "fiesta-del-pueblo-301-manuel-carrasco-salitre-5tUUPz",
+    "artist": "Manuel Carrasco",
+    "title": "Salitre",
+    "antes": 2025,
+    "despues": 2023,
+    "album": "Pueblo Salvaje II"
+  },
+  {
+    "id": "fiesta-del-pueblo-349-comando-tiburon-pasado-pisado-6Gqr73",
+    "artist": "Comando Tiburon",
+    "title": "Pasado Pisado",
+    "antes": 2023,
+    "despues": 2017,
+    "album": "Pasado Pisado"
+  }
+]
