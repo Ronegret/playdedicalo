@@ -1,6 +1,26 @@
 # Dedicalo Play
 
-Juego musical React + Vite con salas por PIN, Firebase Realtime Database, Google Sign-In para anfitriones y playlists publicas de Spotify.
+Juego musical de fiesta para grupos presenciales. Suena una cancion, se corta
+la musica, y cada jugador adivina de que ano es para completar su ruta.
+
+**Produccion:** [play.dedicalo.es](https://play.dedicalo.es) · **Version:** v0.4.0
+
+## Documentacion
+
+| | |
+|---|---|
+| [Concepto](docs/01-concepto.md) | Que es, para quien, por que |
+| [Game Design Document](docs/02-gdd.md) | Mecanicas, reglas, economia |
+| [Arquitectura](docs/03-arquitectura.md) | Stack, datos, decisiones tecnicas |
+| [Marca](docs/04-marca.md) | Identidad, paleta, tipografia |
+| [Roadmap](docs/05-roadmap.md) | Hitos hasta la v1.0 |
+| [Trazabilidad](docs/06-trazabilidad.md) | Prueba de autoria y evolucion |
+| [Decisiones (ADR)](docs/decisiones/) | Por que se hizo cada cosa |
+| [Registro de cambios](CHANGELOG.md) | Historial de versiones |
+
+> **Nota:** antes de cualquier plan comercial, leer
+> [ADR-0002](docs/decisiones/0002-dependencia-de-spotify.md) — la base musical
+> actual bloquea el modelo de cobro.
 
 ## Desarrollo
 
