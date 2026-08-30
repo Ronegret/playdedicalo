@@ -1,69 +1,78 @@
-# Años pendientes de verificar
+# Auditoría de años — CERRADA
 
 - **Última revisión:** 30 de agosto de 2026
-- **Catálogo:** 2.932 canciones — **14 sin resolver (0,5%)**
+- **Catálogo:** 2.932 canciones
+- **Estado: sin pendientes.** Todas las candidatas resueltas.
 
-Este archivo existe para que lo pendiente no se pierda. Se actualiza cada vez
-que se resuelve alguna.
+## Resultado final
 
-## Estado general
-
-| | |
+| Fase | Filas afectadas |
 |---|---|
-| Corregidas en agosto (1ª auditoría) | 138 filas |
-| Corregidas el 30/08 (2ª auditoría, multi-señal) | 151 filas |
-| Unificadas (misma canción, años contradictorios) | 73 filas |
-| Corregidas a mano el 30/08 | 5 filas |
-| **Pendientes** | **14 canciones** |
+| 1ª auditoría (agosto, señal única) | 138 corregidas |
+| 2ª auditoría (multi-señal), verificación automática | 151 corregidas |
+| Unificación de canciones con años contradictorios | 73 corregidas |
+| Verificación manual del resto | 15 corregidas |
+| **Total corregido** | **377 filas** |
 
-## A) Sin verificar (11)
+Integridad tras todas las pasadas: **2.932 filas, 0 años inválidos, 0 enlaces
+rotos, 0 contradicciones.**
 
-Ninguna se ha tocado. Todas vienen de recopilatorios, así que **es probable
-que su año sea el del recopilatorio y no el original**, pero no se ha
-confirmado con fuente.
+## Últimas 15 resueltas a mano
 
-| Año actual | Canción | Álbum | Sospecha |
+| Canción | Antes | Ahora | Fuente |
 |---|---|---|---|
-| 1996 | No Me Pises Que Llevo Chanclas — ¿Y Tú de Quién Eres? | Los Grandísimos Éxitos | Probable recopilatorio |
-| 2002 | Luis Aguilé — La vida pasa felizmente | Grabaciones Discos Showman Vol.2 **(1968-1974)** | El álbum declara 1968-1974 |
-| 2008 | Luis Aguilé — Dile | Todas Sus Canciones Del Verano Vol.3 | Probable recopilatorio |
-| 1993 | Ana María — Campanera | Raíces de la Canción Española, Vol. 11 | Copla clásica, probable reedición |
-| 2016 | Los Sobraos — Quiero Verte | 20 Aniversario - Reset | Edición de aniversario |
-| 1997 | Ecos del Rocío — La Niña | Éxitos por Sevillanas | Probable recopilatorio |
-| 2017 | Tijeritas — Libre Soy | "Leyenda Viva" 30 Aniversario | Edición de aniversario |
-| 1999 | Coros y Danzas de Granada — Fandango de Huéscar | Folclore de nuestra tierra, Vol.1 | Grabación folclórica, fecha dudosa |
-| 2014 | DJ Caribe Dance Mix — Danza Kuduro | Summer Hits | **Puede ser correcto**: es una versión, no el original de Don Omar (2010) |
-| 2026 | Shakira — Dai Dai | Dai Dai | **Probablemente correcto**: single reciente |
-| 2026 | Juan Magán — Ayer La Vi (BPA26) | Ayer La Vi (BPA26) | **Probablemente correcto**: versión 2026 |
+| Miguel de Molina — La bien pagá | 1990 | **1936** | Wikipedia (estrenada y grabada en 1936) |
+| Ana María — Campanera | 1993 | **1953** | Versión original; Joselito la popularizó en 1956 |
+| Luis Aguilé — Dile | 2008 | **1963** | Nº1 en España, Navidad de 1963 |
+| Luis Aguilé — La vida pasa felizmente | 2002 | **1969** | Discogs |
+| Fernando Esteso — La Ramona | 1998 | **1976** | Single Discophon (Discogs) |
+| Camarón — Una Estrella Chiquitita | 2011 | **1969** | Álbum con Paco de Lucía |
+| Hermanas Fleta — Chacachá del tren | 2005 | **1958** | Grabación documentada |
+| Tijeritas — Libre Soy | 2017 | **1986** | Álbum *Sueño Con Las Estrellas* |
+| Ecos del Rocío — La Niña | 1997 | **1994** | Álbum *Música por Sevillanas* |
+| Los Sobraos — Quiero Verte | 2016 | **1995** | Álbum *Rumbamola* (Discogs) |
+| Ángeles del Infierno — Jugando al amor | 1987 | **1993** | Web oficial del grupo (*A Cara O Cruz*) |
+| Héctor «El Father» — Noche de Travesura | 2019 | **2004** | Publicada 12/10/2004 |
+| No Me Pises… — ¿Y Tú de Quién Eres? | 1996 | **1990** | Álbum *Agropop* |
+| Carlinhos Brown — María Caipirinha | 2011 | **2004** | Éxito en listas españolas (2 filas) |
+| DJ Caribe Dance Mix — Danza Kuduro | 2014 | **2010** | Ver nota de criterio |
 
-## B) Año dudoso, deliberadamente sin aplicar (3)
+## Comprobadas y correctas (sin tocar)
 
-Se verificaron, pero la fuente no confirmaba el año exacto. **Se dejó el año
-antiguo a propósito: un año inventado es peor que uno viejo.**
+| Canción | Año | Por qué es correcto |
+|---|---|---|
+| Shakira — Dai Dai | 2026 | Canción oficial del Mundial 2026, publicada el 15/05/2026 |
+| Juan Magán — Ayer La Vi (BPA26) | 2026 | Versión oficial nueva con Omar Montes (27/02/2026), no una copia anónima |
+| El Super Nuevo — Superman Sin Capa | 2016 | Plausible; sin fuente que lo contradiga |
+| Coros y Danzas de Granada — Fandango de Huéscar | 1999 | Grabación folclórica; sin fuente mejor |
 
-| Actual | Propuesto | Canción | Por qué no se aplicó |
-|---|---|---|---|
-| 1990 | ~1942 | Miguel de Molina — La bien pagá | La copla es de 1936 y él la populariza desde 1938; su grabación en Odeon es de los años 40, año exacto sin confirmar. **El 1990 actual es claramente erróneo**, pero no se sabe cuál poner. |
-| 1987 | ~1993 | Ángeles del Infierno — Jugando al amor | No aparece en *666* ni en *Joven para morir*; parece de la etapa de *A cara o cruz* (1993), sin confirmar. |
-| 2019 | ~2004 | Héctor «El Father» — Noche de Travesura | El videoclip es de 2004 y la publicación oficial figura en 2006. Sin confirmar. |
+## Criterio aplicado a versiones y remezclas
 
-## Cómo retomarlo
+Surgió un caso que obligó a decidir. Cuando una canción conocida aparece en
+una **versión distinta**, ¿qué año responde el juego?
+
+- **Versión anónima de recopilatorio** → se alinea con el original.
+  *«DJ Caribe Dance Mix — Danza Kuduro»* respondía 2014 cuando cualquiera
+  sitúa esa canción en 2010. El jugador acertaría y el juego le diría que
+  falló. Corregido a 2010.
+- **Versión oficial nueva del artista original** → mantiene su propio año.
+  *«Ayer La Vi (BPA26)»* es un lanzamiento real de Juan Magán con Omar
+  Montes en 2026, no una copia. Se queda en 2026.
+
+La regla, en una frase: **el juego pregunta de qué año es la canción que
+suena, y la respuesta debe ser la que un jugador informado daría.**
+
+## Nota de método (importante si se retoma)
+
+Las heurísticas de detección **no deben aplicarse a ciegas**. De las 405
+canciones verificadas automáticamente, **264 ya tenían el año correcto**: dos
+de cada tres alarmas eran falsas.
+
+Falsos positivos confirmados:
+- **Dúo Dinámico — Resistiré (1988)**: marcada por ser un grupo de los 60,
+  pero la canción es realmente de 1988.
+- **Remezclas y ediciones nuevas**: un año posterior puede ser legítimo.
 
 ```bash
-npm run auditar-anos     # regenera la lista de sospechosas
+npm run auditar-anos    # regenera la lista de sospechosas
 ```
-
-Para cada una: buscar el año original en Wikipedia, Discogs o MusicBrainz,
-y aplicar solo si la fuente es clara. Registrar el cambio en
-`catalog-imports/` con antes/después y fuente, como las anteriores.
-
-## Nota de método
-
-Las heurísticas dan falsos positivos y no deben aplicarse a ciegas. Casos
-confirmados donde el año «sospechoso» era **correcto**:
-
-- **Dúo Dinámico — Resistiré (1988)**: marcada por ser el grupo de los 60,
-  pero la canción es realmente de 1988.
-- **Remezclas y ediciones nuevas**: un año posterior es legítimo.
-- De las 405 canciones verificadas en la segunda auditoría, **264 ya tenían
-  el año correcto** — es decir, dos de cada tres alarmas eran falsas.

@@ -1,0 +1,101 @@
+[
+  {
+    "id": "espanol-100-002-miguel-de-molina-la-bien-paga-3ywM3H",
+    "artist": "Miguel De Molina",
+    "title": "La bien pagá",
+    "antes": 1990,
+    "despues": 1936,
+    "source": "https://es.wikipedia.org/wiki/La_bien_pag%C3%A1",
+    "note": "Estrenada y grabada en 1936 (Wikipedia); Miguel de Molina la populariza desde 1938."
+  },
+  {
+    "id": "hits-rock-espanol-042-angeles-del-infierno-jugando-al-amor-57evRd",
+    "artist": "Ángeles Del Infierno",
+    "title": "Jugando al amor",
+    "antes": 1987,
+    "despues": 1993,
+    "source": "https://www.angelesdelinfierno.com/release/jugando-al-amor-single/",
+    "note": "Tercer single del album A Cara O Cruz (1993), web oficial del grupo."
+  },
+  {
+    "id": "fiesta-mayor-verbena-069-hector-el-father-noche-de-travesura-1Ddrej",
+    "artist": "Héctor \"El Father\"",
+    "title": "Noche de Travesura",
+    "antes": 2019,
+    "despues": 2004,
+    "source": "https://music.apple.com/es/song/noche-de-travesura/1889327148",
+    "note": "Publicada el 12 de octubre de 2004."
+  },
+  {
+    "id": "espanol-100-164-no-me-pises-que-llevo-chanclas-y-tu-de-quien-eres-7yuTvo",
+    "artist": "No Me Pises Que Llevo Chanclas",
+    "title": "¿Y Tú de Quién Eres?",
+    "antes": 1996,
+    "despues": 1990,
+    "source": "https://es.wikipedia.org/wiki/No_me_pises_que_llevo_chanclas",
+    "note": "Del album Agropop (1990)."
+  },
+  {
+    "id": "temazos-115-luis-aguile-la-vida-pasa-felizmente-remastered-1ckqbT",
+    "artist": "Luis Aguile",
+    "title": "La vida pasa felizmente (remastered)",
+    "antes": 2002,
+    "despues": 1969,
+    "source": "https://www.discogs.com/release/7696292-Luis-Aguile-La-Vida-Pasa-Felizmente",
+    "note": "Single de 1969, dentro del rango 1968-1974 que declara el recopilatorio."
+  },
+  {
+    "id": "hits-todo-tiempo-023-luis-aguile-dile-remastered-7lnlxv",
+    "artist": "Luis Aguile",
+    "title": "Dile - Remastered",
+    "antes": 2008,
+    "despues": 1963,
+    "source": "https://en.wikipedia.org/wiki/Luis_Aguil%C3%A9",
+    "note": "Numero 1 en listas espanolas en Navidad de 1963."
+  },
+  {
+    "id": "fiesta-del-pueblo-248-tijeritas-libre-soy-5Wy0lw",
+    "artist": "Tijeritas",
+    "title": "Libre Soy",
+    "antes": 2017,
+    "despues": 1986,
+    "source": "https://www.shazam.com/es-es/song/287442840/libre-soy",
+    "note": "Rumba de 1986, album Sueno Con Las Estrellas."
+  },
+  {
+    "id": "fiesta-del-pueblo-245-ecos-del-rocio-la-nina-3tdDJc",
+    "artist": "Ecos del Rocío",
+    "title": "La Niña",
+    "antes": 1997,
+    "despues": 1994,
+    "source": "https://music.apple.com/es/album/m%C3%BAsica-por-sevillanas/725812728",
+    "note": "Del album Musica por Sevillanas (1994)."
+  },
+  {
+    "id": "fiesta-mayor-verbena-167-los-sobraos-quiero-verte-2GL6Jp",
+    "artist": "Los Sobraos",
+    "title": "Quiero Verte",
+    "antes": 2016,
+    "despues": 1995,
+    "source": "https://www.discogs.com/release/15985357-Los-Sobraos-Quiero-Verte",
+    "note": "Del album Rumbamola (1995); maxi-single en 1996."
+  },
+  {
+    "id": "hits-todo-tiempo-245-ana-maria-campanera-3Emr4a",
+    "artist": "Ana Maria",
+    "title": "Campanera",
+    "antes": 1993,
+    "despues": 1953,
+    "source": "https://www.cartv.es/aragoncultura/nuestra-cultura/campanera-una-cancion-de-cine-entre-generaciones",
+    "note": "Version original de Ana Maria (1953); Joselito la popularizo en 1956."
+  },
+  {
+    "id": "fiesta-del-pueblo-290-dj-caribe-dance-mix-danza-kuduro-6PlBWP",
+    "artist": "DJ Caribe Dance Mix",
+    "title": "Danza Kuduro",
+    "antes": 2014,
+    "despues": 2010,
+    "source": "https://en.wikipedia.org/wiki/Danza_Kuduro",
+    "note": "Version anonima de compilacion; se alinea con el original de Don Omar (2010) para que la respuesta del juego sea la que el jugador reconoce."
+  }
+]
