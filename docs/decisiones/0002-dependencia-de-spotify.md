@@ -87,10 +87,28 @@ la música y se pregunta el año. Los 30 segundos sobran.
 - Cuanto más tarde se resuelva, más caro sale: si la respuesta es «hay que
   salir de Spotify», cambian decisiones de arquitectura.
 
+## Resultado de la prueba de cobertura (30/08/2026)
+
+Ejecutada con `npm run cobertura` sobre una muestra estratificada por
+playlist. Informe completo en `docs/evidencias/cobertura-previews-*.txt`.
+
+> **94,2% de las canciones tienen preview disponible en Apple** (196/208).
+
+Por playlist, **ninguna baja del 82%**. Las listas españolas antiguas, que
+eran el riesgo principal, salen entre 91% y 100%. Dos incluso al 100%.
+
+**Lectura: la vía de los previews es viable.** El catálogo actual se sostiene
+casi entero.
+
+Matiz importante: el **22,4% de los años de Apple discrepan** de nuestro
+catálogo ya auditado — tienen el mismo problema de recopilatorios que tenía
+Spotify. Pero eso **no es un obstáculo**: seguiríamos usando *nuestros* años,
+que ya están corregidos y con fuente citada. De Apple solo se necesita el
+audio, no la fecha.
+
 ## Qué hay que averiguar (por orden)
 
-1. **Prueba de cobertura**: cuántas de las 2.932 canciones tienen preview en
-   Apple. Decide todo lo demás. Es un script, no toca la app.
+1. ~~**Prueba de cobertura**~~ ✅ **Hecha: 94,2% — viable.**
 2. Escribir a Spotify y **pedir respuesta por escrito** sobre una vía comercial.
 3. Revisar el estado real de la app en el Developer Dashboard.
 4. Analizar el encuadre legal de WhatTheHit.

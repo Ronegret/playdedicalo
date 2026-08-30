@@ -18,3 +18,4 @@ Una decisión importante por archivo, numerada y fechada. Formato ligero:
 | [0001](0001-un-solo-modo-de-juego.md) | Un solo modo de juego | 2026-08-09 | Vigente |
 | [0002](0002-dependencia-de-spotify.md) | Dependencia de Spotify | 2026-08-30 | **Abierta — bloqueante** |
 | [0003](0003-catalogo-local-de-canciones.md) | Catálogo local de canciones | 2026-06-15 | Vigente |
+| [0004](0004-modo-online.md) | Modo online (jugar en remoto) | 2026-08-30 | Investigado |

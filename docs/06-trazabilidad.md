@@ -40,18 +40,35 @@ Marcar cada versión con una **etiqueta anotada** (lleva autor y fecha) y
 publicarla como *release* en GitHub. Si además se firma con GPG, queda
 vinculada criptográficamente a tu identidad.
 
-### Capa 4 — Sello de tiempo independiente ⬜ Pendiente
+### Capa 4 — Sello de tiempo independiente ⬜ Pendiente (paso manual)
 **OpenTimestamps** (`opentimestamps.org`) ancla el hash de un archivo en la
 cadena de bloques de Bitcoin. Es **gratis** y demuestra que un contenido
 concreto existía antes de una fecha, sin depender de GitHub ni de nadie.
 
-```bash
-# Sellar el manifiesto de una versión (gratis)
-ots stamp docs/evidencias/manifiesto-v0.4.0.txt
-```
+> **Nota de esta máquina (30/08/2026):** se intentó automatizar con el cliente
+> de línea de comandos y **no funciona aquí**. `opentimestamps-client` depende
+> de `python-bitcoinlib`, que es incompatible con Python 3.14 (falla al cargar
+> libssl por ctypes), y además el Control de aplicaciones de Windows bloquea
+> el `ots.exe` instalado. No se ha generado ningún `.ots`.
 
-Genera un `.ots` que se guarda junto al manifiesto. Verificable por cualquiera,
-para siempre, sin coste.
+**Alternativa que sí funciona hoy, sin instalar nada:**
+
+1. Abrir <https://opentimestamps.org>
+2. Arrastrar el manifiesto (`docs/evidencias/manifiesto-vX.Y.Z-FECHA.txt`)
+3. Descargar el `.ots` que devuelve
+4. Guardarlo junto al manifiesto y commitearlo
+
+Son 30 segundos por versión. El sitio calcula el hash **en el navegador**: el
+contenido del archivo no se sube, solo su huella. Verificable después por
+cualquiera, para siempre, sin coste.
+
+Si en el futuro se quiere automatizar, hace falta un Python 3.11 o 3.12 y
+`pip install opentimestamps-client`; entonces bastaría:
+
+```bash
+ots stamp docs/evidencias/manifiesto-v0.4.0-2026-08-30.txt
+ots verify docs/evidencias/manifiesto-v0.4.0-2026-08-30.txt.ots
+```
 
 ## 3. Procedimiento al cerrar una versión
 

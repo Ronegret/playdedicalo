@@ -1,0 +1,41 @@
+PRUEBA DE COBERTURA DE PREVIEWS (Apple / iTunes)
+================================================================
+
+Fecha           : 2026-08-30T12:25:15.728Z
+Catalogo total  : 2932 canciones
+Comprobadas     : 208 (muestra estratificada por playlist)
+
+RESULTADO GLOBAL
+----------------------------------------------------------------
+Con preview disponible : 196/208  =  94.2%
+
+Desglose por estado:
+  ok                   196  (94.2%)
+  sin-coincidencia      11  (5.3%)
+  no-encontrada          1  (0.5%)
+
+POR PLAYLIST
+----------------------------------------------------------------
+   82%   18/22   HITSTER - Espanol Rock
+   91%   20/22   HITSTER - 100% Espanol
+   94%   16/17   FIESTAS DE PUEBLO : Temazos de Fiesta Mayor & Verbenas
+   94%   49/52   LAS MEJORES CANCIONES DE TODOS LOS TIEMPOS
+   95%   21/22   HITSTER - Espanol Temazos
+   95%   21/22   HITSTER - Espanol
+  100%   22/22   HITSTER - Espanol Summer Party
+  100%   29/29   FIESTAS DE PUEBLO
+
+COHERENCIA DE ANOS (Apple vs nuestro catalogo ya auditado)
+----------------------------------------------------------------
+Comparables     : 196
+Discrepan       : 44 (22.4%)
+  Si el porcentaje es alto, migrar a Apple obligaria a repetir la
+  auditoria de anos: sus fechas tienen el mismo problema de
+  recopilatorios que tenia Spotify.
+
+LECTURA
+----------------------------------------------------------------
+  >= 85%  VIABLE. La cobertura da para sostener el juego.
+          Siguiente paso: prototipo de reproduccion (Fase 1 del roadmap).
+
+================================================================

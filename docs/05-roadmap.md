@@ -36,8 +36,9 @@ Ver [ADR-0002](decisiones/0002-dependencia-de-spotify.md) para el análisis
 completo.
 
 ### Tareas
-- [ ] **Prueba de cobertura**: cuántas de las 2.932 canciones tienen preview
-      disponible en el catálogo de Apple. *Decide todo lo demás.*
+- [x] **Prueba de cobertura**: `npm run cobertura`. Muestra estratificada
+      por playlist contra la API pública de iTunes. Resultado en
+      `docs/evidencias/cobertura-previews-*.txt`
 - [ ] Escribir a Spotify pidiendo respuesta por escrito sobre una vía de
       acuerdo comercial
 - [ ] Revisar el estado real de la app en el Developer Dashboard de Spotify
@@ -82,7 +83,8 @@ No planificadas, anotadas para no perderlas:
 
 - Modos de juego adicionales (existieron Bingo y Corte Maestro; se
   eliminaron, pero el aprendizaje está)
-- Partidas en remoto (hoy el diseño asume presencialidad)
+- ~~Partidas en remoto~~ → investigado, ver [ADR-0004](decisiones/0004-modo-online.md):
+  sale casi gratis si se resuelve la base musical por la vía de previews
 - Estadísticas por jugador entre partidas
 - Playlists personalizadas del anfitrión (hoy es un flujo manual por donación)
 - Versión física complementaria (cartas), que además esquivaría la
