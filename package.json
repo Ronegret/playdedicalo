@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "avatars": "node scripts/process-avatars.mjs",
     "evidencia": "node scripts/generar-evidencia.mjs",
-    "cobertura": "node scripts/probar-cobertura-previews.mjs"
+    "cobertura": "node scripts/probar-cobertura-previews.mjs",
+    "auditar-anos": "node scripts/auditar-anos.mjs"
   },
   "dependencies": {
     "firebase": "^12.14.0",
