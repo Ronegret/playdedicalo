@@ -64,7 +64,8 @@ final.
 
 1. **Cero fricción para el invitado.** Cualquier paso que se le pueda quitar
    a quien se une, se quita. El nombre es opcional; el PIN avanza solo; el QR
-   salta un paso.
+   salta un paso. **Los invitados nunca necesitan cuenta de nada** — esto es
+   innegociable y aplica también a cualquier modo futuro.
 2. **Legible a distancia y con prisa.** Se juega de pie, con ruido y con
    copas. Si algo hay que leerlo dos veces, está mal diseñado.
 3. **El anfitrión manda el ritmo.** La partida no corre sola: para cuando él

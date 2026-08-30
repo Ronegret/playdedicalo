@@ -4,28 +4,28 @@ MANIFIESTO DE EVIDENCIA — DEDICALO PLAY
 Proyecto      : Dedicalo Play
 Autor         : Rodrigo Negrete Aros
 Version       : v0.4.0
-Generado      : 2026-08-30T12:25:58.394Z  (UTC)
-Local         : Sun Aug 30 2026 14:25:58 GMT+0200 (hora de verano de Europa central)
+Generado      : 2026-08-30T12:35:40.584Z  (UTC)
+Local         : Sun Aug 30 2026 14:35:40 GMT+0200 (hora de verano de Europa central)
 
 ESTADO DEL REPOSITORIO
 ----------------------------------------------------------------
-Commit        : 6c06ef016ed2ff4f7fb62f50bc1720975433de55
+Commit        : 6dda631c05beede19f6bb83a20d410264f3c2be1
 Rama          : main
-Fecha commit  : 2026-08-30T14:25:57+02:00
+Fecha commit  : 2026-08-30T14:25:58+02:00
 Autor commit  : Rodrigo Negrete Aros <rodrigo.negrete.aros@gmail.com>
-Total commits : 118
+Total commits : 119
 Primer commit : 2026-06-13T22:52:54+02:00
 Remoto        : https://github.com/Ronegret/playdedicalo.git
-Sin cambios   : SI (arbol limpio)
+Sin cambios   : NO — hay cambios sin commitear
 
 CONTENIDO
 ----------------------------------------------------------------
-Archivos      : 292
-Tamano total  : 17.18 MB
+Archivos      : 293
+Tamano total  : 17.21 MB
 
 HASH GLOBAL DEL PROYECTO (SHA-256)
 ----------------------------------------------------------------
-8cc6dc60d5a10a96fb387db5190b8d2e437f7decf0cc42bd7bcf127330f5fbe3
+7ae864e64466a4352623028c6b3fb51bfcdbf6abbfbcf79aa87d6e7cc961c772
 
   Este hash identifica de forma unica el estado completo del
   proyecto en la fecha indicada. Cualquier modificacion de
@@ -43,7 +43,7 @@ HASHES POR ARCHIVO (SHA-256)
 82cad760fd834b9c5a02d4721b7e50680d3d0cab93db94cb122838e05b2bc8ee  catalog-imports/song-year-corrections-2026-08-24.json
 f9f74bdc9b8557411df88fd130cfc9d87791530bf9c5ed014a22d3b1c0176f76  CHANGELOG.md
 694832ff6940ac418a6cae2f7fee382d56d80dc0d3b4e45af3974cbb15fc247c  database.rules.json
-aa7dce1ca6105a99c55565c87a820e17457719c90cb495309250960c0aa02b1a  docs/01-concepto.md
+7be75a7833975d26ff72dfa2ba11cc90d65a6814c99ff48449a9ffffa7579f77  docs/01-concepto.md
 190b5ba5f6626063cf2bff672bf04c147b7aebfaca87cc3017b0daea41382792  docs/02-gdd.md
 5db1ae7410f79230777e074db08016c14b1f6a8a4b194717e7dc9cdf0fbb2385  docs/03-arquitectura.md
 1ed09bbbc211e338dedeaf013c6102636577ff67baeab7def8bcbd927a31e315  docs/04-marca.md
@@ -52,10 +52,11 @@ aa7dce1ca6105a99c55565c87a820e17457719c90cb495309250960c0aa02b1a  docs/01-concep
 1ea626d467f3b08fb3f72de3a5b7cca4eba85c53316e561d7cc10beb8eb8ceaf  docs/decisiones/0001-un-solo-modo-de-juego.md
 adb272de8591924e7572c0a2117ac4b913bc3df230117c4209e9324f4f3f6e32  docs/decisiones/0002-dependencia-de-spotify.md
 c87143b99a341d55c484a2e2e6529fc7eb0eeea9541d27a3ac4e38f5f9080e26  docs/decisiones/0003-catalogo-local-de-canciones.md
-f5f4f82f0d722dc45984a6b2e327eec714ebd01d7326aca4a30e5388b7147578  docs/decisiones/0004-modo-online.md
+c305a7083b6ed8a1bf223ae2bc9072632d0e7c02a3ba0af2aad8b2f1a9465b32  docs/decisiones/0004-modo-online.md
 52780c17a5b3600d30583746cbc3bc235ebd46834066af54e70f7c566b0c2eb6  docs/decisiones/README.md
 de6e83a84bbe77e1188b27fd428adeb85180b6252bbaf5edc435137fea77eac0  docs/evidencias/cobertura-previews-2026-08-30.json
 65ac31a0e51422e26247406f61b8212fb1cc68bd2dba9e83328628d048b4ec34  docs/evidencias/cobertura-previews-2026-08-30.txt
+b4ae52f39cce6879d5bb52747160a1b7cbfc3dc21b095bb01dac6e8fc6d94bdb  docs/evidencias/manifiesto-v0.4.0-2026-08-30.txt
 f55ea5caa0ea383e402c2b56de251766e2b9f19faf73293652e00d28793b3e89  docs/evidencias/README.md
 5481de90668369aeb8356ed5b5f5a3e08de470a978f83f796aae134add1294b1  docs/marca/README.md
 47dcffe085cef8b1ba89037c3bcce2eac95a0aa3c9b80b15f0592ff905ea1f6e  docs/README.md
@@ -332,4 +333,4 @@ d96a9d824654dbca385bd70ea18cce7ee4e93bda38ae2efe6caf76c2d037ab94  tools/validate
 4d36db3522a7b2dd10e0936e1004373c7ee65f10f7cd7920cd76410459c15a45  vite.config.js
 
 ================================================================
-Fin del manifiesto — v0.4.0 — 2026-08-30T12:25:58.394Z
+Fin del manifiesto — v0.4.0 — 2026-08-30T12:35:40.584Z
