@@ -1083,6 +1083,12 @@ export default function GameScreen() {
                 <span className="font-label-caps text-[11px] text-neon-green">+5 ACIERTO</span>
                 <span className="w-px h-3 bg-white/20" />
                 <span className="font-label-caps text-[11px] text-intense-red">-3 FALLO</span>
+                <span className="w-px h-3 bg-white/20" />
+                {/* La regla del bonus se ensena aqui, dentro del chip que ya
+                    existia — no hace falta un cartel aparte. */}
+                <span className="flex items-center gap-0.5 font-label-caps text-[11px] text-chaos-gold">
+                  <span className="material-symbols-outlined text-sm">bolt</span>+1 AL 1º
+                </span>
               </motion.div>
             </div>
 

@@ -290,6 +290,13 @@ export default function ResultScreen() {
   const resultCopy = wasYearStolen
     ? `${guestReveal?.stolenBy || 'Un rival'} te robó el año con su sabotaje. Sumaste puntos, pero tu ruta no creció esta vez.`
     : style.copy;
+  // Bonus por contestar primero. La informacion viaja montada en elementos
+  // que ya existen (el chip del delta y la linea de copy), no en paneles
+  // nuevos: se entera todo el mundo sin meter ruido visual.
+  const speedBonus = Number(guestReveal?.speedBonus || 0);
+  const speedWinnerName = guestReveal?.speedWinnerName || null;
+  const iWasFastest = speedBonus > 0;
+
   const deltaColor = pointDelta > 0 ? 'text-neon-green' : pointDelta < 0 ? 'text-intense-red' : 'text-white/30';
   const deltaLabel = pointDelta > 0 ? `+${pointDelta}` : pointDelta !== 0 ? String(pointDelta) : null;
 
@@ -659,15 +666,29 @@ export default function ResultScreen() {
                 initial={{ y: 18, opacity: 0, rotate: 8 }}
                 animate={{ y: 0, opacity: 1, rotate: 0 }}
                 transition={{ delay: 0.35, type: 'spring', stiffness: 140 }}
-                className={`mb-3 rounded-2xl border border-current/30 bg-black/30 px-4 py-2 text-3xl font-black ${deltaColor}`}
+                className={`mb-3 flex items-center gap-1.5 rounded-2xl border border-current/30 bg-black/30 px-4 py-2 text-3xl font-black ${deltaColor}`}
+                title={iWasFastest ? 'Incluye +1 por responder primero' : undefined}
               >
                 {deltaLabel}
+                {iWasFastest && (
+                  <span className="material-symbols-outlined text-chaos-gold" style={{ fontSize: '1.4rem' }}>bolt</span>
+                )}
               </motion.div>
             )}
           </div>
 
           <div className="relative mt-4 mx-auto max-w-sm">
             <p className="text-sm leading-relaxed text-white/70">{resultCopy}</p>
+            {/* Una linea, sin recuadro ni animacion: quien gano el punto lo
+                ve como logro y el resto se entera de quien fue. */}
+            {(iWasFastest || speedWinnerName) && (
+              <p className="mt-2 flex items-center justify-center gap-1.5 text-sm text-chaos-gold/90">
+                <span className="material-symbols-outlined text-base">bolt</span>
+                {iWasFastest
+                  ? '+1 por responder primero'
+                  : `${speedWinnerName} respondió primero (+1)`}
+              </p>
+            )}
           </div>
         </motion.div>
         {/* Cancion revelada */}

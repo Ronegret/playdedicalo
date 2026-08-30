@@ -62,6 +62,11 @@ function armPresenceDisconnect(pin, playerId) {
 // real hacia la meta (REDEEM_YEAR_COST). Con puntos ahorrados, un jugador
 // puede comprar directamente una "canción" de progreso sin tener que
 // acertarla, para quien vaya atrás en el conteo de canciones.
+// Punto extra para quien acierta PRIMERO en la ronda. Solo uno por
+// ronda: premia la decision rapida sin desequilibrar (un acierto normal
+// vale 5).
+export const SPEED_BONUS_POINTS = 1;
+
 export const ATTACK_COST = 8;
 export const REDEEM_YEAR_COST = 40;
 
@@ -489,13 +494,35 @@ export const useGameStore = create((setStore, getStore) => ({
 
     const goalYears = room?.settings?.targetYears || getStore().targetYears;
 
+    // ── Bonus por contestar primero ──────────────────────────────────────
+    // Gana el punto extra quien ACIERTA antes que nadie en la ronda. Se
+    // ordena por la marca del servidor (serverAt); si un cliente viejo no
+    // la trae, cae a su hora local para no quedar excluido. Un empate
+    // exacto se resuelve por id, para que sea determinista y no dependa
+    // del orden en que Firebase devuelva las claves.
+    const speedWinnerId = Object.values(playersById)
+      .filter((player) => {
+        const answer = answers[player.id];
+        const isBlocked = player.activeAttack?.type === 'block_vote';
+        return !isBlocked && Boolean(answer?.isCorrect);
+      })
+      .map((player) => ({
+        id: player.id,
+        t: Number(answers[player.id]?.serverAt ?? answers[player.id]?.at ?? Infinity)
+      }))
+      .sort((a, b) => (a.t - b.t) || String(a.id).localeCompare(String(b.id)))[0]?.id || null;
+
+    const speedWinnerName = speedWinnerId ? (playersById[speedWinnerId]?.name || null) : null;
+
     Object.values(playersById).forEach((player) => {
       const answer = answers[player.id];
       // Bloqueado por sabotaje: no puede responder esta ronda, cuenta como
       // fallo aunque hubiera alcanzado a tocar algo antes de enterarse.
       const isBlocked = player.activeAttack?.type === 'block_vote';
       const isCorrect = !isBlocked && Boolean(answer?.isCorrect);
-      const delta = (!isBlocked && answer) ? (isCorrect ? 5 : -3) : (player.isHost ? 0 : -3);
+      const isSpeedWinner = isCorrect && player.id === speedWinnerId;
+      const speedBonus = isSpeedWinner ? SPEED_BONUS_POINTS : 0;
+      const delta = ((!isBlocked && answer) ? (isCorrect ? 5 : -3) : (player.isHost ? 0 : -3)) + speedBonus;
       const nextPoints = clampPoints(Number(player.points || 0) + delta);
       // Robo de año: si acertó y lo saboteó un "year_steal", el año no se le
       // suma a él — se resuelve en el segundo paso, junto con quitarle uno
@@ -511,6 +538,11 @@ export const useGameStore = create((setStore, getStore) => ({
         stolen: isStolen,
         stolenBy: isStolen ? (player.activeAttack.from || null) : null,
         delta,
+        speedBonus,
+        // Nombre del mas rapido en TODOS los resultados, no solo en el del
+        // ganador: asi el resto tambien se entera de quien se llevo el
+        // punto extra.
+        speedWinnerName,
         points: nextPoints
       };
 
@@ -941,7 +973,12 @@ export const useGameStore = create((setStore, getStore) => ({
       isCorrect: Boolean(isTimelineAnswer ? answerInput.isCorrect : answerInput),
       ...(isTimelineAnswer ? { timelineSlot: answerInput.timelineSlot } : {}),
       round,
-      at: Date.now()
+      at: Date.now(),
+      // El bonus por contestar primero se decide con la hora del SERVIDOR,
+      // no con Date.now() del movil: los relojes de los telefonos van
+      // desviados entre si (a veces minutos), asi que ordenar por hora
+      // local regalaria el bonus siempre al mismo aparato.
+      serverAt: serverTimestamp()
     };
     await writeData(`rooms/${pin}/roundAnswers/${guestId}`, answer);
     setStore({
