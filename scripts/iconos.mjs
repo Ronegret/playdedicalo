@@ -60,6 +60,14 @@ for (const archivo of fuentes) {
   // 4) Iconos pasados como prop: icon="bolt" / nextIcon="arrow_forward"
   for (const m of src.matchAll(/\b(?:icon|nextIcon|fallbackIcon)=["']([a-z_]+)["']/g)) anadir(m[1]);
   for (const m of src.matchAll(/\b(?:icon|nextIcon|fallback)\s*=\s*\{?\s*'([a-z_]+)'/g)) anadir(m[1]);
+
+  // 5) Mapas de iconos: const ICONO = { auto: 'screen_rotation', … }, que
+  //    luego se usan como {ICONO[modo]}. Ahí no hay literal en el JSX, así
+  //    que sin esto se quedarían fuera del subconjunto y se dibujarían como
+  //    palabras sueltas. Pasó de verdad al añadir el control de orientación.
+  for (const m of src.matchAll(/\b(?:const|let)\s+\w*[Ii][Cc][Oo][Nn]\w*\s*=\s*\{([^}]*)\}/g)) {
+    for (const v of m[1].matchAll(/:\s*'([a-z_]+)'/g)) anadir(v[1]);
+  }
 }
 
 const lista = [...iconos].sort();

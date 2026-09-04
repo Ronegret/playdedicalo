@@ -7,6 +7,7 @@ import { auth } from '../firebase';
 import { useGameStore } from '../store/useGameStore';
 import { resetSpotifyConnection } from '../services/spotify';
 import FontSizeControl from './FontSizeControl';
+import OrientationControl from './OrientationControl';
 import AvatarPicker from './AvatarPicker';
 import { isImageAvatar } from '../data/characterAvatars';
 
@@ -161,6 +162,12 @@ export default function ProfileMenu({ user, guestAvatar }) {
               <div className="p-2">
                 <div className="mb-1 rounded-xl px-3 py-2.5">
                   <FontSizeControl className="justify-between" />
+                </div>
+                <div className="mb-1 flex items-center justify-between gap-3 rounded-xl px-3 py-2.5">
+                  <span className="font-label-caps text-[0.65rem] tracking-[0.14em] text-on-surface-variant">
+                    ORIENTACIÓN
+                  </span>
+                  <OrientationControl />
                 </div>
                 {canEditProfile ? (
                   <button

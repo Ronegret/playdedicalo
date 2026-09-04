@@ -114,6 +114,35 @@ html.fs-xl {
     margin-right: auto;
   }
 
+  /* ── Juego en apaisado ────────────────────────────────────────────────
+     La ruta de años es una línea de tiempo horizontal: girando el móvil le
+     cabe más del doble de ancho y se recorre mucho menos para colocar la
+     canción. Pero el contenedor normal está limitado a 430px (diseño para
+     móvil de pie), así que en apaisado hay que soltarlo o el giro no sirve
+     de nada.
+
+     La clase la pone useOrientation, y solo cuando hay ancho de verdad.
+  ─────────────────────────────────────────────────────────────────────── */
+  html.play-landscape .app-shell {
+    width: min(100%, 900px);
+  }
+
+  /* En apaisado sobra poco alto: la decoración se encoge para que la ruta y
+     los botones quepan sin desplazar la pantalla. */
+  html.play-landscape .landscape-compact {
+    display: none;
+  }
+
+  html.play-landscape .landscape-tight {
+    transform: scale(0.72);
+    transform-origin: center top;
+    margin-bottom: -2.5rem;
+  }
+
+  html.play-landscape .safe-bottom-action {
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+  }
+
   /* Reserva espacio para una barra de acción fija al fondo (p. ej. "PARAR
      MÚSICA" en GameScreen). Con la letra base ahora más grande (18px en
      vez de 16px) esa barra ocupa más alto por defecto, no solo con

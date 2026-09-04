@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { ATTACK_COST, ATTACK_TYPES, DEDICALO_PLAYLISTS, GAME_MODES, REDEEM_YEAR_COST, getCombinedTimelineYears, getPlayerPresence, getTimelineProgress, normalizeSabotageTypes, normalizeSpotifyPlaylistUrl, useGameStore } from '../store/useGameStore';
 import { isImageAvatar } from '../data/characterAvatars';
 import HeaderHUD from '../components/HeaderHUD';
+import RotatePrompt from '../components/RotatePrompt';
+import { useOrientation } from '../hooks/useOrientation';
 import JoinRequestBanner from '../components/JoinRequestBanner';
 import { connectSpotify, createQuestionFromTrack, explainSpotifyError, getCurrentHiddenTrack, getSpotifyStatus, pauseSpotifyPlayback, prepareSpotifyPlayback, startRandomPlaylistTrack } from '../services/spotify';
 
@@ -456,84 +458,180 @@ function BlockedPlacement({ attackFrom, attackFromAvatar, playerYears = [], wild
 // que los circulos pueden ser pequenos y no crecen con el ajuste de letra
 // (por eso 2.75rem fijo y no var(--vinyl-size)): agrandar la letra ya no
 // aleja la ruta.
-function TimelineRibbon({ years, wildcards = 0 }) {
+// Disco de vinilo con el año. Vuelve el look de disco (surcos y etiqueta
+// central) porque es la identidad del juego: la ruta se lee como una pila de
+// discos, no como una lista.
+function VinylDisc({ year, wildcard = false, size }) {
+  const color = wildcard ? '#ffbf4d' : '#a855f7';
   return (
-    <div className="overflow-x-auto no-scrollbar -mx-1 px-1">
-      <div className="flex min-w-max items-center gap-1.5">
-        {years.map((year, index) => (
-          <div
-            key={`${year}-${index}`}
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-electric-purple bg-electric-purple/20 text-[0.72rem] font-black tabular-nums text-white"
-          >
+    <div
+      className="relative flex shrink-0 items-center justify-center rounded-full"
+      style={{
+        width: size,
+        height: size,
+        background: 'radial-gradient(circle at 50% 50%, #14101f 0 30%, #0a0810 30% 100%)',
+        border: `3px solid ${color}`,
+        boxShadow: `0 6px 20px rgba(0,0,0,.45), 0 0 18px ${wildcard ? 'rgba(255,191,77,.28)' : 'rgba(168,85,247,.28)'}`
+      }}
+    >
+      {/* Surcos */}
+      <span className="pointer-events-none absolute rounded-full border border-white/10" style={{ inset: '11%' }} />
+      <span className="pointer-events-none absolute rounded-full border border-white/5" style={{ inset: '20%' }} />
+      <span className="pointer-events-none absolute rounded-full border border-white/5" style={{ inset: '29%' }} />
+      {/* Etiqueta central: donde se lee el año de un vistazo */}
+      <span
+        className="relative flex items-center justify-center rounded-full"
+        style={{
+          width: '62%',
+          height: '62%',
+          background: wildcard ? 'rgba(255,191,77,.18)' : 'rgba(168,85,247,.20)',
+          border: `1px solid ${color}`
+        }}
+      >
+        {wildcard ? (
+          <span className="material-symbols-outlined text-chaos-gold" style={{ fontSize: `calc(${size} * 0.3)` }}>star</span>
+        ) : (
+          <span className="font-black tabular-nums leading-none text-white" style={{ fontSize: `calc(${size} * 0.235)` }}>
             {year}
-          </div>
-        ))}
-        {Array.from({ length: wildcards }, (_, index) => (
-          <div
-            key={`w-${index}`}
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-chaos-gold bg-chaos-gold/20"
-          >
-            <span className="material-symbols-outlined text-chaos-gold text-lg">star</span>
-          </div>
-        ))}
-      </div>
+          </span>
+        )}
+      </span>
     </div>
   );
 }
 
-// Una fila = un hueco donde puede ir la cancion. A lo ancho de la pantalla,
-// para que el area de toque sea la fila entera y el texto crezca con el
-// ajuste de letra en vez de irse de viaje hacia la derecha.
-function SlotRow({ from, to, disabled, onClick }) {
-  const etiqueta = from == null
-    ? `Antes de ${to}`
-    : to == null
-      ? `Después de ${from}`
-      : `Entre ${from} y ${to}`;
-
+// Hueco entre dos discos. Se agranda y se enciende cuando queda centrado en
+// el riel: el jugador siempre ve cuál va a elegir sin tener que apuntar con
+// el dedo a un círculo pequeño.
+function VinylGap({ activo, size }) {
   return (
-    <button
-      type="button"
-      disabled={disabled}
-      onClick={onClick}
-      aria-label={`Colocar la canción: ${etiqueta}`}
-      className="flex w-full min-h-touch items-center gap-3 rounded-2xl border-2 border-dashed border-neon-green/45 bg-neon-green/5 px-4 py-3 text-left transition-all active:scale-[0.98] hover:border-neon-green hover:bg-neon-green/12 focus:outline-none focus:ring-2 focus:ring-neon-green disabled:opacity-35"
+    <div
+      className="flex shrink-0 items-center justify-center rounded-full border-[3px] border-dashed transition-all duration-200"
+      style={{
+        width: activo ? size : `calc(${size} * 0.62)`,
+        height: activo ? size : `calc(${size} * 0.62)`,
+        borderColor: activo ? '#39ff14' : 'rgba(57,255,20,.35)',
+        background: activo ? 'rgba(57,255,20,.14)' : 'rgba(57,255,20,.04)',
+        boxShadow: activo ? '0 0 24px rgba(57,255,20,.35)' : 'none'
+      }}
     >
-      <span className="material-symbols-outlined shrink-0 text-neon-green">add</span>
-      <span className="flex-1 font-bold leading-snug text-white">{etiqueta}</span>
-    </button>
+      <span
+        className="material-symbols-outlined text-neon-green transition-transform duration-200"
+        style={{ fontSize: `calc(${size} * ${activo ? 0.34 : 0.24})` }}
+      >
+        add
+      </span>
+    </div>
   );
 }
 
-// `preview` = se muestra mientras suena la cancion, para que el jugador
-// busque su hueco tranquilo. En ese momento aun no se puede confirmar: el
-// desplazamiento deja de ocurrir bajo presion con la sala mirando.
-function TimelinePlacementQuestion({ question, playerYears = [], wildcards = 0, disabled, onPick, activeAttack, targetYears = 12, preview = false }) {
-  const years = playerYears.length ? playerYears : [2000];
+function etiquetaHueco(from, to) {
+  if (from == null) return `Antes de ${to}`;
+  if (to == null) return `Después de ${from}`;
+  return `Entre ${from} y ${to}`;
+}
+
+// `preview` = se ve mientras suena la canción, para buscar el hueco tranquilo
+// antes de que corten la música (sin poder confirmar todavía).
+function TimelinePlacementQuestion({
+  question, playerYears = [], wildcards = 0, disabled, onPick,
+  activeAttack, targetYears = 12, preview = false, layout = 'vertical'
+}) {
+  const years = useMemo(() => (playerYears.length ? playerYears : [2000]), [playerYears]);
   const isStealThreat = activeAttack?.type === 'year_steal';
   const correctSlot = question ? years.filter((year) => year <= question.songYear).length : -1;
+  const apaisado = layout === 'horizontal';
 
-  // Un hueco entre dos anos iguales nunca puede ser la respuesta correcta:
-  // se omite para no ofrecer "Entre 2008 y 2008".
-  const huecos = [];
-  for (let slot = 0; slot <= years.length; slot += 1) {
-    if (slot > 0 && slot < years.length && years[slot - 1] === years[slot]) continue;
-    huecos.push({
-      slot,
-      from: slot === 0 ? null : years[slot - 1],
-      to: slot === years.length ? null : years[slot]
+  const railRef = useRef(null);
+  const gapRefs = useRef([]);
+  const [focoIndex, setFocoIndex] = useState(0);
+
+  // Los huecos entre dos años iguales no se ofrecen: colocar ahí nunca puede
+  // ser correcto y solo añade ruido ("Entre 2008 y 2008").
+  const huecos = useMemo(() => {
+    const lista = [];
+    for (let slot = 0; slot <= years.length; slot += 1) {
+      if (slot > 0 && slot < years.length && years[slot - 1] === years[slot]) continue;
+      lista.push({
+        slot,
+        from: slot === 0 ? null : years[slot - 1],
+        to: slot === years.length ? null : years[slot]
+      });
+    }
+    return lista;
+  }, [years]);
+
+  // Píxeles y no rem A PROPÓSITO: en rem el disco crecería con el ajuste de
+  // letra y poner letra grande volvería a alejar la ruta, que era el fallo
+  // del riel viejo (de 6 a 10 pantallas de recorrido). Aquí el riel es la
+  // referencia visual y se queda compacto; lo que sí crece con la letra es
+  // lo que hay que leer y pulsar de verdad: la etiqueta del hueco elegido y
+  // el botón de confirmar, ambos en rem.
+  const size = apaisado ? '94px' : '72px';
+
+  const recalcularFoco = useCallback(() => {
+    const rail = railRef.current;
+    if (!rail) return;
+    const centro = rail.scrollLeft + rail.clientWidth / 2;
+    let mejor = 0;
+    let mejorDist = Infinity;
+    gapRefs.current.forEach((el, index) => {
+      if (!el) return;
+      const c = el.offsetLeft + el.offsetWidth / 2;
+      const d = Math.abs(c - centro);
+      if (d < mejorDist) { mejorDist = d; mejor = index; }
     });
-  }
+    setFocoIndex(mejor);
+  }, []);
+
+  useEffect(() => {
+    const rail = railRef.current;
+    if (!rail) return undefined;
+    let pendiente = false;
+    const alDesplazar = () => {
+      if (pendiente) return;
+      pendiente = true;
+      window.requestAnimationFrame(() => { pendiente = false; recalcularFoco(); });
+    };
+    rail.addEventListener('scroll', alDesplazar, { passive: true });
+    const inicial = window.setTimeout(recalcularFoco, 0);
+    return () => {
+      rail.removeEventListener('scroll', alDesplazar);
+      window.clearTimeout(inicial);
+    };
+  }, [recalcularFoco, huecos.length]);
+
+  // Arranca centrado en mitad de la ruta y no en el extremo izquierdo: se
+  // recorre la mitad para llegar a cualquier hueco.
+  useEffect(() => {
+    const rail = railRef.current;
+    if (!rail) return undefined;
+    const centrar = window.setTimeout(() => {
+      const medio = gapRefs.current[Math.floor(huecos.length / 2)];
+      if (medio) rail.scrollLeft = medio.offsetLeft + medio.offsetWidth / 2 - rail.clientWidth / 2;
+    }, 0);
+    return () => window.clearTimeout(centrar);
+  }, [huecos.length, layout]);
+
+  const irA = useCallback((index) => {
+    const rail = railRef.current;
+    const el = gapRefs.current[index];
+    if (!rail || !el) return;
+    rail.scrollTo({ left: el.offsetLeft + el.offsetWidth / 2 - rail.clientWidth / 2, behavior: 'smooth' });
+  }, []);
+
+  const huecoActivo = huecos[focoIndex] || huecos[0];
+  const etiqueta = huecoActivo ? etiquetaHueco(huecoActivo.from, huecoActivo.to) : '';
 
   return (
-    <div className={preview ? 'w-full max-w-sm' : 'mt-5'}>
+    <div className={preview ? 'w-full' : 'mt-4 w-full'}>
       <div className="rounded-3xl border border-neon-green/20 bg-[radial-gradient(circle_at_top,rgba(57,255,20,0.12),rgba(255,255,255,0.04)_42%,rgba(0,0,0,0.24)_100%)] p-4 shadow-[0_0_30px_rgba(57,255,20,0.08)]">
         {isStealThreat && !preview && (
-          <div className="mb-3 rounded-xl bg-error/20 border border-error/50 p-2.5 flex items-center gap-2.5">
+          <div className="mb-3 flex items-center gap-2.5 rounded-xl border border-error/50 bg-error/20 p-2.5">
             {isImageAvatar(activeAttack.fromAvatar) ? (
               <img src={activeAttack.fromAvatar} alt={activeAttack.from || 'Rival'} className="h-12 w-12 shrink-0 rounded-full border-2 border-error object-cover" />
             ) : (
-              <span className="material-symbols-outlined text-error text-lg animate-pulse shrink-0">move_down</span>
+              <span className="material-symbols-outlined shrink-0 animate-pulse text-lg text-error">move_down</span>
             )}
             <p className="text-sm font-bold leading-snug text-error">
               <span className="font-black">{activeAttack.from || 'Un rival'}</span> te sabotó: si aciertas, ese año se lo lleva y pierdes uno de los tuyos.
@@ -543,9 +641,9 @@ function TimelinePlacementQuestion({ question, playerYears = [], wildcards = 0, 
 
         <div className="flex items-center justify-between gap-3">
           <div>
-            <p className="font-label-caps text-sm text-neon-green tracking-[0.16em]">TU RUTA DE AÑOS</p>
+            <p className="font-label-caps text-sm tracking-[0.16em] text-neon-green">TU RUTA DE AÑOS</p>
             <p className="mt-1 text-base font-bold text-white">
-              {preview ? 'Ve buscando dónde encaja' : 'Toca dónde crees que va'}
+              {preview ? 'Ve buscando dónde encaja' : 'Desliza y confirma'}
             </p>
           </div>
           <span className="shrink-0 rounded-full border border-white/10 bg-black/25 px-3 py-1.5 text-sm font-label-caps text-on-surface-variant">
@@ -553,27 +651,75 @@ function TimelinePlacementQuestion({ question, playerYears = [], wildcards = 0, 
           </span>
         </div>
 
-        <div className="mt-3">
-          <TimelineRibbon years={years} wildcards={wildcards} />
+        {/* Riel de discos. snap-mandatory sobre los huecos: al soltar el dedo
+            siempre queda uno centrado, nunca a medias. */}
+        <div
+          ref={railRef}
+          className="no-scrollbar relative mt-4 overflow-x-auto overflow-y-hidden"
+          style={{ scrollSnapType: 'x mandatory' }}
+        >
+          <div className="pointer-events-none absolute left-0 right-0 top-1/2 h-px bg-gradient-to-r from-transparent via-white/12 to-transparent" />
+          <div
+            className="relative flex min-w-max items-center gap-2 py-2"
+            style={{ paddingLeft: '50%', paddingRight: '50%' }}
+          >
+            {huecos.map((hueco, index) => (
+              <div key={hueco.slot} className="flex items-center gap-2">
+                <div
+                  ref={(el) => { gapRefs.current[index] = el; }}
+                  style={{ scrollSnapAlign: 'center' }}
+                >
+                  <VinylGap activo={index === focoIndex} size={size} />
+                </div>
+                {hueco.to != null && <VinylDisc year={hueco.to} size={size} />}
+              </div>
+            ))}
+            {Array.from({ length: wildcards }, (_, index) => (
+              <VinylDisc key={`w-${index}`} wildcard size={size} />
+            ))}
+          </div>
         </div>
 
-        <div className="mt-4 flex flex-col gap-2">
-          {huecos.map((hueco) => (
-            <SlotRow
-              key={hueco.slot}
-              from={hueco.from}
-              to={hueco.to}
-              disabled={disabled || preview}
-              onClick={() => onPick({ isCorrect: hueco.slot === correctSlot, timelineSlot: hueco.slot })}
-            />
-          ))}
+        {/* Paso a paso: quien no quiera deslizar con precisión avanza hueco a
+            hueco con las flechas. */}
+        <div className="mt-3 flex items-center gap-2">
+          <button
+            type="button"
+            aria-label="Hueco anterior"
+            disabled={focoIndex === 0}
+            onClick={() => irA(Math.max(0, focoIndex - 1))}
+            className="flex min-h-touch w-12 shrink-0 items-center justify-center rounded-xl border border-white/15 bg-white/5 text-white disabled:opacity-30"
+          >
+            <span className="material-symbols-outlined">arrow_back</span>
+          </button>
+          <p className="flex-1 text-center text-base font-black leading-tight text-white">{etiqueta}</p>
+          <button
+            type="button"
+            aria-label="Hueco siguiente"
+            disabled={focoIndex >= huecos.length - 1}
+            onClick={() => irA(Math.min(huecos.length - 1, focoIndex + 1))}
+            className="flex min-h-touch w-12 shrink-0 items-center justify-center rounded-xl border border-white/15 bg-white/5 text-white disabled:opacity-30"
+          >
+            <span className="material-symbols-outlined">arrow_forward</span>
+          </button>
         </div>
 
-        {preview && (
-          <p className="mt-3 text-sm leading-relaxed text-on-surface-variant">
+        {preview ? (
+          <p className="mt-3 text-center text-sm leading-relaxed text-on-surface-variant">
             Podrás confirmar cuando pare la música.
           </p>
+        ) : (
+          <button
+            type="button"
+            disabled={disabled || !huecoActivo}
+            onClick={() => onPick({ isCorrect: huecoActivo.slot === correctSlot, timelineSlot: huecoActivo.slot })}
+            className="mt-3 flex min-h-touch w-full items-center justify-center gap-2 rounded-2xl bg-neon-green px-4 font-label-caps text-base font-black text-black transition-transform active:scale-[0.98] disabled:opacity-40"
+          >
+            <span className="material-symbols-outlined">add</span>
+            COLOCAR AQUÍ
+          </button>
         )}
+
         {wildcards > 0 && !preview && (
           <p className="mt-3 flex items-center gap-1.5 text-sm text-chaos-gold">
             <span className="material-symbols-outlined text-base">star</span>
@@ -616,6 +762,7 @@ export default function GameScreen() {
   const [answeredQuestionKey, setAnsweredQuestionKey] = useState(null);
   const [countdownValue, setCountdownValue] = useState(3);
   const [softSecondsLeft, setSoftSecondsLeft] = useState(null);
+  const { layout } = useOrientation();
   const [spotifyMessage, setSpotifyMessage] = useState('');
   const [spotifyTrackReady, setSpotifyTrackReady] = useState(false);
   const [spotifyError, setSpotifyError] = useState(false);
@@ -909,6 +1056,7 @@ export default function GameScreen() {
     <div className={`app-screen relative z-10 flex flex-col items-center overflow-y-auto pt-safe-header transition-colors duration-500 ${phase === 'blackout' ? 'bg-black' : 'bg-transparent'}`}>
 
       <HeaderHUD onExit={() => setShowExitConfirm(true)} />
+      <RotatePrompt />
 
       <AnimatePresence>
         {showIncomingAttack && (
@@ -985,7 +1133,7 @@ export default function GameScreen() {
             className={`app-shell flex flex-col items-center gap-3 px-1 text-center sm:gap-4 ${role === 'host' ? 'safe-bottom-action' : ''}`}
           >
             {/* Vinyl listen circle */}
-            <div className="relative w-60 h-60 sm:w-72 sm:h-72 flex items-center justify-center">
+            <div className="landscape-tight relative w-60 h-60 sm:w-72 sm:h-72 flex items-center justify-center">
               {[0, 0.8, 1.6].map((delay) => (
                 <div
                   key={delay}
@@ -1009,7 +1157,7 @@ export default function GameScreen() {
             </div>
 
             {/* Equalizer */}
-            <div className="flex gap-2 items-end h-10 sm:h-14">
+            <div className="landscape-compact flex gap-2 items-end h-10 sm:h-14">
               {EQUALIZER_BARS.map((duration, index) => (
                 <motion.div
                   key={`${duration}-${index}`}
@@ -1046,6 +1194,7 @@ export default function GameScreen() {
                 playerYears={ownTimelineYears}
                 wildcards={Number(ownPlayer?.wildcards || 0)}
                 targetYears={targetYears}
+                layout={layout}
                 preview
               />
             )}
@@ -1194,6 +1343,7 @@ export default function GameScreen() {
                 onPick={handleAnswer}
                 activeAttack={incomingAttack}
                 targetYears={targetYears}
+                layout={layout}
               />
             ) : (
               <motion.div

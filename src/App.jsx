@@ -7,6 +7,7 @@ import ShaderBackground from './components/ShaderBackground';
 import ErrorBoundary from './components/ErrorBoundary';
 import OfflineBanner from './components/OfflineBanner';
 import { stopBgMusic } from './hooks/useBgMusic';
+import { useLandscapeBodyClass } from './hooks/useOrientation';
 
 // After a new deploy, a tab left open from before still points at the old,
 // content-hashed chunk filenames — those 404 on the server and the dynamic
@@ -61,6 +62,7 @@ function PageLoader() {
 import { useGameStore } from './store/useGameStore';
 
 function App() {
+  useLandscapeBodyClass();
   const location = useLocation();
   const navigate = useNavigate();
   const [sessionChecked, setSessionChecked] = useState(false);
