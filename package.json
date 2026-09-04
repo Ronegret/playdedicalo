@@ -11,7 +11,9 @@
     "avatars": "node scripts/process-avatars.mjs",
     "evidencia": "node scripts/generar-evidencia.mjs",
     "cobertura": "node scripts/probar-cobertura-previews.mjs",
-    "auditar-anos": "node scripts/auditar-anos.mjs"
+    "auditar-anos": "node scripts/auditar-anos.mjs",
+    "iconos": "node scripts/iconos.mjs",
+    "prebuild": "node scripts/iconos.mjs --check"
   },
   "dependencies": {
     "firebase": "^12.14.0",
