@@ -1,0 +1,951 @@
+[
+  {
+    "ids": [
+      "chileno-100-149-carlos-cabezas-lo-mejor-de-ti-en-vivo"
+    ],
+    "title": "Lo Mejor de Ti - En Vivo",
+    "artist": "Carlos Cabezas",
+    "album": "Bailando en Silencio (El Resplandor en Vivo)",
+    "current_release_year": 2020,
+    "musicbrainz_year": 1997,
+    "diferencia": -23,
+    "motivo": "ok",
+    "propone_cambio": true
+  },
+  {
+    "ids": [
+      "chileno-100-198-upa-creo-que-voy-a-morir-remastered"
+    ],
+    "title": "Creo Que Voy a Morir - Remastered",
+    "artist": "Upa!",
+    "album": "Que Nos Devuelvan La Emoción (Remastered)",
+    "current_release_year": 2020,
+    "musicbrainz_year": 1994,
+    "diferencia": -26,
+    "motivo": "ok",
+    "propone_cambio": true
+  },
+  {
+    "ids": [
+      "chileno-100-305-upa-ella-llora-remastered"
+    ],
+    "title": "Ella Llora - Remastered",
+    "artist": "Upa!",
+    "album": "Que Nos Devuelvan La Emoción (Remastered)",
+    "current_release_year": 2020,
+    "musicbrainz_year": 1994,
+    "diferencia": -26,
+    "motivo": "ok",
+    "propone_cambio": true
+  },
+  {
+    "ids": [
+      "chileno-100-406-inti-illimani-historico-el-aparecido-en-vivo"
+    ],
+    "title": "El Aparecido - En Vivo",
+    "artist": "Inti Illimani Histórico",
+    "album": "Inti + Quila, Música en la Memoria, Juntos en Chile (Vol. 2) [En Vivo]",
+    "current_release_year": 2015,
+    "musicbrainz_year": 2005,
+    "diferencia": -10,
+    "motivo": "ok",
+    "propone_cambio": true
+  },
+  {
+    "ids": [
+      "chileno-100-435-cecilia-un-compromiso-en-vivo"
+    ],
+    "title": "Un Compromiso - En Vivo",
+    "artist": "Cecilia",
+    "album": "Mi Historia (En Vivo)",
+    "current_release_year": 2021,
+    "musicbrainz_year": null,
+    "diferencia": null,
+    "motivo": "no responde",
+    "propone_cambio": false
+  },
+  {
+    "ids": [
+      "chileno-100-487-joe-vasconcellos-ser-feliz-en-vivo"
+    ],
+    "title": "Ser Feliz - En Vivo",
+    "artist": "Joe Vasconcellos",
+    "album": "Huellas, Una Vida En Vivo",
+    "current_release_year": 2020,
+    "musicbrainz_year": 2014,
+    "diferencia": -6,
+    "motivo": "ok",
+    "propone_cambio": true
+  },
+  {
+    "ids": [
+      "chileno-100-3-los-jaivas-mira-ninita-2020-remasterizado"
+    ],
+    "title": "Mira Niñita - 2020 Remasterizado",
+    "artist": "Los Jaivas",
+    "album": "La Ventana (2020 Remasterizado)",
+    "current_release_year": 1973,
+    "musicbrainz_year": null,
+    "diferencia": null,
+    "motivo": "sin coincidencia",
+    "propone_cambio": false
+  },
+  {
+    "ids": [
+      "chileno-100-13-la-ley-mentira"
+    ],
+    "title": "Mentira",
+    "artist": "La Ley",
+    "album": "La Ley MTV Unplugged",
+    "current_release_year": 2001,
+    "musicbrainz_year": 2001,
+    "diferencia": 0,
+    "motivo": "ok",
+    "propone_cambio": false
+  },
+  {
+    "ids": [
+      "chileno-100-16-sinergia-te-enojai-por-todo"
+    ],
+    "title": "Te Enojai por Todo",
+    "artist": "Sinergia",
+    "album": "22 Exitos Pajarones",
+    "current_release_year": 2014,
+    "musicbrainz_year": 2007,
+    "diferencia": -7,
+    "motivo": "ok",
+    "propone_cambio": true
+  },
+  {
+    "ids": [
+      "chileno-100-22-los-miserables-el-crack-remaster-2023"
+    ],
+    "title": "El Crack - Remaster 2023",
+    "artist": "Los Miserables",
+    "album": "Pasión De Multitudes (Remaster 2023)",
+    "current_release_year": 2003,
+    "musicbrainz_year": 2003,
+    "diferencia": 0,
+    "motivo": "ok",
+    "propone_cambio": false
+  },
+  {
+    "ids": [
+      "chileno-100-28-pedropiedra-inteligencia-dormida"
+    ],
+    "title": "Inteligencia Dormida",
+    "artist": "Pedropiedra",
+    "album": "Pedropiedra (Reedición)",
+    "current_release_year": 2009,
+    "musicbrainz_year": 2009,
+    "diferencia": 0,
+    "motivo": "ok",
+    "propone_cambio": false
+  },
+  {
+    "ids": [
+      "chileno-100-38-aterrizaje-forzoso-despertar-sin-ti-2008-remaste"
+    ],
+    "title": "Despertar Sin Ti - 2008 Remaster",
+    "artist": "Aterrizaje Forzoso",
+    "album": "Grandes Exitos",
+    "current_release_year": 2008,
+    "musicbrainz_year": null,
+    "diferencia": null,
+    "motivo": "sin coincidencia",
+    "propone_cambio": false
+  },
+  {
+    "ids": [
+      "chileno-100-40-christianes-mirame-solo-una-vez-remasterizado-20"
+    ],
+    "title": "Mírame Solo Una Vez - Remasterizado 2023",
+    "artist": "Christianes",
+    "album": "Ultrasol (Remasterizado 2023)",
+    "current_release_year": 1995,
+    "musicbrainz_year": 1995,
+    "diferencia": 0,
+    "motivo": "ok",
+    "propone_cambio": false
+  },
+  {
+    "ids": [
+      "chileno-100-42-electrodomesticos-el-frio-misterio-remaster-2002"
+    ],
+    "title": "El Frio Misterio - Remaster 2002 / Album Version",
+    "artist": "Electrodomésticos",
+    "album": "Grandes Exitos",
+    "current_release_year": 2008,
+    "musicbrainz_year": 1987,
+    "diferencia": -21,
+    "motivo": "ok",
+    "propone_cambio": true
+  },
+  {
+    "ids": [
+      "chileno-100-49-inti-illimani-exiliada-del-sur"
+    ],
+    "title": "Exiliada del sur",
+    "artist": "Inti-Illimani",
+    "album": "Antología I (1973-1978)",
+    "current_release_year": 2000,
+    "musicbrainz_year": 1971,
+    "diferencia": -29,
+    "motivo": "ok",
+    "propone_cambio": true
+  },
+  {
+    "ids": [
+      "chileno-100-57-the-ramblers-a-mi-amada"
+    ],
+    "title": "A Mi Amada",
+    "artist": "The Ramblers",
+    "album": "Antologia 1963-1975 / 52 Clásicos Remasterizados",
+    "current_release_year": 2006,
+    "musicbrainz_year": null,
+    "diferencia": null,
+    "motivo": "sin coincidencia",
+    "propone_cambio": false
+  },
+  {
+    "ids": [
+      "chileno-100-63-solar-lo-que-eres-2017-remaster"
+    ],
+    "title": "Lo Que Eres - 2017 Remaster",
+    "artist": "Solar",
+    "album": "Play/Replay",
+    "current_release_year": 1997,
+    "musicbrainz_year": null,
+    "diferencia": null,
+    "motivo": "sin coincidencia",
+    "propone_cambio": false
+  },
+  {
+    "ids": [
+      "chileno-100-65-valija-diplomatica-mi-vida-vale-mas-2002-digital"
+    ],
+    "title": "Mi Vida Vale Más - 2002 Digital Remaster",
+    "artist": "Valija Diplomatica",
+    "album": "Grandes Exitos - Rock Chileno",
+    "current_release_year": 2006,
+    "musicbrainz_year": null,
+    "diferencia": null,
+    "motivo": "sin coincidencia",
+    "propone_cambio": false
+  },
+  {
+    "ids": [
+      "chileno-100-71-emociones-clandestinas-un-nuevo-baile-remastered"
+    ],
+    "title": "Un Nuevo Baile - Remastered 2006",
+    "artist": "Emociones Clandestinas",
+    "album": "Abajo En La Costanera (Remastered)",
+    "current_release_year": 1987,
+    "musicbrainz_year": 2002,
+    "diferencia": 15,
+    "motivo": "ok",
+    "propone_cambio": true
+  },
+  {
+    "ids": [
+      "chileno-100-74-nadie-ausencia"
+    ],
+    "title": "Ausencia",
+    "artist": "Nadie",
+    "album": "Ausencia (Remastered)",
+    "current_release_year": 2021,
+    "musicbrainz_year": 1987,
+    "diferencia": -34,
+    "motivo": "ok",
+    "propone_cambio": true
+  },
+  {
+    "ids": [
+      "chileno-100-87-alvaro-scaramelli-locos-rayados"
+    ],
+    "title": "Locos Rayados",
+    "artist": "Alvaro Scaramelli",
+    "album": "Colección 80's",
+    "current_release_year": 2018,
+    "musicbrainz_year": null,
+    "diferencia": null,
+    "motivo": "sin fecha",
+    "propone_cambio": false
+  },
+  {
+    "ids": [
+      "chileno-100-92-buddy-richard-tu-carino-se-me-va"
+    ],
+    "title": "Tu Cariño Se Me Va",
+    "artist": "Buddy Richard",
+    "album": "Canciones de Antología (Vol. 2)",
+    "current_release_year": 2015,
+    "musicbrainz_year": 1995,
+    "diferencia": -20,
+    "motivo": "ok",
+    "propone_cambio": true
+  },
+  {
+    "ids": [
+      "chileno-100-96-ariztia-no-te-olvido"
+    ],
+    "title": "No Te Olvido",
+    "artist": "Ariztía",
+    "album": "Humano : Solo Exitos",
+    "current_release_year": 2008,
+    "musicbrainz_year": 1992,
+    "diferencia": -16,
+    "motivo": "ok",
+    "propone_cambio": true
+  },
+  {
+    "ids": [
+      "chileno-100-100-nicole-hoy"
+    ],
+    "title": "Hoy",
+    "artist": "Nicole",
+    "album": "Hoy",
+    "current_release_year": 2009,
+    "musicbrainz_year": 2010,
+    "diferencia": 1,
+    "motivo": "ok",
+    "propone_cambio": true
+  },
+  {
+    "ids": [
+      "chileno-100-122-mon-laferte-tu-falta-de-querer"
+    ],
+    "title": "Tu Falta De Querer",
+    "artist": "Mon Laferte",
+    "album": "Mon Laferte (Vol. 1)",
+    "current_release_year": 2015,
+    "musicbrainz_year": 2015,
+    "diferencia": 0,
+    "motivo": "ok",
+    "propone_cambio": false
+  },
+  {
+    "ids": [
+      "chileno-100-124-sinergia-mujer-robusta"
+    ],
+    "title": "Mujer Robusta",
+    "artist": "Sinergia",
+    "album": "22 Exitos Pajarones",
+    "current_release_year": 2014,
+    "musicbrainz_year": 2001,
+    "diferencia": -13,
+    "motivo": "ok",
+    "propone_cambio": true
+  },
+  {
+    "ids": [
+      "chileno-100-132-los-angeles-negros-y-volvere-remastered-1994"
+    ],
+    "title": "Y Volveré - Remastered 1994",
+    "artist": "Los Angeles Negros",
+    "album": "Clásicos Latinos",
+    "current_release_year": 1994,
+    "musicbrainz_year": 1969,
+    "diferencia": -25,
+    "motivo": "ok",
+    "propone_cambio": true
+  },
+  {
+    "ids": [
+      "chileno-100-151-movimiento-original-grandes-pasos"
+    ],
+    "title": "Grandes Pasos",
+    "artist": "Movimiento Original",
+    "album": "Edición Especial",
+    "current_release_year": 2010,
+    "musicbrainz_year": 2010,
+    "diferencia": 0,
+    "motivo": "ok",
+    "propone_cambio": false
+  },
+  {
+    "ids": [
+      "chileno-100-155-inti-illimani-alturas"
+    ],
+    "title": "Alturas",
+    "artist": "Inti-Illimani",
+    "album": "Antología I (1973-1978)",
+    "current_release_year": 2000,
+    "musicbrainz_year": 1982,
+    "diferencia": -18,
+    "motivo": "ok",
+    "propone_cambio": true
+  },
+  {
+    "ids": [
+      "chileno-100-172-sexual-democracia-cancion-pacifico-violenta"
+    ],
+    "title": "Cancion Pacifico-Violenta",
+    "artist": "Sexual Democracia",
+    "album": "Buscando Chilenos Vol. 1",
+    "current_release_year": 1990,
+    "musicbrainz_year": 1988,
+    "diferencia": -2,
+    "motivo": "ok",
+    "propone_cambio": true
+  },
+  {
+    "ids": [
+      "chileno-100-191-pat-henry-y-los-diablos-azules-te-quiero"
+    ],
+    "title": "Te Quiero",
+    "artist": "Pat Henry Y Los Diablos Azules",
+    "album": "Lo Mejor de Pat Henry y los Diablos Azules",
+    "current_release_year": 2022,
+    "musicbrainz_year": 1999,
+    "diferencia": -23,
+    "motivo": "ok",
+    "propone_cambio": true
+  },
+  {
+    "ids": [
+      "chileno-100-193-nadie-creo-que-te-quiero"
+    ],
+    "title": "Creo Que Te Quiero",
+    "artist": "Nadie",
+    "album": "Ausencia (Remastered)",
+    "current_release_year": 2021,
+    "musicbrainz_year": 1987,
+    "diferencia": -34,
+    "motivo": "ok",
+    "propone_cambio": true
+  },
+  {
+    "ids": [
+      "chileno-100-194-congreso-hijo-del-sol-luminoso"
+    ],
+    "title": "Hijo Del Sol Luminoso",
+    "artist": "Congreso",
+    "album": "1971-1982",
+    "current_release_year": 2006,
+    "musicbrainz_year": 1981,
+    "diferencia": -25,
+    "motivo": "ok",
+    "propone_cambio": true
+  },
+  {
+    "ids": [
+      "chileno-100-196-alvaro-veliz-una-herida-de-amor-remastered"
+    ],
+    "title": "Una Herida de Amor - Remastered",
+    "artist": "Alvaro Veliz",
+    "album": "Alvaro Véliz (Remastered)",
+    "current_release_year": 2000,
+    "musicbrainz_year": 2000,
+    "diferencia": 0,
+    "motivo": "ok",
+    "propone_cambio": false
+  },
+  {
+    "ids": [
+      "chileno-100-210-quilapayun-la-muralla"
+    ],
+    "title": "La Muralla",
+    "artist": "Quilapayún",
+    "album": "La Nueva Cancion Chilena, Vol. 1",
+    "current_release_year": 1995,
+    "musicbrainz_year": 1969,
+    "diferencia": -26,
+    "motivo": "ok",
+    "propone_cambio": true
+  },
+  {
+    "ids": [
+      "chileno-100-217-aterrizaje-forzoso-chica-caribena-2008-digital-r"
+    ],
+    "title": "Chica Caribeña - 2008 Digital Remaster",
+    "artist": "Aterrizaje Forzoso",
+    "album": "Grandes Exitos",
+    "current_release_year": 2008,
+    "musicbrainz_year": null,
+    "diferencia": null,
+    "motivo": "sin coincidencia",
+    "propone_cambio": false
+  },
+  {
+    "ids": [
+      "chileno-100-251-valija-diplomatica-tu-lo-sabes-bien-remaster-200"
+    ],
+    "title": "Tú Lo Sabes Bien - Remaster 2002",
+    "artist": "Valija Diplomatica",
+    "album": "Grandes Exitos - Rock Chileno",
+    "current_release_year": 2006,
+    "musicbrainz_year": 2002,
+    "diferencia": -4,
+    "motivo": "ok",
+    "propone_cambio": true
+  },
+  {
+    "ids": [
+      "chileno-100-255-francisca-valenzuela-peces"
+    ],
+    "title": "Peces",
+    "artist": "Francisca Valenzuela",
+    "album": "Muérdete La Lengua (Edición Especial)",
+    "current_release_year": 2008,
+    "musicbrainz_year": 2007,
+    "diferencia": -1,
+    "motivo": "ok",
+    "propone_cambio": true
+  },
+  {
+    "ids": [
+      "chileno-100-266-grupo-hechizo-romance-ilegal"
+    ],
+    "title": "Romance Ilegal",
+    "artist": "Grupo Hechizo",
+    "album": "Grandes Éxitos",
+    "current_release_year": 1999,
+    "musicbrainz_year": null,
+    "diferencia": null,
+    "motivo": "sin coincidencia",
+    "propone_cambio": false
+  },
+  {
+    "ids": [
+      "chileno-100-282-lucho-gatica-solamente-una-vez"
+    ],
+    "title": "Solamente una Vez",
+    "artist": "Lucho Gatica",
+    "album": "Lucho Gatica - Éxitos Dorados",
+    "current_release_year": 2015,
+    "musicbrainz_year": 1990,
+    "diferencia": -25,
+    "motivo": "ok",
+    "propone_cambio": true
+  },
+  {
+    "ids": [
+      "chileno-100-284-sinergia-amor-alternativo"
+    ],
+    "title": "Amor Alternativo",
+    "artist": "Sinergia",
+    "album": "22 Exitos Pajarones",
+    "current_release_year": 2014,
+    "musicbrainz_year": null,
+    "diferencia": null,
+    "motivo": "no responde",
+    "propone_cambio": false
+  },
+  {
+    "ids": [
+      "chileno-100-289-sol-y-lluvia-en-un-largo-tour-en-vivo"
+    ],
+    "title": "En un Largo Tour (En Vivo)",
+    "artist": "Sol y Lluvia",
+    "album": "Sol y Lluvia (En Vivo)",
+    "current_release_year": 2013,
+    "musicbrainz_year": 1980,
+    "diferencia": -33,
+    "motivo": "ok",
+    "propone_cambio": true
+  },
+  {
+    "ids": [
+      "chileno-100-299-juan-antonio-labra-paran-pan-pan"
+    ],
+    "title": "Paran pan pan",
+    "artist": "Juan Antonio Labra",
+    "album": "Juan Antonio Labra",
+    "current_release_year": 2024,
+    "musicbrainz_year": null,
+    "diferencia": null,
+    "motivo": "sin coincidencia",
+    "propone_cambio": false
+  },
+  {
+    "ids": [
+      "chileno-100-307-ariztia-no-es-mi-culpa-en-vivo"
+    ],
+    "title": "No es mi culpa - En Vivo",
+    "artist": "Ariztía",
+    "album": "No es mi culpa (En Vivo)",
+    "current_release_year": 2025,
+    "musicbrainz_year": 1992,
+    "diferencia": -33,
+    "motivo": "ok",
+    "propone_cambio": true
+  },
+  {
+    "ids": [
+      "chileno-100-308-geoenezetao-viejos-habitantes"
+    ],
+    "title": "Viejos Habitantes",
+    "artist": "Geoenezetao",
+    "album": "Retrospección Mixtape, Vol. 1",
+    "current_release_year": 2019,
+    "musicbrainz_year": null,
+    "diferencia": null,
+    "motivo": "sin coincidencia",
+    "propone_cambio": false
+  },
+  {
+    "ids": [
+      "chileno-100-316-patricio-renan-son-recuerdos"
+    ],
+    "title": "Son Recuerdos",
+    "artist": "Patricio Renan",
+    "album": "Colección Inmortales (Remastered)",
+    "current_release_year": 2004,
+    "musicbrainz_year": null,
+    "diferencia": null,
+    "motivo": "sin fecha",
+    "propone_cambio": false
+  },
+  {
+    "ids": [
+      "chileno-100-317-difuntos-correa-tramposo-amor-2024-version"
+    ],
+    "title": "Tramposo Amor (2024 Version)",
+    "artist": "Difuntos Correa",
+    "album": "Tramposo Amor (Remasterizado)",
+    "current_release_year": 2024,
+    "musicbrainz_year": 2005,
+    "diferencia": -19,
+    "motivo": "ok",
+    "propone_cambio": true
+  },
+  {
+    "ids": [
+      "chileno-100-329-alvaro-scaramelli-si-lo-sabes-te-arrepientes"
+    ],
+    "title": "Si Lo Sabes Te Arrepientes",
+    "artist": "Alvaro Scaramelli",
+    "album": "Colección 80's",
+    "current_release_year": 2018,
+    "musicbrainz_year": null,
+    "diferencia": null,
+    "motivo": "sin fecha",
+    "propone_cambio": false
+  },
+  {
+    "ids": [
+      "chileno-100-341-aguaturbia-waterfall"
+    ],
+    "title": "Waterfall",
+    "artist": "Aguaturbia",
+    "album": "Psychedelic Drugstore - Remastered",
+    "current_release_year": 1970,
+    "musicbrainz_year": 1970,
+    "diferencia": 0,
+    "motivo": "ok",
+    "propone_cambio": false
+  },
+  {
+    "ids": [
+      "chileno-100-342-cevlade-la-panacea"
+    ],
+    "title": "La Panacea",
+    "artist": "Cevlade",
+    "album": "Antología, Vol. 1",
+    "current_release_year": 2015,
+    "musicbrainz_year": null,
+    "diferencia": null,
+    "motivo": "sin coincidencia",
+    "propone_cambio": false
+  },
+  {
+    "ids": [
+      "chileno-100-343-nano-parra-mi-velorio"
+    ],
+    "title": "Mi Velorio",
+    "artist": "Nano Parra",
+    "album": "Mi Chile Lindo, Vol. 2",
+    "current_release_year": 2014,
+    "musicbrainz_year": null,
+    "diferencia": null,
+    "motivo": "sin coincidencia",
+    "propone_cambio": false
+  },
+  {
+    "ids": [
+      "chileno-100-355-patricio-manns-el-cautivo-de-til-til-en-vivo"
+    ],
+    "title": "El Cautivo de Til Til (En Vivo)",
+    "artist": "Patricio Manns",
+    "album": "Patricio Manns en Chile (En Vivo)",
+    "current_release_year": 1990,
+    "musicbrainz_year": 1995,
+    "diferencia": 5,
+    "motivo": "ok",
+    "propone_cambio": true
+  },
+  {
+    "ids": [
+      "chileno-100-361-legua-york-el-pueblo-unido"
+    ],
+    "title": "El Pueblo Unido",
+    "artist": "Legua York",
+    "album": "Antología Underground (1997-2003)",
+    "current_release_year": 2024,
+    "musicbrainz_year": null,
+    "diferencia": null,
+    "motivo": "sin coincidencia",
+    "propone_cambio": false
+  },
+  {
+    "ids": [
+      "chileno-100-365-santiago-del-nuevo-extremo-la-mitad-lejana"
+    ],
+    "title": "La Mitad Lejana",
+    "artist": "Santiago del Nuevo Extremo",
+    "album": "Santiago del Nuevo Extremo, Vol. 1",
+    "current_release_year": 1992,
+    "musicbrainz_year": 1994,
+    "diferencia": 2,
+    "motivo": "ok",
+    "propone_cambio": true
+  },
+  {
+    "ids": [
+      "chileno-100-374-violeta-parra-run-run-se-fue-pal-norte"
+    ],
+    "title": "Run run se fue pal'norte",
+    "artist": "Violeta Parra",
+    "album": "Las Últimas Composiciones",
+    "current_release_year": 2023,
+    "musicbrainz_year": null,
+    "diferencia": null,
+    "motivo": "sin coincidencia",
+    "propone_cambio": false
+  },
+  {
+    "ids": [
+      "chileno-100-377-santo-barrio-traigo-el-aguante-remastered"
+    ],
+    "title": "Traigo el Aguante - Remastered",
+    "artist": "Santo Barrio",
+    "album": "Ahora Es Cuando",
+    "current_release_year": 2005,
+    "musicbrainz_year": 2002,
+    "diferencia": -3,
+    "motivo": "ok",
+    "propone_cambio": true
+  },
+  {
+    "ids": [
+      "chileno-100-382-tiro-de-gracia-suenos"
+    ],
+    "title": "Sueños",
+    "artist": "Tiro De Gracia",
+    "album": "Retorno de Misericordia",
+    "current_release_year": 2012,
+    "musicbrainz_year": 2001,
+    "diferencia": -11,
+    "motivo": "ok",
+    "propone_cambio": true
+  },
+  {
+    "ids": [
+      "chileno-100-383-jose-alfredo-fuentes-te-perdi"
+    ],
+    "title": "Te Perdí",
+    "artist": "José Alfredo Fuentes",
+    "album": "36 Canciones de Exitos",
+    "current_release_year": 2021,
+    "musicbrainz_year": 2003,
+    "diferencia": -18,
+    "motivo": "ok",
+    "propone_cambio": true
+  },
+  {
+    "ids": [
+      "chileno-100-385-sinergia-mi-senora"
+    ],
+    "title": "Mi Señora",
+    "artist": "Sinergia",
+    "album": "22 Exitos Pajarones",
+    "current_release_year": 2014,
+    "musicbrainz_year": 2004,
+    "diferencia": -10,
+    "motivo": "ok",
+    "propone_cambio": true
+  },
+  {
+    "ids": [
+      "chileno-100-386-frecuencia-mod-callate-ya-no-me-mientas"
+    ],
+    "title": "Cállate... Ya No Me Mientas",
+    "artist": "Frecuencia Mod",
+    "album": "El Sonido de los 70's (Vol. 1)",
+    "current_release_year": 1993,
+    "musicbrainz_year": null,
+    "diferencia": null,
+    "motivo": "sin coincidencia",
+    "propone_cambio": false
+  },
+  {
+    "ids": [
+      "chileno-100-391-congreso-el-cielito-de-mi-pieza"
+    ],
+    "title": "El Cielito De Mi Pieza",
+    "artist": "Congreso",
+    "album": "1971-1982",
+    "current_release_year": 2006,
+    "musicbrainz_year": 1977,
+    "diferencia": -29,
+    "motivo": "ok",
+    "propone_cambio": true
+  },
+  {
+    "ids": [
+      "chileno-100-392-javiera-parra-maldita-primavera"
+    ],
+    "title": "Maldita Primavera",
+    "artist": "Javiera Parra",
+    "album": "AM + bonus Tracks (Edición Aniversario)",
+    "current_release_year": 2011,
+    "musicbrainz_year": null,
+    "diferencia": null,
+    "motivo": "sin coincidencia",
+    "propone_cambio": false
+  },
+  {
+    "ids": [
+      "chileno-100-404-los-tres-quizas-con-quien"
+    ],
+    "title": "Quizás Con Quién",
+    "artist": "Los Tres",
+    "album": "Quizás Con Quién",
+    "current_release_year": 2014,
+    "musicbrainz_year": 2015,
+    "diferencia": 1,
+    "motivo": "ok",
+    "propone_cambio": true
+  },
+  {
+    "ids": [
+      "chileno-100-413-angel-parra-cancion-de-amor"
+    ],
+    "title": "Cancion de Amor",
+    "artist": "Angel Parra",
+    "album": "La Nueva Cancion Chilena, Vol. 1",
+    "current_release_year": 1995,
+    "musicbrainz_year": 2008,
+    "diferencia": 13,
+    "motivo": "ok",
+    "propone_cambio": true
+  },
+  {
+    "ids": [
+      "chileno-100-454-los-golpes-con-la-mano-en-la-biblia-2003-digital"
+    ],
+    "title": "Con La Mano En La Biblia - 2003 Digital Remaster",
+    "artist": "Los Golpes",
+    "album": "Antologia 40 Clásicos Remasterizados",
+    "current_release_year": 2006,
+    "musicbrainz_year": null,
+    "diferencia": null,
+    "motivo": "sin coincidencia",
+    "propone_cambio": false
+  },
+  {
+    "ids": [
+      "chileno-100-456-los-prisioneros-we-are-sudamerican-rockers"
+    ],
+    "title": "We Are Sudamerican Rockers",
+    "artist": "Los Prisioneros",
+    "album": "Ni Por La Razón, Ni Por La Fuerza (Edición Especial)",
+    "current_release_year": 1996,
+    "musicbrainz_year": 1988,
+    "diferencia": -8,
+    "motivo": "ok",
+    "propone_cambio": true
+  },
+  {
+    "ids": [
+      "chileno-100-457-los-jaivas-todos-juntos-2020-remasterizado"
+    ],
+    "title": "Todos Juntos - 2020 Remasterizado",
+    "artist": "Los Jaivas",
+    "album": "La Ventana (Remasterizado 2020)",
+    "current_release_year": 1973,
+    "musicbrainz_year": null,
+    "diferencia": null,
+    "motivo": "sin coincidencia",
+    "propone_cambio": false
+  },
+  {
+    "ids": [
+      "chileno-100-464-aterrizaje-forzoso-solo-un-sueno-2008-remaster"
+    ],
+    "title": "Sólo Un Sueño - 2008 Remaster",
+    "artist": "Aterrizaje Forzoso",
+    "album": "Grandes Exitos",
+    "current_release_year": 2008,
+    "musicbrainz_year": null,
+    "diferencia": null,
+    "motivo": "sin coincidencia",
+    "propone_cambio": false
+  },
+  {
+    "ids": [
+      "chileno-100-465-quilapayun-cancion-final-remasterizado-2014"
+    ],
+    "title": "Canción Final - Remasterizado 2014",
+    "artist": "Quilapayún",
+    "album": "Cantata Santa María de Iquique (Remasterizado 2014)",
+    "current_release_year": 1970,
+    "musicbrainz_year": 1970,
+    "diferencia": 0,
+    "motivo": "ok",
+    "propone_cambio": false
+  },
+  {
+    "ids": [
+      "chileno-100-482-frainstrumentos-treinta-y-dos-dias"
+    ],
+    "title": "Treinta y Dos Días",
+    "artist": "Frainstrumentos",
+    "album": "El Bosque (Remasterizado)",
+    "current_release_year": 2010,
+    "musicbrainz_year": null,
+    "diferencia": null,
+    "motivo": "sin coincidencia",
+    "propone_cambio": false
+  },
+  {
+    "ids": [
+      "chileno-100-483-peter-rock-entre-la-arena-y-el-mar"
+    ],
+    "title": "Entre La Arena Y El Mar",
+    "artist": "Peter Rock",
+    "album": "Mejores Exitos",
+    "current_release_year": 2022,
+    "musicbrainz_year": null,
+    "diferencia": null,
+    "motivo": "sin fecha",
+    "propone_cambio": false
+  },
+  {
+    "ids": [
+      "chileno-100-494-supernova-herida"
+    ],
+    "title": "Herida",
+    "artist": "Supernova",
+    "album": "Retráctate",
+    "current_release_year": 2017,
+    "musicbrainz_year": 2002,
+    "diferencia": -15,
+    "motivo": "ok",
+    "propone_cambio": true
+  },
+  {
+    "ids": [
+      "chileno-100-501-los-tres-quien-es-la-que-viene-alli-unplugged-ve"
+    ],
+    "title": "Quien es la Que Viene Alli - Unplugged Version",
+    "artist": "Los Tres",
+    "album": "Los Tres MTV Unplugged",
+    "current_release_year": 1996,
+    "musicbrainz_year": null,
+    "diferencia": null,
+    "motivo": "sin coincidencia",
+    "propone_cambio": false
+  }
+]

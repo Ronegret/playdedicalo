@@ -1,0 +1,5672 @@
+[
+  {
+    "ids": [
+      "espanol-100-183-mala-rodriguez-tengo-un-trato-remastered-2015-13crLw"
+    ],
+    "title": "Tengo Un Trato - Remastered 2015",
+    "artist": "Mala Rodríguez",
+    "album": "Lujo Ibérico (Edición 15 Aniversario)",
+    "current_release_year": 2000,
+    "duration_ms": 168000,
+    "motivos": [
+      "recopilatorio",
+      "aniversario"
+    ],
+    "fuerza": 2
+  },
+  {
+    "ids": [
+      "temazos-111-ricky-martin-la-mordidita-feat-yotuel-00i0O7",
+      "fiesta-mayor-verbena-005-ricky-martin-la-mordidita-feat-yotuel-00i0O7"
+    ],
+    "title": "La Mordidita (feat. Yotuel)",
+    "artist": "Ricky Martin",
+    "album": "A Quien Quiera Escuchar (Deluxe Edition)",
+    "current_release_year": 2015,
+    "duration_ms": 211000,
+    "motivos": [
+      "recopilatorio",
+      "outlier(+16 sobre ~1999 de su artista)"
+    ],
+    "fuerza": 2
+  },
+  {
+    "ids": [
+      "temazos-253-ramones-blitzkrieg-bop-2016-remaster-4KcH1Z"
+    ],
+    "title": "Blitzkrieg Bop - 2016 Remaster",
+    "artist": "Ramones",
+    "album": "Ramones (40th Anniversary Deluxe Edition; 2016 Remaster)",
+    "current_release_year": 1976,
+    "duration_ms": 134000,
+    "motivos": [
+      "recopilatorio",
+      "aniversario"
+    ],
+    "fuerza": 2
+  },
+  {
+    "ids": [
+      "espanol-summer-party-233-bryan-adams-summer-of-69-0GONea"
+    ],
+    "title": "Summer Of '69",
+    "artist": "Bryan Adams",
+    "album": "Reckless (30th Anniversary / Deluxe Edition)",
+    "current_release_year": 1984,
+    "duration_ms": 216000,
+    "motivos": [
+      "recopilatorio",
+      "aniversario"
+    ],
+    "fuerza": 2
+  },
+  {
+    "ids": [
+      "espanol-summer-party-237-kenny-loggins-footloose-from-footloose-soundtrack-2vz1Cs"
+    ],
+    "title": "Footloose - From \"Footloose\" Soundtrack",
+    "artist": "Kenny Loggins",
+    "album": "Footloose (15th Anniversary Collectors' Edition)",
+    "current_release_year": 1984,
+    "duration_ms": 226000,
+    "motivos": [
+      "aniversario",
+      "bandaSonora"
+    ],
+    "fuerza": 2
+  },
+  {
+    "ids": [
+      "espanol-summer-party-243-paul-simon-you-can-call-me-al-0qxYx4"
+    ],
+    "title": "You Can Call Me Al",
+    "artist": "Paul Simon",
+    "album": "Graceland (25th Anniversary Deluxe Edition)",
+    "current_release_year": 1986,
+    "duration_ms": 280000,
+    "motivos": [
+      "recopilatorio",
+      "aniversario"
+    ],
+    "fuerza": 2
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-129-bon-jovi-it-s-my-life-6iNBM6"
+    ],
+    "title": "It's My Life",
+    "artist": "Bon Jovi",
+    "album": "Bon Jovi Greatest Hits - The Ultimate Collection (Deluxe)",
+    "current_release_year": 2000,
+    "duration_ms": 224000,
+    "motivos": [
+      "recopilatorio",
+      "outlier(+14 sobre ~1986 de su artista)"
+    ],
+    "fuerza": 2
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-274-cliff-richard-congratulations-1998-remaster-1SOAN5"
+    ],
+    "title": "Congratulations - 1998 Remaster",
+    "artist": "Cliff Richard",
+    "album": "The Fiftieth Anniversary Album",
+    "current_release_year": 1968,
+    "duration_ms": 155000,
+    "motivos": [
+      "recopilatorio",
+      "aniversario"
+    ],
+    "fuerza": 2
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-092-enrique-morente-manhattan-first-we-take-manhattan-remastered-2016-12Unlu"
+    ],
+    "title": "Manhattan (First We Take Manhattan) - Remastered 2016",
+    "artist": "Enrique Morente",
+    "album": "Omega (Edición 20º Aniversario)",
+    "current_release_year": 1996,
+    "duration_ms": 280000,
+    "motivos": [
+      "recopilatorio",
+      "aniversario"
+    ],
+    "fuerza": 2
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-100-ramones-sheena-is-a-punk-rocker-2017-remaster-61MZN0"
+    ],
+    "title": "Sheena Is a Punk Rocker - 2017 Remaster",
+    "artist": "Ramones",
+    "album": "Rocket to Russia (40th Anniversary Deluxe Edition)",
+    "current_release_year": 1977,
+    "duration_ms": 169000,
+    "motivos": [
+      "recopilatorio",
+      "aniversario"
+    ],
+    "fuerza": 2
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-200-the-velvet-underground-sweet-jane-full-length-version-2015-remaster-3cw3Z7"
+    ],
+    "title": "Sweet Jane - Full Length Version; 2015 Remaster",
+    "artist": "The Velvet Underground",
+    "album": "Loaded: Re-Loaded 45th Anniversary Edition",
+    "current_release_year": 1970,
+    "duration_ms": 246000,
+    "motivos": [
+      "recopilatorio",
+      "aniversario"
+    ],
+    "fuerza": 2
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-302-deep-purple-burn-remastered-2004-1iW2kt"
+    ],
+    "title": "Burn - Remastered 2004",
+    "artist": "Deep Purple",
+    "album": "Burn (30th Anniversary Edition)",
+    "current_release_year": 1974,
+    "duration_ms": 364000,
+    "motivos": [
+      "recopilatorio",
+      "aniversario"
+    ],
+    "fuerza": 2
+  },
+  {
+    "ids": [
+      "fiesta-mayor-verbena-224-jennifer-lopez-dance-again-feat-pitbull-4d2hD6"
+    ],
+    "title": "Dance Again (feat. Pitbull)",
+    "artist": "Jennifer Lopez",
+    "album": "Dance Again...The Hits",
+    "current_release_year": 2012,
+    "duration_ms": 237000,
+    "motivos": [
+      "recopilatorio",
+      "outlier(+13 sobre ~1999 de su artista)"
+    ],
+    "fuerza": 2
+  },
+  {
+    "ids": [
+      "chileno-100-149-carlos-cabezas-lo-mejor-de-ti-en-vivo"
+    ],
+    "title": "Lo Mejor de Ti - En Vivo",
+    "artist": "Carlos Cabezas",
+    "album": "Bailando en Silencio (El Resplandor en Vivo)",
+    "current_release_year": 2020,
+    "duration_ms": 275000,
+    "motivos": [
+      "recopilatorio",
+      "directo"
+    ],
+    "fuerza": 2
+  },
+  {
+    "ids": [
+      "chileno-100-198-upa-creo-que-voy-a-morir-remastered"
+    ],
+    "title": "Creo Que Voy a Morir - Remastered",
+    "artist": "Upa!",
+    "album": "Que Nos Devuelvan La Emoción (Remastered)",
+    "current_release_year": 2020,
+    "duration_ms": 261000,
+    "motivos": [
+      "recopilatorio",
+      "outlier(+34 sobre ~1986 de su artista)"
+    ],
+    "fuerza": 2
+  },
+  {
+    "ids": [
+      "chileno-100-305-upa-ella-llora-remastered"
+    ],
+    "title": "Ella Llora - Remastered",
+    "artist": "Upa!",
+    "album": "Que Nos Devuelvan La Emoción (Remastered)",
+    "current_release_year": 2020,
+    "duration_ms": 287000,
+    "motivos": [
+      "recopilatorio",
+      "outlier(+34 sobre ~1986 de su artista)"
+    ],
+    "fuerza": 2
+  },
+  {
+    "ids": [
+      "chileno-100-406-inti-illimani-historico-el-aparecido-en-vivo"
+    ],
+    "title": "El Aparecido - En Vivo",
+    "artist": "Inti Illimani Histórico",
+    "album": "Inti + Quila, Música en la Memoria, Juntos en Chile (Vol. 2) [En Vivo]",
+    "current_release_year": 2015,
+    "duration_ms": 260000,
+    "motivos": [
+      "recopilatorio",
+      "directo"
+    ],
+    "fuerza": 2
+  },
+  {
+    "ids": [
+      "chileno-100-435-cecilia-un-compromiso-en-vivo"
+    ],
+    "title": "Un Compromiso - En Vivo",
+    "artist": "Cecilia",
+    "album": "Mi Historia (En Vivo)",
+    "current_release_year": 2021,
+    "duration_ms": 245000,
+    "motivos": [
+      "directo",
+      "outlier(+15 sobre ~2006 de su artista)"
+    ],
+    "fuerza": 2
+  },
+  {
+    "ids": [
+      "chileno-100-487-joe-vasconcellos-ser-feliz-en-vivo"
+    ],
+    "title": "Ser Feliz - En Vivo",
+    "artist": "Joe Vasconcellos",
+    "album": "Huellas, Una Vida En Vivo",
+    "current_release_year": 2020,
+    "duration_ms": 217000,
+    "motivos": [
+      "directo",
+      "outlier(+19 sobre ~2001 de su artista)"
+    ],
+    "fuerza": 2
+  },
+  {
+    "ids": [
+      "espanol-100-002-miguel-de-molina-la-bien-paga-3ywM3H"
+    ],
+    "title": "La bien pagá",
+    "artist": "Miguel De Molina",
+    "album": "Antologia De La Cancion Espanola Vol.4",
+    "current_release_year": 1936,
+    "duration_ms": 215000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-008-monna-bell-un-telegrama-fox-remastered-2015-65QjyQ"
+    ],
+    "title": "Un telegrama (Fox) - Remastered 2015",
+    "artist": "Monna Bell",
+    "album": "Los Ep'S Originales (Remastered 2015)",
+    "current_release_year": 1959,
+    "duration_ms": 183000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-009-manolo-escobar-el-porompompero-1BZAlh",
+      "fiesta-mayor-verbena-125-manolo-escobar-el-porompompero-1BZAlh"
+    ],
+    "title": "El Porompompero",
+    "artist": "Manolo Escobar",
+    "album": "Los Grandes Éxitos de Manolo Escobar (The Best of Manolo Escobar)",
+    "current_release_year": 1970,
+    "duration_ms": 158000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-010-duo-dinamico-quince-anos-tiene-mi-amor-5TdRaN"
+    ],
+    "title": "Quince años tiene mi amor",
+    "artist": "Duo Dinamico",
+    "album": "20 Exitos De Oro",
+    "current_release_year": 1960,
+    "duration_ms": 147000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-017-los-brincos-un-sorbito-de-champagne-2tFw1r"
+    ],
+    "title": "Un Sorbito de Champagne",
+    "artist": "Los Brincos",
+    "album": "Lo Mejor de los Brincos",
+    "current_release_year": 1966,
+    "duration_ms": 171000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-023-palito-ortega-la-felicidad-2BK1Oa"
+    ],
+    "title": "La Felicidad",
+    "artist": "Palito Ortega",
+    "album": "Coleccion de Oro",
+    "current_release_year": 1967,
+    "duration_ms": 111000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-029-los-payos-maria-isabel-6y1b0Y"
+    ],
+    "title": "María Isabel",
+    "artist": "Los Payos",
+    "album": "Lo Mejor De Los Payos",
+    "current_release_year": 1969,
+    "duration_ms": 199000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-030-karina-las-flechas-del-amor-5OUUjc"
+    ],
+    "title": "Las flechas del amor",
+    "artist": "Karina",
+    "album": "Colección Diamante: Karina",
+    "current_release_year": 1969,
+    "duration_ms": 156000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-031-marisol-mamy-panchita-remasterizado-4dXgF9"
+    ],
+    "title": "Mamy Panchita - Remasterizado",
+    "artist": "Marisol",
+    "album": "Mamy Panchita (Remasterizado 2022)",
+    "current_release_year": 1970,
+    "duration_ms": 183000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-038-pop-tops-mamy-blue-1PdNcm"
+    ],
+    "title": "Mamy blue",
+    "artist": "Pop Tops",
+    "album": "Leyendas Del Pop Rock Español Vol.2",
+    "current_release_year": 1971,
+    "duration_ms": 233000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-043-paco-de-lucia-entre-dos-aguas-remastered-2014-4WO5q4"
+    ],
+    "title": "Entre Dos Aguas - Remastered 2014",
+    "artist": "Paco de Lucía",
+    "album": "La Búsqueda (Remastered 2014)",
+    "current_release_year": 1973,
+    "duration_ms": 360000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-044-mocedades-tomame-o-dejame-remasterizado-1ZJe2q"
+    ],
+    "title": "Tómame o Déjame - Remasterizado",
+    "artist": "Mocedades",
+    "album": "Mocedades 5",
+    "current_release_year": 1974,
+    "duration_ms": 187000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-047-elsa-baeza-el-cristo-de-palacaguina-50xMqH"
+    ],
+    "title": "El Cristo de Palacagüina",
+    "artist": "Elsa Baeza",
+    "album": "Todo lo Mejor de Elsa Baeza",
+    "current_release_year": 1976,
+    "duration_ms": 224000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-051-miguel-gallardo-hoy-tengo-ganas-de-ti-17oji5"
+    ],
+    "title": "Hoy tengo ganas de ti",
+    "artist": "Miguel Gallardo",
+    "album": "2 (Remasterizado 2017)",
+    "current_release_year": 1975,
+    "duration_ms": 245000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-055-micky-ensename-a-cantar-6zT8Sx",
+      "temazos-132-micky-ensename-a-cantar-6zT8Sx"
+    ],
+    "title": "Enseñame a Cantar",
+    "artist": "Micky",
+    "album": "Todo Lo Mejor",
+    "current_release_year": 1977,
+    "duration_ms": 208000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-056-umberto-tozzi-te-amo-ti-amo-spanish-version-6RbcxI"
+    ],
+    "title": "Te Amo (Ti Amo) - Spanish Version",
+    "artist": "Umberto Tozzi",
+    "album": "Grandes Exitos",
+    "current_release_year": 1977,
+    "duration_ms": 244000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-062-pecos-acordes-1U4oVo"
+    ],
+    "title": "Acordes",
+    "artist": "Pecos",
+    "album": "Concierto para Adolescentes",
+    "current_release_year": 1978,
+    "duration_ms": 228000,
+    "motivos": [
+      "directo"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-071-ejecutivos-agresivos-mari-pili-2015-remaster-5yZO63"
+    ],
+    "title": "Mari Pili - 2015 Remaster",
+    "artist": "Ejecutivos Agresivos",
+    "album": "Héroes de los 80. Ejecutivos Agresivos",
+    "current_release_year": 1980,
+    "duration_ms": 236000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-072-ramoncin-hormigon-mujeres-y-alcohol-edicion-35-aniversario-2kdcgS"
+    ],
+    "title": "Hormigon, Mujeres y Alcohol - Edición 35 aniversario",
+    "artist": "Ramoncin",
+    "album": "Arañando La Ciudad - 35 aniversario",
+    "current_release_year": 1981,
+    "duration_ms": 147000,
+    "motivos": [
+      "aniversario"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-073-alaska-y-los-pegamoides-horror-en-el-hipermercado-1QWFEg"
+    ],
+    "title": "Horror en el hipermercado",
+    "artist": "Alaska Y Los Pegamoides",
+    "album": "Grandes Éxitos - Edición Para Coleccionistas",
+    "current_release_year": 1980,
+    "duration_ms": 141000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-075-rocio-durcal-la-gata-bajo-la-lluvia-0inciz"
+    ],
+    "title": "La Gata Bajo la Lluvia",
+    "artist": "Rocío Dúrcal",
+    "album": "Lo Mejor De Lo Mejor",
+    "current_release_year": 1981,
+    "duration_ms": 214000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-082-parchis-cumpleanos-feliz-4tkKHS"
+    ],
+    "title": "Cumpleaños Feliz",
+    "artist": "Parchis",
+    "album": "Parchis: Todas Sus Canciones Todos Sus Exitos",
+    "current_release_year": 1981,
+    "duration_ms": 170000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-083-teresa-rabal-veo-veo-77sm3H"
+    ],
+    "title": "Veo veo",
+    "artist": "Teresa Rabal",
+    "album": "Sólo para niños... y mayores, Vol. 1",
+    "current_release_year": 1980,
+    "duration_ms": 216000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-085-ricchi-e-poveri-sera-porque-te-amo-04Xdk7"
+    ],
+    "title": "Sera Porque Te Amo",
+    "artist": "Ricchi E Poveri",
+    "album": "Exclusive Ricchi E Poveri - 15 Exitos",
+    "current_release_year": 1981,
+    "duration_ms": 190000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-091-burning-una-noche-sin-ti-3YYaJC"
+    ],
+    "title": "Una Noche Sin Ti",
+    "artist": "Burning",
+    "album": "Colección (Lo Mejor)",
+    "current_release_year": 1978,
+    "duration_ms": 261000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-094-chiquetete-esta-cobardia-remasterizado-2qlmlF"
+    ],
+    "title": "Esta Cobardía - Remasterizado",
+    "artist": "Chiquetete",
+    "album": "Eres Mía (Remasterizado)",
+    "current_release_year": 1984,
+    "duration_ms": 219000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-096-luis-miguel-la-chica-del-bikini-azul-1L2TRA"
+    ],
+    "title": "La Chica Del Bikini Azul",
+    "artist": "Luis Miguel",
+    "album": "Latin Classics",
+    "current_release_year": 1984,
+    "duration_ms": 180000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-101-ivan-fotonovela-437MUs"
+    ],
+    "title": "Fotonovela",
+    "artist": "Ivan",
+    "album": "Lo Mejor de Ivan",
+    "current_release_year": 1984,
+    "duration_ms": 275000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-104-lina-morgan-gracias-por-venir-de-pura-metalurgica-2018-remaster-5cKEvd"
+    ],
+    "title": "Gracias por venir (de \"Pura metalúrgica\") - 2018 Remaster",
+    "artist": "Lina Morgan",
+    "album": "En sus éxitos de las Revistas (2018 Remaster)",
+    "current_release_year": 1980,
+    "duration_ms": 227000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-107-el-ultimo-de-la-fila-insurreccion-2008-remaster-7803rm"
+    ],
+    "title": "Insurrección - 2008 Remaster",
+    "artist": "El Último De La Fila",
+    "album": "Enemigos de lo ajeno (2008 Remaster)",
+    "current_release_year": 1986,
+    "duration_ms": 133000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-112-un-pinguino-en-mi-ascensor-espiando-a-mi-vecina-1XOqhF"
+    ],
+    "title": "Espiando a mi vecina",
+    "artist": "UN PINGUINO EN MI ASCENSOR",
+    "album": "21 Exitos Sin Fecha De Caducidad",
+    "current_release_year": 1987,
+    "duration_ms": 170000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-113-los-toreros-muertos-mi-aguita-amarilla-2fYRXo"
+    ],
+    "title": "Mi Agüita Amarilla",
+    "artist": "Los Toreros Muertos",
+    "album": "30 Años de Éxitos",
+    "current_release_year": 1986,
+    "duration_ms": 339000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-114-gabinete-caligari-camino-soria-2FvPv2"
+    ],
+    "title": "Camino Soria",
+    "artist": "Gabinete Caligari",
+    "album": "Lo Mejor De Gabinete Caligari",
+    "current_release_year": 1987,
+    "duration_ms": 385000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-115-orquesta-mondragon-corazon-de-neon-5zAnoL"
+    ],
+    "title": "Corazón de neón",
+    "artist": "Orquesta Mondragon",
+    "album": "Viaje Con Nosotros A Través De 21 Exitos Feroces",
+    "current_release_year": 1987,
+    "duration_ms": 289000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-117-los-rebeldes-bajo-la-luz-de-la-luna-remasterizado-0VWHxN"
+    ],
+    "title": "Bajo la Luz de la Luna - Remasterizado",
+    "artist": "Los Rebeldes",
+    "album": "Corazón de Rock and Roll (Remasterizado) [Boxset]",
+    "current_release_year": 1988,
+    "duration_ms": 202000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-118-junco-hola-mi-amor-4FKX19"
+    ],
+    "title": "¡Hola, Mi Amor!",
+    "artist": "Junco",
+    "album": "Lo Mejor De Junco",
+    "current_release_year": 1986,
+    "duration_ms": 184000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-123-camaron-de-la-isla-soy-gitano-tangos-7AdFxp"
+    ],
+    "title": "Soy Gitano - Tangos",
+    "artist": "Camaron De La Isla",
+    "album": "Soy Gitano (Remastered)",
+    "current_release_year": 1989,
+    "duration_ms": 255000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-134-cantores-de-hispalis-a-bailar-a-bailar-5Sbsze"
+    ],
+    "title": "A bailar, a bailar",
+    "artist": "Cantores De Hispalis",
+    "album": "Antologia - Cantores De Hispalis",
+    "current_release_year": 1988,
+    "duration_ms": 224000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-136-presuntos-implicados-como-hemos-cambiado-1klC2q"
+    ],
+    "title": "Como hemos cambiado",
+    "artist": "Presuntos Implicados",
+    "album": "Ser De Agua (REMASTERS)",
+    "current_release_year": 1991,
+    "duration_ms": 257000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-146-revolver-el-roce-de-tu-piel-en-directo-1993-5SqRXR"
+    ],
+    "title": "El roce de tu piel - En directo 1993",
+    "artist": "Revolver",
+    "album": "Revolver Basico",
+    "current_release_year": 1993,
+    "duration_ms": 314000,
+    "motivos": [
+      "directo"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-148-ana-belen-derroche-73Bs0g"
+    ],
+    "title": "Derroche",
+    "artist": "Ana Belén",
+    "album": "Veneno Para El Corazón",
+    "current_release_year": 1993,
+    "duration_ms": 224000,
+    "motivos": [
+      "outlier(+14 sobre ~1979 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-150-paco-pil-viva-la-fiesta-version-1993-remasterizada-5VowIM"
+    ],
+    "title": "Viva la Fiesta - Versión 1993 Remasterizada",
+    "artist": "Paco Pil",
+    "album": "Energía Positiva (Remaster)",
+    "current_release_year": 1993,
+    "duration_ms": 349000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-154-georgie-dann-la-barbacoa-61fbKI",
+      "fiesta-mayor-verbena-087-georgie-dann-la-barbacoa-61fbKI"
+    ],
+    "title": "La Barbacoa",
+    "artist": "Georgie Dann",
+    "album": "Macumba y Otros Tremendos Exitos",
+    "current_release_year": 1994,
+    "duration_ms": 256000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-164-no-me-pises-que-llevo-chanclas-y-tu-de-quien-eres-7yuTvo"
+    ],
+    "title": "¿Y Tú de Quién Eres?",
+    "artist": "No Me Pises Que Llevo Chanclas",
+    "album": "Los Grandisimos Exitos De Los Chanlas",
+    "current_release_year": 1990,
+    "duration_ms": 226000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-191-cristian-castro-azul-6pHCJm"
+    ],
+    "title": "Azul",
+    "artist": "Cristian Castro",
+    "album": "Grandes Hits",
+    "current_release_year": 2001,
+    "duration_ms": 259000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-208-el-barrio-quiereme-1NxFzO",
+      "fiesta-mayor-verbena-123-el-barrio-quiereme-1NxFzO"
+    ],
+    "title": "Quiereme",
+    "artist": "El Barrio",
+    "album": "Angel Malherido (Edición Especial)",
+    "current_release_year": 2003,
+    "duration_ms": 229000,
+    "motivos": [
+      "aniversario"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-235-la-musicalite-cuatro-elementos-0jbTQH"
+    ],
+    "title": "Cuatro elementos",
+    "artist": "La Musicalité",
+    "album": "4 Elementos (Edición coleccionista)",
+    "current_release_year": 2010,
+    "duration_ms": 224000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-241-pablo-alboran-solamente-tu-7sRXhR"
+    ],
+    "title": "Solamente tú",
+    "artist": "Pablo Alborán",
+    "album": "Pablo Alboran (Deluxe)",
+    "current_release_year": 2011,
+    "duration_ms": 247000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-253-chayanne-humanos-a-marte-7lOzUJ"
+    ],
+    "title": "Humanos a Marte",
+    "artist": "Chayanne",
+    "album": "En Todo Estaré (Deluxe Edition)",
+    "current_release_year": 2014,
+    "duration_ms": 225000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-254-romeo-santos-propuesta-indecente-5PycBI",
+      "fiesta-mayor-verbena-041-romeo-santos-propuesta-indecente-5PycBI"
+    ],
+    "title": "Propuesta Indecente",
+    "artist": "Romeo Santos",
+    "album": "Fórmula, Vol. 2 (Deluxe Edition)",
+    "current_release_year": 2013,
+    "duration_ms": 235000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-267-jennifer-lopez-el-anillo-2SpfMQ"
+    ],
+    "title": "El Anillo",
+    "artist": "Jennifer Lopez",
+    "album": "El Anillo",
+    "current_release_year": 2018,
+    "duration_ms": 176000,
+    "motivos": [
+      "outlier(+19 sobre ~1999 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-270-blas-canto-el-no-soy-yo-38mCl4"
+    ],
+    "title": "Él no soy yo",
+    "artist": "Blas Cantó",
+    "album": "Complicado (Edición Deluxe)",
+    "current_release_year": 2018,
+    "duration_ms": 279000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-273-daddy-yankee-dura-6KuqAt"
+    ],
+    "title": "Dura",
+    "artist": "Daddy Yankee",
+    "album": "Dura",
+    "current_release_year": 2018,
+    "duration_ms": 200000,
+    "motivos": [
+      "outlier(+14 sobre ~2004 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-280-bizarrap-nathy-peluso-bzrp-music-sessions-vol-36-66-78SeXV"
+    ],
+    "title": "Nathy Peluso: Bzrp Music Sessions, Vol. 36/66",
+    "artist": "Bizarrap",
+    "album": "Nathy Peluso: Bzrp Music Sessions, Vol. 36/66",
+    "current_release_year": 2020,
+    "duration_ms": 171000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-001-david-bowie-starman-2012-remaster-0pQskr"
+    ],
+    "title": "Starman - 2012 Remaster",
+    "artist": "David Bowie",
+    "album": "The Rise and Fall of Ziggy Stardust and the Spiders from Mars (2012 Remaster)",
+    "current_release_year": 1972,
+    "duration_ms": 254000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-009-one-direction-story-of-my-life-4nVBt6"
+    ],
+    "title": "Story of My Life",
+    "artist": "One Direction",
+    "album": "Midnight Memories (Deluxe)",
+    "current_release_year": 2013,
+    "duration_ms": 245000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-010-eagles-hotel-california-2013-remaster-40riOy"
+    ],
+    "title": "Hotel California - 2013 Remaster",
+    "artist": "Eagles",
+    "album": "Hotel California (2013 Remaster)",
+    "current_release_year": 1976,
+    "duration_ms": 391000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-013-m-people-moving-on-up-6vGW3d"
+    ],
+    "title": "Moving on Up",
+    "artist": "M People",
+    "album": "The Best Of M People",
+    "current_release_year": 1993,
+    "duration_ms": 215000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-024-eurythmics-sweet-dreams-are-made-of-this-6zIfdC"
+    ],
+    "title": "Sweet Dreams (Are Made of This)",
+    "artist": "Eurythmics",
+    "album": "Greatest Hits",
+    "current_release_year": 1983,
+    "duration_ms": 292000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-025-shakira-la-tortura-feat-alejandro-sanz-5BSclX",
+      "fiesta-mayor-verbena-179-shakira-la-tortura-feat-alejandro-sanz-5BSclX"
+    ],
+    "title": "La Tortura (feat. Alejandro Sanz)",
+    "artist": "Shakira",
+    "album": "Fijación Oral, Vol. 1",
+    "current_release_year": 2005,
+    "duration_ms": 212000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-035-alaska-y-dinarama-a-quien-le-importa-7Eb5AY"
+    ],
+    "title": "A quién le importa",
+    "artist": "Alaska Y Dinarama",
+    "album": "No Es Pecado -Remasters",
+    "current_release_year": 1986,
+    "duration_ms": 205000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-042-taylor-swift-shake-it-off-0cqRj7"
+    ],
+    "title": "Shake It Off",
+    "artist": "Taylor Swift",
+    "album": "1989 (Deluxe)",
+    "current_release_year": 2014,
+    "duration_ms": 219000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-046-blur-song-2-3GfOAd"
+    ],
+    "title": "Song 2",
+    "artist": "Blur",
+    "album": "Blur: The Best Of",
+    "current_release_year": 1997,
+    "duration_ms": 121000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-055-pecos-hablame-de-ti-7EWKAY"
+    ],
+    "title": "Háblame de Ti",
+    "artist": "Pecos",
+    "album": "Un Par de Corazones y Otros Grandes Éxitos",
+    "current_release_year": 1979,
+    "duration_ms": 207000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-059-michael-jackson-billie-jean-5ChkMS"
+    ],
+    "title": "Billie Jean",
+    "artist": "Michael Jackson",
+    "album": "Thriller 25 Super Deluxe Edition",
+    "current_release_year": 1982,
+    "duration_ms": 293000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-077-the-jackson-5-abc-4u7Zqp"
+    ],
+    "title": "ABC",
+    "artist": "The Jackson 5",
+    "album": "Temazos y Hitazos: 70's",
+    "current_release_year": 1970,
+    "duration_ms": 177000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-083-phil-collins-another-day-in-paradise-2016-remaster-1NCuYq"
+    ],
+    "title": "Another Day in Paradise - 2016 Remaster",
+    "artist": "Phil Collins",
+    "album": "...But Seriously (Deluxe Edition)",
+    "current_release_year": 1989,
+    "duration_ms": 322000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-087-chicory-tip-son-of-my-father-3Jwalo"
+    ],
+    "title": "Son Of My Father",
+    "artist": "Chicory Tip",
+    "album": "Chicory Tip Greatest Hits",
+    "current_release_year": 1972,
+    "duration_ms": 187000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-091-the-beatles-let-it-be-remastered-2009-7iN1s7"
+    ],
+    "title": "Let It Be - Remastered 2009",
+    "artist": "The Beatles",
+    "album": "Let It Be (Remastered)",
+    "current_release_year": 1970,
+    "duration_ms": 243000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-092-isabel-pantoja-se-me-enamora-el-alma-6FG8Tk"
+    ],
+    "title": "Se Me Enamora el Alma",
+    "artist": "Isabel Pantoja",
+    "album": "Pasion Y Deseo (Sus Grandes Exitos De La Copla Y De La Balada Romantica)",
+    "current_release_year": 1989,
+    "duration_ms": 305000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-098-rudimental-these-days-feat-jess-glynne-macklemore-dan-caplen-20ZP3O"
+    ],
+    "title": "These Days (feat. Jess Glynne, Macklemore & Dan Caplen)",
+    "artist": "Rudimental",
+    "album": "Toast to Our Differences (Deluxe Edition)",
+    "current_release_year": 2018,
+    "duration_ms": 211000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-105-t-a-t-u-all-the-things-she-said-4bJygw"
+    ],
+    "title": "All The Things She Said",
+    "artist": "t.A.T.u.",
+    "album": "200 KM/H In The Wrong Lane (10th Anniversary Edition)",
+    "current_release_year": 2002,
+    "duration_ms": 214000,
+    "motivos": [
+      "aniversario"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-112-kc-the-sunshine-band-that-s-the-way-i-like-it-2004-remaster-3PR79C",
+      "espanol-summer-party-284-kc-the-sunshine-band-that-s-the-way-i-like-it-2004-remaster-3PR79C"
+    ],
+    "title": "That's the Way (I Like It) - 2004 Remaster",
+    "artist": "KC & The Sunshine Band",
+    "album": "KC & the Sunshine Band",
+    "current_release_year": 1975,
+    "duration_ms": 185000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-115-luis-aguile-la-vida-pasa-felizmente-remastered-1ckqbT"
+    ],
+    "title": "La vida pasa felizmente (remastered)",
+    "artist": "Luis Aguile",
+    "album": "Luis Aguilé. Sus Grabaciones En Discos Showman Vol.2 (1968-1974)",
+    "current_release_year": 1969,
+    "duration_ms": 171000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-120-pedro-marin-aire-remastered-3QiRtW"
+    ],
+    "title": "Aire - Remastered",
+    "artist": "Pedro Marin",
+    "album": "Todas sus grabaciones en Hispavox (1979-1986) [Remastered 2015]",
+    "current_release_year": 1980,
+    "duration_ms": 213000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-124-black-eyed-peas-i-gotta-feeling-4kLLWz"
+    ],
+    "title": "I Gotta Feeling",
+    "artist": "Black Eyed Peas",
+    "album": "THE E.N.D. (THE ENERGY NEVER DIES) [Deluxe Version]",
+    "current_release_year": 2009,
+    "duration_ms": 289000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-130-georgie-dann-bimbo-92-3I4rCM"
+    ],
+    "title": "Bimbó 92",
+    "artist": "Georgie Dann",
+    "album": "Macumba y Otros Tremendos Exitos",
+    "current_release_year": 1992,
+    "duration_ms": 153000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-135-orchestral-manoeuvres-in-the-dark-enola-gay-7bJSbd"
+    ],
+    "title": "Enola Gay",
+    "artist": "Orchestral Manoeuvres In The Dark",
+    "album": "The Best Of Orchestral Manoeuvres In The Dark",
+    "current_release_year": 1980,
+    "duration_ms": 212000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-142-bizarrap-quevedo-bzrp-music-sessions-vol-52-66-2tTmW7",
+      "fiesta-mayor-verbena-109-bizarrap-quevedo-bzrp-music-sessions-vol-52-66-2tTmW7"
+    ],
+    "title": "Quevedo: Bzrp Music Sessions, Vol. 52/66",
+    "artist": "Bizarrap",
+    "album": "Quevedo: Bzrp Music Sessions, Vol. 52/66",
+    "current_release_year": 2022,
+    "duration_ms": 198000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-155-bobby-mcferrin-don-t-worry-be-happy-5Ybgcw"
+    ],
+    "title": "Don't Worry Be Happy",
+    "artist": "Bobby McFerrin",
+    "album": "The Collection",
+    "current_release_year": 1988,
+    "duration_ms": 292000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-157-shawn-mendes-there-s-nothing-holdin-me-back-7JJmb5"
+    ],
+    "title": "There's Nothing Holdin' Me Back",
+    "artist": "Shawn Mendes",
+    "album": "Illuminate (Deluxe)",
+    "current_release_year": 2017,
+    "duration_ms": 199000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-166-paco-pil-johnny-techno-ska-version-1994-remasterizada-0qPFZh"
+    ],
+    "title": "Johnny Techno Ska - Versión 1994 Remasterizada",
+    "artist": "Paco Pil",
+    "album": "Energía Positiva (Remaster)",
+    "current_release_year": 1994,
+    "duration_ms": 210000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-174-pet-shop-boys-it-s-a-sin-2018-remaster-5fy4vf"
+    ],
+    "title": "It's a Sin - 2018 Remaster",
+    "artist": "Pet Shop Boys",
+    "album": "Actually: Further Listening 1987 - 1988 (2018 Remaster)",
+    "current_release_year": 1987,
+    "duration_ms": 299000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-176-clean-bandit-rockabye-feat-sean-paul-anne-marie-2hrUO4"
+    ],
+    "title": "Rockabye (feat. Sean Paul & Anne-Marie)",
+    "artist": "Clean Bandit",
+    "album": "What Is Love? (Deluxe Edition)",
+    "current_release_year": 2016,
+    "duration_ms": 251000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-179-whigfield-saturday-night-radio-mix-2ev0Mc"
+    ],
+    "title": "Saturday Night - Radio Mix",
+    "artist": "Whigfield",
+    "album": "The Hits Collection",
+    "current_release_year": 1994,
+    "duration_ms": 247000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-180-chayanne-madre-tierra-oye-2wlptO",
+      "fiesta-mayor-verbena-003-chayanne-madre-tierra-oye-2wlptO"
+    ],
+    "title": "Madre Tierra (Oye)",
+    "artist": "Chayanne",
+    "album": "En Todo Estaré (Deluxe Edition)",
+    "current_release_year": 2014,
+    "duration_ms": 205000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-187-ana-belen-agapimu-32MzNj"
+    ],
+    "title": "Agapimu",
+    "artist": "Ana Belén",
+    "album": "Grandes Exitos",
+    "current_release_year": 1979,
+    "duration_ms": 211000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-211-el-sueno-de-morfeo-nunca-volvera-3TZiiT"
+    ],
+    "title": "Nunca volverá",
+    "artist": "El Sueño de Morfeo",
+    "album": "El sueño de Morfeo (reedicion)",
+    "current_release_year": 2005,
+    "duration_ms": 194000,
+    "motivos": [
+      "aniversario"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-215-los-chichos-ni-mas-ni-menos-3NWoyV"
+    ],
+    "title": "Ni Mas Ni Menos",
+    "artist": "Los Chichos",
+    "album": "Los Chicos: Todos sus Éxitos...y Más",
+    "current_release_year": 1974,
+    "duration_ms": 200000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-224-rodolfo-chikilicuatre-baila-el-chiki-chiki-7wUKRQ"
+    ],
+    "title": "Baila el Chiki Chiki",
+    "artist": "Rodolfo Chikilicuatre",
+    "album": "Hots Hits Latinos",
+    "current_release_year": 2008,
+    "duration_ms": 173000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-229-peret-borriquito-64X1Hz"
+    ],
+    "title": "Borriquito",
+    "artist": "Peret",
+    "album": "Grandes Exitos",
+    "current_release_year": 1971,
+    "duration_ms": 213000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-232-modjo-lady-hear-me-tonight-49X0LA"
+    ],
+    "title": "Lady - Hear Me Tonight",
+    "artist": "Modjo",
+    "album": "Modjo (Remastered)",
+    "current_release_year": 2000,
+    "duration_ms": 307000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-235-the-rubettes-sugar-baby-love-294ii3"
+    ],
+    "title": "Sugar Baby Love",
+    "artist": "The Rubettes",
+    "album": "The Best Of",
+    "current_release_year": 1974,
+    "duration_ms": 209000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-239-carlinhos-brown-maria-caipirinha-with-dj-dero-2X1P55",
+      "espanol-summer-party-152-carlinhos-brown-maria-caipirinha-with-dj-dero-2X1P55"
+    ],
+    "title": "María Caipirinha (with Dj Dero)",
+    "artist": "Carlinhos Brown",
+    "album": "Latin Fitness Dance 2012 - Workout Cardio Music - The Hits for Your Workout (Pop Kuduro, Cumbia, Latin House, Dembow, Merengue, Salsa, Bachata)",
+    "current_release_year": 2004,
+    "duration_ms": 249000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-240-george-michael-faith-59eAcA"
+    ],
+    "title": "Faith",
+    "artist": "George Michael",
+    "album": "Ladies And Gentlemen... The Best Of George Michael",
+    "current_release_year": 1987,
+    "duration_ms": 194000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-244-the-rolling-stones-angie-remastered-2009-1GcVa4"
+    ],
+    "title": "Angie - Remastered 2009",
+    "artist": "The Rolling Stones",
+    "album": "Goats Head Soup (Remastered 2009)",
+    "current_release_year": 1973,
+    "duration_ms": 272000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-247-sandro-giacobbe-el-jardin-prohibido-3xec1B"
+    ],
+    "title": "El Jardín Prohibido",
+    "artist": "Sandro Giacobbe",
+    "album": "Sandro Giacobbe: Éxitos",
+    "current_release_year": 1976,
+    "duration_ms": 247000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-249-aerosmith-cryin-0NJC0F"
+    ],
+    "title": "Cryin'",
+    "artist": "Aerosmith",
+    "album": "Get A Grip",
+    "current_release_year": 1993,
+    "duration_ms": 308000,
+    "motivos": [
+      "outlier(+18 sobre ~1975 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-250-alexandra-stan-mr-saxobeat-2BTSWf"
+    ],
+    "title": "Mr. Saxobeat",
+    "artist": "Alexandra Stan",
+    "album": "Sundown (Original Motion Picture Soundtrack)",
+    "current_release_year": 2010,
+    "duration_ms": 195000,
+    "motivos": [
+      "bandaSonora"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-256-michael-jackson-scream-4LD5dh"
+    ],
+    "title": "Scream",
+    "artist": "Michael Jackson",
+    "album": "HIStory - PAST, PRESENT AND FUTURE - BOOK I",
+    "current_release_year": 1995,
+    "duration_ms": 277000,
+    "motivos": [
+      "outlier(+13 sobre ~1982 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-258-jessie-j-bang-bang-0puf9y"
+    ],
+    "title": "Bang Bang",
+    "artist": "Jessie J",
+    "album": "Sweet Talker (Deluxe Version)",
+    "current_release_year": 2014,
+    "duration_ms": 199000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-259-queen-another-one-bites-the-dust-remastered-2011-5vdp5U",
+      "fiesta-mayor-verbena-054-queen-another-one-bites-the-dust-remastered-2011-5vdp5U"
+    ],
+    "title": "Another One Bites The Dust - Remastered 2011",
+    "artist": "Queen",
+    "album": "The Game (2011 Remaster)",
+    "current_release_year": 1980,
+    "duration_ms": 214000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-262-bonnie-tyler-holding-out-for-a-hero-from-footloose-soundtrack-5Hyr47",
+      "espanol-summer-party-028-bonnie-tyler-holding-out-for-a-hero-from-footloose-soundtrack-5Hyr47"
+    ],
+    "title": "Holding Out for a Hero - From \"Footloose\" Soundtrack",
+    "artist": "Bonnie Tyler",
+    "album": "Secret Dreams and Forbidden Fire",
+    "current_release_year": 1984,
+    "duration_ms": 348000,
+    "motivos": [
+      "bandaSonora"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-269-depeche-mode-just-can-t-get-enough-0qi4b1"
+    ],
+    "title": "Just Can't Get Enough",
+    "artist": "Depeche Mode",
+    "album": "Speak and Spell (Deluxe)",
+    "current_release_year": 1981,
+    "duration_ms": 220000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-270-lady-gaga-bad-romance-0Siywu"
+    ],
+    "title": "Bad Romance",
+    "artist": "Lady Gaga",
+    "album": "The Fame Monster (Deluxe Edition)",
+    "current_release_year": 2009,
+    "duration_ms": 294000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-276-ellie-goulding-love-me-like-you-do-from-fifty-shades-of-grey-3zHq9o"
+    ],
+    "title": "Love Me Like You Do - From \"Fifty Shades Of Grey\"",
+    "artist": "Ellie Goulding",
+    "album": "Delirium (Deluxe)",
+    "current_release_year": 2015,
+    "duration_ms": 252000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-278-the-weather-girls-it-s-raining-men-5g6nzs"
+    ],
+    "title": "It's Raining Men",
+    "artist": "The Weather Girls",
+    "album": "The Best of Disco",
+    "current_release_year": 1982,
+    "duration_ms": 211000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-280-taio-cruz-dynamite-2CEgGE"
+    ],
+    "title": "Dynamite",
+    "artist": "Taio Cruz",
+    "album": "The Rokstarr Hits Collection",
+    "current_release_year": 2010,
+    "duration_ms": 202000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-281-belinda-carlisle-heaven-is-a-place-on-earth-4V9BTS"
+    ],
+    "title": "Heaven Is A Place On Earth",
+    "artist": "Belinda Carlisle",
+    "album": "Heaven on Earth (Remastered & Expanded Special Edition)",
+    "current_release_year": 1987,
+    "duration_ms": 247000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-285-john-paul-young-love-is-in-the-air-38GqIQ"
+    ],
+    "title": "Love Is In The Air",
+    "artist": "John Paul Young",
+    "album": "Classic Hits",
+    "current_release_year": 1977,
+    "duration_ms": 208000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-296-chocolate-mayonesa-5Qjx4o",
+      "fiesta-mayor-verbena-081-chocolate-mayonesa-5Qjx4o"
+    ],
+    "title": "Mayonesa",
+    "artist": "Chocolate",
+    "album": "2000 Grandes Exitos",
+    "current_release_year": 2000,
+    "duration_ms": 231000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-303-r-e-m-losing-my-religion-31AOj9"
+    ],
+    "title": "Losing My Religion",
+    "artist": "R.E.M.",
+    "album": "Out Of Time (25th Anniversary Edition)",
+    "current_release_year": 1991,
+    "duration_ms": 268000,
+    "motivos": [
+      "aniversario"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "temazos-306-moby-escapar-slipping-away-feat-amaral-2006-remastered-version-41nv6T"
+    ],
+    "title": "Escapar (Slipping Away) (feat. Amaral) - 2006 Remastered Version",
+    "artist": "Moby",
+    "album": "Go - The Very Best Of Moby (Deluxe)",
+    "current_release_year": 2006,
+    "duration_ms": 222000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-002-two-man-sound-samba-megamix-12-version-3h9GLv"
+    ],
+    "title": "Samba Megamix (12 version)",
+    "artist": "Two Man Sound",
+    "album": "Samba Megamix",
+    "current_release_year": 1990,
+    "duration_ms": 448000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-005-jarabe-de-palo-eso-que-tu-me-das-6cRvHL"
+    ],
+    "title": "Eso Que Tú Me Das",
+    "artist": "Jarabe De Palo",
+    "album": "Eso Que Tú Me Das",
+    "current_release_year": 2020,
+    "duration_ms": 214000,
+    "motivos": [
+      "outlier(+17 sobre ~2003 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-009-blur-girls-boys-5CeL9C"
+    ],
+    "title": "Girls & Boys",
+    "artist": "Blur",
+    "album": "Blur: The Best Of",
+    "current_release_year": 1994,
+    "duration_ms": 259000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-013-georgie-dann-el-chiringuito-remasterizado-4ZXGwo"
+    ],
+    "title": "El Chiringuito - Remasterizado",
+    "artist": "Georgie Dann",
+    "album": "Caliente, Caliente (Remasterizado 2023)",
+    "current_release_year": 1988,
+    "duration_ms": 188000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-020-the-lovin-spoonful-summer-in-the-city-remastered-7AzFID"
+    ],
+    "title": "Summer in the City - Remastered",
+    "artist": "The Lovin' Spoonful",
+    "album": "Hums Of The Lovin' Spoonful",
+    "current_release_year": 1966,
+    "duration_ms": 160000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-025-elvis-crespo-suavemente-1YwPNe"
+    ],
+    "title": "Suavemente",
+    "artist": "Elvis Crespo",
+    "album": "Suavemente...Los Exitos",
+    "current_release_year": 1998,
+    "duration_ms": 266000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-029-amy-winehouse-you-know-i-m-no-good-0DMRKq"
+    ],
+    "title": "You Know I'm No Good",
+    "artist": "Amy Winehouse",
+    "album": "Back To Black (Deluxe Edition)",
+    "current_release_year": 2006,
+    "duration_ms": 257000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-030-burning-mueve-tus-caderas-5OUYVb"
+    ],
+    "title": "Mueve Tus Caderas",
+    "artist": "Burning",
+    "album": "Colección (Lo Mejor)",
+    "current_release_year": 1979,
+    "duration_ms": 171000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-033-azul-y-negro-me-estoy-volviendo-loco-6M5Cye"
+    ],
+    "title": "Me Estoy Volviendo Loco",
+    "artist": "Azul Y Negro",
+    "album": "El Color De Los Exitos",
+    "current_release_year": 1982,
+    "duration_ms": 214000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-034-chic-i-want-your-love-2018-remaster-7oohei"
+    ],
+    "title": "I Want Your Love - 2018 Remaster",
+    "artist": "CHIC",
+    "album": "C'est Chic (2018 Remaster)",
+    "current_release_year": 1978,
+    "duration_ms": 413000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-035-bee-gees-you-should-be-dancing-4T5Y25"
+    ],
+    "title": "You Should Be Dancing",
+    "artist": "Bee Gees",
+    "album": "The Ultimate Bee Gees",
+    "current_release_year": 1976,
+    "duration_ms": 256000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-037-c-c-music-factory-gonna-make-you-sweat-everybody-dance-now-feat-freedom-williams-7eheoW"
+    ],
+    "title": "Gonna Make You Sweat (Everybody Dance Now) (feat. Freedom Williams)",
+    "artist": "C & C Music Factory",
+    "album": "Super Hits",
+    "current_release_year": 1990,
+    "duration_ms": 244000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-041-no-me-pises-que-llevo-chanclas-bolillon-3xi7tK"
+    ],
+    "title": "Bolillón",
+    "artist": "No Me Pises Que Llevo Chanclas",
+    "album": "Los Grandisimos Exitos De Los Chanlas",
+    "current_release_year": 1989,
+    "duration_ms": 192000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-042-r-e-m-shiny-happy-people-1v2zyA"
+    ],
+    "title": "Shiny Happy People",
+    "artist": "R.E.M.",
+    "album": "Out Of Time (25th Anniversary Edition)",
+    "current_release_year": 1991,
+    "duration_ms": 225000,
+    "motivos": [
+      "aniversario"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-049-george-michael-freedom-90-remastered-1wZ7o1"
+    ],
+    "title": "Freedom! '90 - Remastered",
+    "artist": "George Michael",
+    "album": "Listen Without Prejudice Vol. 1 (Remastered)",
+    "current_release_year": 1990,
+    "duration_ms": 390000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-055-the-rolling-stones-brown-sugar-remastered-2009-61UuPx"
+    ],
+    "title": "Brown Sugar - Remastered 2009",
+    "artist": "The Rolling Stones",
+    "album": "Sticky Fingers (Remastered)",
+    "current_release_year": 1971,
+    "duration_ms": 228000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-064-massiel-eres-4TDcFk"
+    ],
+    "title": "Eres",
+    "artist": "Massiel",
+    "album": "Tiempos dificiles",
+    "current_release_year": 1981,
+    "duration_ms": 197000,
+    "motivos": [
+      "outlier(+13 sobre ~1968 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-065-enrique-iglesias-subeme-la-radio-0mnAmQ"
+    ],
+    "title": "SUBEME LA RADIO",
+    "artist": "Enrique Iglesias",
+    "album": "FINAL (Vol.1)",
+    "current_release_year": 2017,
+    "duration_ms": 207000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-068-los-fabulosos-cadillacs-matador-remasterizado-2008-4bMZ60"
+    ],
+    "title": "Matador - Remasterizado 2008",
+    "artist": "Los Fabulosos Cadillacs",
+    "album": "Obras Cumbres",
+    "current_release_year": 1993,
+    "duration_ms": 275000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-073-the-clash-should-i-stay-or-should-i-go-remastered-39shmb"
+    ],
+    "title": "Should I Stay or Should I Go - Remastered",
+    "artist": "The Clash",
+    "album": "Combat Rock (Remastered)",
+    "current_release_year": 1982,
+    "duration_ms": 188000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-076-ambrose-his-orchestra-it-s-a-hap-hap-happy-world-674PSQ"
+    ],
+    "title": "It's a Hap-Hap-Happy World",
+    "artist": "Ambrose & His Orchestra",
+    "album": "Dancing the War Away, Vol. 2",
+    "current_release_year": 1939,
+    "duration_ms": 174000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-084-inxs-new-sensation-2xcrse"
+    ],
+    "title": "New Sensation",
+    "artist": "INXS",
+    "album": "Kick (Remastered 2011)",
+    "current_release_year": 1987,
+    "duration_ms": 220000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-091-huey-lewis-the-news-the-power-of-love-2olVm1"
+    ],
+    "title": "The Power Of Love",
+    "artist": "Huey Lewis & The News",
+    "album": "Greatest Hits: Huey Lewis And The News",
+    "current_release_year": 1985,
+    "duration_ms": 234000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-093-loquillo-y-los-trogloditas-el-rompeolas-remaster-2017-0sX3Xm"
+    ],
+    "title": "El rompeolas - Remaster 2017",
+    "artist": "Loquillo Y Los Trogloditas",
+    "album": "Morir en primavera (Remaster 2017)",
+    "current_release_year": 1988,
+    "duration_ms": 288000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-095-sergio-vargas-la-ventanita-5CmVYF",
+      "fiesta-mayor-verbena-025-sergio-vargas-la-ventanita-5CmVYF"
+    ],
+    "title": "La Ventanita",
+    "artist": "Sergio Vargas",
+    "album": "Grandes Exitos",
+    "current_release_year": 1992,
+    "duration_ms": 286000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-109-belinda-carlisle-leave-a-light-on-7vJz53"
+    ],
+    "title": "Leave a Light On",
+    "artist": "Belinda Carlisle",
+    "album": "Runaway Horses (Remastered & Expanded Special Edition)",
+    "current_release_year": 1989,
+    "duration_ms": 278000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-110-the-kinks-you-really-got-me-29SyMC"
+    ],
+    "title": "You Really Got Me",
+    "artist": "The Kinks",
+    "album": "Kinks (Deluxe)",
+    "current_release_year": 1964,
+    "duration_ms": 131000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-120-the-beatles-here-comes-the-sun-remastered-2009-6dGnYI"
+    ],
+    "title": "Here Comes The Sun - Remastered 2009",
+    "artist": "The Beatles",
+    "album": "Abbey Road (Remastered)",
+    "current_release_year": 1969,
+    "duration_ms": 185000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-123-zz-top-la-grange-2005-remaster-70YvYr"
+    ],
+    "title": "La Grange - 2005 Remaster",
+    "artist": "ZZ Top",
+    "album": "Tres Hombres (Expanded 2006 Remaster)",
+    "current_release_year": 1973,
+    "duration_ms": 230000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-125-the-monkees-i-m-a-believer-2006-remaster-3G7tRC"
+    ],
+    "title": "I'm a Believer - 2006 Remaster",
+    "artist": "The Monkees",
+    "album": "More of The Monkees (Deluxe Edition)",
+    "current_release_year": 1966,
+    "duration_ms": 167000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-135-sleeper-atomic-6guf5r"
+    ],
+    "title": "Atomic",
+    "artist": "Sleeper",
+    "album": "Inbetweener - The Best of Sleeper",
+    "current_release_year": 1996,
+    "duration_ms": 309000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-158-banda-blanca-sopa-de-caracol-4V8uHu"
+    ],
+    "title": "Sopa de Caracol",
+    "artist": "Banda Blanca",
+    "album": "Lo Mejor de Banda Blanca - 16 Exitos",
+    "current_release_year": 1991,
+    "duration_ms": 293000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-159-donna-summer-i-feel-love-0q3A8T"
+    ],
+    "title": "I Feel Love",
+    "artist": "Donna Summer",
+    "album": "Lo Mejor De Donna Summer",
+    "current_release_year": 1977,
+    "duration_ms": 225000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-161-john-travolta-summer-nights-from-grease-2AVkAr"
+    ],
+    "title": "Summer Nights - From “Grease”",
+    "artist": "John Travolta",
+    "album": "Grease (The Original Motion Picture Soundtrack)",
+    "current_release_year": 1978,
+    "duration_ms": 216000,
+    "motivos": [
+      "bandaSonora"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-162-musical-youth-pass-the-dutchie-1BkY0N"
+    ],
+    "title": "Pass The Dutchie",
+    "artist": "Musical Youth",
+    "album": "Anthology",
+    "current_release_year": 1982,
+    "duration_ms": 205000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-174-robin-thicke-blurred-lines-0n4bIT"
+    ],
+    "title": "Blurred Lines",
+    "artist": "Robin Thicke",
+    "album": "Blurred Lines (Deluxe)",
+    "current_release_year": 2013,
+    "duration_ms": 263000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-175-chris-norman-stumblin-in-2017-remaster-2Pzhx2"
+    ],
+    "title": "Stumblin' In - 2017 Remaster",
+    "artist": "Chris Norman",
+    "album": "Stumblin' In (2017 Remaster)",
+    "current_release_year": 1978,
+    "duration_ms": 239000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-176-fleetwood-mac-don-t-stop-2004-remaster-4bEb3K"
+    ],
+    "title": "Don't Stop - 2004 Remaster",
+    "artist": "Fleetwood Mac",
+    "album": "Rumours",
+    "current_release_year": 1977,
+    "duration_ms": 193000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-182-el-simbolo-levantando-las-manos-6aIOfv",
+      "fiesta-mayor-verbena-062-el-simbolo-levantando-las-manos-6aIOfv"
+    ],
+    "title": "Levantando las Manos",
+    "artist": "El Símbolo",
+    "album": "Éxitos",
+    "current_release_year": 1997,
+    "duration_ms": 265000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-190-los-mismos-el-puente-5ZsIUg"
+    ],
+    "title": "El Puente",
+    "artist": "Los Mismos",
+    "album": "Sus Grandes Exitos",
+    "current_release_year": 1968,
+    "duration_ms": 184000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-195-shakira-hips-don-t-lie-feat-wyclef-jean-3ZFTkv",
+      "fiesta-mayor-verbena-019-shakira-hips-don-t-lie-feat-wyclef-jean-3ZFTkv"
+    ],
+    "title": "Hips Don't Lie (feat. Wyclef Jean)",
+    "artist": "Shakira",
+    "album": "Oral Fixation, Vol. 2 (Expanded Edition)",
+    "current_release_year": 2005,
+    "duration_ms": 218000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-197-counting-crows-accidentally-in-love-from-shrek-2-soundtrack-04j67X"
+    ],
+    "title": "Accidentally In Love - From \"Shrek 2\" Soundtrack",
+    "artist": "Counting Crows",
+    "album": "Shrek 2 (Original Motion Picture Soundtrack)",
+    "current_release_year": 2004,
+    "duration_ms": 188000,
+    "motivos": [
+      "bandaSonora"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-205-los-rebeldes-mediterraneo-remasterizado-6inenm"
+    ],
+    "title": "Mediterraneo - Remasterizado",
+    "artist": "Los Rebeldes",
+    "album": "Corazón de Rock and Roll (Remasterizado) [Boxset]",
+    "current_release_year": 1986,
+    "duration_ms": 234000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-208-britney-spears-baby-one-more-time-3MjUtN"
+    ],
+    "title": "...Baby One More Time",
+    "artist": "Britney Spears",
+    "album": "...Baby One More Time (Digital Deluxe Version)",
+    "current_release_year": 1999,
+    "duration_ms": 211000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-210-them-gloria-feat-van-morrison-stereo-version-1DKyFV"
+    ],
+    "title": "Gloria (feat. Van Morrison) - Stereo Version",
+    "artist": "Them",
+    "album": "The Essential Van Morrison",
+    "current_release_year": 1964,
+    "duration_ms": 156000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-223-marisol-corazon-contento-remasterizado-6J3Cz3"
+    ],
+    "title": "Corazón Contento - Remasterizado",
+    "artist": "Marisol",
+    "album": "Marisol (1976) [Remasterizado 2022]",
+    "current_release_year": 1968,
+    "duration_ms": 181000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-232-black-eyed-peas-the-time-dirty-bit-7vWFaM"
+    ],
+    "title": "The Time (Dirty Bit)",
+    "artist": "Black Eyed Peas",
+    "album": "The Beginning (Deluxe)",
+    "current_release_year": 2010,
+    "duration_ms": 307000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-235-spandau-ballet-gold-2003-remaster-0Z9Ukc"
+    ],
+    "title": "Gold - 2003 Remaster",
+    "artist": "Spandau Ballet",
+    "album": "True (Special Edition)",
+    "current_release_year": 1983,
+    "duration_ms": 290000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-240-bruno-lomas-ya-llega-el-verano-1jGnbI"
+    ],
+    "title": "Ya Llega el Verano",
+    "artist": "Bruno Lomas",
+    "album": "Bruno Lomas, Grandes Éxitos",
+    "current_release_year": 1968,
+    "duration_ms": 137000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-245-duo-dinamico-oh-carol-4cnGvm"
+    ],
+    "title": "¡Oh! Carol",
+    "artist": "Duo Dinamico",
+    "album": "20 Exitos De Oro",
+    "current_release_year": 1961,
+    "duration_ms": 109000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-249-tribalistas-ja-sei-namorar-2004-digital-remaster-352FuG"
+    ],
+    "title": "Já Sei Namorar - 2004 Digital Remaster",
+    "artist": "Tribalistas",
+    "album": "Tribalistas",
+    "current_release_year": 2002,
+    "duration_ms": 196000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-250-the-sacados-ritmo-de-la-noche-classic-version-0WK8Nz"
+    ],
+    "title": "Ritmo de la Noche (Classic Version)",
+    "artist": "The Sacados",
+    "album": "Superexitos Vol. 2",
+    "current_release_year": 1990,
+    "duration_ms": 268000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-254-edurne-como-tu-4hnNgP"
+    ],
+    "title": "Como Tú",
+    "artist": "Edurne",
+    "album": "Catarsis (Deluxe)",
+    "current_release_year": 2020,
+    "duration_ms": 178000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-258-eurythmics-there-must-be-an-angel-playing-with-my-heart-1YJ4vp"
+    ],
+    "title": "There Must Be an Angel (Playing With My Heart)",
+    "artist": "Eurythmics",
+    "album": "Greatest Hits",
+    "current_release_year": 1985,
+    "duration_ms": 280000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-260-deep-purple-smoke-on-the-water-remastered-2012-5MMnwY"
+    ],
+    "title": "Smoke On The Water - Remastered 2012",
+    "artist": "Deep Purple",
+    "album": "Machine Head (Remastered)",
+    "current_release_year": 1972,
+    "duration_ms": 340000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-265-ub40-red-red-wine-4POgt5"
+    ],
+    "title": "Red Red Wine",
+    "artist": "UB40",
+    "album": "The Best Of UB40 Volume I",
+    "current_release_year": 1983,
+    "duration_ms": 183000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-277-kaiser-chiefs-ruby-2sgBTN"
+    ],
+    "title": "Ruby",
+    "artist": "Kaiser Chiefs",
+    "album": "Yours Truly, Angry Mob (Deluxe)",
+    "current_release_year": 2007,
+    "duration_ms": 204000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-280-queen-don-t-stop-me-now-remastered-2011-5T8EDU"
+    ],
+    "title": "Don't Stop Me Now - Remastered 2011",
+    "artist": "Queen",
+    "album": "Jazz (2011 Remaster)",
+    "current_release_year": 1978,
+    "duration_ms": 209000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-282-bizarrap-shakira-bzrp-music-sessions-vol-53-66-4nrPB8"
+    ],
+    "title": "Shakira: Bzrp Music Sessions, Vol. 53/66",
+    "artist": "Bizarrap",
+    "album": "Shakira: Bzrp Music Sessions, Vol. 53/66",
+    "current_release_year": 2023,
+    "duration_ms": 214000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-289-duran-duran-girls-on-film-2010-remaster-4EFkvO"
+    ],
+    "title": "Girls on Film - 2010 Remaster",
+    "artist": "Duran Duran",
+    "album": "Duran Duran (Deluxe Edition)",
+    "current_release_year": 1981,
+    "duration_ms": 212000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-297-eric-clapton-i-shot-the-sheriff-0UOxp1"
+    ],
+    "title": "I Shot The Sheriff",
+    "artist": "Eric Clapton",
+    "album": "461 Ocean Blvd. (Deluxe Edition)",
+    "current_release_year": 1974,
+    "duration_ms": 263000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-300-ray-parker-jr-ghostbusters-6QGI6v"
+    ],
+    "title": "Ghostbusters",
+    "artist": "Ray Parker Jr.",
+    "album": "Ghostbusters (Original Motion Picture Soundtrack)",
+    "current_release_year": 1984,
+    "duration_ms": 245000,
+    "motivos": [
+      "bandaSonora"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-306-los-amaya-vete-remasterizado-08CMK6"
+    ],
+    "title": "Vete - Remasterizado",
+    "artist": "Los Amaya",
+    "album": "Nosotros los Gitanos (Remasterizado)",
+    "current_release_year": 1977,
+    "duration_ms": 239000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-summer-party-307-los-diablos-un-rayo-de-sol-6mUQ6N",
+      "hits-todo-tiempo-061-los-diablos-un-rayo-de-sol-6mUQ6N"
+    ],
+    "title": "Un Rayo de Sol",
+    "artist": "Los Diablos",
+    "album": "70s los Anos Jovenes - la Coleccion",
+    "current_release_year": 1970,
+    "duration_ms": 213000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-003-queen-under-pressure-remastered-2011-2fuCqu"
+    ],
+    "title": "Under Pressure - Remastered 2011",
+    "artist": "Queen",
+    "album": "Hot Space (2011 Remaster)",
+    "current_release_year": 1981,
+    "duration_ms": 248000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-004-duo-dinamico-quisiera-ser-7inx0u"
+    ],
+    "title": "Quisiera ser",
+    "artist": "Duo Dinamico",
+    "album": "20 Exitos De Oro",
+    "current_release_year": 1961,
+    "duration_ms": 174000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-022-alessia-cara-scars-to-your-beautiful-42ydLw"
+    ],
+    "title": "Scars To Your Beautiful",
+    "artist": "Alessia Cara",
+    "album": "Know-It-All (Deluxe)",
+    "current_release_year": 2015,
+    "duration_ms": 230000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-023-luis-aguile-dile-remastered-7lnlxv"
+    ],
+    "title": "Dile - Remastered",
+    "artist": "Luis Aguile",
+    "album": "Luis Aguilé. Todas Sus Canciones Del Verano Vol.3",
+    "current_release_year": 1963,
+    "duration_ms": 149000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-030-billy-swan-i-can-help-4oW1lG"
+    ],
+    "title": "I Can Help",
+    "artist": "Billy Swan",
+    "album": "The Best Of Billy Swan",
+    "current_release_year": 1974,
+    "duration_ms": 238000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-031-carlos-baute-colgando-en-tus-manos-con-marta-sanchez-3UI9I3"
+    ],
+    "title": "Colgando en tus manos (con Marta Sánchez)",
+    "artist": "Carlos Baute",
+    "album": "De mi puño y letra - Edicion Coleccionista",
+    "current_release_year": 2008,
+    "duration_ms": 232000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-033-sister-sledge-we-are-family-1995-remaster-5IKLwq"
+    ],
+    "title": "We Are Family - 1995 Remaster",
+    "artist": "Sister Sledge",
+    "album": "We Are Family (1995 Remaster)",
+    "current_release_year": 1979,
+    "duration_ms": 216000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-037-bill-medley-i-ve-had-the-time-of-my-life-from-dirty-dancing-soundtrack-4BFMQ1"
+    ],
+    "title": "(I've Had) The Time of My Life - From \"Dirty Dancing\" Soundtrack",
+    "artist": "Bill Medley",
+    "album": "Platinum & Gold Collection",
+    "current_release_year": 1987,
+    "duration_ms": 289000,
+    "motivos": [
+      "bandaSonora"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-042-duo-dinamico-resistire-2oI6d7",
+      "fiesta-mayor-verbena-203-duo-dinamico-resistire-2oI6d7"
+    ],
+    "title": "Resistiré",
+    "artist": "Duo Dinamico",
+    "album": "En Forma",
+    "current_release_year": 1988,
+    "duration_ms": 241000,
+    "motivos": [
+      "outlier(+27 sobre ~1961 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-048-the-verve-bitter-sweet-symphony-remastered-2016-57iDDD"
+    ],
+    "title": "Bitter Sweet Symphony - Remastered 2016",
+    "artist": "The Verve",
+    "album": "Urban Hymns (Remastered 2016)",
+    "current_release_year": 1997,
+    "duration_ms": 357000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-058-miley-cyrus-wrecking-ball-2vwlzO"
+    ],
+    "title": "Wrecking Ball",
+    "artist": "Miley Cyrus",
+    "album": "Bangerz (Deluxe Version)",
+    "current_release_year": 2013,
+    "duration_ms": 221000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-060-meghan-trainor-all-about-that-bass-5jE48h"
+    ],
+    "title": "All About That Bass",
+    "artist": "Meghan Trainor",
+    "album": "Title (Deluxe)",
+    "current_release_year": 2014,
+    "duration_ms": 191000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-064-baccara-yes-sir-i-can-boogie-2LScqp",
+      "fiesta-mayor-verbena-191-baccara-yes-sir-i-can-boogie-2LScqp"
+    ],
+    "title": "Yes Sir, I Can Boogie",
+    "artist": "Baccara",
+    "album": "The Collection & Tracklisting",
+    "current_release_year": 1977,
+    "duration_ms": 273000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-071-don-omar-danza-kuduro-4sCSUQ"
+    ],
+    "title": "Danza Kuduro",
+    "artist": "Don Omar",
+    "album": "Fast Five (Original Motion Picture Soundtrack)",
+    "current_release_year": 2010,
+    "duration_ms": 198000,
+    "motivos": [
+      "bandaSonora"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-073-amii-stewart-knock-on-wood-6120uJ"
+    ],
+    "title": "Knock On Wood",
+    "artist": "Amii Stewart",
+    "album": "Greatest Hits",
+    "current_release_year": 1978,
+    "duration_ms": 250000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-074-hermanas-fleta-chacacha-del-tren-remastered-1FjyT8"
+    ],
+    "title": "Chacachá del tren (remastered)",
+    "artist": "Hermanas Fleta",
+    "album": "Hermanas Fleta Vol.1 (1952-1955)",
+    "current_release_year": 1958,
+    "duration_ms": 139000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-076-enrico-caruso-rigoletto-la-donna-e-mobile-7idTMG"
+    ],
+    "title": "Rigoletto: \"La Donna E' Mobile\"",
+    "artist": "Enrico Caruso",
+    "album": "The Gramophone Classics, Vol. 1",
+    "current_release_year": 1908,
+    "duration_ms": 149000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-078-nirvana-smells-like-teen-spirit-4CeeEO"
+    ],
+    "title": "Smells Like Teen Spirit",
+    "artist": "Nirvana",
+    "album": "Nevermind (Remastered)",
+    "current_release_year": 1991,
+    "duration_ms": 301000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-083-glenn-miller-in-the-mood-2006-remastered-version-0wAyDB"
+    ],
+    "title": "In the Mood - 2006 Remastered Version",
+    "artist": "Glenn Miller",
+    "album": "In the Mood",
+    "current_release_year": 1939,
+    "duration_ms": 214000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-094-manolo-escobar-mi-carro-0Uzf6J"
+    ],
+    "title": "Mi Carro",
+    "artist": "Manolo Escobar",
+    "album": "La Copla, Vol.4",
+    "current_release_year": 1969,
+    "duration_ms": 168000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-099-the-cardigans-lovefool-7aQjPe"
+    ],
+    "title": "Lovefool",
+    "artist": "The Cardigans",
+    "album": "First Band On The Moon (Remastered)",
+    "current_release_year": 1996,
+    "duration_ms": 193000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-100-raphael-mi-gran-noche-6Tnnk7",
+      "fiesta-mayor-verbena-168-raphael-mi-gran-noche-6Tnnk7"
+    ],
+    "title": "Mi gran noche",
+    "artist": "Raphael",
+    "album": "Digan Lo Que Digan: Banda Sonora Original De La Pe",
+    "current_release_year": 1967,
+    "duration_ms": 180000,
+    "motivos": [
+      "bandaSonora"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-116-chubby-checker-the-twist-6DSvUZ"
+    ],
+    "title": "The Twist",
+    "artist": "Chubby Checker",
+    "album": "Chubby Checker Classics",
+    "current_release_year": 1960,
+    "duration_ms": 158000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-126-ana-belen-la-puerta-de-alcala-29opVI"
+    ],
+    "title": "La Puerta de Alcalá",
+    "artist": "Ana Belén",
+    "album": "Grandes Exitos",
+    "current_release_year": 1978,
+    "duration_ms": 288000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-137-alaska-y-los-pegamoides-bailando-0OteyY"
+    ],
+    "title": "Bailando",
+    "artist": "Alaska Y Los Pegamoides",
+    "album": "Grandes Éxitos - Edición Para Coleccionistas",
+    "current_release_year": 1982,
+    "duration_ms": 308000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-140-ole-ole-no-controles-1suKCY",
+      "fiesta-mayor-verbena-190-ole-ole-no-controles-1suKCY"
+    ],
+    "title": "No Controles",
+    "artist": "Ole Ole",
+    "album": "Grandes Exitos",
+    "current_release_year": 1983,
+    "duration_ms": 241000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-141-pont-aeri-flying-free-original-mix-5yqive"
+    ],
+    "title": "Flying Free - Original Mix",
+    "artist": "Pont Aeri",
+    "album": "Pont Aeri, Vol. 4 EP",
+    "current_release_year": 1999,
+    "duration_ms": 406000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-151-rihanna-work-72TFWv"
+    ],
+    "title": "Work",
+    "artist": "Rihanna",
+    "album": "ANTI (Deluxe)",
+    "current_release_year": 2016,
+    "duration_ms": 219000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-160-the-beatles-get-back-remastered-2009-4MLBqA"
+    ],
+    "title": "Get Back - Remastered 2009",
+    "artist": "The Beatles",
+    "album": "Let It Be (Remastered)",
+    "current_release_year": 1969,
+    "duration_ms": 189000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-161-mocedades-eres-tu-08HeIb"
+    ],
+    "title": "Eres Tú",
+    "artist": "Mocedades",
+    "album": "Grandes Exitos",
+    "current_release_year": 1973,
+    "duration_ms": 214000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-163-hombres-g-devuelveme-a-mi-chica-1Wrzhf"
+    ],
+    "title": "Devuélveme a mi chica",
+    "artist": "Hombres G",
+    "album": "Hombres G (Edición 30 Aniversario)",
+    "current_release_year": 1985,
+    "duration_ms": 194000,
+    "motivos": [
+      "aniversario"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-165-the-bangles-walk-like-an-egyptian-1Jwc3O"
+    ],
+    "title": "Walk Like an Egyptian",
+    "artist": "The Bangles",
+    "album": "The Essential Bangles",
+    "current_release_year": 1986,
+    "duration_ms": 204000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-185-heroes-del-silencio-entre-dos-tierras-7BYqVv"
+    ],
+    "title": "Entre dos tierras",
+    "artist": "Heroes Del Silencio",
+    "album": "Senderos De Traición - Edición Especial",
+    "current_release_year": 1990,
+    "duration_ms": 368000,
+    "motivos": [
+      "aniversario"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-186-depeche-mode-enjoy-the-silence-2006-remaster-1EjQRT"
+    ],
+    "title": "Enjoy the Silence - 2006 Remaster",
+    "artist": "Depeche Mode",
+    "album": "Violator (2006 Remaster)",
+    "current_release_year": 1990,
+    "duration_ms": 372000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-189-massiel-la-la-la-1ApXNk",
+      "fiesta-mayor-verbena-208-massiel-la-la-la-1ApXNk"
+    ],
+    "title": "La, La, La",
+    "artist": "Massiel",
+    "album": "Lo Mejor de Massiel",
+    "current_release_year": 1968,
+    "duration_ms": 152000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-191-los-secretos-pero-a-tu-lado-3JOXwH"
+    ],
+    "title": "Pero a tu lado",
+    "artist": "Los Secretos",
+    "album": "Dos Caras Distintas",
+    "current_release_year": 1995,
+    "duration_ms": 195000,
+    "motivos": [
+      "outlier(+14 sobre ~1981 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-192-red-hot-chili-peppers-under-the-bridge-3d9DCh"
+    ],
+    "title": "Under the Bridge",
+    "artist": "Red Hot Chili Peppers",
+    "album": "Blood Sugar Sex Magik (Deluxe Edition)",
+    "current_release_year": 1991,
+    "duration_ms": 264000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-196-pablo-alboran-te-he-echado-de-menos-radio-edit-59bqZ2"
+    ],
+    "title": "Te he echado de menos - Radio Edit",
+    "artist": "Pablo Alborán",
+    "album": "Pablo Alboran (Deluxe)",
+    "current_release_year": 2011,
+    "duration_ms": 232000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-201-wet-wet-wet-love-is-all-around-from-four-weddings-and-a-funeral-0PCGfA"
+    ],
+    "title": "Love Is All Around - From \"Four Weddings And A Funeral\"",
+    "artist": "Wet Wet Wet",
+    "album": "Picture This (20th Anniversary Edition)",
+    "current_release_year": 1994,
+    "duration_ms": 246000,
+    "motivos": [
+      "aniversario"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-202-the-police-every-breath-you-take-1JSTJq"
+    ],
+    "title": "Every Breath You Take",
+    "artist": "The Police",
+    "album": "Synchronicity (Remastered 2003)",
+    "current_release_year": 1983,
+    "duration_ms": 253000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-206-enrique-iglesias-duele-el-corazon-5adqS3"
+    ],
+    "title": "DUELE EL CORAZON",
+    "artist": "Enrique Iglesias",
+    "album": "FINAL (Vol.1)",
+    "current_release_year": 2016,
+    "duration_ms": 199000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-210-bill-haley-his-comets-see-you-later-alligator-1s4hyU"
+    ],
+    "title": "See You Later, Alligator",
+    "artist": "Bill Haley & His Comets",
+    "album": "Bill Haley's Greatest Hits",
+    "current_release_year": 1956,
+    "duration_ms": 165000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-214-shakira-las-de-la-intuicion-3uU6dq"
+    ],
+    "title": "Las de la Intuición",
+    "artist": "Shakira",
+    "album": "Fijación Oral, Vol. 1",
+    "current_release_year": 2005,
+    "duration_ms": 220000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-219-azucar-moreno-solo-se-vive-una-vez-5dg7Of"
+    ],
+    "title": "Sólo Se Vive una Vez",
+    "artist": "Azucar Moreno",
+    "album": "Mucho Azucar (Grandes Exitos)",
+    "current_release_year": 1996,
+    "duration_ms": 210000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-245-ana-maria-campanera-3Emr4a"
+    ],
+    "title": "Campanera",
+    "artist": "Ana Maria",
+    "album": "Raices de la Canción Española, Vol. 11",
+    "current_release_year": 1953,
+    "duration_ms": 191000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-246-amy-winehouse-rehab-3N4DI1"
+    ],
+    "title": "Rehab",
+    "artist": "Amy Winehouse",
+    "album": "Back To Black (Deluxe Edition)",
+    "current_release_year": 2006,
+    "duration_ms": 214000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-257-ed-sheeran-shape-of-you-7qiZfU"
+    ],
+    "title": "Shape of You",
+    "artist": "Ed Sheeran",
+    "album": "÷ (Deluxe)",
+    "current_release_year": 2017,
+    "duration_ms": 233000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-258-the-rolling-stones-start-me-up-remastered-2009-7HKez5"
+    ],
+    "title": "Start Me Up - Remastered 2009",
+    "artist": "The Rolling Stones",
+    "album": "Tattoo You (2009 Re-Mastered)",
+    "current_release_year": 1981,
+    "duration_ms": 213000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-260-david-bowie-space-oddity-1999-remaster-74mVYA"
+    ],
+    "title": "Space Oddity - 1999 Remaster",
+    "artist": "David Bowie",
+    "album": "Best of Bowie",
+    "current_release_year": 1969,
+    "duration_ms": 316000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-269-los-sirex-la-escoba-1dgi28"
+    ],
+    "title": "La Escoba",
+    "artist": "Los Sirex",
+    "album": "Lo Mejor de los Sirex",
+    "current_release_year": 1965,
+    "duration_ms": 160000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-270-salvatore-adamo-mis-manos-en-tu-cintura-6kFowC"
+    ],
+    "title": "Mis Manos en Tu Cintura",
+    "artist": "Salvatore Adamo",
+    "album": "Adamo en Español - Cae la Nieve y Todos Sus Éxitos",
+    "current_release_year": 1966,
+    "duration_ms": 177000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-272-rocio-jurado-como-una-ola-1gNXYv"
+    ],
+    "title": "Como una Ola",
+    "artist": "Rocío Jurado",
+    "album": "Coleccion Original: Rocio Jurado",
+    "current_release_year": 1981,
+    "duration_ms": 256000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-278-jorge-sepulveda-tres-veces-guapa-0GVQML"
+    ],
+    "title": "Tres Veces Guapa",
+    "artist": "Jorge Sepúlveda",
+    "album": "10 Grandes Éxitos",
+    "current_release_year": 1950,
+    "duration_ms": 150000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-286-julio-iglesias-soy-un-truhan-soy-un-senor-07nrFS"
+    ],
+    "title": "Soy un Truhán, Soy un Señor",
+    "artist": "Julio Iglesias",
+    "album": "My Life: The Greatest Hits",
+    "current_release_year": 1977,
+    "duration_ms": 180000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-287-amy-macdonald-this-is-the-life-2T3jgo"
+    ],
+    "title": "This Is The Life",
+    "artist": "Amy Macdonald",
+    "album": "This Is The Life (eDeluxe)",
+    "current_release_year": 2007,
+    "duration_ms": 184000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-297-salome-vivo-cantando-059G9t"
+    ],
+    "title": "Vivo Cantando",
+    "artist": "Salomé",
+    "album": "Todo Lo Mejor",
+    "current_release_year": 1969,
+    "duration_ms": 130000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-304-peret-canta-y-se-feliz-4xuQ7K"
+    ],
+    "title": "Canta y Sé Feliz",
+    "artist": "Peret",
+    "album": "La Salsa De La Rumba",
+    "current_release_year": 2001,
+    "duration_ms": 170000,
+    "motivos": [
+      "outlier(+12 sobre ~1989 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-018-pearl-jam-daughter-remastered-53eJFr"
+    ],
+    "title": "Daughter - Remastered",
+    "artist": "Pearl Jam",
+    "album": "Vs.",
+    "current_release_year": 1993,
+    "duration_ms": 235000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-019-derby-motoreta-s-burrito-kachimba-las-leyes-de-la-frontera-54rmOG"
+    ],
+    "title": "Las Leyes De La Frontera",
+    "artist": "Derby Motoreta’s Burrito Kachimba",
+    "album": "Las Leyes De La Frontera (Banda Sonora Original)",
+    "current_release_year": 2021,
+    "duration_ms": 215000,
+    "motivos": [
+      "bandaSonora"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-031-the-black-keys-gold-on-the-ceiling-2021-remaster-54bO2C"
+    ],
+    "title": "Gold on the Ceiling - 2021 Remaster",
+    "artist": "The Black Keys",
+    "album": "El Camino (2021 Remaster)",
+    "current_release_year": 2011,
+    "duration_ms": 224000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-034-pretenders-back-on-the-chain-gang-2007-remaster-4cMHCR"
+    ],
+    "title": "Back on the Chain Gang - 2007 Remaster",
+    "artist": "Pretenders",
+    "album": "Learning to Crawl (Expanded & Remastered)",
+    "current_release_year": 1982,
+    "duration_ms": 231000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-036-los-toreros-muertos-los-toreros-muertos-71x4gN"
+    ],
+    "title": "Los Toreros Muertos",
+    "artist": "Los Toreros Muertos",
+    "album": "30 Años de Éxitos",
+    "current_release_year": 1986,
+    "duration_ms": 142000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-041-blur-beetlebum-2012-remaster-4OHVCe"
+    ],
+    "title": "Beetlebum - 2012 Remaster",
+    "artist": "Blur",
+    "album": "Blur (Special Edition)",
+    "current_release_year": 1997,
+    "duration_ms": 305000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-042-angeles-del-infierno-jugando-al-amor-57evRd"
+    ],
+    "title": "Jugando al amor",
+    "artist": "Ángeles Del Infierno",
+    "album": "Lo Mejor De Los Ángeles Del Infierno",
+    "current_release_year": 1993,
+    "duration_ms": 229000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-044-deluxe-que-no-24OflD"
+    ],
+    "title": "Que No",
+    "artist": "Deluxe",
+    "album": "If Things Were to Go Wrong (Edición Especial)",
+    "current_release_year": 2003,
+    "duration_ms": 230000,
+    "motivos": [
+      "aniversario"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-054-scorpions-big-city-nights-2015-remaster-4j7Gkw"
+    ],
+    "title": "Big City Nights - 2015 - Remaster",
+    "artist": "Scorpions",
+    "album": "Love At First Sting",
+    "current_release_year": 1984,
+    "duration_ms": 249000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-060-kasabian-you-re-in-love-with-a-psycho-0AJhcu"
+    ],
+    "title": "You're in Love with a Psycho",
+    "artist": "Kasabian",
+    "album": "For Crying Out Loud (Deluxe)",
+    "current_release_year": 2017,
+    "duration_ms": 215000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-069-red-hot-chili-peppers-can-t-stop-3ZOEyt"
+    ],
+    "title": "Can't Stop",
+    "artist": "Red Hot Chili Peppers",
+    "album": "By the Way (Deluxe Edition)",
+    "current_release_year": 2002,
+    "duration_ms": 269000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-074-king-crimson-21st-century-schizoid-man-including-mirrors-2MfrET"
+    ],
+    "title": "21st Century Schizoid Man - Including \"Mirrors\"",
+    "artist": "King Crimson",
+    "album": "In The Court Of The Crimson King (Expanded & Remastered Original Album Mix)",
+    "current_release_year": 1969,
+    "duration_ms": 442000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-075-091-que-fue-del-siglo-xx-remasterizado-2oa2oD"
+    ],
+    "title": "Que Fue del Siglo XX - Remasterizado",
+    "artist": "091",
+    "album": "Este Es Nuestro Tiempo 1986-1991 (Remasterizado)",
+    "current_release_year": 1989,
+    "duration_ms": 177000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-077-dead-poet-society-intoodeep-54jvLV"
+    ],
+    "title": ".intoodeep.",
+    "artist": "Dead Poet Society",
+    "album": "-!- (Deluxe)",
+    "current_release_year": 2021,
+    "duration_ms": 219000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-083-los-brincos-lola-1Exn1N"
+    ],
+    "title": "Lola",
+    "artist": "Los Brincos",
+    "album": "Lo Mejor de los Brincos, Vol. 2",
+    "current_release_year": 1967,
+    "duration_ms": 151000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-091-inxs-mystify-1teL5e"
+    ],
+    "title": "Mystify",
+    "artist": "INXS",
+    "album": "Kick (Remastered 2011)",
+    "current_release_year": 1987,
+    "duration_ms": 197000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-093-los-romeos-mi-vida-rosa-2016-remastered-version-371BSq"
+    ],
+    "title": "Mi vida rosa - 2016 Remastered Version",
+    "artist": "Los Romeos",
+    "album": "Los Romeos (Remasterizado 2016)",
+    "current_release_year": 1990,
+    "duration_ms": 240000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-094-the-police-next-to-you-7HjipY"
+    ],
+    "title": "Next To You",
+    "artist": "The Police",
+    "album": "Outlandos D'Amour (Remastered 2003)",
+    "current_release_year": 1978,
+    "duration_ms": 171000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-095-bush-machinehead-remastered-2014-1wrhhP"
+    ],
+    "title": "Machinehead - Remastered 2014",
+    "artist": "Bush",
+    "album": "Sixteen Stone (Remastered)",
+    "current_release_year": 1994,
+    "duration_ms": 256000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-104-alanis-morissette-you-learn-2015-remaster-4l7YIn"
+    ],
+    "title": "You Learn - 2015 Remaster",
+    "artist": "Alanis Morissette",
+    "album": "Jagged Little Pill (2015 Remaster)",
+    "current_release_year": 1995,
+    "duration_ms": 239000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-105-the-beatles-helter-skelter-remastered-2009-0Bs0hU"
+    ],
+    "title": "Helter Skelter - Remastered 2009",
+    "artist": "The Beatles",
+    "album": "The Beatles (Remastered)",
+    "current_release_year": 1968,
+    "duration_ms": 269000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-109-metallica-the-unforgiven-remastered-2021-5lqyqP"
+    ],
+    "title": "The Unforgiven - Remastered 2021",
+    "artist": "Metallica",
+    "album": "Metallica (Remastered 2021)",
+    "current_release_year": 1991,
+    "duration_ms": 387000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-110-led-zeppelin-good-times-bad-times-1993-remaster-0QwZfb"
+    ],
+    "title": "Good Times Bad Times - 1993 Remaster",
+    "artist": "Led Zeppelin",
+    "album": "Led Zeppelin",
+    "current_release_year": 1969,
+    "duration_ms": 166000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-114-los-mitos-si-te-acuerdas-de-mi-2015-remaster-76ksg9"
+    ],
+    "title": "Si te acuerdas de mí - 2015 Remaster",
+    "artist": "Los Mitos",
+    "album": "Es muy facil (Remastered)",
+    "current_release_year": 1969,
+    "duration_ms": 218000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-116-black-sabbath-war-pigs-2009-remaster-6TYQRl"
+    ],
+    "title": "War Pigs - 2009 Remaster",
+    "artist": "Black Sabbath",
+    "album": "Paranoid",
+    "current_release_year": 1970,
+    "duration_ms": 475000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-120-canovas-senora-azul-1LXgrJ"
+    ],
+    "title": "Señora azul",
+    "artist": "Canovas",
+    "album": "Señora Azul (40 Aniversario)",
+    "current_release_year": 1974,
+    "duration_ms": 229000,
+    "motivos": [
+      "aniversario"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-126-platero-y-tu-voy-a-acabar-borracho-2YsHVq"
+    ],
+    "title": "Voy a acabar borracho",
+    "artist": "Platero Y Tu",
+    "album": "Colección Definitiva - 25 Años",
+    "current_release_year": 1991,
+    "duration_ms": 305000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-130-rage-against-the-machine-know-your-enemy-1XTGyf"
+    ],
+    "title": "Know Your Enemy",
+    "artist": "Rage Against The Machine",
+    "album": "Rage Against The Machine - XX (20th Anniversary Special Edition)",
+    "current_release_year": 1992,
+    "duration_ms": 294000,
+    "motivos": [
+      "aniversario"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-131-angeles-del-infierno-si-tu-no-estas-aqui-3dTijA"
+    ],
+    "title": "Si tú no estás aquí",
+    "artist": "Ángeles Del Infierno",
+    "album": "Lo Mejor De Los Ángeles Del Infierno",
+    "current_release_year": 1988,
+    "duration_ms": 267000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-132-spoon-the-underdog-7cDbqF"
+    ],
+    "title": "The Underdog",
+    "artist": "Spoon",
+    "album": "Ga Ga Ga Ga Ga (2017 Remaster)",
+    "current_release_year": 2007,
+    "duration_ms": 222000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-135-oasis-stand-by-me-remastered-5WTPhY"
+    ],
+    "title": "Stand By Me - Remastered",
+    "artist": "Oasis",
+    "album": "Be Here Now (Deluxe Remastered Edition)",
+    "current_release_year": 1997,
+    "duration_ms": 355000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-139-stone-temple-pilots-vasoline-2019-remaster-4fjsOd"
+    ],
+    "title": "Vasoline - 2019 Remaster",
+    "artist": "Stone Temple Pilots",
+    "album": "Purple (2019 Remaster)",
+    "current_release_year": 1994,
+    "duration_ms": 176000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-141-jet-cold-hard-bitch-0wESZs"
+    ],
+    "title": "Cold Hard Bitch",
+    "artist": "Jet",
+    "album": "Get Born (Deluxe Edition)",
+    "current_release_year": 2003,
+    "duration_ms": 243000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-147-tommy-james-the-shondells-crimson-clover-0I4yYE"
+    ],
+    "title": "Crimson & Clover",
+    "artist": "Tommy James & The Shondells",
+    "album": "Anthology",
+    "current_release_year": 1968,
+    "duration_ms": 209000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-153-foo-fighters-best-of-you-5FZxsH"
+    ],
+    "title": "Best of You",
+    "artist": "Foo Fighters",
+    "album": "In Your Honor",
+    "current_release_year": 2005,
+    "duration_ms": 255000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-155-burning-esto-es-un-atraco-1qKjod"
+    ],
+    "title": "Esto Es un Atraco",
+    "artist": "Burning",
+    "album": "Colección (Lo Mejor)",
+    "current_release_year": 1984,
+    "duration_ms": 193000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-162-el-ultimo-de-la-fila-querida-milagros-2008-remaster-4ZzZh1"
+    ],
+    "title": "Querida Milagros - 2008 Remaster",
+    "artist": "El Último De La Fila",
+    "album": "Cuando la pobreza entra por la puerta, el amor salta por la ventana (2008 Remaster)",
+    "current_release_year": 1985,
+    "duration_ms": 265000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-166-zz-top-tush-2006-remaster-55WrYz"
+    ],
+    "title": "Tush (2006 Remaster)",
+    "artist": "ZZ Top",
+    "album": "Fandango! (Expanded 2006 Remaster)",
+    "current_release_year": 1975,
+    "duration_ms": 133000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-167-la-habitacion-roja-indestructibles-0knEa0"
+    ],
+    "title": "Indestructibles",
+    "artist": "La Habitación Roja",
+    "album": "Fue Eléctrico (Edicion Deluxe)",
+    "current_release_year": 2012,
+    "duration_ms": 234000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-168-soundgarden-spoonman-1jMaB1"
+    ],
+    "title": "Spoonman",
+    "artist": "Soundgarden",
+    "album": "Superunknown (20th Anniversary)",
+    "current_release_year": 1994,
+    "duration_ms": 246000,
+    "motivos": [
+      "aniversario"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-172-the-smashing-pumpkins-disarm-2011-remaster-6YIggU"
+    ],
+    "title": "Disarm - 2011 Remaster",
+    "artist": "The Smashing Pumpkins",
+    "album": "Siamese Dream (Deluxe Edition)",
+    "current_release_year": 1993,
+    "duration_ms": 196000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-178-wilco-jesus-etc-2022-remaster-7qTr6N"
+    ],
+    "title": "Jesus, Etc. - 2022 Remaster",
+    "artist": "Wilco",
+    "album": "Yankee Hotel Foxtrot (Expanded Edition)",
+    "current_release_year": 2002,
+    "duration_ms": 231000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-185-garbage-stupid-girl-4dC0fW"
+    ],
+    "title": "Stupid Girl",
+    "artist": "Garbage",
+    "album": "Anthology",
+    "current_release_year": 1996,
+    "duration_ms": 259000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-210-modulos-todo-tiene-su-fin-5Su0gs"
+    ],
+    "title": "Todo tiene su fin",
+    "artist": "Módulos",
+    "album": "Grandes Exitos",
+    "current_release_year": 1969,
+    "duration_ms": 308000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-227-paul-mccartney-jet-2010-remaster-4D40Zl"
+    ],
+    "title": "Jet - 2010 Remaster",
+    "artist": "Paul McCartney",
+    "album": "Band On The Run",
+    "current_release_year": 1973,
+    "duration_ms": 248000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-228-thin-lizzy-jailbreak-4qbiCq"
+    ],
+    "title": "Jailbreak",
+    "artist": "Thin Lizzy",
+    "album": "Jailbreak (Deluxe Edition)",
+    "current_release_year": 1976,
+    "duration_ms": 240000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-235-bon-jovi-wanted-dead-or-alive-52m7IQ"
+    ],
+    "title": "Wanted Dead Or Alive",
+    "artist": "Bon Jovi",
+    "album": "Slippery When Wet (Deluxe Edition)",
+    "current_release_year": 1986,
+    "duration_ms": 311000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-238-coz-mas-sexy-remasterizado-5bEUjc"
+    ],
+    "title": "Más Sexy - Remasterizado",
+    "artist": "COZ",
+    "album": "Las Chicas Son Guerreras (Remasterizado)",
+    "current_release_year": 1980,
+    "duration_ms": 232000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-243-heroes-del-silencio-heroe-de-leyenda-6pAvXn"
+    ],
+    "title": "Héroe de leyenda",
+    "artist": "Heroes Del Silencio",
+    "album": "El Mar No Cesa- Edición Especial",
+    "current_release_year": 1988,
+    "duration_ms": 248000,
+    "motivos": [
+      "aniversario"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-245-steppenwolf-born-to-be-wild-2VPGmr"
+    ],
+    "title": "Born To Be Wild",
+    "artist": "Steppenwolf",
+    "album": "Born To Be Wild (Best Of....)",
+    "current_release_year": 1968,
+    "duration_ms": 209000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-255-fleetwood-mac-go-your-own-way-2004-remaster-07GvNc"
+    ],
+    "title": "Go Your Own Way - 2004 Remaster",
+    "artist": "Fleetwood Mac",
+    "album": "Rumours",
+    "current_release_year": 1977,
+    "duration_ms": 223000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-260-the-rolling-stones-beast-of-burden-remastered-1994-77oU2r"
+    ],
+    "title": "Beast Of Burden - Remastered 1994",
+    "artist": "The Rolling Stones",
+    "album": "Some Girls",
+    "current_release_year": 1978,
+    "duration_ms": 265000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-263-slipknot-before-i-forget-6wqJeI"
+    ],
+    "title": "Before I Forget",
+    "artist": "Slipknot",
+    "album": "Vol. 3: The Subliminal Verses (Special Edition)",
+    "current_release_year": 2004,
+    "duration_ms": 278000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-269-david-bowie-rebel-rebel-2016-remaster-2EC9IJ"
+    ],
+    "title": "Rebel Rebel - 2016 Remaster",
+    "artist": "David Bowie",
+    "album": "Diamond Dogs (2016 Remaster)",
+    "current_release_year": 1974,
+    "duration_ms": 274000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-270-bruce-springsteen-thunder-road-7xmol0"
+    ],
+    "title": "Thunder Road",
+    "artist": "Bruce Springsteen",
+    "album": "Greatest Hits",
+    "current_release_year": 1975,
+    "duration_ms": 288000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-273-orquesta-mondragon-caperucita-feroz-6lgZD6"
+    ],
+    "title": "Caperucita feroz",
+    "artist": "Orquesta Mondragon",
+    "album": "Viaje Con Nosotros A Través De 21 Exitos Feroces",
+    "current_release_year": 1980,
+    "duration_ms": 150000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-280-iron-maiden-run-to-the-hills-2015-remaster-4Zc7TC"
+    ],
+    "title": "Run to the Hills - 2015 Remaster",
+    "artist": "Iron Maiden",
+    "album": "The Number of the Beast (2015 Remaster)",
+    "current_release_year": 1982,
+    "duration_ms": 233000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-281-mama-chicas-del-colegio-43Q1u4"
+    ],
+    "title": "Chicas Del Colegio",
+    "artist": "Mamá",
+    "album": "Mama \"Grandes Exitos\"",
+    "current_release_year": 1980,
+    "duration_ms": 185000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-282-walls-haz-lo-que-quieras-conmigo-10nuAv"
+    ],
+    "title": "haz lo que quieras conmigo",
+    "artist": "Walls",
+    "album": "LUNA 18 (Deluxe)",
+    "current_release_year": 2024,
+    "duration_ms": 208000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-284-the-clash-i-fought-the-law-7lSDCr"
+    ],
+    "title": "I Fought the Law",
+    "artist": "The Clash",
+    "album": "Hits Back",
+    "current_release_year": 1979,
+    "duration_ms": 163000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-289-queen-hammer-to-fall-remastered-2011-2VnXWH"
+    ],
+    "title": "Hammer To Fall - Remastered 2011",
+    "artist": "Queen",
+    "album": "The Works (Deluxe Edition 2011 Remaster)",
+    "current_release_year": 1984,
+    "duration_ms": 265000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-295-the-who-won-t-get-fooled-again-original-album-version-0cJPLF"
+    ],
+    "title": "Won't Get Fooled Again - Original Album Version",
+    "artist": "The Who",
+    "album": "Who's Next (Deluxe Edition)",
+    "current_release_year": 1971,
+    "duration_ms": 511000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-304-miguel-rios-el-rock-de-una-noche-de-verano-remastered-2005-24fnQ5"
+    ],
+    "title": "El Rock De Una Noche De Verano - Remastered 2005",
+    "artist": "Miguel Ríos",
+    "album": "Lo Mejor De Miguel Rios",
+    "current_release_year": 1983,
+    "duration_ms": 259000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-rock-espanol-306-loquillo-rock-and-roll-star-2MPWdz"
+    ],
+    "title": "Rock and Roll Star",
+    "artist": "Loquillo",
+    "album": "Grandes Éxitos: Loquillo",
+    "current_release_year": 1981,
+    "duration_ms": 249000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "fiesta-mayor-verbena-011-shakira-dai-dai-0kosUz"
+    ],
+    "title": "Dai Dai",
+    "artist": "Shakira",
+    "album": "Dai Dai",
+    "current_release_year": 2026,
+    "duration_ms": 223000,
+    "motivos": [
+      "outlier(+16 sobre ~2010 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "fiesta-mayor-verbena-015-chayanne-torero-709Cnd"
+    ],
+    "title": "Torero",
+    "artist": "Chayanne",
+    "album": "Grandes Exitos",
+    "current_release_year": 1998,
+    "duration_ms": 217000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "fiesta-mayor-verbena-017-queen-we-will-rock-you-remastered-2011-4pbJqG"
+    ],
+    "title": "We Will Rock You - Remastered 2011",
+    "artist": "Queen",
+    "album": "News Of The World (2011 Remaster)",
+    "current_release_year": 1977,
+    "duration_ms": 122000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "fiesta-mayor-verbena-022-raffaella-carra-hay-quel-venir-al-sur-5MwUr7"
+    ],
+    "title": "Hay Quel Venir al Sur",
+    "artist": "Raffaella Carrà",
+    "album": "Raffaella Carrà: Sensational Hits",
+    "current_release_year": 1978,
+    "duration_ms": 232000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "fiesta-mayor-verbena-032-juan-magan-ayer-la-vi-bpa26-50SSJV"
+    ],
+    "title": "Ayer La Vi (BPA26)",
+    "artist": "Juan Magán",
+    "album": "Ayer La Vi (BPA26)",
+    "current_release_year": 2026,
+    "duration_ms": 170000,
+    "motivos": [
+      "outlier(+14 sobre ~2012 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "fiesta-mayor-verbena-034-queen-bohemian-rhapsody-remastered-2011-4u7Ene"
+    ],
+    "title": "Bohemian Rhapsody - Remastered 2011",
+    "artist": "Queen",
+    "album": "A Night At The Opera (2011 Remaster)",
+    "current_release_year": 1975,
+    "duration_ms": 354000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "fiesta-mayor-verbena-058-rocio-durcal-me-gustas-mucho-4xOwXg"
+    ],
+    "title": "Me Gustas Mucho",
+    "artist": "Rocío Dúrcal",
+    "album": "Sus 16 Grandes Exitos",
+    "current_release_year": 1978,
+    "duration_ms": 184000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "fiesta-mayor-verbena-063-wisin-adrenalina-feat-jennifer-lopez-ricky-martin-2eqDUx"
+    ],
+    "title": "Adrenalina (feat. Jennifer Lopez & Ricky Martin)",
+    "artist": "Wisin",
+    "album": "El Regreso del Sobreviviente (Deluxe Edition)",
+    "current_release_year": 2014,
+    "duration_ms": 235000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "fiesta-mayor-verbena-069-hector-el-father-noche-de-travesura-1Ddrej"
+    ],
+    "title": "Noche de Travesura",
+    "artist": "Héctor \"El Father\"",
+    "album": "Goldstar Music La Familia Reggaeton Hits",
+    "current_release_year": 2004,
+    "duration_ms": 207000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "fiesta-mayor-verbena-075-queen-we-are-the-champions-remastered-2011-1lCRw5"
+    ],
+    "title": "We Are The Champions - Remastered 2011",
+    "artist": "Queen",
+    "album": "News Of The World (2011 Remaster)",
+    "current_release_year": 1977,
+    "duration_ms": 179000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "fiesta-mayor-verbena-091-ricky-martin-vente-pa-ca-feat-maluma-7DM4BP"
+    ],
+    "title": "Vente Pa' Ca (feat. Maluma)",
+    "artist": "Ricky Martin",
+    "album": "Vente Pa' Ca (feat. Maluma)",
+    "current_release_year": 2016,
+    "duration_ms": 259000,
+    "motivos": [
+      "outlier(+17 sobre ~1999 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "fiesta-mayor-verbena-112-raphael-escandalo-3xbymP"
+    ],
+    "title": "Escándalo",
+    "artist": "Raphael",
+    "album": "Ave Fénix",
+    "current_release_year": 1992,
+    "duration_ms": 304000,
+    "motivos": [
+      "outlier(+25 sobre ~1967 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "fiesta-mayor-verbena-126-fernando-esteso-la-ramona-remastered-3ibRyJ"
+    ],
+    "title": "La ramona (remastered)",
+    "artist": "Fernando Esteso",
+    "album": "Fernando Esteso. Sus Mejores Grabaciones En Discos Discophon (1975-1976)",
+    "current_release_year": 1976,
+    "duration_ms": 223000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "fiesta-mayor-verbena-167-los-sobraos-quiero-verte-2GL6Jp"
+    ],
+    "title": "Quiero Verte",
+    "artist": "Los Sobraos",
+    "album": "20 Aniversario - Reset",
+    "current_release_year": 1995,
+    "duration_ms": 223000,
+    "motivos": [
+      "aniversario"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "fiesta-mayor-verbena-173-rosendo-maneras-de-vivir-version-2004-directo-mexico-2jxtxO"
+    ],
+    "title": "Maneras de vivir - Versión 2004-directo México",
+    "artist": "Rosendo",
+    "album": "Salud y buenos alimentos",
+    "current_release_year": 2004,
+    "duration_ms": 262000,
+    "motivos": [
+      "outlier(+16 sobre ~1988 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "fiesta-mayor-verbena-174-georgie-dann-la-cerveza-59EbXC"
+    ],
+    "title": "La Cerveza",
+    "artist": "Georgie Dann",
+    "album": "La Cerveza",
+    "current_release_year": 2013,
+    "duration_ms": 204000,
+    "motivos": [
+      "outlier(+19 sobre ~1994 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "fiesta-mayor-verbena-225-pitbull-give-me-everything-feat-nayer-4QNpBf"
+    ],
+    "title": "Give Me Everything (feat. Nayer)",
+    "artist": "Pitbull",
+    "album": "Planet Pit (Deluxe Version)",
+    "current_release_year": 2011,
+    "duration_ms": 252000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "fiesta-mayor-verbena-233-queen-the-show-must-go-on-remastered-2011-3hU637"
+    ],
+    "title": "The Show Must Go On - Remastered 2011",
+    "artist": "Queen",
+    "album": "Innuendo (Deluxe Remastered Version)",
+    "current_release_year": 1991,
+    "duration_ms": 277000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-3-los-jaivas-mira-ninita-2020-remasterizado"
+    ],
+    "title": "Mira Niñita - 2020 Remasterizado",
+    "artist": "Los Jaivas",
+    "album": "La Ventana (2020 Remasterizado)",
+    "current_release_year": 1973,
+    "duration_ms": 421000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-13-la-ley-mentira"
+    ],
+    "title": "Mentira",
+    "artist": "La Ley",
+    "album": "La Ley MTV Unplugged",
+    "current_release_year": 2001,
+    "duration_ms": 288000,
+    "motivos": [
+      "directo"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-16-sinergia-te-enojai-por-todo"
+    ],
+    "title": "Te Enojai por Todo",
+    "artist": "Sinergia",
+    "album": "22 Exitos Pajarones",
+    "current_release_year": 2014,
+    "duration_ms": 169000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-22-los-miserables-el-crack-remaster-2023"
+    ],
+    "title": "El Crack - Remaster 2023",
+    "artist": "Los Miserables",
+    "album": "Pasión De Multitudes (Remaster 2023)",
+    "current_release_year": 2003,
+    "duration_ms": 224000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-28-pedropiedra-inteligencia-dormida"
+    ],
+    "title": "Inteligencia Dormida",
+    "artist": "Pedropiedra",
+    "album": "Pedropiedra (Reedición)",
+    "current_release_year": 2009,
+    "duration_ms": 231000,
+    "motivos": [
+      "aniversario"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-38-aterrizaje-forzoso-despertar-sin-ti-2008-remaste"
+    ],
+    "title": "Despertar Sin Ti - 2008 Remaster",
+    "artist": "Aterrizaje Forzoso",
+    "album": "Grandes Exitos",
+    "current_release_year": 2008,
+    "duration_ms": 204000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-40-christianes-mirame-solo-una-vez-remasterizado-20"
+    ],
+    "title": "Mírame Solo Una Vez - Remasterizado 2023",
+    "artist": "Christianes",
+    "album": "Ultrasol (Remasterizado 2023)",
+    "current_release_year": 1995,
+    "duration_ms": 204000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-42-electrodomesticos-el-frio-misterio-remaster-2002"
+    ],
+    "title": "El Frio Misterio - Remaster 2002 / Album Version",
+    "artist": "Electrodomésticos",
+    "album": "Grandes Exitos",
+    "current_release_year": 2008,
+    "duration_ms": 304000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-49-inti-illimani-exiliada-del-sur"
+    ],
+    "title": "Exiliada del sur",
+    "artist": "Inti-Illimani",
+    "album": "Antología I (1973-1978)",
+    "current_release_year": 2000,
+    "duration_ms": 212000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-57-the-ramblers-a-mi-amada"
+    ],
+    "title": "A Mi Amada",
+    "artist": "The Ramblers",
+    "album": "Antologia 1963-1975 / 52 Clásicos Remasterizados",
+    "current_release_year": 2006,
+    "duration_ms": 200000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-63-solar-lo-que-eres-2017-remaster"
+    ],
+    "title": "Lo Que Eres - 2017 Remaster",
+    "artist": "Solar",
+    "album": "Play/Replay",
+    "current_release_year": 1997,
+    "duration_ms": 249000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-65-valija-diplomatica-mi-vida-vale-mas-2002-digital"
+    ],
+    "title": "Mi Vida Vale Más - 2002 Digital Remaster",
+    "artist": "Valija Diplomatica",
+    "album": "Grandes Exitos - Rock Chileno",
+    "current_release_year": 2006,
+    "duration_ms": 168000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-71-emociones-clandestinas-un-nuevo-baile-remastered"
+    ],
+    "title": "Un Nuevo Baile - Remastered 2006",
+    "artist": "Emociones Clandestinas",
+    "album": "Abajo En La Costanera (Remastered)",
+    "current_release_year": 1987,
+    "duration_ms": 265000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-74-nadie-ausencia"
+    ],
+    "title": "Ausencia",
+    "artist": "Nadie",
+    "album": "Ausencia (Remastered)",
+    "current_release_year": 2021,
+    "duration_ms": 318000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-87-alvaro-scaramelli-locos-rayados"
+    ],
+    "title": "Locos Rayados",
+    "artist": "Alvaro Scaramelli",
+    "album": "Colección 80's",
+    "current_release_year": 2018,
+    "duration_ms": 234000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-92-buddy-richard-tu-carino-se-me-va"
+    ],
+    "title": "Tu Cariño Se Me Va",
+    "artist": "Buddy Richard",
+    "album": "Canciones de Antología (Vol. 2)",
+    "current_release_year": 2015,
+    "duration_ms": 204000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-96-ariztia-no-te-olvido"
+    ],
+    "title": "No Te Olvido",
+    "artist": "Ariztía",
+    "album": "Humano : Solo Exitos",
+    "current_release_year": 2008,
+    "duration_ms": 247000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-100-nicole-hoy"
+    ],
+    "title": "Hoy",
+    "artist": "Nicole",
+    "album": "Hoy",
+    "current_release_year": 2009,
+    "duration_ms": 257000,
+    "motivos": [
+      "outlier(+12 sobre ~1997 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-122-mon-laferte-tu-falta-de-querer"
+    ],
+    "title": "Tu Falta De Querer",
+    "artist": "Mon Laferte",
+    "album": "Mon Laferte (Vol. 1)",
+    "current_release_year": 2015,
+    "duration_ms": 278000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-124-sinergia-mujer-robusta"
+    ],
+    "title": "Mujer Robusta",
+    "artist": "Sinergia",
+    "album": "22 Exitos Pajarones",
+    "current_release_year": 2014,
+    "duration_ms": 158000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-132-los-angeles-negros-y-volvere-remastered-1994"
+    ],
+    "title": "Y Volveré - Remastered 1994",
+    "artist": "Los Angeles Negros",
+    "album": "Clásicos Latinos",
+    "current_release_year": 1994,
+    "duration_ms": 243000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-151-movimiento-original-grandes-pasos"
+    ],
+    "title": "Grandes Pasos",
+    "artist": "Movimiento Original",
+    "album": "Edición Especial",
+    "current_release_year": 2010,
+    "duration_ms": 218000,
+    "motivos": [
+      "aniversario"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-155-inti-illimani-alturas"
+    ],
+    "title": "Alturas",
+    "artist": "Inti-Illimani",
+    "album": "Antología I (1973-1978)",
+    "current_release_year": 2000,
+    "duration_ms": 192000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-172-sexual-democracia-cancion-pacifico-violenta"
+    ],
+    "title": "Cancion Pacifico-Violenta",
+    "artist": "Sexual Democracia",
+    "album": "Buscando Chilenos Vol. 1",
+    "current_release_year": 1990,
+    "duration_ms": 284000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-191-pat-henry-y-los-diablos-azules-te-quiero"
+    ],
+    "title": "Te Quiero",
+    "artist": "Pat Henry Y Los Diablos Azules",
+    "album": "Lo Mejor de Pat Henry y los Diablos Azules",
+    "current_release_year": 2022,
+    "duration_ms": 193000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-193-nadie-creo-que-te-quiero"
+    ],
+    "title": "Creo Que Te Quiero",
+    "artist": "Nadie",
+    "album": "Ausencia (Remastered)",
+    "current_release_year": 2021,
+    "duration_ms": 220000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-194-congreso-hijo-del-sol-luminoso"
+    ],
+    "title": "Hijo Del Sol Luminoso",
+    "artist": "Congreso",
+    "album": "1971-1982",
+    "current_release_year": 2006,
+    "duration_ms": 330000,
+    "motivos": [
+      "outlier(+17 sobre ~1989 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-196-alvaro-veliz-una-herida-de-amor-remastered"
+    ],
+    "title": "Una Herida de Amor - Remastered",
+    "artist": "Alvaro Veliz",
+    "album": "Alvaro Véliz (Remastered)",
+    "current_release_year": 2000,
+    "duration_ms": 242000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-210-quilapayun-la-muralla"
+    ],
+    "title": "La Muralla",
+    "artist": "Quilapayún",
+    "album": "La Nueva Cancion Chilena, Vol. 1",
+    "current_release_year": 1995,
+    "duration_ms": 279000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-217-aterrizaje-forzoso-chica-caribena-2008-digital-r"
+    ],
+    "title": "Chica Caribeña - 2008 Digital Remaster",
+    "artist": "Aterrizaje Forzoso",
+    "album": "Grandes Exitos",
+    "current_release_year": 2008,
+    "duration_ms": 242000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-251-valija-diplomatica-tu-lo-sabes-bien-remaster-200"
+    ],
+    "title": "Tú Lo Sabes Bien - Remaster 2002",
+    "artist": "Valija Diplomatica",
+    "album": "Grandes Exitos - Rock Chileno",
+    "current_release_year": 2006,
+    "duration_ms": 212000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-255-francisca-valenzuela-peces"
+    ],
+    "title": "Peces",
+    "artist": "Francisca Valenzuela",
+    "album": "Muérdete La Lengua (Edición Especial)",
+    "current_release_year": 2008,
+    "duration_ms": 233000,
+    "motivos": [
+      "aniversario"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-266-grupo-hechizo-romance-ilegal"
+    ],
+    "title": "Romance Ilegal",
+    "artist": "Grupo Hechizo",
+    "album": "Grandes Éxitos",
+    "current_release_year": 1999,
+    "duration_ms": 192000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-282-lucho-gatica-solamente-una-vez"
+    ],
+    "title": "Solamente una Vez",
+    "artist": "Lucho Gatica",
+    "album": "Lucho Gatica - Éxitos Dorados",
+    "current_release_year": 2015,
+    "duration_ms": 206000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-284-sinergia-amor-alternativo"
+    ],
+    "title": "Amor Alternativo",
+    "artist": "Sinergia",
+    "album": "22 Exitos Pajarones",
+    "current_release_year": 2014,
+    "duration_ms": 221000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-289-sol-y-lluvia-en-un-largo-tour-en-vivo"
+    ],
+    "title": "En un Largo Tour (En Vivo)",
+    "artist": "Sol y Lluvia",
+    "album": "Sol y Lluvia (En Vivo)",
+    "current_release_year": 2013,
+    "duration_ms": 290000,
+    "motivos": [
+      "directo"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-299-juan-antonio-labra-paran-pan-pan"
+    ],
+    "title": "Paran pan pan",
+    "artist": "Juan Antonio Labra",
+    "album": "Juan Antonio Labra",
+    "current_release_year": 2024,
+    "duration_ms": 223000,
+    "motivos": [
+      "outlier(+14 sobre ~2010 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-307-ariztia-no-es-mi-culpa-en-vivo"
+    ],
+    "title": "No es mi culpa - En Vivo",
+    "artist": "Ariztía",
+    "album": "No es mi culpa (En Vivo)",
+    "current_release_year": 2025,
+    "duration_ms": 263000,
+    "motivos": [
+      "directo"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-308-geoenezetao-viejos-habitantes"
+    ],
+    "title": "Viejos Habitantes",
+    "artist": "Geoenezetao",
+    "album": "Retrospección Mixtape, Vol. 1",
+    "current_release_year": 2019,
+    "duration_ms": 137000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-316-patricio-renan-son-recuerdos"
+    ],
+    "title": "Son Recuerdos",
+    "artist": "Patricio Renan",
+    "album": "Colección Inmortales (Remastered)",
+    "current_release_year": 2004,
+    "duration_ms": 147000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-317-difuntos-correa-tramposo-amor-2024-version"
+    ],
+    "title": "Tramposo Amor (2024 Version)",
+    "artist": "Difuntos Correa",
+    "album": "Tramposo Amor (Remasterizado)",
+    "current_release_year": 2024,
+    "duration_ms": 186000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-329-alvaro-scaramelli-si-lo-sabes-te-arrepientes"
+    ],
+    "title": "Si Lo Sabes Te Arrepientes",
+    "artist": "Alvaro Scaramelli",
+    "album": "Colección 80's",
+    "current_release_year": 2018,
+    "duration_ms": 270000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-341-aguaturbia-waterfall"
+    ],
+    "title": "Waterfall",
+    "artist": "Aguaturbia",
+    "album": "Psychedelic Drugstore - Remastered",
+    "current_release_year": 1970,
+    "duration_ms": 224000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-342-cevlade-la-panacea"
+    ],
+    "title": "La Panacea",
+    "artist": "Cevlade",
+    "album": "Antología, Vol. 1",
+    "current_release_year": 2015,
+    "duration_ms": 268000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-343-nano-parra-mi-velorio"
+    ],
+    "title": "Mi Velorio",
+    "artist": "Nano Parra",
+    "album": "Mi Chile Lindo, Vol. 2",
+    "current_release_year": 2014,
+    "duration_ms": 167000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-355-patricio-manns-el-cautivo-de-til-til-en-vivo"
+    ],
+    "title": "El Cautivo de Til Til (En Vivo)",
+    "artist": "Patricio Manns",
+    "album": "Patricio Manns en Chile (En Vivo)",
+    "current_release_year": 1990,
+    "duration_ms": 306000,
+    "motivos": [
+      "directo"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-361-legua-york-el-pueblo-unido"
+    ],
+    "title": "El Pueblo Unido",
+    "artist": "Legua York",
+    "album": "Antología Underground (1997-2003)",
+    "current_release_year": 2024,
+    "duration_ms": 224000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-365-santiago-del-nuevo-extremo-la-mitad-lejana"
+    ],
+    "title": "La Mitad Lejana",
+    "artist": "Santiago del Nuevo Extremo",
+    "album": "Santiago del Nuevo Extremo, Vol. 1",
+    "current_release_year": 1992,
+    "duration_ms": 314000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-374-violeta-parra-run-run-se-fue-pal-norte"
+    ],
+    "title": "Run run se fue pal'norte",
+    "artist": "Violeta Parra",
+    "album": "Las Últimas Composiciones",
+    "current_release_year": 2023,
+    "duration_ms": 235000,
+    "motivos": [
+      "outlier(+12 sobre ~2011 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-377-santo-barrio-traigo-el-aguante-remastered"
+    ],
+    "title": "Traigo el Aguante - Remastered",
+    "artist": "Santo Barrio",
+    "album": "Ahora Es Cuando",
+    "current_release_year": 2005,
+    "duration_ms": 165000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-382-tiro-de-gracia-suenos"
+    ],
+    "title": "Sueños",
+    "artist": "Tiro De Gracia",
+    "album": "Retorno de Misericordia",
+    "current_release_year": 2012,
+    "duration_ms": 321000,
+    "motivos": [
+      "outlier(+15 sobre ~1997 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-383-jose-alfredo-fuentes-te-perdi"
+    ],
+    "title": "Te Perdí",
+    "artist": "José Alfredo Fuentes",
+    "album": "36 Canciones de Exitos",
+    "current_release_year": 2021,
+    "duration_ms": 145000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-385-sinergia-mi-senora"
+    ],
+    "title": "Mi Señora",
+    "artist": "Sinergia",
+    "album": "22 Exitos Pajarones",
+    "current_release_year": 2014,
+    "duration_ms": 189000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-386-frecuencia-mod-callate-ya-no-me-mientas"
+    ],
+    "title": "Cállate... Ya No Me Mientas",
+    "artist": "Frecuencia Mod",
+    "album": "El Sonido de los 70's (Vol. 1)",
+    "current_release_year": 1993,
+    "duration_ms": 236000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-391-congreso-el-cielito-de-mi-pieza"
+    ],
+    "title": "El Cielito De Mi Pieza",
+    "artist": "Congreso",
+    "album": "1971-1982",
+    "current_release_year": 2006,
+    "duration_ms": 170000,
+    "motivos": [
+      "outlier(+17 sobre ~1989 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-392-javiera-parra-maldita-primavera"
+    ],
+    "title": "Maldita Primavera",
+    "artist": "Javiera Parra",
+    "album": "AM + bonus Tracks (Edición Aniversario)",
+    "current_release_year": 2011,
+    "duration_ms": 225000,
+    "motivos": [
+      "aniversario"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-404-los-tres-quizas-con-quien"
+    ],
+    "title": "Quizás Con Quién",
+    "artist": "Los Tres",
+    "album": "Quizás Con Quién",
+    "current_release_year": 2014,
+    "duration_ms": 251000,
+    "motivos": [
+      "outlier(+19 sobre ~1995 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-413-angel-parra-cancion-de-amor"
+    ],
+    "title": "Cancion de Amor",
+    "artist": "Angel Parra",
+    "album": "La Nueva Cancion Chilena, Vol. 1",
+    "current_release_year": 1995,
+    "duration_ms": 170000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-454-los-golpes-con-la-mano-en-la-biblia-2003-digital"
+    ],
+    "title": "Con La Mano En La Biblia - 2003 Digital Remaster",
+    "artist": "Los Golpes",
+    "album": "Antologia 40 Clásicos Remasterizados",
+    "current_release_year": 2006,
+    "duration_ms": 191000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-456-los-prisioneros-we-are-sudamerican-rockers"
+    ],
+    "title": "We Are Sudamerican Rockers",
+    "artist": "Los Prisioneros",
+    "album": "Ni Por La Razón, Ni Por La Fuerza (Edición Especial)",
+    "current_release_year": 1996,
+    "duration_ms": 215000,
+    "motivos": [
+      "aniversario"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-457-los-jaivas-todos-juntos-2020-remasterizado"
+    ],
+    "title": "Todos Juntos - 2020 Remasterizado",
+    "artist": "Los Jaivas",
+    "album": "La Ventana (Remasterizado 2020)",
+    "current_release_year": 1973,
+    "duration_ms": 345000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-464-aterrizaje-forzoso-solo-un-sueno-2008-remaster"
+    ],
+    "title": "Sólo Un Sueño - 2008 Remaster",
+    "artist": "Aterrizaje Forzoso",
+    "album": "Grandes Exitos",
+    "current_release_year": 2008,
+    "duration_ms": 206000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-465-quilapayun-cancion-final-remasterizado-2014"
+    ],
+    "title": "Canción Final - Remasterizado 2014",
+    "artist": "Quilapayún",
+    "album": "Cantata Santa María de Iquique (Remasterizado 2014)",
+    "current_release_year": 1970,
+    "duration_ms": 171000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-482-frainstrumentos-treinta-y-dos-dias"
+    ],
+    "title": "Treinta y Dos Días",
+    "artist": "Frainstrumentos",
+    "album": "El Bosque (Remasterizado)",
+    "current_release_year": 2010,
+    "duration_ms": 216000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-483-peter-rock-entre-la-arena-y-el-mar"
+    ],
+    "title": "Entre La Arena Y El Mar",
+    "artist": "Peter Rock",
+    "album": "Mejores Exitos",
+    "current_release_year": 2022,
+    "duration_ms": 141000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-494-supernova-herida"
+    ],
+    "title": "Herida",
+    "artist": "Supernova",
+    "album": "Retráctate",
+    "current_release_year": 2017,
+    "duration_ms": 188000,
+    "motivos": [
+      "outlier(+18 sobre ~1999 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-501-los-tres-quien-es-la-que-viene-alli-unplugged-ve"
+    ],
+    "title": "Quien es la Que Viene Alli - Unplugged Version",
+    "artist": "Los Tres",
+    "album": "Los Tres MTV Unplugged",
+    "current_release_year": 1996,
+    "duration_ms": 249000,
+    "motivos": [
+      "directo"
+    ],
+    "fuerza": 1
+  }
+]

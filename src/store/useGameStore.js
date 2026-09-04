@@ -126,9 +126,8 @@ export const DEDICALO_PLAYLISTS = [
   { id: 'espanol-summer-party', icon: 'wb_sunny', name: 'ESPAÑOL SUMMER', mood: 'Fiesta luminosa, verano y energía alta.', url: 'https://open.spotify.com/playlist/0UY3oVANXRqflE5QjHhaH4' },
   { id: 'hits-todo-tiempo', icon: 'public', name: 'HITS DE SIEMPRE', mood: 'Hits reconocibles para cualquier mesa.', url: 'https://open.spotify.com/playlist/5TOMoP3KEWtRASGeFsksUY' },
   { id: 'hits-rock-espanol', icon: 'electric_bolt', name: 'HITS ROCK ESPAÑOL', mood: 'Guitarras, himnos y memoria colectiva.', url: 'https://open.spotify.com/playlist/2cT61hYCfIkwHAyVMwej9D' },
-  { id: 'mejores-todos-tiempos', icon: 'emoji_events', name: 'MEJORES DE SIEMPRE', mood: 'Clásicos y favoritos de todos los tiempos.', url: 'https://open.spotify.com/playlist/0f3YRJO2HyZTpCLCVxzBt0' },
   { id: 'fiesta-mayor-verbena', icon: 'celebration', name: 'FIESTA MAYOR', mood: 'Verbena, pueblo y canciones para gritar.', url: 'https://open.spotify.com/playlist/7xcdrzs58PmLIZa4P5Qk3s' },
-  { id: 'fiesta-del-pueblo', icon: 'nightlife', name: 'FIESTA DEL PUEBLO', mood: 'La lista para cerrar la noche arriba.', url: 'https://open.spotify.com/playlist/4OoS8qoueVgm5PpuDUlOwH' }
+  { id: 'chileno-100', icon: 'public', name: 'CHILENO 100%', mood: 'De Los Prisioneros a hoy: himnos de Chile.', url: 'https://open.spotify.com/playlist/3jP5j1yCgXSFzg0hgsWM7Z' }
 ];
 export const DEFAULT_SPOTIFY_PLAYLIST_URL = DEDICALO_PLAYLISTS[0].url;
 
@@ -141,9 +140,8 @@ export const PLAYLIST_META = {
   'espanol-summer-party': { icon: 'wb_sunny', color: '#ffd000', accent: '#00c8ff', format: 'SUN MIX' },
   'hits-todo-tiempo': { icon: 'public', color: '#00c8ff', accent: '#ff7a1a', format: 'GLOBAL' },
   'hits-rock-espanol': { icon: 'electric_bolt', color: '#ffcc00', accent: '#ff3d77', format: 'ROCK CD' },
-  'mejores-todos-tiempos': { icon: 'emoji_events', color: '#39ff14', accent: '#a855f7', format: 'LEGENDS' },
   'fiesta-mayor-verbena': { icon: 'celebration', color: '#dd44ff', accent: '#ffd000', format: 'VERBENA' },
-  'fiesta-del-pueblo': { icon: 'nightlife', color: '#ff44aa', accent: '#00c8ff', format: 'PUEBLO' }
+  'chileno-100': { icon: 'public', color: '#d52b1e', accent: '#0039a6', format: 'CHILE' }
 };
 
 export const GAME_MODES = {

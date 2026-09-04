@@ -13,7 +13,11 @@
     "cobertura": "node scripts/probar-cobertura-previews.mjs",
     "auditar-anos": "node scripts/auditar-anos.mjs",
     "iconos": "node scripts/iconos.mjs",
-    "prebuild": "node scripts/iconos.mjs --check"
+    "prebuild": "node scripts/iconos.mjs --check",
+    "importar-embed": "node scripts/importar-embed.mjs",
+    "importar-playlist": "node scripts/importar-playlist.mjs",
+    "anos-canciones": "node scripts/anos-canciones.mjs",
+    "anos-musicbrainz": "node scripts/anos-musicbrainz.mjs"
   },
   "dependencies": {
     "firebase": "^12.14.0",
