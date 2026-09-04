@@ -63,6 +63,27 @@ for (const [artista, canciones] of porArtista) {
 
 const UMBRAL_OUTLIER = 12;
 
+// Artista fallecido con una canción fechada DESPUÉS de su muerte: eso no es
+// una sospecha, es un error seguro. Es la señal más barata y más fiable de
+// todas, y salió de encontrar "Gracias a la Vida" de Violeta Parra fechada
+// en 2014 cuando ella murió en 1967.
+let FALLECIDOS = {};
+try {
+  FALLECIDOS = JSON.parse(readFileSync(join(RAIZ, 'scripts', 'artistas-fallecidos.json'), 'utf8'));
+} catch {
+  // Sin la lista el resto de señales sigue funcionando.
+}
+
+function murioAntesDe(artista, ano) {
+  const clave = String(artista || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .trim();
+  const muerte = FALLECIDOS[clave];
+  return typeof muerte === 'number' && ano > muerte ? muerte : null;
+}
+
 const sospechosas = new Map(); // por spotify_track_id, para no duplicar
 
 for (const s of catalogo) {
@@ -80,6 +101,9 @@ for (const s of catalogo) {
   if (mediana && ano - mediana >= UMBRAL_OUTLIER && !ES_VERSION_NUEVA.test(titulo)) {
     motivos.push(`outlier(+${ano - mediana} sobre ~${mediana} de su artista)`);
   }
+
+  const muerte = murioAntesDe(s.artist_main, ano);
+  if (muerte) motivos.push(`IMPOSIBLE(el artista murio en ${muerte})`);
 
   if (!motivos.length) continue;
 

@@ -254,5 +254,50 @@
     "antes": 2017,
     "despues": 2002,
     "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-6-violeta-parra-gracias-a-la-vida",
+    "artist": "Violeta Parra",
+    "title": "Gracias a la Vida",
+    "antes": 2014,
+    "despues": 1966,
+    "source": "https://en.wikipedia.org/wiki/Las_%C3%BAltimas_composiciones",
+    "note": "Las Ultimas Composiciones, RCA Victor, noviembre de 1966"
+  },
+  {
+    "id": "chileno-100-105-violeta-parra-la-carta",
+    "artist": "Violeta Parra",
+    "title": "La Carta",
+    "antes": 2011,
+    "despues": 1962,
+    "source": "https://en.wikipedia.org/wiki/Las_%C3%BAltimas_composiciones",
+    "note": "Grabada en Paris, principios de los 60; el disco Canciones Reencontradas es una reedicion"
+  },
+  {
+    "id": "chileno-100-208-violeta-parra-el-gavilan",
+    "artist": "Violeta Parra",
+    "title": "El Gavilan",
+    "antes": 1980,
+    "despues": 1966,
+    "source": "https://en.wikipedia.org/wiki/Las_%C3%BAltimas_composiciones",
+    "note": "Composicion de finales de los 50, grabada para RCA en 1966"
+  },
+  {
+    "id": "chileno-100-374-violeta-parra-run-run-se-fue-pal-norte",
+    "artist": "Violeta Parra",
+    "title": "Run run se fue pal'norte",
+    "antes": 2023,
+    "despues": 1966,
+    "source": "https://en.wikipedia.org/wiki/Las_%C3%BAltimas_composiciones",
+    "note": "Las Ultimas Composiciones, 1966"
+  },
+  {
+    "id": "chileno-100-469-violeta-parra-arauco-tiene-una-pena",
+    "artist": "Violeta Parra",
+    "title": "Arauco Tiene una Pena",
+    "antes": 2011,
+    "despues": 1962,
+    "source": "https://en.wikipedia.org/wiki/Las_%C3%BAltimas_composiciones",
+    "note": "Grabada en Paris, principios de los 60"
   }
 ]

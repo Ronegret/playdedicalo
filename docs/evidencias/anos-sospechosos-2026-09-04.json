@@ -202,41 +202,11 @@
     "title": "Lo Mejor de Ti - En Vivo",
     "artist": "Carlos Cabezas",
     "album": "Bailando en Silencio (El Resplandor en Vivo)",
-    "current_release_year": 2020,
+    "current_release_year": 1997,
     "duration_ms": 275000,
     "motivos": [
       "recopilatorio",
       "directo"
-    ],
-    "fuerza": 2
-  },
-  {
-    "ids": [
-      "chileno-100-198-upa-creo-que-voy-a-morir-remastered"
-    ],
-    "title": "Creo Que Voy a Morir - Remastered",
-    "artist": "Upa!",
-    "album": "Que Nos Devuelvan La Emoción (Remastered)",
-    "current_release_year": 2020,
-    "duration_ms": 261000,
-    "motivos": [
-      "recopilatorio",
-      "outlier(+34 sobre ~1986 de su artista)"
-    ],
-    "fuerza": 2
-  },
-  {
-    "ids": [
-      "chileno-100-305-upa-ella-llora-remastered"
-    ],
-    "title": "Ella Llora - Remastered",
-    "artist": "Upa!",
-    "album": "Que Nos Devuelvan La Emoción (Remastered)",
-    "current_release_year": 2020,
-    "duration_ms": 287000,
-    "motivos": [
-      "recopilatorio",
-      "outlier(+34 sobre ~1986 de su artista)"
     ],
     "fuerza": 2
   },
@@ -247,7 +217,7 @@
     "title": "El Aparecido - En Vivo",
     "artist": "Inti Illimani Histórico",
     "album": "Inti + Quila, Música en la Memoria, Juntos en Chile (Vol. 2) [En Vivo]",
-    "current_release_year": 2015,
+    "current_release_year": 2005,
     "duration_ms": 260000,
     "motivos": [
       "recopilatorio",
@@ -277,11 +247,11 @@
     "title": "Ser Feliz - En Vivo",
     "artist": "Joe Vasconcellos",
     "album": "Huellas, Una Vida En Vivo",
-    "current_release_year": 2020,
+    "current_release_year": 2014,
     "duration_ms": 217000,
     "motivos": [
       "directo",
-      "outlier(+19 sobre ~2001 de su artista)"
+      "outlier(+13 sobre ~2001 de su artista)"
     ],
     "fuerza": 2
   },
@@ -508,6 +478,20 @@
     "duration_ms": 244000,
     "motivos": [
       "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "espanol-100-058-nino-bravo-te-quiero-te-quiero-5ltBmv"
+    ],
+    "title": "Te Quiero, Te Quiero",
+    "artist": "Nino Bravo",
+    "album": "Super 20",
+    "current_release_year": 1976,
+    "duration_ms": 171000,
+    "motivos": [
+      "IMPOSIBLE(el artista murio en 1973)"
     ],
     "fuerza": 1
   },
@@ -2373,6 +2357,20 @@
   },
   {
     "ids": [
+      "espanol-summer-party-169-celia-cruz-la-vida-es-un-carnaval-1BwrMG"
+    ],
+    "title": "La Vida Es Un Carnaval",
+    "artist": "Celia Cruz",
+    "album": "Para La Eternidad",
+    "current_release_year": 2016,
+    "duration_ms": 278000,
+    "motivos": [
+      "IMPOSIBLE(el artista murio en 2003)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
       "espanol-summer-party-174-robin-thicke-blurred-lines-0n4bIT"
     ],
     "title": "Blurred Lines",
@@ -2909,6 +2907,20 @@
   },
   {
     "ids": [
+      "hits-todo-tiempo-047-nino-bravo-libre-1uAjXd"
+    ],
+    "title": "Libre",
+    "artist": "Nino Bravo",
+    "album": "Super 20",
+    "current_release_year": 1976,
+    "duration_ms": 249000,
+    "motivos": [
+      "IMPOSIBLE(el artista murio en 1973)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
       "hits-todo-tiempo-048-the-verve-bitter-sweet-symphony-remastered-2016-57iDDD"
     ],
     "title": "Bitter Sweet Symphony - Remastered 2016",
@@ -3093,6 +3105,20 @@
   },
   {
     "ids": [
+      "hits-todo-tiempo-105-antonio-molina-soy-minero-2uQPey"
+    ],
+    "title": "Soy minero",
+    "artist": "Antonio Molina",
+    "album": "Antonio Molina Y El Cine",
+    "current_release_year": 1996,
+    "duration_ms": 209000,
+    "motivos": [
+      "IMPOSIBLE(el artista murio en 1992)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
       "hits-todo-tiempo-116-chubby-checker-the-twist-6DSvUZ"
     ],
     "title": "The Twist",
@@ -3229,6 +3255,20 @@
     "duration_ms": 204000,
     "motivos": [
       "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "hits-todo-tiempo-172-freddie-mercury-barcelona-3BdId1"
+    ],
+    "title": "Barcelona",
+    "artist": "Freddie Mercury",
+    "album": "Messenger Of The Gods: The Singles Collection",
+    "current_release_year": 2016,
+    "duration_ms": 266000,
+    "motivos": [
+      "IMPOSIBLE(el artista murio en 1991)"
     ],
     "fuerza": 1
   },
@@ -4565,6 +4605,20 @@
   },
   {
     "ids": [
+      "fiesta-mayor-verbena-050-rocio-durcal-como-tu-mujer-pues-mira-tu-remix-0fMhZa"
+    ],
+    "title": "Como Tu Mujer - Pues Mira Tú- Remix",
+    "artist": "Rocío Dúrcal",
+    "album": "Como Tu Mujer (Pues Mira Tú- Remix)",
+    "current_release_year": 2025,
+    "duration_ms": 221000,
+    "motivos": [
+      "IMPOSIBLE(el artista murio en 2006)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
       "fiesta-mayor-verbena-058-rocio-durcal-me-gustas-mucho-4xOwXg"
     ],
     "title": "Me Gustas Mucho",
@@ -4705,6 +4759,20 @@
   },
   {
     "ids": [
+      "fiesta-mayor-verbena-211-celia-cruz-la-negra-tiene-tumbao-78UZRd"
+    ],
+    "title": "La Negra Tiene Tumbao",
+    "artist": "Celia Cruz",
+    "album": "La Reina Y Sus Amigos",
+    "current_release_year": 2009,
+    "duration_ms": 252000,
+    "motivos": [
+      "IMPOSIBLE(el artista murio en 2003)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
       "fiesta-mayor-verbena-225-pitbull-give-me-everything-feat-nayer-4QNpBf"
     ],
     "title": "Give Me Everything (feat. Nayer)",
@@ -4766,7 +4834,7 @@
     "title": "Te Enojai por Todo",
     "artist": "Sinergia",
     "album": "22 Exitos Pajarones",
-    "current_release_year": 2014,
+    "current_release_year": 2007,
     "duration_ms": 169000,
     "motivos": [
       "recopilatorio"
@@ -4798,6 +4866,20 @@
     "duration_ms": 231000,
     "motivos": [
       "aniversario"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-32-los-angeles-negros-como-quisiera-decirte"
+    ],
+    "title": "Cómo Quisiera Decirte",
+    "artist": "Los Angeles Negros",
+    "album": "Clásicos Latinos",
+    "current_release_year": 1994,
+    "duration_ms": 169000,
+    "motivos": [
+      "outlier(+24 sobre ~1970 de su artista)"
     ],
     "fuerza": 1
   },
@@ -4836,7 +4918,7 @@
     "title": "El Frio Misterio - Remaster 2002 / Album Version",
     "artist": "Electrodomésticos",
     "album": "Grandes Exitos",
-    "current_release_year": 2008,
+    "current_release_year": 1987,
     "duration_ms": 304000,
     "motivos": [
       "recopilatorio"
@@ -4850,7 +4932,7 @@
     "title": "Exiliada del sur",
     "artist": "Inti-Illimani",
     "album": "Antología I (1973-1978)",
-    "current_release_year": 2000,
+    "current_release_year": 1971,
     "duration_ms": 212000,
     "motivos": [
       "recopilatorio"
@@ -4920,7 +5002,7 @@
     "title": "Ausencia",
     "artist": "Nadie",
     "album": "Ausencia (Remastered)",
-    "current_release_year": 2021,
+    "current_release_year": 1987,
     "duration_ms": 318000,
     "motivos": [
       "recopilatorio"
@@ -4948,7 +5030,7 @@
     "title": "Tu Cariño Se Me Va",
     "artist": "Buddy Richard",
     "album": "Canciones de Antología (Vol. 2)",
-    "current_release_year": 2015,
+    "current_release_year": 1995,
     "duration_ms": 204000,
     "motivos": [
       "recopilatorio"
@@ -4962,7 +5044,7 @@
     "title": "No Te Olvido",
     "artist": "Ariztía",
     "album": "Humano : Solo Exitos",
-    "current_release_year": 2008,
+    "current_release_year": 1992,
     "duration_ms": 247000,
     "motivos": [
       "recopilatorio"
@@ -5004,7 +5086,7 @@
     "title": "Mujer Robusta",
     "artist": "Sinergia",
     "album": "22 Exitos Pajarones",
-    "current_release_year": 2014,
+    "current_release_year": 2001,
     "duration_ms": 158000,
     "motivos": [
       "recopilatorio"
@@ -5018,7 +5100,7 @@
     "title": "Y Volveré - Remastered 1994",
     "artist": "Los Angeles Negros",
     "album": "Clásicos Latinos",
-    "current_release_year": 1994,
+    "current_release_year": 1969,
     "duration_ms": 243000,
     "motivos": [
       "recopilatorio"
@@ -5046,7 +5128,7 @@
     "title": "Alturas",
     "artist": "Inti-Illimani",
     "album": "Antología I (1973-1978)",
-    "current_release_year": 2000,
+    "current_release_year": 1982,
     "duration_ms": 192000,
     "motivos": [
       "recopilatorio"
@@ -5060,7 +5142,7 @@
     "title": "Cancion Pacifico-Violenta",
     "artist": "Sexual Democracia",
     "album": "Buscando Chilenos Vol. 1",
-    "current_release_year": 1990,
+    "current_release_year": 1988,
     "duration_ms": 284000,
     "motivos": [
       "recopilatorio"
@@ -5074,7 +5156,7 @@
     "title": "Te Quiero",
     "artist": "Pat Henry Y Los Diablos Azules",
     "album": "Lo Mejor de Pat Henry y los Diablos Azules",
-    "current_release_year": 2022,
+    "current_release_year": 1999,
     "duration_ms": 193000,
     "motivos": [
       "recopilatorio"
@@ -5088,24 +5170,10 @@
     "title": "Creo Que Te Quiero",
     "artist": "Nadie",
     "album": "Ausencia (Remastered)",
-    "current_release_year": 2021,
+    "current_release_year": 1987,
     "duration_ms": 220000,
     "motivos": [
       "recopilatorio"
-    ],
-    "fuerza": 1
-  },
-  {
-    "ids": [
-      "chileno-100-194-congreso-hijo-del-sol-luminoso"
-    ],
-    "title": "Hijo Del Sol Luminoso",
-    "artist": "Congreso",
-    "album": "1971-1982",
-    "current_release_year": 2006,
-    "duration_ms": 330000,
-    "motivos": [
-      "outlier(+17 sobre ~1989 de su artista)"
     ],
     "fuerza": 1
   },
@@ -5125,12 +5193,26 @@
   },
   {
     "ids": [
+      "chileno-100-198-upa-creo-que-voy-a-morir-remastered"
+    ],
+    "title": "Creo Que Voy a Morir - Remastered",
+    "artist": "Upa!",
+    "album": "Que Nos Devuelvan La Emoción (Remastered)",
+    "current_release_year": 1988,
+    "duration_ms": 261000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
       "chileno-100-210-quilapayun-la-muralla"
     ],
     "title": "La Muralla",
     "artist": "Quilapayún",
     "album": "La Nueva Cancion Chilena, Vol. 1",
-    "current_release_year": 1995,
+    "current_release_year": 1969,
     "duration_ms": 279000,
     "motivos": [
       "recopilatorio"
@@ -5153,12 +5235,26 @@
   },
   {
     "ids": [
+      "chileno-100-233-quilapayun-nuestro-cobre"
+    ],
+    "title": "Nuestro Cobre",
+    "artist": "Quilapayún",
+    "album": "La Fuerza de la Historia",
+    "current_release_year": 2006,
+    "duration_ms": 207000,
+    "motivos": [
+      "outlier(+36 sobre ~1970 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
       "chileno-100-251-valija-diplomatica-tu-lo-sabes-bien-remaster-200"
     ],
     "title": "Tú Lo Sabes Bien - Remaster 2002",
     "artist": "Valija Diplomatica",
     "album": "Grandes Exitos - Rock Chileno",
-    "current_release_year": 2006,
+    "current_release_year": 2002,
     "duration_ms": 212000,
     "motivos": [
       "recopilatorio"
@@ -5172,7 +5268,7 @@
     "title": "Peces",
     "artist": "Francisca Valenzuela",
     "album": "Muérdete La Lengua (Edición Especial)",
-    "current_release_year": 2008,
+    "current_release_year": 2007,
     "duration_ms": 233000,
     "motivos": [
       "aniversario"
@@ -5200,7 +5296,7 @@
     "title": "Solamente una Vez",
     "artist": "Lucho Gatica",
     "album": "Lucho Gatica - Éxitos Dorados",
-    "current_release_year": 2015,
+    "current_release_year": 1990,
     "duration_ms": 206000,
     "motivos": [
       "recopilatorio"
@@ -5228,7 +5324,7 @@
     "title": "En un Largo Tour (En Vivo)",
     "artist": "Sol y Lluvia",
     "album": "Sol y Lluvia (En Vivo)",
-    "current_release_year": 2013,
+    "current_release_year": 1980,
     "duration_ms": 290000,
     "motivos": [
       "directo"
@@ -5251,12 +5347,26 @@
   },
   {
     "ids": [
+      "chileno-100-305-upa-ella-llora-remastered"
+    ],
+    "title": "Ella Llora - Remastered",
+    "artist": "Upa!",
+    "album": "Que Nos Devuelvan La Emoción (Remastered)",
+    "current_release_year": 1988,
+    "duration_ms": 287000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
       "chileno-100-307-ariztia-no-es-mi-culpa-en-vivo"
     ],
     "title": "No es mi culpa - En Vivo",
     "artist": "Ariztía",
     "album": "No es mi culpa (En Vivo)",
-    "current_release_year": 2025,
+    "current_release_year": 1992,
     "duration_ms": 263000,
     "motivos": [
       "directo"
@@ -5298,7 +5408,7 @@
     "title": "Tramposo Amor (2024 Version)",
     "artist": "Difuntos Correa",
     "album": "Tramposo Amor (Remasterizado)",
-    "current_release_year": 2024,
+    "current_release_year": 2005,
     "duration_ms": 186000,
     "motivos": [
       "recopilatorio"
@@ -5405,43 +5515,15 @@
   },
   {
     "ids": [
-      "chileno-100-374-violeta-parra-run-run-se-fue-pal-norte"
-    ],
-    "title": "Run run se fue pal'norte",
-    "artist": "Violeta Parra",
-    "album": "Las Últimas Composiciones",
-    "current_release_year": 2023,
-    "duration_ms": 235000,
-    "motivos": [
-      "outlier(+12 sobre ~2011 de su artista)"
-    ],
-    "fuerza": 1
-  },
-  {
-    "ids": [
       "chileno-100-377-santo-barrio-traigo-el-aguante-remastered"
     ],
     "title": "Traigo el Aguante - Remastered",
     "artist": "Santo Barrio",
     "album": "Ahora Es Cuando",
-    "current_release_year": 2005,
+    "current_release_year": 2002,
     "duration_ms": 165000,
     "motivos": [
       "recopilatorio"
-    ],
-    "fuerza": 1
-  },
-  {
-    "ids": [
-      "chileno-100-382-tiro-de-gracia-suenos"
-    ],
-    "title": "Sueños",
-    "artist": "Tiro De Gracia",
-    "album": "Retorno de Misericordia",
-    "current_release_year": 2012,
-    "duration_ms": 321000,
-    "motivos": [
-      "outlier(+15 sobre ~1997 de su artista)"
     ],
     "fuerza": 1
   },
@@ -5452,7 +5534,7 @@
     "title": "Te Perdí",
     "artist": "José Alfredo Fuentes",
     "album": "36 Canciones de Exitos",
-    "current_release_year": 2021,
+    "current_release_year": 2003,
     "duration_ms": 145000,
     "motivos": [
       "recopilatorio"
@@ -5466,7 +5548,7 @@
     "title": "Mi Señora",
     "artist": "Sinergia",
     "album": "22 Exitos Pajarones",
-    "current_release_year": 2014,
+    "current_release_year": 2004,
     "duration_ms": 189000,
     "motivos": [
       "recopilatorio"
@@ -5489,15 +5571,15 @@
   },
   {
     "ids": [
-      "chileno-100-391-congreso-el-cielito-de-mi-pieza"
+      "chileno-100-390-electrodomesticos-has-sabido-sufrir"
     ],
-    "title": "El Cielito De Mi Pieza",
-    "artist": "Congreso",
-    "album": "1971-1982",
-    "current_release_year": 2006,
-    "duration_ms": 170000,
+    "title": "Has Sabido Sufrir",
+    "artist": "Electrodomésticos",
+    "album": "La Nueva Canción Chilena",
+    "current_release_year": 2004,
+    "duration_ms": 302000,
     "motivos": [
-      "outlier(+17 sobre ~1989 de su artista)"
+      "outlier(+17 sobre ~1987 de su artista)"
     ],
     "fuerza": 1
   },
@@ -5564,7 +5646,7 @@
     "title": "We Are Sudamerican Rockers",
     "artist": "Los Prisioneros",
     "album": "Ni Por La Razón, Ni Por La Fuerza (Edición Especial)",
-    "current_release_year": 1996,
+    "current_release_year": 1988,
     "duration_ms": 215000,
     "motivos": [
       "aniversario"
@@ -5638,20 +5720,6 @@
     "duration_ms": 141000,
     "motivos": [
       "recopilatorio"
-    ],
-    "fuerza": 1
-  },
-  {
-    "ids": [
-      "chileno-100-494-supernova-herida"
-    ],
-    "title": "Herida",
-    "artist": "Supernova",
-    "album": "Retráctate",
-    "current_release_year": 2017,
-    "duration_ms": 188000,
-    "motivos": [
-      "outlier(+18 sobre ~1999 de su artista)"
     ],
     "fuerza": 1
   },
