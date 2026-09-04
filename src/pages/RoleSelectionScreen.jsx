@@ -81,7 +81,7 @@ function AlbumTrackHero({ paused, onToggle }) {
           </motion.div>
 
           <div className="relative min-w-0 text-left">
-            <p className="font-label-caps text-[10px] tracking-[0.24em] text-neon-green">NOW PLAYING</p>
+            <p className="font-label-caps text-[0.588rem] tracking-[0.24em] text-neon-green">NOW PLAYING</p>
             <h2 className="mt-1 text-xl font-black uppercase leading-none text-white sm:text-2xl">Dedícalo Play</h2>
             <p className="mt-1 text-xs leading-snug text-on-surface-variant">Party game musical</p>
 
@@ -103,7 +103,7 @@ function AlbumTrackHero({ paused, onToggle }) {
                     className="h-full rounded-full bg-gradient-to-r from-vinyl-orange via-electric-purple to-deep-blue"
                   />
                 </div>
-                <div className="mt-1 flex justify-between font-label-caps text-[8px] tracking-[0.14em] text-white/35">
+                <div className="mt-1 flex justify-between font-label-caps text-[0.471rem] tracking-[0.14em] text-white/35">
                   <span>00:07</span>
                   <span>03:33</span>
                 </div>
@@ -131,7 +131,7 @@ function AlbumTrackHero({ paused, onToggle }) {
 
         <div className="relative mt-3 flex items-center justify-center gap-2 rounded-full border border-white/10 bg-black/20 px-3 py-2">
           <span className="h-1.5 w-1.5 rounded-full bg-neon-green shadow-[0_0_12px_rgba(57,255,20,0.8)]" />
-          <p className="font-label-caps text-[10px] tracking-[0.24em] text-white/60">
+          <p className="font-label-caps text-[0.588rem] tracking-[0.24em] text-white/60">
             {paused ? 'TOCA PLAY PARA ESCUCHAR' : 'SONANDO · TOCA PARA PAUSAR'}
           </p>
         </div>
@@ -160,7 +160,7 @@ function RoleCard({ type, title, text, action, icon, color, glow, onClick }) {
       <div className="relative flex items-center gap-4">
         <MiniVinyl active color={color} icon={icon} />
         <div className="min-w-0 flex-1">
-          <p className="font-label-caps text-[10px] tracking-[0.24em]" style={{ color }}>
+          <p className="font-label-caps text-[0.588rem] tracking-[0.24em]" style={{ color }}>
             {type}
           </p>
           <h2 className="mt-1 text-xl font-black leading-tight text-white sm:text-2xl">

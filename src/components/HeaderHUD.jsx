@@ -76,7 +76,7 @@ export default function HeaderHUD({ onExit }) {
                 <span className="material-symbols-outlined text-xl leading-none">arrow_back</span>
               </button>
             )}
-            <span className="hidden shrink-0 border-l border-white/10 pl-2 font-label-caps text-[11px] tracking-widest text-on-surface-variant sm:inline-block">
+            <span className="hidden shrink-0 border-l border-white/10 pl-2 font-label-caps text-[0.647rem] tracking-widest text-on-surface-variant sm:inline-block">
               SALA {pin}
             </span>
           </div>
@@ -85,14 +85,14 @@ export default function HeaderHUD({ onExit }) {
           <div className="flex min-w-0 items-center justify-center gap-2.5 overflow-hidden">
             <div className="min-w-0 text-center">
               <p className="font-label-caps text-xs text-neon-green leading-none">RONDA {round}</p>
-              <p className="truncate font-label-caps text-[10px] text-on-surface-variant leading-none mt-0.5">AÑOS LOCOS</p>
+              <p className="truncate font-label-caps text-[0.588rem] text-on-surface-variant leading-none mt-0.5">AÑOS LOCOS</p>
             </div>
             {myYears > 0 && (
               <>
                 <span className="h-5 w-px shrink-0 bg-white/15" />
                 <div className="shrink-0 text-center">
                   <p className="font-stats-xl text-lg font-black text-white leading-none">{myYears}<span className="text-sm text-on-surface-variant font-bold">/{targetYears || 12}</span></p>
-                  <p className="font-label-caps text-[10px] text-neon-green/80 leading-none mt-0.5">AÑOS</p>
+                  <p className="font-label-caps text-[0.588rem] text-neon-green/80 leading-none mt-0.5">AÑOS</p>
                 </div>
               </>
             )}
@@ -116,7 +116,7 @@ export default function HeaderHUD({ onExit }) {
             </button>
 
             <div className="shrink-0 text-right leading-none">
-              <p className="font-label-caps text-[10px] text-on-surface-variant">PTS</p>
+              <p className="font-label-caps text-[0.588rem] text-on-surface-variant">PTS</p>
               <p className="mt-0.5 font-label-caps text-base font-black text-neon-green">{ownPlayer?.points ?? 0}</p>
             </div>
 

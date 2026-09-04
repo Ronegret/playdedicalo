@@ -21,12 +21,12 @@ export default function SpotifyPlayer() {
     >
       <div className="max-w-[430px] mx-auto px-4 py-3">
         <div className="rounded-2xl border border-white/10 bg-surface-container/80 px-4 py-3 text-center shadow-[0_18px_50px_rgba(0,0,0,0.22)]">
-          <p className="text-[10px] text-neon-green font-label-caps tracking-[0.24em] uppercase">ESTILO ACTIVO</p>
+          <p className="text-[0.588rem] text-neon-green font-label-caps tracking-[0.24em] uppercase">ESTILO ACTIVO</p>
           <p className="mt-1 flex items-center justify-center gap-1.5 text-sm font-black uppercase tracking-[0.08em] text-white truncate">
             <span className="material-symbols-outlined text-base text-neon-green">{activePlaylist.icon}</span>
             {activePlaylist.name}
           </p>
-          <p className="mt-2 text-[11px] text-on-surface-variant leading-snug">{activePlaylist.mood}</p>
+          <p className="mt-2 text-[0.647rem] text-on-surface-variant leading-snug">{activePlaylist.mood}</p>
         </div>
       </div>
     </motion.div>

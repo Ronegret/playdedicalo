@@ -46,7 +46,7 @@ export default function SupportButton({ compact = false, className = '' }) {
               className="w-full max-w-sm rounded-2xl border border-vinyl-orange/40 bg-surface-container p-5 shadow-[0_0_50px_rgba(0,0,0,0.8)]"
               onClick={(e) => e.stopPropagation()}
             >
-              <p className="font-label-caps text-[10px] text-vinyl-orange tracking-widest">APOYA CON BIZUM</p>
+              <p className="font-label-caps text-[0.588rem] text-vinyl-orange tracking-widest">APOYA CON BIZUM</p>
               <p className="mt-1 text-sm text-on-surface-variant leading-relaxed">
                 Abre la app de tu banco, elige Bizum y envía tu aporte a este número:
               </p>
@@ -56,14 +56,14 @@ export default function SupportButton({ compact = false, className = '' }) {
                 <button
                   type="button"
                   onClick={handleCopy}
-                  className="shrink-0 h-9 px-3 rounded-lg border border-vinyl-orange/40 bg-vinyl-orange/15 text-vinyl-orange font-label-caps text-[11px] font-bold active:scale-95 transition-transform flex items-center gap-1.5"
+                  className="shrink-0 min-h-touch px-3 rounded-lg border border-vinyl-orange/40 bg-vinyl-orange/15 text-vinyl-orange font-label-caps text-[0.647rem] font-bold active:scale-95 transition-transform flex items-center gap-1.5"
                 >
                   <span className="material-symbols-outlined text-sm">{copied ? 'check' : 'content_copy'}</span>
                   {copied ? 'COPIADO' : 'COPIAR'}
                 </button>
               </div>
 
-              <p className="mt-3 text-[11px] text-on-surface-variant leading-relaxed">
+              <p className="mt-3 text-[0.647rem] text-on-surface-variant leading-relaxed">
                 Cualquier monto ayuda a mantener el proyecto. ¡Gracias!
               </p>
 

@@ -9,18 +9,31 @@ import { connectSpotify, createQuestionFromTrack, explainSpotifyError, getCurren
 
 const EQUALIZER_BARS = [0.35, 0.58, 0.42, 0.71, 0.49, 0.64, 0.39];
 
+// Segundos de cortesia una vez que ha respondido la mayoria (ver
+// softTimerArmed). Suficiente para que un rezagado termine, corto para que
+// la partida no se pare.
+const SOFT_TIMER_SECONDS = 10;
+
 // Fila compacta de "quién respondió / está bloqueado" durante la ronda,
 // para TODOS los jugadores (antes solo lo veía el anfitrión). A propósito
 // chica y en una sola fila deslizable — no la lista grande de avatares del
 // anfitrión — para no tapar ni empujar lejos el riel donde tienen que
 // colocar su respuesta.
-function VoteStatusStrip({ players, roundAnswers, isPlayerBlockedThisRound, answerCount, expectedVotes, guestId }) {
+function VoteStatusStrip({ players, roundAnswers, isPlayerBlockedThisRound, answerCount, expectedVotes, guestId, secondsLeft = null }) {
   if (!players.length) return null;
+  const corriendo = typeof secondsLeft === 'number';
   return (
-    <div className="w-full max-w-sm rounded-xl border border-white/10 bg-black/25 px-3 py-2">
+    <div className={`w-full max-w-sm rounded-xl border px-3 py-2 transition-colors ${corriendo ? 'border-chaos-gold/60 bg-chaos-gold/10' : 'border-white/10 bg-black/25'}`}>
       <div className="flex items-center justify-between gap-2">
-        <p className="font-label-caps text-[10px] tracking-[0.16em] text-on-surface-variant">RESPONDIERON</p>
-        <p className="font-label-caps text-[10px] font-black text-neon-green">{answerCount}/{expectedVotes}</p>
+        <p className="font-label-caps text-[0.588rem] tracking-[0.16em] text-on-surface-variant">
+          {corriendo ? 'ÚLTIMOS SEGUNDOS' : 'RESPONDIERON'}
+        </p>
+        <div className="flex items-center gap-2">
+          {corriendo && (
+            <span className="font-label-caps text-sm font-black tabular-nums text-chaos-gold">{secondsLeft}s</span>
+          )}
+          <p className="font-label-caps text-[0.588rem] font-black text-neon-green">{answerCount}/{expectedVotes}</p>
+        </div>
       </div>
       <div className="mt-1.5 flex items-center gap-2 overflow-x-auto no-scrollbar pb-0.5">
         {players.map((player) => {
@@ -84,11 +97,11 @@ function RankingPeek({ players, guestId, targetYears = 12 }) {
             <span className={`w-10 h-10 rounded-xl text-base font-black flex items-center justify-center ${myRank === 1 ? 'bg-neon-green text-black shadow-[0_0_16px_rgba(57,255,20,0.4)]' : myRank === 2 ? 'bg-white/20 text-white' : 'bg-white/10 text-on-surface-variant'}`}>
               {myRank || '?'}
             </span>
-            <span className="mt-0.5 font-label-caps text-[9px] tracking-[0.12em] text-on-surface-variant">POS</span>
+            <span className="mt-0.5 font-label-caps text-[0.529rem] tracking-[0.12em] text-on-surface-variant">POS</span>
           </div>
           {/* Years progress */}
           <div className="min-w-0">
-            <p className="font-label-caps text-[10px] tracking-[0.18em] text-neon-green">TUS AÑOS · META</p>
+            <p className="font-label-caps text-[0.588rem] tracking-[0.18em] text-neon-green">TUS AÑOS · META</p>
             <div className="mt-0.5 flex items-baseline gap-1">
               <span className="font-stats-xl text-2xl font-black text-white leading-none">{myYears}</span>
               <span className="text-sm text-on-surface-variant font-bold">/{targetYears}</span>
@@ -144,7 +157,7 @@ function RankingPeek({ players, guestId, targetYears = 12 }) {
                     <span className="font-label-caps text-lg font-black uppercase tracking-wide text-white truncate flex-1">{player.name}{isMe ? ' (tú)' : ''}</span>
                     <div className="text-right shrink-0">
                       <p className="text-base font-black text-neon-green leading-none">{progress}/{targetYears}</p>
-                      <p className="mt-0.5 text-[10px] font-bold text-on-surface-variant leading-none">
+                      <p className="mt-0.5 text-[0.588rem] font-bold text-on-surface-variant leading-none">
                         {missing === 0 ? '¡Meta!' : player === leader ? 'Lidera' : `Faltan ${missing}`}
                       </p>
                     </div>
@@ -161,12 +174,6 @@ function RankingPeek({ players, guestId, targetYears = 12 }) {
 
 
 
-function getTimelineSlotLabel(years, index) {
-  if (index === 0) return `Antes de ${years[0]}`;
-  if (index === years.length) return `Después de ${years[years.length - 1]}`;
-  return `Entre ${years[index - 1]} y ${years[index]}`;
-}
-
 function getAttackCopy(attack) {
   const fallback = ATTACK_TYPES[attack?.type] || ATTACK_TYPES.block_vote;
   return {
@@ -175,59 +182,6 @@ function getAttackCopy(attack) {
     description: attack?.description || fallback.description,
     icon: fallback.icon
   };
-}
-
-// Círculo simple para un año ya conseguido: nada de textura ni relieve, solo
-// el número bien grande — se lee de un vistazo y a distancia. La versión
-// anterior (disco de vinilo con surco) se veía bonita pero ocupaba mucho
-// espacio por muy poca información real; esto deja ver más ruta a la vez y
-// prioriza el número sobre la decoración.
-function VinylYearChip({ year }) {
-  return (
-    <div
-      className="relative flex shrink-0 snap-center items-center justify-center rounded-full border-[3px] border-electric-purple bg-electric-purple/20 shadow-[0_6px_18px_rgba(0,0,0,0.35)]"
-      style={{ width: 'var(--vinyl-size, 4.75rem)', height: 'var(--vinyl-size, 4.75rem)' }}
-    >
-      <span className="font-stats-xl font-black leading-none text-white" style={{ fontSize: 'min(1.6rem, max(1rem, 5.5vw))' }}>
-        {year}
-      </span>
-    </div>
-  );
-}
-
-// Igual de simple que un año, pero dorado con una estrella: una canción
-// comprada con puntos (ver REDEEM_YEAR_COST), no acertada de oído. Cuenta
-// igual para la meta, pero se distingue de un vistazo.
-function WildcardChip() {
-  return (
-    <div
-      className="relative flex shrink-0 snap-center items-center justify-center rounded-full border-[3px] border-chaos-gold bg-chaos-gold/20 shadow-[0_6px_18px_rgba(0,0,0,0.35)]"
-      style={{ width: 'var(--vinyl-size, 4.75rem)', height: 'var(--vinyl-size, 4.75rem)' }}
-    >
-      <span className="material-symbols-outlined text-chaos-gold" style={{ fontSize: 'min(2.2rem, max(1.4rem, 7vw))' }}>star</span>
-    </div>
-  );
-}
-
-// Hueco tappable entre dos años: el jugador toca aquí para decir dónde cree
-// que va la canción nueva. Mismo círculo simple, pero punteado y con un "+"
-// para leerse claramente como interactivo frente a los años ya colocados.
-function VinylSlotButton({ label, disabled, onClick }) {
-  return (
-    <button
-      type="button"
-      disabled={disabled}
-      onClick={onClick}
-      aria-label={`Colocar canción: ${label}`}
-      className="group relative shrink-0 snap-center rounded-full border-[3px] border-dashed border-neon-green/60 bg-neon-green/5 text-neon-green flex flex-col items-center justify-center active:scale-90 transition-transform hover:bg-neon-green/15 hover:border-neon-green focus:outline-none focus:ring-2 focus:ring-neon-green disabled:opacity-40"
-      style={{ width: 'var(--vinyl-size, 4.75rem)', height: 'var(--vinyl-size, 4.75rem)' }}
-    >
-      <span className="material-symbols-outlined text-2xl leading-none">add</span>
-      <span className="absolute -bottom-9 w-32 text-center text-[min(0.95rem,max(0.7rem,3vw))] font-bold font-label-caps leading-tight text-white group-hover:text-neon-green transition-colors">
-        {label}
-      </span>
-    </button>
-  );
 }
 
 const BURST_EMOJI = ['🎵', '🎶', '⚡', '💥', '🔊', '🎧', '✨'];
@@ -496,16 +450,85 @@ function BlockedPlacement({ attackFrom, attackFromAvatar, playerYears = [], wild
   );
 }
 
-function TimelinePlacementQuestion({ question, playerYears = [], wildcards = 0, disabled, onPick, activeAttack, targetYears = 12 }) {
-  const years = playerYears.length ? playerYears : [2000];
-  const isStealThreat = activeAttack?.type === 'year_steal';
-  const slots = Array.from({ length: years.length + 1 }, (_, index) => index);
-  const correctSlot = years.filter((year) => year <= question.songYear).length;
+// Riel de referencia: la ruta completa de un vistazo, SIN poder tocarla.
+// Antes esto era el control de respuesta y obligaba a recorrer hasta 12
+// pantallas en horizontal para encontrar un hueco. Ahora solo informa, asi
+// que los circulos pueden ser pequenos y no crecen con el ajuste de letra
+// (por eso 2.75rem fijo y no var(--vinyl-size)): agrandar la letra ya no
+// aleja la ruta.
+function TimelineRibbon({ years, wildcards = 0 }) {
+  return (
+    <div className="overflow-x-auto no-scrollbar -mx-1 px-1">
+      <div className="flex min-w-max items-center gap-1.5">
+        {years.map((year, index) => (
+          <div
+            key={`${year}-${index}`}
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-electric-purple bg-electric-purple/20 text-[0.72rem] font-black tabular-nums text-white"
+          >
+            {year}
+          </div>
+        ))}
+        {Array.from({ length: wildcards }, (_, index) => (
+          <div
+            key={`w-${index}`}
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-chaos-gold bg-chaos-gold/20"
+          >
+            <span className="material-symbols-outlined text-chaos-gold text-lg">star</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Una fila = un hueco donde puede ir la cancion. A lo ancho de la pantalla,
+// para que el area de toque sea la fila entera y el texto crezca con el
+// ajuste de letra en vez de irse de viaje hacia la derecha.
+function SlotRow({ from, to, disabled, onClick }) {
+  const etiqueta = from == null
+    ? `Antes de ${to}`
+    : to == null
+      ? `Después de ${from}`
+      : `Entre ${from} y ${to}`;
 
   return (
-    <div className="mt-5">
+    <button
+      type="button"
+      disabled={disabled}
+      onClick={onClick}
+      aria-label={`Colocar la canción: ${etiqueta}`}
+      className="flex w-full min-h-touch items-center gap-3 rounded-2xl border-2 border-dashed border-neon-green/45 bg-neon-green/5 px-4 py-3 text-left transition-all active:scale-[0.98] hover:border-neon-green hover:bg-neon-green/12 focus:outline-none focus:ring-2 focus:ring-neon-green disabled:opacity-35"
+    >
+      <span className="material-symbols-outlined shrink-0 text-neon-green">add</span>
+      <span className="flex-1 font-bold leading-snug text-white">{etiqueta}</span>
+    </button>
+  );
+}
+
+// `preview` = se muestra mientras suena la cancion, para que el jugador
+// busque su hueco tranquilo. En ese momento aun no se puede confirmar: el
+// desplazamiento deja de ocurrir bajo presion con la sala mirando.
+function TimelinePlacementQuestion({ question, playerYears = [], wildcards = 0, disabled, onPick, activeAttack, targetYears = 12, preview = false }) {
+  const years = playerYears.length ? playerYears : [2000];
+  const isStealThreat = activeAttack?.type === 'year_steal';
+  const correctSlot = question ? years.filter((year) => year <= question.songYear).length : -1;
+
+  // Un hueco entre dos anos iguales nunca puede ser la respuesta correcta:
+  // se omite para no ofrecer "Entre 2008 y 2008".
+  const huecos = [];
+  for (let slot = 0; slot <= years.length; slot += 1) {
+    if (slot > 0 && slot < years.length && years[slot - 1] === years[slot]) continue;
+    huecos.push({
+      slot,
+      from: slot === 0 ? null : years[slot - 1],
+      to: slot === years.length ? null : years[slot]
+    });
+  }
+
+  return (
+    <div className={preview ? 'w-full max-w-sm' : 'mt-5'}>
       <div className="rounded-3xl border border-neon-green/20 bg-[radial-gradient(circle_at_top,rgba(57,255,20,0.12),rgba(255,255,255,0.04)_42%,rgba(0,0,0,0.24)_100%)] p-4 shadow-[0_0_30px_rgba(57,255,20,0.08)]">
-        {isStealThreat && (
+        {isStealThreat && !preview && (
           <div className="mb-3 rounded-xl bg-error/20 border border-error/50 p-2.5 flex items-center gap-2.5">
             {isImageAvatar(activeAttack.fromAvatar) ? (
               <img src={activeAttack.fromAvatar} alt={activeAttack.from || 'Rival'} className="h-12 w-12 shrink-0 rounded-full border-2 border-error object-cover" />
@@ -521,52 +544,42 @@ function TimelinePlacementQuestion({ question, playerYears = [], wildcards = 0, 
         <div className="flex items-center justify-between gap-3">
           <div>
             <p className="font-label-caps text-sm text-neon-green tracking-[0.16em]">TU RUTA DE AÑOS</p>
-            <p className="mt-1 text-base text-white font-bold">Toca dónde crees que va</p>
+            <p className="mt-1 text-base font-bold text-white">
+              {preview ? 'Ve buscando dónde encaja' : 'Toca dónde crees que va'}
+            </p>
           </div>
-          <span className="rounded-full border border-white/10 bg-black/25 px-3 py-1.5 text-sm font-label-caps text-on-surface-variant">
+          <span className="shrink-0 rounded-full border border-white/10 bg-black/25 px-3 py-1.5 text-sm font-label-caps text-on-surface-variant">
             {Math.min(years.length + wildcards, targetYears)}/{targetYears}
           </span>
         </div>
 
-        {/* Fila de años: riel horizontal con snap-scroll, círculos y huecos
-            en línea recta para leerse rápido de un vistazo. */}
-        <div className="relative mt-6 overflow-x-auto overflow-y-visible pb-12 pt-2 snap-x no-scrollbar sm:mt-8">
-          <div className="absolute left-0 right-0 top-1/2 h-px bg-gradient-to-r from-transparent via-white/12 to-transparent" />
-          <div className="relative min-w-max flex items-center gap-3 px-2">
-            {slots.map((slot, index) => {
-              // Entre dos años iguales (dos canciones del mismo año en la
-              // ruta) no tiene sentido ofrecer un hueco "Entre 2008 y 2008"
-              // — nunca puede ser la respuesta correcta (colocar ahí
-              // siempre cuenta como error) y solo confunde. Se omite ese
-              // botón y los dos discos quedan juntos, sin nada en medio.
-              const isRedundantTieGap = slot > 0 && slot < years.length && years[slot - 1] === years[slot];
-              return (
-                <div key={slot} className="flex items-center gap-3">
-                  {!isRedundantTieGap && (
-                    <VinylSlotButton
-                      label={getTimelineSlotLabel(years, slot)}
-                      disabled={disabled}
-                      onClick={() => onPick({ isCorrect: slot === correctSlot, timelineSlot: slot })}
-                    />
-                  )}
-                  {index < years.length && <VinylYearChip year={years[index]} />}
-                </div>
-              );
-            })}
-            {wildcards > 0 && Array.from({ length: wildcards }, (_, index) => (
-              <WildcardChip key={`wildcard-${index}`} />
-            ))}
-          </div>
+        <div className="mt-3">
+          <TimelineRibbon years={years} wildcards={wildcards} />
         </div>
-        {wildcards > 0 && (
-          <p className="mt-2 flex items-center gap-1.5 text-sm text-chaos-gold">
+
+        <div className="mt-4 flex flex-col gap-2">
+          {huecos.map((hueco) => (
+            <SlotRow
+              key={hueco.slot}
+              from={hueco.from}
+              to={hueco.to}
+              disabled={disabled || preview}
+              onClick={() => onPick({ isCorrect: hueco.slot === correctSlot, timelineSlot: hueco.slot })}
+            />
+          ))}
+        </div>
+
+        {preview && (
+          <p className="mt-3 text-sm leading-relaxed text-on-surface-variant">
+            Podrás confirmar cuando pare la música.
+          </p>
+        )}
+        {wildcards > 0 && !preview && (
+          <p className="mt-3 flex items-center gap-1.5 text-sm text-chaos-gold">
             <span className="material-symbols-outlined text-base">star</span>
             {wildcards === 1 ? '1 canción canjeada con puntos' : `${wildcards} canciones canjeadas con puntos`}
           </p>
         )}
-        <p className="mt-3 text-base leading-relaxed text-on-surface-variant">
-          Desliza la fila si no ves todos tus años.
-        </p>
       </div>
     </div>
   );
@@ -602,6 +615,7 @@ export default function GameScreen() {
   } = useGameStore();
   const [answeredQuestionKey, setAnsweredQuestionKey] = useState(null);
   const [countdownValue, setCountdownValue] = useState(3);
+  const [softSecondsLeft, setSoftSecondsLeft] = useState(null);
   const [spotifyMessage, setSpotifyMessage] = useState('');
   const [spotifyTrackReady, setSpotifyTrackReady] = useState(false);
   const [spotifyError, setSpotifyError] = useState(false);
@@ -735,6 +749,13 @@ export default function GameScreen() {
   // total, "X/Y votos" se queda pegado para siempre y el anfitrión (o
   // cualquiera) espera un voto que jamás va a llegar.
   const expectedVotes = players.filter((player) => getPlayerPresence(player).status !== 'kicked' && !isPlayerBlockedThisRound(player)).length || players.length;
+  // Tiempo blando: con mucha gente basta que uno se distraiga para que el
+  // resto espere, y el anfitrion queda de arbitro teniendo que meter prisa a
+  // alguien. Cuando ya han respondido tres de cada cuatro arranca una cuenta
+  // atras visible para todos; al llegar a cero revela el anfitrion solo. No
+  // corta a nadie de golpe: avisa a todos por igual.
+  const votesForSoftTimer = Math.max(2, Math.ceil(expectedVotes * 0.75));
+  const softTimerArmed = phase === 'blackout' && expectedVotes > 3 && answerCount >= votesForSoftTimer && answerCount < expectedVotes;
   const mode = GAME_MODES[gameMode] || GAME_MODES.timeline;
   const activePlaylist = DEDICALO_PLAYLISTS.find((playlist) => (
     normalizeSpotifyPlaylistUrl(playlist.url) === normalizeSpotifyPlaylistUrl(spotifyPlaylistUrl)
@@ -787,9 +808,41 @@ export default function GameScreen() {
     show: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', stiffness: 130 } }
   };
 
+  // Cuenta atras del tiempo blando. Solo el anfitrion dispara el revelado
+  // al llegar a cero — el resto unicamente ve el numero, para que no haya
+  // dos clientes revelando la misma ronda.
+  useEffect(() => {
+    // El estado se toca solo desde callbacks (timeout/interval), nunca en el
+    // cuerpo del efecto: evita renders en cascada.
+    if (!softTimerArmed) {
+      const limpiar = window.setTimeout(() => setSoftSecondsLeft(null), 0);
+      return () => window.clearTimeout(limpiar);
+    }
+    const finalizaEn = Date.now() + SOFT_TIMER_SECONDS * 1000;
+    const refrescar = () => {
+      const quedan = Math.max(0, Math.ceil((finalizaEn - Date.now()) / 1000));
+      setSoftSecondsLeft(quedan);
+    };
+    const arranque = window.setTimeout(refrescar, 0);
+    const tick = window.setInterval(refrescar, 250);
+    return () => {
+      window.clearTimeout(arranque);
+      window.clearInterval(tick);
+    };
+  }, [softTimerArmed, round]);
+
+  useEffect(() => {
+    if (softSecondsLeft !== 0 || role !== 'host' || phase !== 'blackout') return;
+    hostRevealResults().catch((error) => {
+      console.error('Error al revelar por tiempo:', error);
+    });
+  }, [softSecondsLeft, role, phase, hostRevealResults]);
+
   const handleAnswer = (isCorrect) => {
     setAnsweredQuestionKey(questionKey);
     guestAnswer(isCorrect);
+    // Patron distinto para acierto y fallo: se juega en sitios con ruido
+    // donde no se oye nada, asi que el movil confirma en la mano.
     if (navigator.vibrate) navigator.vibrate(isCorrect ? [30] : [100, 30, 100]);
   };
 
@@ -988,6 +1041,15 @@ export default function GameScreen() {
               </p>
             )}
 
+            {gameMode === 'timeline' && !isBlockedThisRound && (
+              <TimelinePlacementQuestion
+                playerYears={ownTimelineYears}
+                wildcards={Number(ownPlayer?.wildcards || 0)}
+                targetYears={targetYears}
+                preview
+              />
+            )}
+
             <RankingPeek players={players} guestId={guestId} targetYears={targetYears} />
 
             {(canAttack || canRedeem) && (
@@ -1080,13 +1142,13 @@ export default function GameScreen() {
                 transition={{ delay: 0.3 }}
                 className="mt-3 inline-flex items-center gap-3 rounded-full border border-white/10 bg-black/30 px-4 py-1.5"
               >
-                <span className="font-label-caps text-[11px] text-neon-green">+5 ACIERTO</span>
+                <span className="font-label-caps text-[0.647rem] text-neon-green">+5 ACIERTO</span>
                 <span className="w-px h-3 bg-white/20" />
-                <span className="font-label-caps text-[11px] text-intense-red">-3 FALLO</span>
+                <span className="font-label-caps text-[0.647rem] text-intense-red">-3 FALLO</span>
                 <span className="w-px h-3 bg-white/20" />
                 {/* La regla del bonus se ensena aqui, dentro del chip que ya
                     existia — no hace falta un cartel aparte. */}
-                <span className="flex items-center gap-0.5 font-label-caps text-[11px] text-chaos-gold">
+                <span className="flex items-center gap-0.5 font-label-caps text-[0.647rem] text-chaos-gold">
                   <span className="material-symbols-outlined text-sm">bolt</span>+1 AL 1º
                 </span>
               </motion.div>
@@ -1164,6 +1226,7 @@ export default function GameScreen() {
                   isPlayerBlockedThisRound={isPlayerBlockedThisRound}
                   answerCount={answerCount}
                   expectedVotes={expectedVotes}
+                  secondsLeft={softSecondsLeft}
                   guestId={guestId}
                 />
               </div>

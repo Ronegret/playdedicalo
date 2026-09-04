@@ -68,7 +68,18 @@ function armPresenceDisconnect(pin, playerId) {
 export const SPEED_BONUS_POINTS = 1;
 
 export const ATTACK_COST = 8;
-export const REDEEM_YEAR_COST = 40;
+// 30 y no 40: los jugadores arrancan con 10 puntos y el mas rapido de cada
+// ronda se lleva otro, asi que a 40 solo llegaba quien ya iba ganando —
+// medido, cuando por fin podia canjear llevaba 10,6 de 12 canciones y ya no
+// le hacia falta. A 30, el jugador medio lo alcanza sobre la ronda 12
+// llevando ~8/12, que es cuando la remontada todavia significa algo.
+export const REDEEM_YEAR_COST = 30;
+
+// Un jugador que entra con la partida empezada arrancaba con la ruta vacia
+// mientras el resto podia llevar 8 de 12: no tenia ninguna opcion real. Se
+// le da de salida la media del grupo menos este margen, para que entre por
+// detras pero dentro de la partida.
+export const LATE_JOIN_HANDICAP = 2;
 
 // El sabotaje tiene consecuencia real en la ruta de años, no solo un efecto
 // visual — a pedido explícito del usuario:
@@ -258,6 +269,19 @@ export function getCombinedTimelineYears(player) {
 // para comprar este progreso.
 export function getTimelineProgress(player) {
   return getCombinedTimelineYears(player).length + Number(player?.wildcards || 0);
+}
+
+// Con cuanto progreso arranca quien se suma con la partida empezada: la
+// media del grupo menos LATE_JOIN_HANDICAP. Se cuenta como comodines (no
+// como años concretos) porque no tiene sentido inventarle canciones que no
+// ha acertado; para la meta valen igual. Nunca por debajo de 0, y nunca por
+// encima de lo que lleva el grupo.
+export function lateJoinWildcards(players = []) {
+  const rivales = (players || []).filter((p) => p && !p.isHost);
+  if (!rivales.length) return 0;
+  const media = rivales.reduce((suma, p) => suma + getTimelineProgress(p), 0) / rivales.length;
+  // -1 porque todos arrancan ya con el año base contado en su progreso.
+  return Math.max(0, Math.round(media) - LATE_JOIN_HANDICAP - 1);
 }
 
 
@@ -1326,7 +1350,11 @@ export const useGameStore = create((setStore, getStore) => ({
         kicked: false,
         timelineBaseYear: existingPlayer ? existingPlayer.timelineBaseYear : getTimelineBaseYear(requestId),
         timelineYears: existingPlayer ? (existingPlayer.timelineYears || []) : [],
-        wildcards: existingPlayer ? Number(existingPlayer.wildcards || 0) : 0
+        // Entra con la partida en marcha: sin esto arrancaria en 1/12
+        // mientras el resto puede llevar 8/12, sin ninguna opcion real.
+        wildcards: existingPlayer
+          ? Number(existingPlayer.wildcards || 0)
+          : lateJoinWildcards(Object.values(room?.players || {}))
       };
       await writeData(`rooms/${pin}/players/${requestId}`, newPlayer);
       await deleteData(`rooms/${pin}/joinRequests/${requestId}`);

@@ -1,5 +1,4 @@
 ﻿import { AnimatePresence, motion } from 'framer-motion';
-import jsQR from 'jsqr';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { getRedirectResult, onAuthStateChanged, signInWithPopup, signInWithRedirect } from 'firebase/auth';
@@ -186,6 +185,11 @@ export default function GuestJoinScreen() {
       }
 
       try {
+        // Se descarga aqui, no al abrir la pantalla: quien escribe el PIN a
+        // mano no llega a pedirla nunca.
+        const { default: jsQR } = await import('jsqr');
+        if (!isActive) return;
+
         const stream = await navigator.mediaDevices.getUserMedia({
           video: { facingMode: { ideal: 'environment' } },
           audio: false

@@ -53,13 +53,13 @@ function PlaylistArtwork({ meta, isSelected }) {
         }}
       >
         <div className="flex items-center justify-between">
-          <span className="rounded-full bg-black/35 px-1.5 py-0.5 font-label-caps text-[8px] tracking-[0.16em] text-white/90">
+          <span className="rounded-full bg-black/35 px-1.5 py-0.5 font-label-caps text-[0.471rem] tracking-[0.16em] text-white/90">
             DED
           </span>
           <span className="h-2 w-2 rounded-full bg-white/80" />
         </div>
         <div className="mt-2 flex flex-1 items-center justify-center rounded-lg bg-black/25 ring-1 ring-white/10">
-          <span className="material-symbols-outlined text-[30px] text-white drop-shadow">
+          <span className="material-symbols-outlined text-[1.765rem] text-white drop-shadow">
             {meta.icon}
           </span>
         </div>
@@ -378,7 +378,7 @@ export default function HostSyncScreen() {
                   <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#1ed760] text-black">
                     <span className="material-symbols-outlined text-lg">graphic_eq</span>
                   </span>
-                  <p className="font-label-caps text-[#1ed760] text-[10px] tracking-[0.22em]">SPOTIFY PREMIUM</p>
+                  <p className="font-label-caps text-[#1ed760] text-[0.588rem] tracking-[0.22em]">SPOTIFY PREMIUM</p>
                 </div>
 
                 <div className="flex items-center justify-between gap-3 mb-5">
@@ -392,7 +392,7 @@ export default function HostSyncScreen() {
                     type="button"
                     onClick={() => connectSpotify('/host/sync')}
                     whileTap={{ scale: 0.94 }}
-                    className={`min-h-touch px-3 rounded-xl font-label-caps text-[10px] tracking-[0.15em] shrink-0 ${
+                    className={`min-h-touch px-3 rounded-xl font-label-caps text-[0.588rem] tracking-[0.15em] shrink-0 ${
                       spotifyStatus.connected
                         ? 'border border-white/15 bg-white/5 text-on-surface-variant'
                         : 'bg-[#1ed760] text-black font-bold'
@@ -485,7 +485,7 @@ export default function HostSyncScreen() {
                       </motion.button>
                     </div>
 
-                    <p className="font-label-caps text-[10px] text-on-surface-variant tracking-[0.2em]">
+                    <p className="font-label-caps text-[0.588rem] text-on-surface-variant tracking-[0.2em]">
                       {isTestingSpotify
                         ? 'CONECTANDO...'
                         : isSpotifyPlaying
@@ -610,7 +610,7 @@ export default function HostSyncScreen() {
                 <p className="copy-readable mx-auto mt-2 max-w-md text-on-surface-variant">Define la vibra de la partida: una sola mecánica, muchas energías.</p>
               </div>
               <div
-                className="h-9 px-3 rounded-xl flex items-center gap-2 font-label-caps text-[11px] text-white border shrink-0"
+                className="h-9 px-3 rounded-xl flex items-center gap-2 font-label-caps text-[0.647rem] text-white border shrink-0"
                 style={{
                   backgroundColor: `${selectedMeta.color}18`,
                   borderColor: `${selectedMeta.color}44`,
@@ -661,24 +661,24 @@ export default function HostSyncScreen() {
                       <div className="min-w-0 flex-1 sm:w-full">
                         <div className="mb-2 flex items-center gap-2">
                           <span
-                            className="inline-flex h-6 items-center rounded-full px-2 font-label-caps text-[9px] tracking-[0.18em] text-black"
+                            className="inline-flex h-6 items-center rounded-full px-2 font-label-caps text-[0.529rem] tracking-[0.18em] text-black"
                             style={{ backgroundColor: meta.accent }}
                           >
                             {meta.format}
                           </span>
                           {isSelected && (
-                            <span className="inline-flex h-6 items-center rounded-full bg-white px-2 font-label-caps text-[9px] tracking-[0.18em] text-black">
+                            <span className="inline-flex h-6 items-center rounded-full bg-white px-2 font-label-caps text-[0.529rem] tracking-[0.18em] text-black">
                               ACTIVA
                             </span>
                           )}
                         </div>
-                        <p className="font-headline-lg text-[18px] font-black uppercase leading-[1.05] text-white sm:min-h-[38px]">
+                        <p className="font-headline-lg text-[1.059rem] font-black uppercase leading-[1.05] text-white sm:min-h-[38px]">
                           {playlist.name}
                         </p>
                         <p className="mt-1.5 text-xs font-semibold leading-snug text-on-surface-variant sm:min-h-[34px]">
                           {playlist.mood}
                         </p>
-                        <div className="mt-3 hidden items-center gap-2 text-[10px] font-black uppercase tracking-[0.18em] text-white/55 sm:flex">
+                        <div className="mt-3 hidden items-center gap-2 text-[0.588rem] font-black uppercase tracking-[0.18em] text-white/55 sm:flex">
                           <span className="h-px flex-1" style={{ backgroundColor: `${meta.color}66` }} />
                           Portada Dedicalo
                         </div>
@@ -716,7 +716,7 @@ export default function HostSyncScreen() {
                 {selectedMeta.icon}
               </span>
               <div className="min-w-0">
-                <p className="font-label-caps text-[10px] text-on-surface-variant tracking-widest">SELECCIONADO</p>
+                <p className="font-label-caps text-[0.588rem] text-on-surface-variant tracking-widest">SELECCIONADO</p>
                 <p className="mt-0.5 truncate text-sm font-black uppercase text-white">{selectedPlaylistData.name}</p>
                 <p className="text-xs text-on-surface-variant mt-0.5 truncate">{selectedPlaylistData.mood}</p>
               </div>

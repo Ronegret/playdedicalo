@@ -58,10 +58,10 @@ export default function MusicVinylControl() {
           {isAudioPlaying ? 'pause' : 'play_arrow'}
         </span>
       </button>
-      <span className={`rounded-full px-2 py-1 text-[9px] font-label-caps border pointer-events-none tracking-[0.18em] ${isAudioPlaying ? 'border-vinyl-orange/40 bg-vinyl-orange/10 text-white' : 'border-white/10 bg-black/40 text-on-surface-variant'}`}>
+      <span className={`rounded-full px-2 py-1 text-[0.529rem] font-label-caps border pointer-events-none tracking-[0.18em] ${isAudioPlaying ? 'border-vinyl-orange/40 bg-vinyl-orange/10 text-white' : 'border-white/10 bg-black/40 text-on-surface-variant'}`}>
         {canControl ? (isAudioPlaying ? 'STOP' : 'PLAY') : (isAudioPlaying ? 'PLAY' : 'STOP')}
       </span>
-      {error && <span className="w-32 text-center text-[9px] leading-tight text-intense-red font-label-caps">{error}</span>}
+      {error && <span className="w-32 text-center text-[0.529rem] leading-tight text-intense-red font-label-caps">{error}</span>}
     </div>
   );
 }

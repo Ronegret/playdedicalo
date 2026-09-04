@@ -113,7 +113,7 @@ export default function WelcomeScreen() {
               <div className="absolute inset-0 rounded-full flex items-center justify-center bg-black/40 backdrop-blur-[2px]">
                 <div className="flex flex-col items-center gap-1">
                   <span className="material-symbols-outlined text-white/90" style={{ fontSize: '3rem' }}>play_arrow</span>
-                  <span className="font-label-caps text-[9px] tracking-[0.18em] text-white/80">TOCA PARA SONAR</span>
+                  <span className="font-label-caps text-[0.529rem] tracking-[0.18em] text-white/80">TOCA PARA SONAR</span>
                 </div>
               </div>
             )}
@@ -149,7 +149,7 @@ export default function WelcomeScreen() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-[10px] font-bold uppercase tracking-[0.3em] text-vinyl-orange"
+            className="text-[0.588rem] font-bold uppercase tracking-[0.3em] text-vinyl-orange"
           >
             Party Game Musical
           </motion.p>
@@ -183,7 +183,7 @@ export default function WelcomeScreen() {
             ].map(([val, label]) => (
               <div key={label}>
                 <p className="font-stats-xl text-2xl text-vinyl-orange font-black leading-none">{val}</p>
-                <p className="font-label-caps text-[10px] text-on-surface-variant mt-1">{label}</p>
+                <p className="font-label-caps text-[0.588rem] text-on-surface-variant mt-1">{label}</p>
               </div>
             ))}
           </motion.div>
@@ -208,7 +208,7 @@ export default function WelcomeScreen() {
               <button
                 type="button"
                 onClick={handleInstall}
-                className="h-10 rounded-2xl border border-electric-purple/30 bg-electric-purple/8 text-electric-purple/80 text-xs font-semibold uppercase tracking-[0.18em] flex items-center justify-center gap-2 hover:bg-electric-purple/15 active:scale-95 transition-all"
+                className="min-h-touch rounded-2xl border border-electric-purple/30 bg-electric-purple/8 text-electric-purple/80 text-xs font-semibold uppercase tracking-[0.18em] flex items-center justify-center gap-2 hover:bg-electric-purple/15 active:scale-95 transition-all"
               >
                 <span className="material-symbols-outlined text-base">download</span>
                 Instalar app
