@@ -21020,7 +21020,7 @@
     "duration_ms": 211000,
     "duration_seconds": 211,
     "cover_url": "https://i.scdn.co/image/ab67616d0000b2731c76dd4f82e782ffe0f014a6",
-    "preview_url": "",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/99/9e/a1/999ea151-6f2a-54a0-333a-22a51db7f2d8/mzaf_11368509350941920626.plus.aac.p.m4a",
     "popularity": "",
     "explicit": "",
     "difficulty": "medium",
@@ -21031,7 +21031,9 @@
     "question_year": "{\"text\":\"En que ano salio esta cancion?\",\"options\":[\"1994\",\"1996\",\"1998\",\"2001\"],\"correct\":1}",
     "question_timeline_year": "1996",
     "question_title": "{\"text\":\"Cual es el titulo de este tema?\",\"answer\":\"It's Raining Men\"}",
-    "catalog_index": 586
+    "catalog_index": 586,
+    "apple_track_id": 401137991,
+    "preview_estado": "ok"
   },
   {
     "id": "temazos-279-fatboy-slim-the-rockafeller-skank-6uJrLZ",
@@ -21054,7 +21056,7 @@
     "duration_ms": 413000,
     "duration_seconds": 413,
     "cover_url": "https://i.scdn.co/image/ab67616d0000b273541c6002395d0e87e218e9af",
-    "preview_url": "",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/4c/8b/bc/4c8bbc83-20bc-e8b9-df08-8f6fc011e746/mzaf_349321396017858179.plus.aac.p.m4a",
     "popularity": "",
     "explicit": "",
     "difficulty": "medium",
@@ -21065,7 +21067,9 @@
     "question_year": "{\"text\":\"En que ano salio esta cancion?\",\"options\":[\"1996\",\"1998\",\"2000\",\"2003\"],\"correct\":1}",
     "question_timeline_year": "1998",
     "question_title": "{\"text\":\"Cual es el titulo de este tema?\",\"answer\":\"The Rockafeller Skank\"}",
-    "catalog_index": 587
+    "catalog_index": 587,
+    "apple_track_id": 1439718668,
+    "preview_estado": "ok"
   },
   {
     "id": "temazos-280-taio-cruz-dynamite-2CEgGE",
@@ -21088,7 +21092,7 @@
     "duration_ms": 202000,
     "duration_seconds": 202,
     "cover_url": "https://i.scdn.co/image/ab67616d0000b27366c3eb32692a0ae487079cf1",
-    "preview_url": "",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/ef/1c/a9/ef1ca989-82c8-4e02-0d9a-30c3f740ec06/mzaf_18106607034491598874.plus.aac.p.m4a",
     "popularity": "",
     "explicit": "",
     "difficulty": "medium",
@@ -21099,7 +21103,9 @@
     "question_year": "{\"text\":\"En que ano salio esta cancion?\",\"options\":[\"2008\",\"2010\",\"2012\",\"2015\"],\"correct\":1}",
     "question_timeline_year": "2010",
     "question_title": "{\"text\":\"Cual es el titulo de este tema?\",\"answer\":\"Dynamite\"}",
-    "catalog_index": 588
+    "catalog_index": 588,
+    "apple_track_id": 1442389521,
+    "preview_estado": "ok"
   },
   {
     "id": "temazos-281-belinda-carlisle-heaven-is-a-place-on-earth-4V9BTS",
@@ -21122,7 +21128,7 @@
     "duration_ms": 247000,
     "duration_seconds": 247,
     "cover_url": "https://i.scdn.co/image/ab67616d0000b273e489befcd9fed0e7cf04052f",
-    "preview_url": "",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/c7/60/50/c7605026-502b-938c-e457-f791f0a0532b/mzaf_10494624059556836757.plus.aac.p.m4a",
     "popularity": "",
     "explicit": "",
     "difficulty": "medium",
@@ -21133,7 +21139,9 @@
     "question_year": "{\"text\":\"En que ano salio esta cancion?\",\"options\":[\"1985\",\"1987\",\"1989\",\"1992\"],\"correct\":1}",
     "question_timeline_year": "1987",
     "question_title": "{\"text\":\"Cual es el titulo de este tema?\",\"answer\":\"Heaven Is A Place On Earth\"}",
-    "catalog_index": 589
+    "catalog_index": 589,
+    "apple_track_id": 1818602240,
+    "preview_estado": "ok"
   },
   {
     "id": "temazos-282-the-chemical-brothers-hey-boy-hey-girl-7kXmJw",
@@ -21156,7 +21164,7 @@
     "duration_ms": 290000,
     "duration_seconds": 290,
     "cover_url": "https://i.scdn.co/image/ab67616d0000b27329dc59785f4c767fcbfc9e38",
-    "preview_url": "",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/cb/d2/1d/cbd21d97-5696-b10f-5609-a022aae1aa88/mzaf_6100570169966975808.plus.aac.p.m4a",
     "popularity": "",
     "explicit": "",
     "difficulty": "medium",
@@ -21167,7 +21175,9 @@
     "question_year": "{\"text\":\"En que ano salio esta cancion?\",\"options\":[\"1997\",\"1999\",\"2001\",\"2004\"],\"correct\":1}",
     "question_timeline_year": "1999",
     "question_title": "{\"text\":\"Cual es el titulo de este tema?\",\"answer\":\"Hey Boy Hey Girl\"}",
-    "catalog_index": 590
+    "catalog_index": 590,
+    "apple_track_id": 714174441,
+    "preview_estado": "ok"
   },
   {
     "id": "temazos-283-ariana-grande-7-rings-6ocbgo",
@@ -21201,7 +21211,8 @@
     "question_year": "{\"text\":\"En que ano salio esta cancion?\",\"options\":[\"2017\",\"2019\",\"2021\",\"2024\"],\"correct\":1}",
     "question_timeline_year": "2019",
     "question_title": "{\"text\":\"Cual es el titulo de este tema?\",\"answer\":\"7 rings\"}",
-    "catalog_index": 591
+    "catalog_index": 591,
+    "preview_estado": "sin coincidencia"
   },
   {
     "id": "temazos-284-george-mccrae-rock-your-baby-6pMHMz",
@@ -21224,7 +21235,7 @@
     "duration_ms": 200000,
     "duration_seconds": 200,
     "cover_url": "https://i.scdn.co/image/ab67616d0000b273077d7271b180ff4d3e1f7cd7",
-    "preview_url": "",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/68/a3/ad/68a3ad9a-2195-d392-ece3-9a2e89d8b59f/mzaf_12066906418970027372.plus.aac.p.m4a",
     "popularity": "",
     "explicit": "",
     "difficulty": "medium",
@@ -21235,7 +21246,9 @@
     "question_year": "{\"text\":\"En que ano salio esta cancion?\",\"options\":[\"2008\",\"2010\",\"2012\",\"2015\"],\"correct\":1}",
     "question_timeline_year": "2010",
     "question_title": "{\"text\":\"Cual es el titulo de este tema?\",\"answer\":\"Rock Your Baby\"}",
-    "catalog_index": 592
+    "catalog_index": 592,
+    "apple_track_id": 286162724,
+    "preview_estado": "ok"
   },
   {
     "id": "temazos-285-john-paul-young-love-is-in-the-air-38GqIQ",
@@ -21258,7 +21271,7 @@
     "duration_ms": 208000,
     "duration_seconds": 208,
     "cover_url": "https://i.scdn.co/image/ab67616d0000b273f2784ba1cd63beaacb7c5a4b",
-    "preview_url": "",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/c3/a2/bd/c3a2bdd6-42ac-fbe2-a772-b211752c0506/mzaf_3186317634866203344.plus.aac.p.m4a",
     "popularity": "",
     "explicit": "",
     "difficulty": "medium",
@@ -21269,7 +21282,9 @@
     "question_year": "{\"text\":\"En que ano salio esta cancion?\",\"options\":[\"1987\",\"1989\",\"1991\",\"1994\"],\"correct\":1}",
     "question_timeline_year": "1989",
     "question_title": "{\"text\":\"Cual es el titulo de este tema?\",\"answer\":\"Love Is In The Air\"}",
-    "catalog_index": 593
+    "catalog_index": 593,
+    "apple_track_id": 601947146,
+    "preview_estado": "ok"
   },
   {
     "id": "temazos-286-des-ree-life-5LGqFI",
@@ -21292,7 +21307,7 @@
     "duration_ms": 216000,
     "duration_seconds": 216,
     "cover_url": "https://i.scdn.co/image/ab67616d0000b273df5db9751cfa58ceadbed9a0",
-    "preview_url": "",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/fd/d7/46/fdd74622-f6b0-9fc6-13ef-9a424e03aa1f/mzaf_7699641590263757888.plus.aac.p.m4a",
     "popularity": "",
     "explicit": "",
     "difficulty": "medium",
@@ -21303,7 +21318,9 @@
     "question_year": "{\"text\":\"En que ano salio esta cancion?\",\"options\":[\"1996\",\"1998\",\"2000\",\"2003\"],\"correct\":1}",
     "question_timeline_year": "1998",
     "question_title": "{\"text\":\"Cual es el titulo de este tema?\",\"answer\":\"Life\"}",
-    "catalog_index": 594
+    "catalog_index": 594,
+    "apple_track_id": 211424460,
+    "preview_estado": "ok"
   },
   {
     "id": "temazos-287-beret-lo-siento-4S6gJt",
@@ -21326,7 +21343,7 @@
     "duration_ms": 230000,
     "duration_seconds": 230,
     "cover_url": "https://i.scdn.co/image/ab67616d0000b273dc6bf6758123b65c89fa3021",
-    "preview_url": "",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/cb/fd/5e/cbfd5e0f-3046-6857-ac39-c53f8a8fc225/mzaf_13964877702755308465.plus.aac.p.m4a",
     "popularity": "",
     "explicit": "",
     "difficulty": "medium",
@@ -21337,7 +21354,9 @@
     "question_year": "{\"text\":\"En que ano salio esta cancion?\",\"options\":[\"2016\",\"2018\",\"2020\",\"2023\"],\"correct\":1}",
     "question_timeline_year": "2018",
     "question_title": "{\"text\":\"Cual es el titulo de este tema?\",\"answer\":\"Lo siento\"}",
-    "catalog_index": 595
+    "catalog_index": 595,
+    "apple_track_id": 1424394444,
+    "preview_estado": "ok"
   },
   {
     "id": "temazos-288-flo-rida-whistle-3bC1ah",
@@ -21360,7 +21379,7 @@
     "duration_ms": 224000,
     "duration_seconds": 224,
     "cover_url": "https://i.scdn.co/image/ab67616d0000b27315785fa4f22f8c50902b3a42",
-    "preview_url": "",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/45/b7/f6/45b7f6b7-09ab-913d-a13f-ead22039a708/mzaf_13057173187947537148.plus.aac.p.m4a",
     "popularity": "",
     "explicit": "",
     "difficulty": "medium",
@@ -21371,7 +21390,9 @@
     "question_year": "{\"text\":\"En que ano salio esta cancion?\",\"options\":[\"2010\",\"2012\",\"2014\",\"2017\"],\"correct\":1}",
     "question_timeline_year": "2012",
     "question_title": "{\"text\":\"Cual es el titulo de este tema?\",\"answer\":\"Whistle\"}",
-    "catalog_index": 596
+    "catalog_index": 596,
+    "apple_track_id": 519296442,
+    "preview_estado": "ok"
   },
   {
     "id": "temazos-289-dani-martin-cero-5vCgDt",
@@ -21394,7 +21415,7 @@
     "duration_ms": 267000,
     "duration_seconds": 267,
     "cover_url": "https://i.scdn.co/image/ab67616d0000b2732f8beb8419496b02948e822d",
-    "preview_url": "",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/11/9e/7d/119e7d2f-6a7c-86ad-e509-db5f009b16b8/mzaf_16706360314713851546.plus.aac.p.m4a",
     "popularity": "",
     "explicit": "",
     "difficulty": "medium",
@@ -21405,7 +21426,9 @@
     "question_year": "{\"text\":\"En que ano salio esta cancion?\",\"options\":[\"2011\",\"2013\",\"2015\",\"2018\"],\"correct\":1}",
     "question_timeline_year": "2013",
     "question_title": "{\"text\":\"Cual es el titulo de este tema?\",\"answer\":\"Cero\"}",
-    "catalog_index": 597
+    "catalog_index": 597,
+    "apple_track_id": 649273077,
+    "preview_estado": "ok"
   },
   {
     "id": "temazos-290-charlie-puth-we-don-t-talk-anymore-feat-selena-gomez-06KyNu",
@@ -21428,7 +21451,7 @@
     "duration_ms": 217000,
     "duration_seconds": 217,
     "cover_url": "https://i.scdn.co/image/ab67616d0000b273633a2d775747bccfbcb17a45",
-    "preview_url": "",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/dc/4c/12/dc4c1228-f317-7a67-73d2-552e58a43d58/mzaf_11677038530570521518.plus.aac.p.m4a",
     "popularity": "",
     "explicit": "",
     "difficulty": "medium",
@@ -21439,7 +21462,9 @@
     "question_year": "{\"text\":\"En que ano salio esta cancion?\",\"options\":[\"2014\",\"2016\",\"2018\",\"2021\"],\"correct\":1}",
     "question_timeline_year": "2016",
     "question_title": "{\"text\":\"Cual es el titulo de este tema?\",\"answer\":\"We Don't Talk Anymore (feat. Selena Gomez)\"}",
-    "catalog_index": 598
+    "catalog_index": 598,
+    "apple_track_id": 1172997043,
+    "preview_estado": "ok"
   },
   {
     "id": "temazos-291-alphaville-forever-young-4S1VYq",
@@ -21462,7 +21487,7 @@
     "duration_ms": 226000,
     "duration_seconds": 226,
     "cover_url": "https://i.scdn.co/image/ab67616d0000b273b9c4979446c4d39bc08e9503",
-    "preview_url": "",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/1d/6d/a5/1d6da5d1-744d-ab23-e0f8-9b349d5436d6/mzaf_343672495858933075.plus.aac.p.m4a",
     "popularity": "",
     "explicit": "",
     "difficulty": "medium",
@@ -21473,7 +21498,9 @@
     "question_year": "{\"text\":\"En que ano salio esta cancion?\",\"options\":[\"1982\",\"1984\",\"1986\",\"1989\"],\"correct\":1}",
     "question_timeline_year": "1984",
     "question_title": "{\"text\":\"Cual es el titulo de este tema?\",\"answer\":\"Forever Young\"}",
-    "catalog_index": 599
+    "catalog_index": 599,
+    "apple_track_id": 65122547,
+    "preview_estado": "ok"
   },
   {
     "id": "temazos-292-snap-the-power-0nQLxi",
@@ -21496,7 +21523,7 @@
     "duration_ms": 228000,
     "duration_seconds": 228,
     "cover_url": "https://i.scdn.co/image/ab67616d0000b27347930301a69fe411d50a6e3e",
-    "preview_url": "",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/0f/9b/7a/0f9b7a7d-7ee3-a005-94c6-778013ed5bc7/mzaf_13630337656076307294.plus.aac.p.m4a",
     "popularity": "",
     "explicit": "",
     "difficulty": "medium",
@@ -21507,7 +21534,9 @@
     "question_year": "{\"text\":\"En que ano salio esta cancion?\",\"options\":[\"1988\",\"1990\",\"1992\",\"1995\"],\"correct\":1}",
     "question_timeline_year": "1990",
     "question_title": "{\"text\":\"Cual es el titulo de este tema?\",\"answer\":\"The Power\"}",
-    "catalog_index": 600
+    "catalog_index": 600,
+    "apple_track_id": 6768601978,
+    "preview_estado": "ok"
   },
   {
     "id": "temazos-293-loco-mia-locomia-7kSclo",
@@ -21530,7 +21559,7 @@
     "duration_ms": 345000,
     "duration_seconds": 345,
     "cover_url": "https://i.scdn.co/image/ab67616d0000b273a9522505e6ded88df6893917",
-    "preview_url": "",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/ea/68/42/ea684215-b8cf-2419-55e8-7bd7a37017ae/mzaf_14795905598299542957.plus.aac.p.m4a",
     "popularity": "",
     "explicit": "",
     "difficulty": "medium",
@@ -21541,7 +21570,9 @@
     "question_year": "{\"text\":\"En que ano salio esta cancion?\",\"options\":[\"2014\",\"2016\",\"2018\",\"2021\"],\"correct\":1}",
     "question_timeline_year": "2016",
     "question_title": "{\"text\":\"Cual es el titulo de este tema?\",\"answer\":\"Locomia\"}",
-    "catalog_index": 601
+    "catalog_index": 601,
+    "apple_track_id": 1695609918,
+    "preview_estado": "ok"
   },
   {
     "id": "temazos-294-david-guetta-titanium-feat-sia-0TDLuu",
@@ -21564,7 +21595,7 @@
     "duration_ms": 245000,
     "duration_seconds": 245,
     "cover_url": "https://i.scdn.co/image/ab67616d0000b27363bf1cd36632031eb3081cb0",
-    "preview_url": "",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/27/c2/c7/27c2c78c-318e-cd6c-deb4-ebcdfec2de24/mzaf_6964948339914536280.plus.aac.p.m4a",
     "popularity": "",
     "explicit": "",
     "difficulty": "medium",
@@ -21575,7 +21606,9 @@
     "question_year": "{\"text\":\"En que ano salio esta cancion?\",\"options\":[\"2010\",\"2012\",\"2014\",\"2017\"],\"correct\":1}",
     "question_timeline_year": "2012",
     "question_title": "{\"text\":\"Cual es el titulo de este tema?\",\"answer\":\"Titanium (feat. Sia)\"}",
-    "catalog_index": 602
+    "catalog_index": 602,
+    "apple_track_id": 726390516,
+    "preview_estado": "ok"
   },
   {
     "id": "temazos-295-house-of-pain-jump-around-6Jymsa",
@@ -21598,7 +21631,7 @@
     "duration_ms": 214000,
     "duration_seconds": 214,
     "cover_url": "https://i.scdn.co/image/ab67616d0000b273c9f143444515b5106b0e4de5",
-    "preview_url": "",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/1b/ff/46/1bff4615-9327-bc85-fef3-b9334bf55c89/mzaf_4586239461601648720.plus.aac.p.m4a",
     "popularity": "",
     "explicit": "",
     "difficulty": "medium",
@@ -21609,7 +21642,9 @@
     "question_year": "{\"text\":\"En que ano salio esta cancion?\",\"options\":[\"1990\",\"1992\",\"1994\",\"1997\"],\"correct\":1}",
     "question_timeline_year": "1992",
     "question_title": "{\"text\":\"Cual es el titulo de este tema?\",\"answer\":\"Jump Around\"}",
-    "catalog_index": 603
+    "catalog_index": 603,
+    "apple_track_id": 1604628161,
+    "preview_estado": "ok"
   },
   {
     "id": "temazos-296-chocolate-mayonesa-5Qjx4o",
@@ -21632,7 +21667,7 @@
     "duration_ms": 231000,
     "duration_seconds": 231,
     "cover_url": "https://i.scdn.co/image/ab67616d0000b2730bbc871457eea49155f9f9b2",
-    "preview_url": "",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/19/90/34/1990341d-494d-2aa2-498a-2f532cab0ce4/mzaf_10449764230430980400.plus.aac.p.m4a",
     "popularity": "",
     "explicit": "",
     "difficulty": "medium",
@@ -21643,7 +21678,9 @@
     "question_year": "{\"text\":\"En que ano salio esta cancion?\",\"options\":[\"1998\",\"2000\",\"2002\",\"2005\"],\"correct\":1}",
     "question_timeline_year": "2000",
     "question_title": "{\"text\":\"Cual es el titulo de este tema?\",\"answer\":\"Mayonesa\"}",
-    "catalog_index": 604
+    "catalog_index": 604,
+    "apple_track_id": 1093269387,
+    "preview_estado": "ok"
   },
   {
     "id": "temazos-297-los-ronaldos-no-puedo-vivir-sin-ti-1EC0JR",
@@ -21666,7 +21703,7 @@
     "duration_ms": 254000,
     "duration_seconds": 254,
     "cover_url": "https://i.scdn.co/image/ab67616d0000b2734963e4821aed03e3e90a3e63",
-    "preview_url": "",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/31/18/64/311864c9-a34d-bd16-04c9-7796e471b6d2/mzaf_14886853969449844231.plus.aac.p.m4a",
     "popularity": "",
     "explicit": "",
     "difficulty": "medium",
@@ -21677,7 +21714,9 @@
     "question_year": "{\"text\":\"En que ano salio esta cancion?\",\"options\":[\"2005\",\"2007\",\"2009\",\"2012\"],\"correct\":1}",
     "question_timeline_year": "2007",
     "question_title": "{\"text\":\"Cual es el titulo de este tema?\",\"answer\":\"No Puedo Vivir Sin Ti\"}",
-    "catalog_index": 605
+    "catalog_index": 605,
+    "apple_track_id": 6799205695,
+    "preview_estado": "ok"
   },
   {
     "id": "temazos-298-nino-bravo-america-america-5X9yP4",
@@ -21700,7 +21739,7 @@
     "duration_ms": 210000,
     "duration_seconds": 210,
     "cover_url": "https://i.scdn.co/image/ab67616d0000b273faa3ffb12407f6efe0584452",
-    "preview_url": "",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/a8/0a/38/a80a3855-a5ff-282d-9a88-8de87b0b5b7d/mzaf_10366492731644146614.plus.aac.p.m4a",
     "popularity": "",
     "explicit": "",
     "difficulty": "medium",
@@ -21711,7 +21750,9 @@
     "question_year": "{\"text\":\"En que ano salio esta cancion?\",\"options\":[\"2003\",\"2005\",\"2007\",\"2010\"],\"correct\":1}",
     "question_timeline_year": "2005",
     "question_title": "{\"text\":\"Cual es el titulo de este tema?\",\"answer\":\"América, América\"}",
-    "catalog_index": 606
+    "catalog_index": 606,
+    "apple_track_id": 1443193964,
+    "preview_estado": "ok"
   },
   {
     "id": "temazos-299-juanes-me-enamora-5BY0p2",
@@ -21734,7 +21775,7 @@
     "duration_ms": 192000,
     "duration_seconds": 192,
     "cover_url": "https://i.scdn.co/image/ab67616d0000b2731a3925772178135aca2dec56",
-    "preview_url": "",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/29/5a/27/295a27e2-647e-1b42-358e-0b2557436cec/mzaf_8525102757960199312.plus.aac.p.m4a",
     "popularity": "",
     "explicit": "",
     "difficulty": "medium",
@@ -21745,7 +21786,9 @@
     "question_year": "{\"text\":\"En que ano salio esta cancion?\",\"options\":[\"2005\",\"2007\",\"2009\",\"2012\"],\"correct\":1}",
     "question_timeline_year": "2007",
     "question_title": "{\"text\":\"Cual es el titulo de este tema?\",\"answer\":\"Me Enamora\"}",
-    "catalog_index": 607
+    "catalog_index": 607,
+    "apple_track_id": 1442825786,
+    "preview_estado": "ok"
   },
   {
     "id": "temazos-300-edward-maya-stereo-love-0gBfLS",
@@ -21768,7 +21811,7 @@
     "duration_ms": 247000,
     "duration_seconds": 247,
     "cover_url": "https://i.scdn.co/image/ab67616d0000b27382cd7c9b928ad028f9afb73a",
-    "preview_url": "",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/bd/08/02/bd0802a2-3fdb-c3d8-91fe-30f3d49a3f4f/mzaf_3422423638098444278.plus.aac.p.m4a",
     "popularity": "",
     "explicit": "",
     "difficulty": "medium",
@@ -21779,7 +21822,9 @@
     "question_year": "{\"text\":\"En que ano salio esta cancion?\",\"options\":[\"2007\",\"2009\",\"2011\",\"2014\"],\"correct\":1}",
     "question_timeline_year": "2009",
     "question_title": "{\"text\":\"Cual es el titulo de este tema?\",\"answer\":\"Stereo Love\"}",
-    "catalog_index": 608
+    "catalog_index": 608,
+    "apple_track_id": 1555177065,
+    "preview_estado": "ok"
   },
   {
     "id": "temazos-301-elton-john-don-t-go-breaking-my-heart-7HW5WI",
@@ -21802,7 +21847,7 @@
     "duration_ms": 275000,
     "duration_seconds": 275,
     "cover_url": "https://i.scdn.co/image/ab67616d0000b27342a15a4fe15a8a88ab728d5b",
-    "preview_url": "",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/f9/3a/86/f93a861c-dafd-19fc-7f22-34b691474f3a/mzaf_5187025995070032353.plus.aac.p.m4a",
     "popularity": "",
     "explicit": "",
     "difficulty": "medium",
@@ -21813,7 +21858,9 @@
     "question_year": "{\"text\":\"En que ano salio esta cancion?\",\"options\":[\"1973\",\"1975\",\"1977\",\"1980\"],\"correct\":1}",
     "question_timeline_year": "1975",
     "question_title": "{\"text\":\"Cual es el titulo de este tema?\",\"answer\":\"Don't Go Breaking My Heart\"}",
-    "catalog_index": 609
+    "catalog_index": 609,
+    "apple_track_id": 1440913387,
+    "preview_estado": "ok"
   },
   {
     "id": "temazos-302-rihanna-umbrella-49FYly",
@@ -21836,7 +21883,7 @@
     "duration_ms": 275000,
     "duration_seconds": 275,
     "cover_url": "https://i.scdn.co/image/ab67616d0000b273f9f27162ab1ed45b8d7a7e98",
-    "preview_url": "",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/7b/45/22/7b452241-882c-409b-3a9b-23306b14286a/mzaf_8588243939716013218.plus.aac.p.m4a",
     "popularity": "",
     "explicit": "",
     "difficulty": "medium",
@@ -21847,7 +21894,9 @@
     "question_year": "{\"text\":\"En que ano salio esta cancion?\",\"options\":[\"2006\",\"2008\",\"2010\",\"2013\"],\"correct\":1}",
     "question_timeline_year": "2008",
     "question_title": "{\"text\":\"Cual es el titulo de este tema?\",\"answer\":\"Umbrella\"}",
-    "catalog_index": 610
+    "catalog_index": 610,
+    "apple_track_id": 1441154437,
+    "preview_estado": "ok"
   },
   {
     "id": "temazos-303-r-e-m-losing-my-religion-31AOj9",
@@ -21870,7 +21919,7 @@
     "duration_ms": 268000,
     "duration_seconds": 268,
     "cover_url": "https://i.scdn.co/image/ab67616d0000b273e2dd4e821bcc3f70dc0c8ffd",
-    "preview_url": "",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/4f/14/45/4f1445c7-c1e3-ef07-878c-f016839cef6b/mzaf_15501181977794875858.plus.aac.p.m4a",
     "popularity": "",
     "explicit": "",
     "difficulty": "medium",
@@ -21881,7 +21930,9 @@
     "question_year": "{\"text\":\"En que ano salio esta cancion?\",\"options\":[\"1989\",\"1991\",\"1993\",\"1996\"],\"correct\":1}",
     "question_timeline_year": "1991",
     "question_title": "{\"text\":\"Cual es el titulo de este tema?\",\"answer\":\"Losing My Religion\"}",
-    "catalog_index": 611
+    "catalog_index": 611,
+    "apple_track_id": 1440945283,
+    "preview_estado": "ok"
   },
   {
     "id": "temazos-304-el-canto-del-loco-peter-pan-1gkBsK",
@@ -21904,7 +21955,7 @@
     "duration_ms": 259000,
     "duration_seconds": 259,
     "cover_url": "https://i.scdn.co/image/ab67616d0000b27359a4a6f989bc72370e9e615d",
-    "preview_url": "",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/09/ad/b9/09adb921-405e-0937-c617-baa5839c7c72/mzaf_5047202476844311578.plus.aac.p.m4a",
     "popularity": "",
     "explicit": "",
     "difficulty": "medium",
@@ -21915,7 +21966,9 @@
     "question_year": "{\"text\":\"En que ano salio esta cancion?\",\"options\":[\"2006\",\"2008\",\"2010\",\"2013\"],\"correct\":1}",
     "question_timeline_year": "2008",
     "question_title": "{\"text\":\"Cual es el titulo de este tema?\",\"answer\":\"Peter Pan\"}",
-    "catalog_index": 612
+    "catalog_index": 612,
+    "apple_track_id": 276255991,
+    "preview_estado": "ok"
   },
   {
     "id": "temazos-305-portugal-the-man-feel-it-still-6QgjcU",
@@ -21938,7 +21991,7 @@
     "duration_ms": 163000,
     "duration_seconds": 163,
     "cover_url": "https://i.scdn.co/image/ab67616d0000b273af52c228c9619ff6298b08cd",
-    "preview_url": "",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/85/c2/25/85c225b9-8360-501e-bf3f-64e4b02e199c/mzaf_437601562163779888.plus.aac.p.m4a",
     "popularity": "",
     "explicit": "",
     "difficulty": "medium",
@@ -21949,7 +22002,9 @@
     "question_year": "{\"text\":\"En que ano salio esta cancion?\",\"options\":[\"2015\",\"2017\",\"2019\",\"2022\"],\"correct\":1}",
     "question_timeline_year": "2017",
     "question_title": "{\"text\":\"Cual es el titulo de este tema?\",\"answer\":\"Feel It Still\"}",
-    "catalog_index": 613
+    "catalog_index": 613,
+    "apple_track_id": 1209285548,
+    "preview_estado": "ok"
   },
   {
     "id": "temazos-306-moby-escapar-slipping-away-feat-amaral-2006-remastered-version-41nv6T",
@@ -21983,7 +22038,8 @@
     "question_year": "{\"text\":\"En que ano salio esta cancion?\",\"options\":[\"2004\",\"2006\",\"2008\",\"2011\"],\"correct\":1}",
     "question_timeline_year": "2006",
     "question_title": "{\"text\":\"Cual es el titulo de este tema?\",\"answer\":\"Escapar (Slipping Away) (feat. Amaral) - 2006 Remastered Version\"}",
-    "catalog_index": 614
+    "catalog_index": 614,
+    "preview_estado": "sin coincidencia"
   },
   {
     "id": "temazos-307-imagine-dragons-believer-0pqnGH",
@@ -22006,7 +22062,7 @@
     "duration_ms": 204000,
     "duration_seconds": 204,
     "cover_url": "https://i.scdn.co/image/ab67616d0000b2735675e83f707f1d7271e5cf8a",
-    "preview_url": "",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/c0/3f/36/c03f367a-b66b-fd0a-a54c-30f8250c4410/mzaf_12768434238801682952.plus.aac.p.m4a",
     "popularity": "",
     "explicit": "",
     "difficulty": "medium",
@@ -22017,7 +22073,9 @@
     "question_year": "{\"text\":\"En que ano salio esta cancion?\",\"options\":[\"2015\",\"2017\",\"2019\",\"2022\"],\"correct\":1}",
     "question_timeline_year": "2017",
     "question_title": "{\"text\":\"Cual es el titulo de este tema?\",\"answer\":\"Believer\"}",
-    "catalog_index": 615
+    "catalog_index": 615,
+    "apple_track_id": 1411628233,
+    "preview_estado": "ok"
   },
   {
     "id": "temazos-308-mark-ronson-uptown-funk-feat-bruno-mars-32OlwW",
@@ -22040,7 +22098,7 @@
     "duration_ms": 269000,
     "duration_seconds": 269,
     "cover_url": "https://i.scdn.co/image/ab67616d0000b2739860171ddfee17f77a570cf6",
-    "preview_url": "",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/b9/96/2c/b9962c79-3662-235c-e55d-6c4b41457499/mzaf_18075623088273148288.plus.aac.p.m4a",
     "popularity": "",
     "explicit": "",
     "difficulty": "medium",
@@ -22051,7 +22109,9 @@
     "question_year": "{\"text\":\"En que ano salio esta cancion?\",\"options\":[\"2013\",\"2015\",\"2017\",\"2020\"],\"correct\":1}",
     "question_timeline_year": "2015",
     "question_title": "{\"text\":\"Cual es el titulo de este tema?\",\"answer\":\"Uptown Funk (feat. Bruno Mars)\"}",
-    "catalog_index": 616
+    "catalog_index": 616,
+    "apple_track_id": 943946671,
+    "preview_estado": "ok"
   },
   {
     "id": "espanol-summer-party-001-tequila-me-vuelvo-loco-3sQtyO",
@@ -65705,7 +65765,10 @@
     "release_year": 1990,
     "duration_ms": 242000,
     "spotify_track_id": "0swl1tZWBEBOdRVPN6axXe",
-    "spotify_uri": "spotify:track:0swl1tZWBEBOdRVPN6axXe"
+    "spotify_uri": "spotify:track:0swl1tZWBEBOdRVPN6axXe",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/d7/f5/83/d7f5834f-a94b-a73c-7451-df333262c880/mzaf_5915901001858421092.plus.aac.p.m4a",
+    "apple_track_id": 724066688,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-139-los-prisioneros-paramar",
@@ -65718,7 +65781,10 @@
     "release_year": 1984,
     "duration_ms": 225000,
     "spotify_track_id": "6YbjZUR8F5ewBI1kHaIA1G",
-    "spotify_uri": "spotify:track:6YbjZUR8F5ewBI1kHaIA1G"
+    "spotify_uri": "spotify:track:6YbjZUR8F5ewBI1kHaIA1G",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/2f/e0/53/2fe053e7-8907-63c6-09c1-e8a6cfbed060/mzaf_6352746669062308306.plus.aac.p.m4a",
+    "apple_track_id": 724066561,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-140-los-prisioneros-el-baile-de-los-que-sobran",
@@ -65731,7 +65797,10 @@
     "release_year": 1986,
     "duration_ms": 343000,
     "spotify_track_id": "15T3otpUnJKin5njR8x0Tx",
-    "spotify_uri": "spotify:track:15T3otpUnJKin5njR8x0Tx"
+    "spotify_uri": "spotify:track:15T3otpUnJKin5njR8x0Tx",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/1e/6a/6d/1e6a6de6-bcd6-273d-f01e-22ef2425a5da/mzaf_13093210724886798818.plus.aac.p.m4a",
+    "apple_track_id": 724066502,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-141-los-prisioneros-estrechez-de-corazon",
@@ -65744,7 +65813,10 @@
     "release_year": 1991,
     "duration_ms": 298000,
     "spotify_track_id": "4oR2kX5BI50GBnQGRdRRsM",
-    "spotify_uri": "spotify:track:4oR2kX5BI50GBnQGRdRRsM"
+    "spotify_uri": "spotify:track:4oR2kX5BI50GBnQGRdRRsM",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/35/e2/96/35e2969e-4480-f714-bb11-fabb78b449b3/mzaf_11888570214758576100.plus.aac.p.m4a",
+    "apple_track_id": 714653017,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-142-los-prisioneros-por-que-no-se-van",
@@ -65757,7 +65829,10 @@
     "release_year": 1986,
     "duration_ms": 181000,
     "spotify_track_id": "0FRpkVdaghjib91eaXOA97",
-    "spotify_uri": "spotify:track:0FRpkVdaghjib91eaXOA97"
+    "spotify_uri": "spotify:track:0FRpkVdaghjib91eaXOA97",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/c0/ba/9f/c0ba9f74-7ff8-8b37-5f17-498d8b4f042a/mzaf_6658364289711999081.plus.aac.p.m4a",
+    "apple_track_id": 723429074,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-143-los-prisioneros-tren-al-sur",
@@ -65770,7 +65845,10 @@
     "release_year": 1990,
     "duration_ms": 336000,
     "spotify_track_id": "6W1BLmVBxkqZwFQcORQLnv",
-    "spotify_uri": "spotify:track:6W1BLmVBxkqZwFQcORQLnv"
+    "spotify_uri": "spotify:track:6W1BLmVBxkqZwFQcORQLnv",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/fe/a4/8c/fea48c52-cdf5-5897-b05c-09b3967c6418/mzaf_1136971463270286503.plus.aac.p.m4a",
+    "apple_track_id": 714652852,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-144-los-prisioneros-la-voz-de-los-80",
@@ -65783,7 +65861,10 @@
     "release_year": 1984,
     "duration_ms": 248000,
     "spotify_track_id": "0VvwpKqD7cOYubrK030fGR",
-    "spotify_uri": "spotify:track:0VvwpKqD7cOYubrK030fGR"
+    "spotify_uri": "spotify:track:0VvwpKqD7cOYubrK030fGR",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/6d/47/1b/6d471bdc-cfd2-feb2-80a1-bf6e8dabeaf3/mzaf_209162447178281595.plus.aac.p.m4a",
+    "apple_track_id": 723428915,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-145-los-prisioneros-no-necesitamos-banderas",
@@ -65796,7 +65877,10 @@
     "release_year": 1984,
     "duration_ms": 309000,
     "spotify_track_id": "3J8UPLZhNFQi3o2qIvwLjY",
-    "spotify_uri": "spotify:track:3J8UPLZhNFQi3o2qIvwLjY"
+    "spotify_uri": "spotify:track:3J8UPLZhNFQi3o2qIvwLjY",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/a1/4e/d3/a14ed333-fc16-fb19-1e1f-a23a5e3f18f7/mzaf_17407056376844040178.plus.aac.p.m4a",
+    "apple_track_id": 933144911,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-146-los-prisioneros-corazones-rojos",
@@ -65809,7 +65893,10 @@
     "release_year": 1990,
     "duration_ms": 211000,
     "spotify_track_id": "244nCwfi32MNrkALQi2qga",
-    "spotify_uri": "spotify:track:244nCwfi32MNrkALQi2qga"
+    "spotify_uri": "spotify:track:244nCwfi32MNrkALQi2qga",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/cc/16/5a/cc165aa1-34e5-e629-612d-a32c0f404e52/mzaf_2486332101694655478.plus.aac.p.m4a",
+    "apple_track_id": 723798860,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-147-los-prisioneros-nunca-quedas-mal-con-nadie",
@@ -65822,7 +65909,10 @@
     "release_year": 1984,
     "duration_ms": 250000,
     "spotify_track_id": "0AkmNg3BN8xBuECm5xllwR",
-    "spotify_uri": "spotify:track:0AkmNg3BN8xBuECm5xllwR"
+    "spotify_uri": "spotify:track:0AkmNg3BN8xBuECm5xllwR",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/c9/7f/89/c97f8998-c1be-73ca-908b-e81fa15c3c23/mzaf_17964909850723153221.plus.aac.p.m4a",
+    "apple_track_id": 724066732,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-148-los-prisioneros-quien-mato-a-marilyn",
@@ -65835,7 +65925,10 @@
     "release_year": 1984,
     "duration_ms": 188000,
     "spotify_track_id": "6aq0jKmaxLzS8o82abgSxR",
-    "spotify_uri": "spotify:track:6aq0jKmaxLzS8o82abgSxR"
+    "spotify_uri": "spotify:track:6aq0jKmaxLzS8o82abgSxR",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/62/0f/78/620f78a0-cfdb-c13e-cad7-25590df82f05/mzaf_10332532596122707182.plus.aac.p.m4a",
+    "apple_track_id": 723428972,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-149-los-prisioneros-quieren-dinero",
@@ -65848,7 +65941,10 @@
     "release_year": 1986,
     "duration_ms": 310000,
     "spotify_track_id": "5De5NuCIu9zcBfgSFdXPbA",
-    "spotify_uri": "spotify:track:5De5NuCIu9zcBfgSFdXPbA"
+    "spotify_uri": "spotify:track:5De5NuCIu9zcBfgSFdXPbA",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/43/44/a4/4344a483-87cd-91c7-e4b5-17c283e3f134/mzaf_10587899465331498099.plus.aac.p.m4a",
+    "apple_track_id": 1102889392,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-150-los-prisioneros-sexo",
@@ -65861,7 +65957,10 @@
     "release_year": 1984,
     "duration_ms": 287000,
     "spotify_track_id": "4kngkpQ3T9wUzZrdfQr0Wq",
-    "spotify_uri": "spotify:track:4kngkpQ3T9wUzZrdfQr0Wq"
+    "spotify_uri": "spotify:track:4kngkpQ3T9wUzZrdfQr0Wq",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/c1/e2/fa/c1e2fa97-5e42-21db-d337-d7f717c145f9/mzaf_13078085132394856333.plus.aac.p.m4a",
+    "apple_track_id": 933144903,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-151-los-prisioneros-muevan-las-industrias",
@@ -65874,7 +65973,10 @@
     "release_year": 1986,
     "duration_ms": 248000,
     "spotify_track_id": "0NhbvFZXkZPWxPcQdtVFLZ",
-    "spotify_uri": "spotify:track:0NhbvFZXkZPWxPcQdtVFLZ"
+    "spotify_uri": "spotify:track:0NhbvFZXkZPWxPcQdtVFLZ",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/0d/ac/19/0dac1915-d279-6d32-b5f5-55d69ecd5d14/mzaf_6868742214561986850.plus.aac.p.m4a",
+    "apple_track_id": 724066695,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-152-los-prisioneros-cuentame-una-historia-original",
@@ -65887,7 +65989,10 @@
     "release_year": 1990,
     "duration_ms": 229000,
     "spotify_track_id": "5ycOBJyHjc40mNGB3Dim7Y",
-    "spotify_uri": "spotify:track:5ycOBJyHjc40mNGB3Dim7Y"
+    "spotify_uri": "spotify:track:5ycOBJyHjc40mNGB3Dim7Y",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/2b/1f/73/2b1f73fa-8061-1138-f886-c1665ddca5df/mzaf_5389072790680332348.plus.aac.p.m4a",
+    "apple_track_id": 723798861,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-153-los-prisioneros-we-are-sudamerican-rockers",
@@ -65900,7 +66005,10 @@
     "release_year": 1988,
     "duration_ms": 215000,
     "spotify_track_id": "5F38bWepavLdPnAP0s22Xo",
-    "spotify_uri": "spotify:track:5F38bWepavLdPnAP0s22Xo"
+    "spotify_uri": "spotify:track:5F38bWepavLdPnAP0s22Xo",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/44/af/c4/44afc4f7-0ebd-383e-8973-2d895019ed20/mzaf_1743146496296670441.plus.aac.p.m4a",
+    "apple_track_id": 724066690,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-154-los-prisioneros-pa-pa-pa",
@@ -65913,7 +66021,10 @@
     "release_year": 1987,
     "duration_ms": 210000,
     "spotify_track_id": "3IDNQ9K0yuETDqfLdumk3H",
-    "spotify_uri": "spotify:track:3IDNQ9K0yuETDqfLdumk3H"
+    "spotify_uri": "spotify:track:3IDNQ9K0yuETDqfLdumk3H",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/40/3a/8c/403a8cb3-7ed2-cf31-a8b3-34a2e509c652/mzaf_12775642093728794091.plus.aac.p.m4a",
+    "apple_track_id": 723429295,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-155-los-prisioneros-por-que-los-ricos",
@@ -65926,7 +66037,10 @@
     "release_year": 1986,
     "duration_ms": 296000,
     "spotify_track_id": "0GvT2AUiVLteoFm11XgdjL",
-    "spotify_uri": "spotify:track:0GvT2AUiVLteoFm11XgdjL"
+    "spotify_uri": "spotify:track:0GvT2AUiVLteoFm11XgdjL",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/06/16/ce/0616cef8-a0b7-69a3-97b8-448465695df8/mzaf_12369330326801281548.plus.aac.p.m4a",
+    "apple_track_id": 724066730,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-156-los-prisioneros-latinoamerica-es-un-pueblo-al-su",
@@ -65939,7 +66053,10 @@
     "release_year": 1984,
     "duration_ms": 242000,
     "spotify_track_id": "6Y57xXG66eowb6BqZfbd0U",
-    "spotify_uri": "spotify:track:6Y57xXG66eowb6BqZfbd0U"
+    "spotify_uri": "spotify:track:6Y57xXG66eowb6BqZfbd0U",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/ac/51/b3/ac51b33b-c920-04e9-8dd7-742ca2257379/mzaf_7534841759523443459.plus.aac.p.m4a",
+    "apple_track_id": 933144897,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-157-los-prisioneros-mentalidad-televisiva",
@@ -65952,7 +66069,10 @@
     "release_year": 1984,
     "duration_ms": 256000,
     "spotify_track_id": "1OZndFlWMi0FkjGyIbV1DS",
-    "spotify_uri": "spotify:track:1OZndFlWMi0FkjGyIbV1DS"
+    "spotify_uri": "spotify:track:1OZndFlWMi0FkjGyIbV1DS",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/00/de/73/00de739f-4874-f649-8cd2-153a6676d7fb/mzaf_18396869085380491708.plus.aac.p.m4a",
+    "apple_track_id": 724066689,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-158-los-prisioneros-que-no-destrocen-tu-vida",
@@ -65965,7 +66085,10 @@
     "release_year": 1987,
     "duration_ms": 252000,
     "spotify_track_id": "6QH6qOcHV20tncJtdvHb44",
-    "spotify_uri": "spotify:track:6QH6qOcHV20tncJtdvHb44"
+    "spotify_uri": "spotify:track:6QH6qOcHV20tncJtdvHb44",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a2/8f/58/a28f5818-f3e0-7aad-d705-212c29d93c90/mzaf_3854451414713622258.plus.aac.p.m4a",
+    "apple_track_id": 724066578,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-159-los-prisioneros-brigada-de-negro",
@@ -65978,7 +66101,10 @@
     "release_year": 1984,
     "duration_ms": 226000,
     "spotify_track_id": "01yDjImCcOaHDT4uy6VOPw",
-    "spotify_uri": "spotify:track:01yDjImCcOaHDT4uy6VOPw"
+    "spotify_uri": "spotify:track:01yDjImCcOaHDT4uy6VOPw",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/4d/e5/04/4de504b8-a4b3-ac57-567f-4baeb30ca3eb/mzaf_15353002065688857517.plus.aac.p.m4a",
+    "apple_track_id": 933144896,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-160-los-prisioneros-noche-en-la-ciudad",
@@ -65991,7 +66117,10 @@
     "release_year": 1990,
     "duration_ms": 370000,
     "spotify_track_id": "7al2fp3n4GW18mPF4cHPUy",
-    "spotify_uri": "spotify:track:7al2fp3n4GW18mPF4cHPUy"
+    "spotify_uri": "spotify:track:7al2fp3n4GW18mPF4cHPUy",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/12/90/f3/1290f361-3ff9-4034-d09e-4bec0713824e/mzaf_15779601993353535324.plus.aac.p.m4a",
+    "apple_track_id": 723798877,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-161-los-prisioneros-independencia-cultural",
@@ -66004,7 +66133,10 @@
     "release_year": 1986,
     "duration_ms": 272000,
     "spotify_track_id": "5KtFijRDUJIyIsqEp8xUnb",
-    "spotify_uri": "spotify:track:5KtFijRDUJIyIsqEp8xUnb"
+    "spotify_uri": "spotify:track:5KtFijRDUJIyIsqEp8xUnb",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/ef/9f/ef/ef9fefc8-6a2e-c678-5267-fb6d99f80479/mzaf_6808414926331514835.plus.aac.p.m4a",
+    "apple_track_id": 724066585,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-162-los-prisioneros-lo-estamos-pasando-muy-bien",
@@ -66017,7 +66149,10 @@
     "release_year": 1987,
     "duration_ms": 348000,
     "spotify_track_id": "1oiHurFFxAaa1KrL0q6VRo",
-    "spotify_uri": "spotify:track:1oiHurFFxAaa1KrL0q6VRo"
+    "spotify_uri": "spotify:track:1oiHurFFxAaa1KrL0q6VRo",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/07/3e/cf/073ecf7a-f4a8-d0a8-0ea8-3c3ef16fa5b1/mzaf_493575011005001142.plus.aac.p.m4a",
+    "apple_track_id": 713622036,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-163-los-prisioneros-exijo-ser-un-heroe",
@@ -66030,7 +66165,10 @@
     "release_year": 1986,
     "duration_ms": 343000,
     "spotify_track_id": "3Sm8TZeE54N9pWtAMK6qQM",
-    "spotify_uri": "spotify:track:3Sm8TZeE54N9pWtAMK6qQM"
+    "spotify_uri": "spotify:track:3Sm8TZeE54N9pWtAMK6qQM",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/00/74/b3/0074b3f0-e68f-313f-44e1-0079ce39b0e3/mzaf_6348476649985134733.plus.aac.p.m4a",
+    "apple_track_id": 714026689,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-164-los-prisioneros-por-amarte",
@@ -66043,7 +66181,10 @@
     "release_year": 1990,
     "duration_ms": 363000,
     "spotify_track_id": "5E1v87gRNLWbTHQc0DGlTI",
-    "spotify_uri": "spotify:track:5E1v87gRNLWbTHQc0DGlTI"
+    "spotify_uri": "spotify:track:5E1v87gRNLWbTHQc0DGlTI",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/94/86/df/9486df74-85a6-5351-3b32-1e1cc2b2f97d/mzaf_5712106864047280447.plus.aac.p.m4a",
+    "apple_track_id": 723798873,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-165-los-prisioneros-por-favor",
@@ -66056,7 +66197,10 @@
     "release_year": 1986,
     "duration_ms": 212000,
     "spotify_track_id": "7ckgU4Hcj9urCh2bTO8Ct8",
-    "spotify_uri": "spotify:track:7ckgU4Hcj9urCh2bTO8Ct8"
+    "spotify_uri": "spotify:track:7ckgU4Hcj9urCh2bTO8Ct8",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/4f/3a/a2/4f3aa254-6fa8-c9e8-10b8-c7f1bd83f471/mzaf_9366892765190447501.plus.aac.p.m4a",
+    "apple_track_id": 714026693,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-166-los-prisioneros-maldito-sudaca",
@@ -66069,7 +66213,10 @@
     "release_year": 1987,
     "duration_ms": 136000,
     "spotify_track_id": "75KyB8zFgkkfwOWr3wz2y0",
-    "spotify_uri": "spotify:track:75KyB8zFgkkfwOWr3wz2y0"
+    "spotify_uri": "spotify:track:75KyB8zFgkkfwOWr3wz2y0",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/82/7c/2e/827c2ee3-ad6a-0f56-68db-3377122dcbce/mzaf_8606186116250184317.plus.aac.p.m4a",
+    "apple_track_id": 724066706,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-167-los-prisioneros-jugar-a-la-guerra",
@@ -66082,7 +66229,10 @@
     "release_year": 1987,
     "duration_ms": 277000,
     "spotify_track_id": "5CRx7zuhcYCh086TOlfTFq",
-    "spotify_uri": "spotify:track:5CRx7zuhcYCh086TOlfTFq"
+    "spotify_uri": "spotify:track:5CRx7zuhcYCh086TOlfTFq",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/86/c1/ba/86c1bac5-1083-d27b-2569-6c2cd8f101b6/mzaf_8803986157452930492.plus.aac.p.m4a",
+    "apple_track_id": 713622025,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-168-los-prisioneros-una-mujer-que-no-llame-la-atenci",
@@ -66095,7 +66245,10 @@
     "release_year": 1986,
     "duration_ms": 203000,
     "spotify_track_id": "4ovxoRmShmXzsxLI4X7AB6",
-    "spotify_uri": "spotify:track:4ovxoRmShmXzsxLI4X7AB6"
+    "spotify_uri": "spotify:track:4ovxoRmShmXzsxLI4X7AB6",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/80/e4/68/80e468a6-2d3f-00cd-6dc3-3a360eb26ad1/mzaf_10395026819483855520.plus.aac.p.m4a",
+    "apple_track_id": 714026698,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-169-los-prisioneros-de-la-cultura-de-la-basura",
@@ -66108,7 +66261,10 @@
     "release_year": 1987,
     "duration_ms": 187000,
     "spotify_track_id": "54LquXyjjfdqPtG475n5L3",
-    "spotify_uri": "spotify:track:54LquXyjjfdqPtG475n5L3"
+    "spotify_uri": "spotify:track:54LquXyjjfdqPtG475n5L3",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/0b/22/17/0b22176b-5f50-b3a9-93f3-7a6e25507c42/mzaf_12321912252112624668.plus.aac.p.m4a",
+    "apple_track_id": 713621997,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-170-los-prisioneros-ultra-derecha",
@@ -66121,7 +66277,10 @@
     "release_year": 2003,
     "duration_ms": 202000,
     "spotify_track_id": "6T9yR5ip1m2z6K7QSKsB3s",
-    "spotify_uri": "spotify:track:6T9yR5ip1m2z6K7QSKsB3s"
+    "spotify_uri": "spotify:track:6T9yR5ip1m2z6K7QSKsB3s",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/07/22/cb/0722cb53-e660-dffa-91cb-4d4ca703bf0e/mzaf_34513493359307831.plus.aac.p.m4a",
+    "apple_track_id": 1482956928,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-171-los-prisioneros-con-suavidad",
@@ -66134,7 +66293,10 @@
     "release_year": 1990,
     "duration_ms": 304000,
     "spotify_track_id": "2PmoxtFwmuP8hnLCaV9wFW",
-    "spotify_uri": "spotify:track:2PmoxtFwmuP8hnLCaV9wFW"
+    "spotify_uri": "spotify:track:2PmoxtFwmuP8hnLCaV9wFW",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/d9/01/ff/d901ffe4-2d00-6ae4-7170-d64bed5c8912/mzaf_316018396369929767.plus.aac.p.m4a",
+    "apple_track_id": 723798852,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-172-la-ley-mentira",
@@ -66147,7 +66309,10 @@
     "release_year": 2001,
     "duration_ms": 288000,
     "spotify_track_id": "5Em7MA991Gn3yhheaul0CX",
-    "spotify_uri": "spotify:track:5Em7MA991Gn3yhheaul0CX"
+    "spotify_uri": "spotify:track:5Em7MA991Gn3yhheaul0CX",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/40/a2/75/40a275f0-2d4b-43a5-3aff-dcff8efc303e/mzaf_7751616893805379669.plus.aac.p.m4a",
+    "apple_track_id": 280606021,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-173-la-ley-aqui",
@@ -66160,7 +66325,10 @@
     "release_year": 2000,
     "duration_ms": 284000,
     "spotify_track_id": "4aDtCVcQCkR7zYa8jwLciP",
-    "spotify_uri": "spotify:track:4aDtCVcQCkR7zYa8jwLciP"
+    "spotify_uri": "spotify:track:4aDtCVcQCkR7zYa8jwLciP",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/70/94/e5/7094e539-098c-f7bd-cb01-54366eb3658a/mzaf_4537809917116133633.plus.aac.p.m4a",
+    "apple_track_id": 280674400,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-174-la-ley-el-duelo",
@@ -66173,7 +66341,10 @@
     "release_year": 1995,
     "duration_ms": 194000,
     "spotify_track_id": "3XHg42QOqlevRU7jXRkAKk",
-    "spotify_uri": "spotify:track:3XHg42QOqlevRU7jXRkAKk"
+    "spotify_uri": "spotify:track:3XHg42QOqlevRU7jXRkAKk",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/3f/73/5a/3f735aaa-a884-a5c1-3a2d-f64d026ba181/mzaf_4242278979894784389.plus.aac.p.m4a",
+    "apple_track_id": 280782708,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-175-la-ley-fuera-de-mi",
@@ -66186,7 +66357,10 @@
     "release_year": 2000,
     "duration_ms": 298000,
     "spotify_track_id": "5XH286garUg3tcciTKR50O",
-    "spotify_uri": "spotify:track:5XH286garUg3tcciTKR50O"
+    "spotify_uri": "spotify:track:5XH286garUg3tcciTKR50O",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/23/58/f3/2358f3c6-1d36-39a4-5c01-6b5ded610507/mzaf_1689921335006125280.plus.aac.p.m4a",
+    "apple_track_id": 280606073,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-176-la-ley-sin-ti",
@@ -66199,7 +66373,8 @@
     "release_year": 2014,
     "duration_ms": 253000,
     "spotify_track_id": "3w7R891x5eZMncR4tazCxS",
-    "spotify_uri": "spotify:track:3w7R891x5eZMncR4tazCxS"
+    "spotify_uri": "spotify:track:3w7R891x5eZMncR4tazCxS",
+    "preview_estado": "sin coincidencia"
   },
   {
     "id": "chileno-100-177-la-ley-doble-opuesto",
@@ -66212,7 +66387,10 @@
     "release_year": 1991,
     "duration_ms": 267000,
     "spotify_track_id": "57gcHVTTVxY4LN84KpPDpf",
-    "spotify_uri": "spotify:track:57gcHVTTVxY4LN84KpPDpf"
+    "spotify_uri": "spotify:track:57gcHVTTVxY4LN84KpPDpf",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/75/fb/2b/75fb2b93-0766-8bc5-3b31-783e233ea2f7/mzaf_7388435360804403882.plus.aac.p.m4a",
+    "apple_track_id": 1420247119,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-178-la-ley-prisioneros-de-la-piel",
@@ -66225,7 +66403,10 @@
     "release_year": 1991,
     "duration_ms": 198000,
     "spotify_track_id": "700d0zZVnEg4V9SQBEW00w",
-    "spotify_uri": "spotify:track:700d0zZVnEg4V9SQBEW00w"
+    "spotify_uri": "spotify:track:700d0zZVnEg4V9SQBEW00w",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/dd/ce/28/ddce28c7-3662-4b66-d6ab-edaea3061fd1/mzaf_14971842802349425402.plus.aac.p.m4a",
+    "apple_track_id": 1420247131,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-179-la-ley-tejedores-de-ilusion",
@@ -66238,7 +66419,10 @@
     "release_year": 1993,
     "duration_ms": 256000,
     "spotify_track_id": "5sMZNkZlIDHwW4BR0MQyxt",
-    "spotify_uri": "spotify:track:5sMZNkZlIDHwW4BR0MQyxt"
+    "spotify_uri": "spotify:track:5sMZNkZlIDHwW4BR0MQyxt",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/18/91/dd/1891dd3b-a98b-7c48-aa73-e9e1118ce85f/mzaf_966110862778085440.plus.aac.p.m4a",
+    "apple_track_id": 1420237455,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-180-la-ley-intenta-amar",
@@ -66251,7 +66435,10 @@
     "release_year": 2001,
     "duration_ms": 291000,
     "spotify_track_id": "4rgBSJ2qNeQQWg2ZL1Lt49",
-    "spotify_uri": "spotify:track:4rgBSJ2qNeQQWg2ZL1Lt49"
+    "spotify_uri": "spotify:track:4rgBSJ2qNeQQWg2ZL1Lt49",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/12/3b/40/123b4095-7bce-1dd8-f87a-d457fd343187/mzaf_11081299128196414259.plus.aac.p.m4a",
+    "apple_track_id": 280606044,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-181-la-ley-placer",
@@ -66264,7 +66451,10 @@
     "release_year": 1991,
     "duration_ms": 264000,
     "spotify_track_id": "3CxnwKn2ZIqnFIHBcnNMPn",
-    "spotify_uri": "spotify:track:3CxnwKn2ZIqnFIHBcnNMPn"
+    "spotify_uri": "spotify:track:3CxnwKn2ZIqnFIHBcnNMPn",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/9a/33/2f/9a332f57-1807-98a6-64b8-738fac65369a/mzaf_1846787966940683493.plus.aac.p.m4a",
+    "apple_track_id": 1420247120,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-182-la-ley-mas-alla",
@@ -66277,7 +66467,10 @@
     "release_year": 2003,
     "duration_ms": 296000,
     "spotify_track_id": "13F7o3PxLxoI6P6AiWy60Z",
-    "spotify_uri": "spotify:track:13F7o3PxLxoI6P6AiWy60Z"
+    "spotify_uri": "spotify:track:13F7o3PxLxoI6P6AiWy60Z",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/e1/5a/64/e15a64ef-e234-9d92-2252-ee802bfc06fd/mzaf_6808568532351914291.plus.aac.p.m4a",
+    "apple_track_id": 280607264,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-183-la-ley-olvidar",
@@ -66290,7 +66483,8 @@
     "release_year": 2014,
     "duration_ms": 217000,
     "spotify_track_id": "3eIVO4ru1QSBTMnpsafaSM",
-    "spotify_uri": "spotify:track:3eIVO4ru1QSBTMnpsafaSM"
+    "spotify_uri": "spotify:track:3eIVO4ru1QSBTMnpsafaSM",
+    "preview_estado": "sin coincidencia"
   },
   {
     "id": "chileno-100-184-la-ley-angie",
@@ -66303,7 +66497,10 @@
     "release_year": 1991,
     "duration_ms": 272000,
     "spotify_track_id": "25sK1pxqcz754CFeH9DoH3",
-    "spotify_uri": "spotify:track:25sK1pxqcz754CFeH9DoH3"
+    "spotify_uri": "spotify:track:25sK1pxqcz754CFeH9DoH3",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/5c/9d/e2/5c9de2d1-a63d-2b3e-5e72-a5b6edc35255/mzaf_804889378506548178.plus.aac.p.m4a",
+    "apple_track_id": 1420247135,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-185-la-ley-dia-cero",
@@ -66316,7 +66513,10 @@
     "release_year": 2001,
     "duration_ms": 271000,
     "spotify_track_id": "5wqgWp7vmyYTaDsh0s4gFQ",
-    "spotify_uri": "spotify:track:5wqgWp7vmyYTaDsh0s4gFQ"
+    "spotify_uri": "spotify:track:5wqgWp7vmyYTaDsh0s4gFQ",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/05/86/f1/0586f1b2-6096-bb43-62fa-70ba42795e7d/mzaf_11303208351752780049.plus.aac.p.m4a",
+    "apple_track_id": 280782728,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-186-la-ley-animal",
@@ -66329,7 +66529,10 @@
     "release_year": 1995,
     "duration_ms": 362000,
     "spotify_track_id": "4VBxXS2B6MsTZyzE5Yd8DR",
-    "spotify_uri": "spotify:track:4VBxXS2B6MsTZyzE5Yd8DR"
+    "spotify_uri": "spotify:track:4VBxXS2B6MsTZyzE5Yd8DR",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/7f/f2/63/7ff26354-3271-2afa-1567-83bc2162c241/mzaf_3622250534793898411.plus.aac.p.m4a",
+    "apple_track_id": 40621299,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-187-la-ley-eternidad",
@@ -66342,7 +66545,10 @@
     "release_year": 2001,
     "duration_ms": 251000,
     "spotify_track_id": "7vVR3tUTFZTE5aDaPJPhML",
-    "spotify_uri": "spotify:track:7vVR3tUTFZTE5aDaPJPhML"
+    "spotify_uri": "spotify:track:7vVR3tUTFZTE5aDaPJPhML",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/ca/24/f2/ca24f2b3-a938-824f-e034-5d2de0ba1263/mzaf_17251082423714157839.plus.aac.p.m4a",
+    "apple_track_id": 280674366,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-188-la-ley-amate-y-salvate",
@@ -66355,7 +66561,10 @@
     "release_year": 2003,
     "duration_ms": 262000,
     "spotify_track_id": "2hjzINVuK6OH4lsiUegKNm",
-    "spotify_uri": "spotify:track:2hjzINVuK6OH4lsiUegKNm"
+    "spotify_uri": "spotify:track:2hjzINVuK6OH4lsiUegKNm",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/61/21/c5/6121c500-7451-a235-6678-1e3c0754c7db/mzaf_16128134702948517180.plus.aac.p.m4a",
+    "apple_track_id": 280607176,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-189-beto-cuevas-hablame",
@@ -66368,7 +66577,10 @@
     "release_year": 2008,
     "duration_ms": 306000,
     "spotify_track_id": "0gPfjm3QFkEcPU2TaM7OaY",
-    "spotify_uri": "spotify:track:0gPfjm3QFkEcPU2TaM7OaY"
+    "spotify_uri": "spotify:track:0gPfjm3QFkEcPU2TaM7OaY",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/5d/ee/3b/5dee3b17-7972-a25f-2e29-007c096969cd/mzaf_2999834135357760047.plus.aac.p.m4a",
+    "apple_track_id": 290647599,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-190-beto-cuevas-vuelvo",
@@ -66381,7 +66593,10 @@
     "release_year": 2008,
     "duration_ms": 253000,
     "spotify_track_id": "1fgFg8mSragU2i3H1FwBF4",
-    "spotify_uri": "spotify:track:1fgFg8mSragU2i3H1FwBF4"
+    "spotify_uri": "spotify:track:1fgFg8mSragU2i3H1FwBF4",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/c3/39/4d/c3394d64-3c35-7dd9-35bc-2071caf1ff91/mzaf_16811461063917143991.plus.aac.p.m4a",
+    "apple_track_id": 290647586,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-191-amaral-te-necesito-acustico",
@@ -66394,7 +66609,8 @@
     "release_year": 2002,
     "duration_ms": 245000,
     "spotify_track_id": "61ZvRYNgX7WliB1kgQB32a",
-    "spotify_uri": "spotify:track:61ZvRYNgX7WliB1kgQB32a"
+    "spotify_uri": "spotify:track:61ZvRYNgX7WliB1kgQB32a",
+    "preview_estado": "sin coincidencia"
   },
   {
     "id": "chileno-100-192-beto-cuevas-gracias-a-la-vida",
@@ -66407,7 +66623,8 @@
     "release_year": 2010,
     "duration_ms": 275000,
     "spotify_track_id": "6CsWNO457id8qebdIIRxMq",
-    "spotify_uri": "spotify:track:6CsWNO457id8qebdIIRxMq"
+    "spotify_uri": "spotify:track:6CsWNO457id8qebdIIRxMq",
+    "preview_estado": "sin coincidencia"
   },
   {
     "id": "chileno-100-193-lucybell-milagro",
@@ -66420,7 +66637,10 @@
     "release_year": 2000,
     "duration_ms": 179000,
     "spotify_track_id": "4Ev1EbYD7rsCNoMnHTUhLz",
-    "spotify_uri": "spotify:track:4Ev1EbYD7rsCNoMnHTUhLz"
+    "spotify_uri": "spotify:track:4Ev1EbYD7rsCNoMnHTUhLz",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/39/15/e3/3915e370-be88-940a-6efa-40cd8d628de9/mzaf_17875389269690050886.plus.aac.p.m4a",
+    "apple_track_id": 250984294,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-194-lucybell-cuando-respiro-en-tu-boca",
@@ -66433,7 +66653,10 @@
     "release_year": 1995,
     "duration_ms": 208000,
     "spotify_track_id": "5EhButiJbrrRbO3qguSKkg",
-    "spotify_uri": "spotify:track:5EhButiJbrrRbO3qguSKkg"
+    "spotify_uri": "spotify:track:5EhButiJbrrRbO3qguSKkg",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/19/fe/ab/19feab41-bfb4-6326-f69a-d48aa291911d/mzaf_6112104586695987261.plus.aac.p.m4a",
+    "apple_track_id": 713560931,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-195-lucybell-mataz",
@@ -66446,7 +66669,10 @@
     "release_year": 1996,
     "duration_ms": 345000,
     "spotify_track_id": "2el13qIMOd8cripOqNohGB",
-    "spotify_uri": "spotify:track:2el13qIMOd8cripOqNohGB"
+    "spotify_uri": "spotify:track:2el13qIMOd8cripOqNohGB",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/16/d2/3e/16d23e09-eadc-6de4-af73-a03601bd3f25/mzaf_15883187577684207598.plus.aac.p.m4a",
+    "apple_track_id": 713608103,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-196-lucybell-raptame-del-fin",
@@ -66459,7 +66685,10 @@
     "release_year": 2006,
     "duration_ms": 229000,
     "spotify_track_id": "31PgkRlu7xToxA0PjHoMf7",
-    "spotify_uri": "spotify:track:31PgkRlu7xToxA0PjHoMf7"
+    "spotify_uri": "spotify:track:31PgkRlu7xToxA0PjHoMf7",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/fa/2c/7e/fa2c7eb9-6d56-2a17-a2eb-2137589b60a0/mzaf_7285875569092144428.plus.aac.p.m4a",
+    "apple_track_id": 262197106,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-197-lucybell-hoy-sone",
@@ -66472,7 +66701,10 @@
     "release_year": 2004,
     "duration_ms": 177000,
     "spotify_track_id": "5ZZJ2RgxvwGAht2w04XR3q",
-    "spotify_uri": "spotify:track:5ZZJ2RgxvwGAht2w04XR3q"
+    "spotify_uri": "spotify:track:5ZZJ2RgxvwGAht2w04XR3q",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/dc/c1/02/dcc10291-3613-9207-1735-93c66b50d485/mzaf_4510411727739599785.plus.aac.p.m4a",
+    "apple_track_id": 42232372,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-198-lucybell-tu-sangre-en-vivo",
@@ -66485,7 +66717,10 @@
     "release_year": 2001,
     "duration_ms": 203000,
     "spotify_track_id": "2c46gT0mtHmmTEcjVVCHdH",
-    "spotify_uri": "spotify:track:2c46gT0mtHmmTEcjVVCHdH"
+    "spotify_uri": "spotify:track:2c46gT0mtHmmTEcjVVCHdH",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/fc/9f/23/fc9f233c-d46c-4fca-85e9-03b0af78f09b/mzaf_2368711720983596141.plus.aac.p.m4a",
+    "apple_track_id": 250985414,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-199-lucybell-vete",
@@ -66498,7 +66733,10 @@
     "release_year": 1995,
     "duration_ms": 234000,
     "spotify_track_id": "4AC64waVHrFJevbTUHktKY",
-    "spotify_uri": "spotify:track:4AC64waVHrFJevbTUHktKY"
+    "spotify_uri": "spotify:track:4AC64waVHrFJevbTUHktKY",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/05/7e/43/057e4369-9946-7e00-547a-808ab48791f7/mzaf_3758020411836948194.plus.aac.p.m4a",
+    "apple_track_id": 1513647157,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-200-lucybell-a-perderse",
@@ -66511,7 +66749,10 @@
     "release_year": 2006,
     "duration_ms": 200000,
     "spotify_track_id": "45qWKSi8IjDLo2wgtmwUW3",
-    "spotify_uri": "spotify:track:45qWKSi8IjDLo2wgtmwUW3"
+    "spotify_uri": "spotify:track:45qWKSi8IjDLo2wgtmwUW3",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/74/15/c8/7415c8f7-e979-055b-19e6-fa23d472f40a/mzaf_7797338008446358673.plus.aac.p.m4a",
+    "apple_track_id": 262196740,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-201-la-pozze-latina-chica-electrica",
@@ -66524,7 +66765,10 @@
     "release_year": 1999,
     "duration_ms": 326000,
     "spotify_track_id": "0rHdsAq6qtSTdwJW4luqyW",
-    "spotify_uri": "spotify:track:0rHdsAq6qtSTdwJW4luqyW"
+    "spotify_uri": "spotify:track:0rHdsAq6qtSTdwJW4luqyW",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/87/3c/1a/873c1a4a-8376-eaea-1e77-cd2bde90340b/mzaf_4237232682272007303.plus.aac.p.m4a",
+    "apple_track_id": 1165088600,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-202-joe-vasconcellos-la-joya-del-pacifico",
@@ -66537,7 +66781,10 @@
     "release_year": 2006,
     "duration_ms": 223000,
     "spotify_track_id": "0aHps38kFw6Aqg9sJpD97d",
-    "spotify_uri": "spotify:track:0aHps38kFw6Aqg9sJpD97d"
+    "spotify_uri": "spotify:track:0aHps38kFw6Aqg9sJpD97d",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/b1/6f/2d/b16f2d22-4730-9e55-be4a-1e6c9280ae06/mzaf_12882820305756931776.plus.aac.p.m4a",
+    "apple_track_id": 713608439,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-203-joe-vasconcellos-las-seis",
@@ -66550,7 +66797,10 @@
     "release_year": 1995,
     "duration_ms": 175000,
     "spotify_track_id": "56Q1u9KJUMcun4UWv0b7ik",
-    "spotify_uri": "spotify:track:56Q1u9KJUMcun4UWv0b7ik"
+    "spotify_uri": "spotify:track:56Q1u9KJUMcun4UWv0b7ik",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/d8/d6/8c/d8d68c05-09a2-66b5-a614-b2d1ef2152a6/mzaf_5069512261605131454.plus.aac.p.m4a",
+    "apple_track_id": 714026179,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-204-joe-vasconcellos-magico",
@@ -66563,7 +66813,10 @@
     "release_year": 1995,
     "duration_ms": 187000,
     "spotify_track_id": "5xjomARNn4eeQ9yXVTIXBJ",
-    "spotify_uri": "spotify:track:5xjomARNn4eeQ9yXVTIXBJ"
+    "spotify_uri": "spotify:track:5xjomARNn4eeQ9yXVTIXBJ",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/cf/54/e6/cf54e63d-6ad7-55f3-8e43-f10ea0d8e72c/mzaf_8526628316073984462.plus.aac.p.m4a",
+    "apple_track_id": 714026169,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-205-joe-vasconcellos-huellas-live-from-santiago-chil",
@@ -66576,7 +66829,8 @@
     "release_year": 2006,
     "duration_ms": 375000,
     "spotify_track_id": "0gaohTJb734s9Av2YzDNQE",
-    "spotify_uri": "spotify:track:0gaohTJb734s9Av2YzDNQE"
+    "spotify_uri": "spotify:track:0gaohTJb734s9Av2YzDNQE",
+    "preview_estado": "sin coincidencia"
   },
   {
     "id": "chileno-100-206-joe-vasconcellos-solo-por-esta-noche",
@@ -66589,7 +66843,10 @@
     "release_year": 1995,
     "duration_ms": 220000,
     "spotify_track_id": "7GFm40mEZdXUnxm295nkZx",
-    "spotify_uri": "spotify:track:7GFm40mEZdXUnxm295nkZx"
+    "spotify_uri": "spotify:track:7GFm40mEZdXUnxm295nkZx",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/27/a7/19/27a71924-0e1b-4a8a-d494-064102672a84/mzaf_10834758358141597990.plus.aac.p.m4a",
+    "apple_track_id": 714026261,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-207-joe-vasconcellos-la-funa",
@@ -66602,7 +66859,10 @@
     "release_year": 1997,
     "duration_ms": 145000,
     "spotify_track_id": "6bEhhqg8vVNlnmj9CF6O0C",
-    "spotify_uri": "spotify:track:6bEhhqg8vVNlnmj9CF6O0C"
+    "spotify_uri": "spotify:track:6bEhhqg8vVNlnmj9CF6O0C",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/9a/13/f4/9a13f4f5-d0fd-1a23-0e7a-acbf05648954/mzaf_14286406491293566721.plus.aac.p.m4a",
+    "apple_track_id": 714135726,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-208-joe-vasconcellos-quieto",
@@ -66615,7 +66875,10 @@
     "release_year": 1995,
     "duration_ms": 201000,
     "spotify_track_id": "2cwuaqbiPCrkPdXFMYyz1s",
-    "spotify_uri": "spotify:track:2cwuaqbiPCrkPdXFMYyz1s"
+    "spotify_uri": "spotify:track:2cwuaqbiPCrkPdXFMYyz1s",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/9f/77/1e/9f771ebc-de76-5caf-1828-00ade7d3db95/mzaf_10985837455668829593.plus.aac.p.m4a",
+    "apple_track_id": 714026306,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-209-joe-vasconcellos-blusa-transparente",
@@ -66628,7 +66891,10 @@
     "release_year": 1995,
     "duration_ms": 224000,
     "spotify_track_id": "37rStpzVvQzrig49cBSAGi",
-    "spotify_uri": "spotify:track:37rStpzVvQzrig49cBSAGi"
+    "spotify_uri": "spotify:track:37rStpzVvQzrig49cBSAGi",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/cf/79/0b/cf790bfc-dc15-9316-f589-7be857782138/mzaf_3454381355145866425.plus.aac.p.m4a",
+    "apple_track_id": 714026320,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-210-joe-vasconcellos-hijo-del-sol-luminoso-live-from",
@@ -66641,7 +66907,10 @@
     "release_year": 2006,
     "duration_ms": 292000,
     "spotify_track_id": "6unZcc3iGVZWzMJvNJdXvL",
-    "spotify_uri": "spotify:track:6unZcc3iGVZWzMJvNJdXvL"
+    "spotify_uri": "spotify:track:6unZcc3iGVZWzMJvNJdXvL",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/9a/73/d4/9a73d440-9205-3acd-cefa-655e3efd874c/mzaf_13192997924062116222.plus.aac.p.m4a",
+    "apple_track_id": 1481458690,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-211-joe-vasconcellos-ciudad-traicionera-live-from-sa",
@@ -66654,7 +66923,8 @@
     "release_year": 2006,
     "duration_ms": 276000,
     "spotify_track_id": "3i1fNc4s7QCEIyRuA5IVh1",
-    "spotify_uri": "spotify:track:3i1fNc4s7QCEIyRuA5IVh1"
+    "spotify_uri": "spotify:track:3i1fNc4s7QCEIyRuA5IVh1",
+    "preview_estado": "sin coincidencia"
   },
   {
     "id": "chileno-100-212-joe-vasconcellos-volante-o-maleta",
@@ -66667,7 +66937,10 @@
     "release_year": 2001,
     "duration_ms": 199000,
     "spotify_track_id": "4LHTMDpK2YEMx4Pf4EoRot",
-    "spotify_uri": "spotify:track:4LHTMDpK2YEMx4Pf4EoRot"
+    "spotify_uri": "spotify:track:4LHTMDpK2YEMx4Pf4EoRot",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/aa/dc/65/aadc65f2-81cc-dd9d-51c6-1326cd57c188/mzaf_12671832157366427839.plus.aac.p.m4a",
+    "apple_track_id": 1160323900,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-213-gondwana-sentimiento-original",
@@ -66680,7 +66953,10 @@
     "release_year": 1997,
     "duration_ms": 292000,
     "spotify_track_id": "2dz5G8cubIlwFN6SJtj0rg",
-    "spotify_uri": "spotify:track:2dz5G8cubIlwFN6SJtj0rg"
+    "spotify_uri": "spotify:track:2dz5G8cubIlwFN6SJtj0rg",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/3f/35/e1/3f35e182-b063-3e19-144e-fc1b1c8a3573/mzaf_9607818530957786764.plus.aac.p.m4a",
+    "apple_track_id": 567291404,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-214-gondwana-felicidad",
@@ -66693,7 +66969,10 @@
     "release_year": 2008,
     "duration_ms": 341000,
     "spotify_track_id": "3TilMZ5wdTBPrDYPNY9Kc8",
-    "spotify_uri": "spotify:track:3TilMZ5wdTBPrDYPNY9Kc8"
+    "spotify_uri": "spotify:track:3TilMZ5wdTBPrDYPNY9Kc8",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/dc/61/99/dc61997f-dd16-2392-23b4-2d675329936e/mzaf_8331966253423844530.plus.aac.p.m4a",
+    "apple_track_id": 713468603,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-215-gondwana-armonia-de-amor",
@@ -66706,7 +66985,10 @@
     "release_year": 1997,
     "duration_ms": 234000,
     "spotify_track_id": "2CfWRsmVFEIJA3t5HBMvry",
-    "spotify_uri": "spotify:track:2CfWRsmVFEIJA3t5HBMvry"
+    "spotify_uri": "spotify:track:2CfWRsmVFEIJA3t5HBMvry",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/b1/9d/05/b19d05bf-a98f-6423-ac73-c08168ccd17c/mzaf_5282191043801170615.plus.aac.p.m4a",
+    "apple_track_id": 567291677,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-216-gondwana-antonia",
@@ -66719,7 +67001,10 @@
     "release_year": 2000,
     "duration_ms": 246000,
     "spotify_track_id": "51LZ2XHdETvNLQ6SKqTjWF",
-    "spotify_uri": "spotify:track:51LZ2XHdETvNLQ6SKqTjWF"
+    "spotify_uri": "spotify:track:51LZ2XHdETvNLQ6SKqTjWF",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/d3/1d/53/d31d53d6-491a-1a59-f08d-859c8c4965e0/mzaf_253298871173759604.plus.aac.p.m4a",
+    "apple_track_id": 567206217,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-217-gondwana-verde-amarillo-y-rojo",
@@ -66732,7 +67017,10 @@
     "release_year": 2000,
     "duration_ms": 338000,
     "spotify_track_id": "4Gu3btu3WVhofFBbSyrwBC",
-    "spotify_uri": "spotify:track:4Gu3btu3WVhofFBbSyrwBC"
+    "spotify_uri": "spotify:track:4Gu3btu3WVhofFBbSyrwBC",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/3c/92/3c/3c923c20-086b-e035-198d-c957ec5a8ee9/mzaf_16039411044588024576.plus.aac.p.m4a",
+    "apple_track_id": 404238016,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-218-gondwana-ignorancia-remaster-2008",
@@ -66745,7 +67033,8 @@
     "release_year": 2002,
     "duration_ms": 276000,
     "spotify_track_id": "4rNkvOVYIpJufH09yYXPEi",
-    "spotify_uri": "spotify:track:4rNkvOVYIpJufH09yYXPEi"
+    "spotify_uri": "spotify:track:4rNkvOVYIpJufH09yYXPEi",
+    "preview_estado": "sin coincidencia"
   },
   {
     "id": "chileno-100-219-gondwana-dime",
@@ -66758,7 +67047,10 @@
     "release_year": 2008,
     "duration_ms": 256000,
     "spotify_track_id": "6YjkpZPWoDnY2Xbvf9lSWn",
-    "spotify_uri": "spotify:track:6YjkpZPWoDnY2Xbvf9lSWn"
+    "spotify_uri": "spotify:track:6YjkpZPWoDnY2Xbvf9lSWn",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/68/cf/e2/68cfe2fc-e58b-810b-73a7-b51791c29db6/mzaf_980862514171627405.plus.aac.p.m4a",
+    "apple_track_id": 713468687,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-220-gondwana-mi-princesa",
@@ -66771,7 +67063,10 @@
     "release_year": 2004,
     "duration_ms": 263000,
     "spotify_track_id": "6qwIv4W6tUPxt2jLz84tlo",
-    "spotify_uri": "spotify:track:6qwIv4W6tUPxt2jLz84tlo"
+    "spotify_uri": "spotify:track:6qwIv4W6tUPxt2jLz84tlo",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/47/08/5b/47085bac-83ec-924d-8e5d-8b55c3be45f1/mzaf_16413829429503163644.plus.aac.p.m4a",
+    "apple_track_id": 714138540,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-221-gondwana-la-barca-2008-remaster",
@@ -66784,7 +67079,8 @@
     "release_year": 2020,
     "duration_ms": 270000,
     "spotify_track_id": "45vzhze2Ti8d4kl1fnePGV",
-    "spotify_uri": "spotify:track:45vzhze2Ti8d4kl1fnePGV"
+    "spotify_uri": "spotify:track:45vzhze2Ti8d4kl1fnePGV",
+    "preview_estado": "sin coincidencia"
   },
   {
     "id": "chileno-100-222-gondwana-fuego-2008-remaster",
@@ -66797,7 +67093,8 @@
     "release_year": 2020,
     "duration_ms": 239000,
     "spotify_track_id": "48N0UhVIF3kZ3eH9iDT8rF",
-    "spotify_uri": "spotify:track:48N0UhVIF3kZ3eH9iDT8rF"
+    "spotify_uri": "spotify:track:48N0UhVIF3kZ3eH9iDT8rF",
+    "preview_estado": "sin coincidencia"
   },
   {
     "id": "chileno-100-223-gondwana-reggae-is-coming",
@@ -66810,7 +67107,10 @@
     "release_year": 1997,
     "duration_ms": 252000,
     "spotify_track_id": "1yYq0GX9AKLb6yiN5pmyEw",
-    "spotify_uri": "spotify:track:1yYq0GX9AKLb6yiN5pmyEw"
+    "spotify_uri": "spotify:track:1yYq0GX9AKLb6yiN5pmyEw",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/90/7d/e1/907de15f-16fe-d58f-9363-c7c950fdf9f6/mzaf_9466306631480069932.plus.aac.p.m4a",
+    "apple_track_id": 567291400,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-224-gondwana-nadie-como-tu",
@@ -66823,7 +67123,10 @@
     "release_year": 2008,
     "duration_ms": 247000,
     "spotify_track_id": "52sDXLOJz1y7Gjf3TJ5eWa",
-    "spotify_uri": "spotify:track:52sDXLOJz1y7Gjf3TJ5eWa"
+    "spotify_uri": "spotify:track:52sDXLOJz1y7Gjf3TJ5eWa",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/50/ae/58/50ae587d-8b1a-304e-4e8f-04e8029957e0/mzaf_1729369830299394367.plus.aac.p.m4a",
+    "apple_track_id": 713468688,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-225-gondwana-chainga-langa",
@@ -66836,7 +67139,10 @@
     "release_year": 1997,
     "duration_ms": 196000,
     "spotify_track_id": "1akpbkKct2FsbSE71IKHZR",
-    "spotify_uri": "spotify:track:1akpbkKct2FsbSE71IKHZR"
+    "spotify_uri": "spotify:track:1akpbkKct2FsbSE71IKHZR",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/95/37/16/9537164c-8d5e-9310-20da-a86cbba08c1c/mzaf_265276619173655775.plus.aac.p.m4a",
+    "apple_track_id": 567291403,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-226-gondwana-te-recuerdo-amanda",
@@ -66849,7 +67155,10 @@
     "release_year": 2008,
     "duration_ms": 329000,
     "spotify_track_id": "337eg34bKb97zZce5PUXQs",
-    "spotify_uri": "spotify:track:337eg34bKb97zZce5PUXQs"
+    "spotify_uri": "spotify:track:337eg34bKb97zZce5PUXQs",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/2f/36/6b/2f366b76-f123-9c93-9230-eb7a6a03050a/mzaf_291531331731839038.plus.aac.p.m4a",
+    "apple_track_id": 713468686,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-227-gondwana-guerra",
@@ -66862,7 +67171,10 @@
     "release_year": 1997,
     "duration_ms": 227000,
     "spotify_track_id": "6XkwfvohWsXv7B3GrDblaZ",
-    "spotify_uri": "spotify:track:6XkwfvohWsXv7B3GrDblaZ"
+    "spotify_uri": "spotify:track:6XkwfvohWsXv7B3GrDblaZ",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/f3/b4/f9/f3b4f97a-b15d-d1df-494d-908e0687804e/mzaf_5871598472103119620.plus.aac.p.m4a",
+    "apple_track_id": 567291408,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-228-gondwana-alabanza",
@@ -66875,7 +67187,10 @@
     "release_year": 2000,
     "duration_ms": 261000,
     "spotify_track_id": "6g0p5ZemM9FUKyNCqlkt69",
-    "spotify_uri": "spotify:track:6g0p5ZemM9FUKyNCqlkt69"
+    "spotify_uri": "spotify:track:6g0p5ZemM9FUKyNCqlkt69",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/72/dd/67/72dd67e8-5c2c-d374-ed5e-fe27fd1145ff/mzaf_10728278721490175477.plus.aac.p.m4a",
+    "apple_track_id": 567206175,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-229-gondwana-keep-the-faith",
@@ -66888,7 +67203,10 @@
     "release_year": 2000,
     "duration_ms": 188000,
     "spotify_track_id": "2Qq4l3G6w6WdfM1rKrEqBe",
-    "spotify_uri": "spotify:track:2Qq4l3G6w6WdfM1rKrEqBe"
+    "spotify_uri": "spotify:track:2Qq4l3G6w6WdfM1rKrEqBe",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/67/f9/6e/67f96e27-45e7-8697-0433-046d17141408/mzaf_2071706042637437365.plus.aac.p.m4a",
+    "apple_track_id": 567206176,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-230-gondwana-aire-de-jah",
@@ -66901,7 +67219,10 @@
     "release_year": 2007,
     "duration_ms": 237000,
     "spotify_track_id": "21a0hsGjEbG6hBl00N3I5g",
-    "spotify_uri": "spotify:track:21a0hsGjEbG6hBl00N3I5g"
+    "spotify_uri": "spotify:track:21a0hsGjEbG6hBl00N3I5g",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview122/v4/f0/97/e1/f097e18f-a816-f3d3-a24c-9d433d6a8242/mzaf_9434196093112753990.plus.aac.p.m4a",
+    "apple_track_id": 291349468,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-231-gondwana-dulce-amor",
@@ -66914,7 +67235,10 @@
     "release_year": 2001,
     "duration_ms": 229000,
     "spotify_track_id": "4VXBz2WOCrFYPy3uG29Jd7",
-    "spotify_uri": "spotify:track:4VXBz2WOCrFYPy3uG29Jd7"
+    "spotify_uri": "spotify:track:4VXBz2WOCrFYPy3uG29Jd7",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/96/ba/d5/96bad58a-efc0-4a58-7081-d5a5f4b7a6dc/mzaf_14885882249369223124.plus.aac.p.m4a",
+    "apple_track_id": 567206218,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-232-quique-neira-pensando-en-ti",
@@ -66927,7 +67251,10 @@
     "release_year": 2003,
     "duration_ms": 249000,
     "spotify_track_id": "5XORpyys9dvyjJWpTYeame",
-    "spotify_uri": "spotify:track:5XORpyys9dvyjJWpTYeame"
+    "spotify_uri": "spotify:track:5XORpyys9dvyjJWpTYeame",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/8b/f0/ce/8bf0cea4-907b-ada8-f678-ff1dd4b024bb/mzaf_12362829567986196074.plus.aac.p.m4a",
+    "apple_track_id": 724660864,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-233-quique-neira-cosas-buenas",
@@ -66940,7 +67267,10 @@
     "release_year": 2006,
     "duration_ms": 277000,
     "spotify_track_id": "6ovTxaS3DjIi9ZZPf1Xdvh",
-    "spotify_uri": "spotify:track:6ovTxaS3DjIi9ZZPf1Xdvh"
+    "spotify_uri": "spotify:track:6ovTxaS3DjIi9ZZPf1Xdvh",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/05/73/71/05737156-6070-ce94-ca74-5632bbe89b41/mzaf_7776382572143561948.plus.aac.p.m4a",
+    "apple_track_id": 713653784,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-234-shamanes-crew-la-crew",
@@ -66953,7 +67283,10 @@
     "release_year": 2016,
     "duration_ms": 211000,
     "spotify_track_id": "28qOaxq9XjJIssbtpET5Xo",
-    "spotify_uri": "spotify:track:28qOaxq9XjJIssbtpET5Xo"
+    "spotify_uri": "spotify:track:28qOaxq9XjJIssbtpET5Xo",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/d8/9a/ed/d89aedd1-54c1-bda1-ee8c-898ca1b83b09/mzaf_11700229311110759852.plus.aac.p.m4a",
+    "apple_track_id": 1256946508,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-235-shamanes-crew-amor-de-luto",
@@ -66966,7 +67299,10 @@
     "release_year": 2016,
     "duration_ms": 235000,
     "spotify_track_id": "1BUtlHw09bzZXdEyjobaI0",
-    "spotify_uri": "spotify:track:1BUtlHw09bzZXdEyjobaI0"
+    "spotify_uri": "spotify:track:1BUtlHw09bzZXdEyjobaI0",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/62/15/97/621597af-cba7-214c-92ca-8d105c0b4669/mzaf_17630842487175203542.plus.aac.p.m4a",
+    "apple_track_id": 1256946324,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-236-shamanes-crew-espartaco",
@@ -66979,7 +67315,10 @@
     "release_year": 2016,
     "duration_ms": 317000,
     "spotify_track_id": "5IJfOtDmZ8mb56Zzv0icgI",
-    "spotify_uri": "spotify:track:5IJfOtDmZ8mb56Zzv0icgI"
+    "spotify_uri": "spotify:track:5IJfOtDmZ8mb56Zzv0icgI",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/f1/95/1a/f1951a4e-0348-1291-df74-38a3d6ae1770/mzaf_8532584775505651939.plus.aac.p.m4a",
+    "apple_track_id": 1256946499,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-237-shamanes-crew-lejos-de-ti",
@@ -66992,7 +67331,10 @@
     "release_year": 2010,
     "duration_ms": 253000,
     "spotify_track_id": "5hBCcrqQBqIRuBhxJGHq2U",
-    "spotify_uri": "spotify:track:5hBCcrqQBqIRuBhxJGHq2U"
+    "spotify_uri": "spotify:track:5hBCcrqQBqIRuBhxJGHq2U",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/f8/a2/19/f8a21901-e9a1-6df6-ed12-a7f5be12a404/mzaf_13625867219964905057.plus.aac.p.m4a",
+    "apple_track_id": 1256924296,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-238-shamanes-crew-prisionera-feat-zalo-reyes",
@@ -67005,7 +67347,10 @@
     "release_year": 2010,
     "duration_ms": 231000,
     "spotify_track_id": "4y7VqeIlakC0MLyi9XxTYu",
-    "spotify_uri": "spotify:track:4y7VqeIlakC0MLyi9XxTYu"
+    "spotify_uri": "spotify:track:4y7VqeIlakC0MLyi9XxTYu",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/f9/78/18/f9781807-5cf3-6db9-6a04-497adf159de9/mzaf_7374991727963873445.plus.aac.p.m4a",
+    "apple_track_id": 1256923773,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-239-shamanes-crew-aroma-tropical",
@@ -67018,7 +67363,10 @@
     "release_year": 2010,
     "duration_ms": 283000,
     "spotify_track_id": "2jYoH5guB3pVAZ8SdMGDHl",
-    "spotify_uri": "spotify:track:2jYoH5guB3pVAZ8SdMGDHl"
+    "spotify_uri": "spotify:track:2jYoH5guB3pVAZ8SdMGDHl",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/11/f1/fe/11f1fe86-0b94-7e84-3d0a-ac93c183e08d/mzaf_12177899608738298636.plus.aac.p.m4a",
+    "apple_track_id": 1256923777,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-240-shamanes-crew-marihuana",
@@ -67031,7 +67379,10 @@
     "release_year": 2016,
     "duration_ms": 203000,
     "spotify_track_id": "75vgEGpva29BiGi3MvtDte",
-    "spotify_uri": "spotify:track:75vgEGpva29BiGi3MvtDte"
+    "spotify_uri": "spotify:track:75vgEGpva29BiGi3MvtDte",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/4a/e7/91/4ae791b4-9302-a9a2-0532-3a75fbe95bd1/mzaf_9334229850986649798.plus.aac.p.m4a",
+    "apple_track_id": 1256946510,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-241-shamanes-crew-ninos-de-barrio",
@@ -67044,7 +67395,10 @@
     "release_year": 2016,
     "duration_ms": 236000,
     "spotify_track_id": "7bSNevAp9pwygAVxyubZFE",
-    "spotify_uri": "spotify:track:7bSNevAp9pwygAVxyubZFE"
+    "spotify_uri": "spotify:track:7bSNevAp9pwygAVxyubZFE",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/52/b9/fd/52b9fd76-a1c8-6c66-9f53-377adec36153/mzaf_179964262214656084.plus.aac.p.m4a",
+    "apple_track_id": 1256946331,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-242-shamanes-crew-se-libre-feat-movimiento-original",
@@ -67057,7 +67411,10 @@
     "release_year": 2010,
     "duration_ms": 264000,
     "spotify_track_id": "4KnpphpichS7dnGCruS6Kb",
-    "spotify_uri": "spotify:track:4KnpphpichS7dnGCruS6Kb"
+    "spotify_uri": "spotify:track:4KnpphpichS7dnGCruS6Kb",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/7f/86/8f/7f868f33-63b0-13ad-7271-599300933cf4/mzaf_13912606442926248382.plus.aac.p.m4a",
+    "apple_track_id": 1256924303,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-243-shamanes-crew-huellas-en-el-tiempo",
@@ -67070,7 +67427,10 @@
     "release_year": 2016,
     "duration_ms": 220000,
     "spotify_track_id": "2d6d55lcIvGmT0kh1Vn0RN",
-    "spotify_uri": "spotify:track:2d6d55lcIvGmT0kh1Vn0RN"
+    "spotify_uri": "spotify:track:2d6d55lcIvGmT0kh1Vn0RN",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/d8/b8/c6/d8b8c6ee-b957-4795-5eb6-3c2b7e762b55/mzaf_15605198982273294595.plus.aac.p.m4a",
+    "apple_track_id": 1256946327,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-244-shamanes-crew-todo-por-nada",
@@ -67083,7 +67443,10 @@
     "release_year": 2016,
     "duration_ms": 302000,
     "spotify_track_id": "2x6IxVI4r0xxwDfr4dZT3U",
-    "spotify_uri": "spotify:track:2x6IxVI4r0xxwDfr4dZT3U"
+    "spotify_uri": "spotify:track:2x6IxVI4r0xxwDfr4dZT3U",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/3c/90/16/3c901604-c451-b3ac-3854-57db5ea8d218/mzaf_10588736598002781263.plus.aac.p.m4a",
+    "apple_track_id": 1256946328,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-245-shamanes-crew-dangerous-feat-bommer-mc-cogoyo",
@@ -67096,7 +67459,10 @@
     "release_year": 2010,
     "duration_ms": 223000,
     "spotify_track_id": "4QTCxZ7XQbg0nD4lSXoRkR",
-    "spotify_uri": "spotify:track:4QTCxZ7XQbg0nD4lSXoRkR"
+    "spotify_uri": "spotify:track:4QTCxZ7XQbg0nD4lSXoRkR",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/49/24/e5/4924e5e0-3822-960e-5cde-003de512d66c/mzaf_13152491288401400268.plus.aac.p.m4a",
+    "apple_track_id": 1256924622,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-246-shamanes-crew-dicen-estar-vivos",
@@ -67109,7 +67475,10 @@
     "release_year": 2016,
     "duration_ms": 222000,
     "spotify_track_id": "398y3g6hvDDVerA4yhDQWA",
-    "spotify_uri": "spotify:track:398y3g6hvDDVerA4yhDQWA"
+    "spotify_uri": "spotify:track:398y3g6hvDDVerA4yhDQWA",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/59/ca/92/59ca9275-a486-1a22-6cec-a0ae379de320/mzaf_16849089465073068700.plus.aac.p.m4a",
+    "apple_track_id": 1256946498,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-247-shamanes-crew-amor-del-ghetto-feat-ky-mani-marle",
@@ -67122,7 +67491,10 @@
     "release_year": 2010,
     "duration_ms": 234000,
     "spotify_track_id": "0F0imieZPzkWSdS7CvNYEw",
-    "spotify_uri": "spotify:track:0F0imieZPzkWSdS7CvNYEw"
+    "spotify_uri": "spotify:track:0F0imieZPzkWSdS7CvNYEw",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/b5/e4/17/b5e41768-01e0-9250-5ab2-0aae2b9c33c0/mzaf_15800672839528848919.plus.aac.p.m4a",
+    "apple_track_id": 1256924305,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-248-shamanes-crew-amor-sin-precio",
@@ -67135,7 +67507,10 @@
     "release_year": 2010,
     "duration_ms": 218000,
     "spotify_track_id": "0bP9pfVp7GGfisiEEQKsIS",
-    "spotify_uri": "spotify:track:0bP9pfVp7GGfisiEEQKsIS"
+    "spotify_uri": "spotify:track:0bP9pfVp7GGfisiEEQKsIS",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/df/e0/ac/dfe0ac35-4747-49e6-5f36-8a33231c9417/mzaf_2855830416939020870.plus.aac.p.m4a",
+    "apple_track_id": 1256923771,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-249-shamanes-crew-linda",
@@ -67148,7 +67523,10 @@
     "release_year": 2010,
     "duration_ms": 235000,
     "spotify_track_id": "056l0NdK5ZmSG9Z31QC8ii",
-    "spotify_uri": "spotify:track:056l0NdK5ZmSG9Z31QC8ii"
+    "spotify_uri": "spotify:track:056l0NdK5ZmSG9Z31QC8ii",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/95/6e/93/956e93b6-a269-f199-75cd-dc05614acda0/mzaf_1495627540840715578.plus.aac.p.m4a",
+    "apple_track_id": 1256923780,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-250-manes-del-asis-a-fumarla",
@@ -67161,7 +67539,8 @@
     "release_year": 2015,
     "duration_ms": 194000,
     "spotify_track_id": "1bc2ob5mJn69SiKHtYWVA4",
-    "spotify_uri": "spotify:track:1bc2ob5mJn69SiKHtYWVA4"
+    "spotify_uri": "spotify:track:1bc2ob5mJn69SiKHtYWVA4",
+    "preview_estado": "sin coincidencia"
   },
   {
     "id": "chileno-100-251-manes-del-asis-bajo-efecto",
@@ -67174,7 +67553,8 @@
     "release_year": 2015,
     "duration_ms": 262000,
     "spotify_track_id": "36Q9AdhKAjPhKqNvDNLAAW",
-    "spotify_uri": "spotify:track:36Q9AdhKAjPhKqNvDNLAAW"
+    "spotify_uri": "spotify:track:36Q9AdhKAjPhKqNvDNLAAW",
+    "preview_estado": "sin coincidencia"
   },
   {
     "id": "chileno-100-252-manes-del-asis-one-love-raggamuffin",
@@ -67187,7 +67567,10 @@
     "release_year": 2015,
     "duration_ms": 272000,
     "spotify_track_id": "63AiYBpwLnjY1eDhoqaOHt",
-    "spotify_uri": "spotify:track:63AiYBpwLnjY1eDhoqaOHt"
+    "spotify_uri": "spotify:track:63AiYBpwLnjY1eDhoqaOHt",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/cc/d4/ab/ccd4ab30-8783-02b9-1ec2-4975e0180e7c/mzaf_2772863872096226873.plus.aac.p.m4a",
+    "apple_track_id": 1275539466,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-253-movimiento-original-natural",
@@ -67200,7 +67583,10 @@
     "release_year": 2011,
     "duration_ms": 204000,
     "spotify_track_id": "3tsBwY0wRBkiy8EBOY3O7z",
-    "spotify_uri": "spotify:track:3tsBwY0wRBkiy8EBOY3O7z"
+    "spotify_uri": "spotify:track:3tsBwY0wRBkiy8EBOY3O7z",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/c5/64/03/c56403a2-a6d0-8069-2232-e264636930ab/mzaf_4782553431605257547.plus.aac.p.m4a",
+    "apple_track_id": 1771032116,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-254-movimiento-original-grandes-pasos",
@@ -67213,7 +67599,10 @@
     "release_year": 2010,
     "duration_ms": 218000,
     "spotify_track_id": "5PN6mXTkzE43DztEmAqsqj",
-    "spotify_uri": "spotify:track:5PN6mXTkzE43DztEmAqsqj"
+    "spotify_uri": "spotify:track:5PN6mXTkzE43DztEmAqsqj",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/38/d1/4e/38d14efa-48b5-30d2-665e-3ea5642b05fd/mzaf_2592217468979467114.plus.aac.p.m4a",
+    "apple_track_id": 1759456799,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-255-movimiento-original-originala",
@@ -67226,7 +67615,10 @@
     "release_year": 2011,
     "duration_ms": 217000,
     "spotify_track_id": "1lr05RqFhNJhpi8Hc6wbDC",
-    "spotify_uri": "spotify:track:1lr05RqFhNJhpi8Hc6wbDC"
+    "spotify_uri": "spotify:track:1lr05RqFhNJhpi8Hc6wbDC",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/e3/70/39/e3703992-4225-5abf-bc50-e8d22825b7bd/mzaf_1658201364802301154.plus.aac.p.m4a",
+    "apple_track_id": 1771032127,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-256-quique-neira-un-poquito-de-ti-feat-movimiento-or",
@@ -67239,7 +67631,10 @@
     "release_year": 2011,
     "duration_ms": 301000,
     "spotify_track_id": "3axbIOoM5lUXADunn5WVos",
-    "spotify_uri": "spotify:track:3axbIOoM5lUXADunn5WVos"
+    "spotify_uri": "spotify:track:3axbIOoM5lUXADunn5WVos",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/36/05/c4/3605c4db-c87b-b459-1692-534b2cc36eb8/mzaf_12246895271187622302.plus.aac.p.m4a",
+    "apple_track_id": 1046177236,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-257-movimiento-original-lova",
@@ -67252,7 +67647,10 @@
     "release_year": 2010,
     "duration_ms": 214000,
     "spotify_track_id": "7p819MwVrnU5Ptrk2dIvzl",
-    "spotify_uri": "spotify:track:7p819MwVrnU5Ptrk2dIvzl"
+    "spotify_uri": "spotify:track:7p819MwVrnU5Ptrk2dIvzl",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/6d/44/f0/6d44f00d-6ebf-16b8-d770-9e6b82b16676/mzaf_16541215072728756193.plus.aac.p.m4a",
+    "apple_track_id": 1759456798,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-258-aerstame-valle-central-feat-excelencia-prehispan",
@@ -67265,7 +67663,10 @@
     "release_year": 2007,
     "duration_ms": 370000,
     "spotify_track_id": "3nqSj33l3Y2DmXHrLCiGBc",
-    "spotify_uri": "spotify:track:3nqSj33l3Y2DmXHrLCiGBc"
+    "spotify_uri": "spotify:track:3nqSj33l3Y2DmXHrLCiGBc",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/53/bd/42/53bd42c7-87c1-6500-b3bd-fd4c37603232/mzaf_609261364125657464.plus.aac.p.m4a",
+    "apple_track_id": 1585438856,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-259-movimiento-original-soldados-del-ghetto",
@@ -67278,7 +67679,10 @@
     "release_year": 2010,
     "duration_ms": 207000,
     "spotify_track_id": "4SK37N46CEyr4STK8Q011q",
-    "spotify_uri": "spotify:track:4SK37N46CEyr4STK8Q011q"
+    "spotify_uri": "spotify:track:4SK37N46CEyr4STK8Q011q",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/98/15/83/981583e4-b4ab-9a81-64c8-6b6659ac9193/mzaf_12901973093300039430.plus.aac.p.m4a",
+    "apple_track_id": 1759456790,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-260-movimiento-original-m-o",
@@ -67291,7 +67695,10 @@
     "release_year": 2010,
     "duration_ms": 248000,
     "spotify_track_id": "2hBedfLcWnwcxb5mLgPVlt",
-    "spotify_uri": "spotify:track:2hBedfLcWnwcxb5mLgPVlt"
+    "spotify_uri": "spotify:track:2hBedfLcWnwcxb5mLgPVlt",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/68/da/0e/68da0e2b-e0e4-4f68-35cc-1146157c366a/mzaf_7868987075416090315.plus.aac.p.m4a",
+    "apple_track_id": 1759456791,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-261-movimiento-original-barrio-sin-luz",
@@ -67304,7 +67711,10 @@
     "release_year": 2008,
     "duration_ms": 194000,
     "spotify_track_id": "6t5m3OELaiXIalFjUOMHjs",
-    "spotify_uri": "spotify:track:6t5m3OELaiXIalFjUOMHjs"
+    "spotify_uri": "spotify:track:6t5m3OELaiXIalFjUOMHjs",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/bb/47/fd/bb47fd7b-7ed6-1bca-1c86-98acea9021cf/mzaf_175830972493412096.plus.aac.p.m4a",
+    "apple_track_id": 1482767979,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-262-movimiento-original-raperzonas",
@@ -67317,7 +67727,10 @@
     "release_year": 2015,
     "duration_ms": 236000,
     "spotify_track_id": "3PPfpnCwOzVF1ARQ7e7aEY",
-    "spotify_uri": "spotify:track:3PPfpnCwOzVF1ARQ7e7aEY"
+    "spotify_uri": "spotify:track:3PPfpnCwOzVF1ARQ7e7aEY",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/58/65/2f/58652f0c-cc7e-7338-4e92-7747b529c311/mzaf_18198238586248033045.plus.aac.p.m4a",
+    "apple_track_id": 1482407408,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-263-movimiento-original-me-siento-bien",
@@ -67330,7 +67743,10 @@
     "release_year": 2015,
     "duration_ms": 186000,
     "spotify_track_id": "0efW4EM4RJLjNy2esOyVOe",
-    "spotify_uri": "spotify:track:0efW4EM4RJLjNy2esOyVOe"
+    "spotify_uri": "spotify:track:0efW4EM4RJLjNy2esOyVOe",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/a4/18/e0/a418e0ae-2f14-51e9-4c46-8f1142374bdb/mzaf_17213263014207858673.plus.aac.p.m4a",
+    "apple_track_id": 1771032111,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-264-movimiento-original-cotidiano-feat-salvaje-decib",
@@ -67343,7 +67759,10 @@
     "release_year": 2015,
     "duration_ms": 259000,
     "spotify_track_id": "0z9NZUfIvHfRg44nyHsdA6",
-    "spotify_uri": "spotify:track:0z9NZUfIvHfRg44nyHsdA6"
+    "spotify_uri": "spotify:track:0z9NZUfIvHfRg44nyHsdA6",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/77/9a/80/779a80ad-6790-3502-9138-078a81e6e6ac/mzaf_8185437406962027888.plus.aac.p.m4a",
+    "apple_track_id": 1482767989,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-265-movimiento-original-chhile",
@@ -67356,7 +67775,10 @@
     "release_year": 2015,
     "duration_ms": 262000,
     "spotify_track_id": "1lUTBTnUynRkUgVneVRim0",
-    "spotify_uri": "spotify:track:1lUTBTnUynRkUgVneVRim0"
+    "spotify_uri": "spotify:track:1lUTBTnUynRkUgVneVRim0",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/8c/bf/29/8cbf2900-dd0c-cd26-e2a5-690af6cf09a8/mzaf_15726984572169317529.plus.aac.p.m4a",
+    "apple_track_id": 1759456796,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-266-aerstame-movimiento-feat-mc-piri-dj-b-ese",
@@ -67369,7 +67791,10 @@
     "release_year": 2007,
     "duration_ms": 190000,
     "spotify_track_id": "27YTfMfdSYgv06hSbiV75q",
-    "spotify_uri": "spotify:track:27YTfMfdSYgv06hSbiV75q"
+    "spotify_uri": "spotify:track:27YTfMfdSYgv06hSbiV75q",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/9f/cc/83/9fcc83a4-c2fb-bde7-d8e4-f04be1f7c5fb/mzaf_15756147053549369225.plus.aac.p.m4a",
+    "apple_track_id": 1585438841,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-267-salvaje-decibel-tengo-un-sueno",
@@ -67382,7 +67807,8 @@
     "release_year": 2014,
     "duration_ms": 235000,
     "spotify_track_id": "0lHm99QJ8Zu3el6ZSoB2nl",
-    "spotify_uri": "spotify:track:0lHm99QJ8Zu3el6ZSoB2nl"
+    "spotify_uri": "spotify:track:0lHm99QJ8Zu3el6ZSoB2nl",
+    "preview_estado": "sin coincidencia"
   },
   {
     "id": "chileno-100-268-tiro-de-gracia-el-juego-verdadero",
@@ -67395,7 +67821,10 @@
     "release_year": 1997,
     "duration_ms": 192000,
     "spotify_track_id": "74UB6CQRH9ykJEh9ma3XwD",
-    "spotify_uri": "spotify:track:74UB6CQRH9ykJEh9ma3XwD"
+    "spotify_uri": "spotify:track:74UB6CQRH9ykJEh9ma3XwD",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/7d/74/26/7d742695-963a-f802-2fd1-afc60b39ec9e/mzaf_8387394181585866347.plus.aac.p.m4a",
+    "apple_track_id": 713319016,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-269-tiro-de-gracia-suenos",
@@ -67408,7 +67837,10 @@
     "release_year": 2012,
     "duration_ms": 321000,
     "spotify_track_id": "1CHIyvldODAZvaMrtitxT1",
-    "spotify_uri": "spotify:track:1CHIyvldODAZvaMrtitxT1"
+    "spotify_uri": "spotify:track:1CHIyvldODAZvaMrtitxT1",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/06/f3/dc/06f3dcd8-1615-1cec-10fd-3b69271d355a/mzaf_17373345681614258912.plus.aac.p.m4a",
+    "apple_track_id": 713987472,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-270-tiro-de-gracia-melaza",
@@ -67421,7 +67853,10 @@
     "release_year": 1997,
     "duration_ms": 179000,
     "spotify_track_id": "09xGWzgSw8zp5oS1x5ogym",
-    "spotify_uri": "spotify:track:09xGWzgSw8zp5oS1x5ogym"
+    "spotify_uri": "spotify:track:09xGWzgSw8zp5oS1x5ogym",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/e1/94/92/e1949257-6e88-9010-e381-5d374461c0b0/mzaf_439843815906260670.plus.aac.p.m4a",
+    "apple_track_id": 713319133,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-271-tiro-de-gracia-chupacabras",
@@ -67434,7 +67869,10 @@
     "release_year": 1997,
     "duration_ms": 230000,
     "spotify_track_id": "1ZZXuEFC87l047nDRLVmG7",
-    "spotify_uri": "spotify:track:1ZZXuEFC87l047nDRLVmG7"
+    "spotify_uri": "spotify:track:1ZZXuEFC87l047nDRLVmG7",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/99/51/6a/99516a0d-3f5d-18dc-ae4d-b8f39810ac13/mzaf_10364441681907285738.plus.aac.p.m4a",
+    "apple_track_id": 713319129,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-272-tiro-de-gracia-viaje-sin-rumbo",
@@ -67447,7 +67885,10 @@
     "release_year": 1997,
     "duration_ms": 219000,
     "spotify_track_id": "4DY8TLIxYCTd7tOLwpoy96",
-    "spotify_uri": "spotify:track:4DY8TLIxYCTd7tOLwpoy96"
+    "spotify_uri": "spotify:track:4DY8TLIxYCTd7tOLwpoy96",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/0d/08/b7/0d08b71d-fefe-df59-184b-0abab4a7fd2a/mzaf_2826533277465398159.plus.aac.p.m4a",
+    "apple_track_id": 713319128,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-273-tiro-de-gracia-nuestra-fiesta-okupa-segura-y-no-",
@@ -67460,7 +67901,10 @@
     "release_year": 1997,
     "duration_ms": 127000,
     "spotify_track_id": "6bBqycwOrmADaMs5isZv6Q",
-    "spotify_uri": "spotify:track:6bBqycwOrmADaMs5isZv6Q"
+    "spotify_uri": "spotify:track:6bBqycwOrmADaMs5isZv6Q",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/45/a9/73/45a9735b-7685-1ebe-a666-6899e5942bf5/mzaf_8365179794664208198.plus.aac.p.m4a",
+    "apple_track_id": 713319132,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-274-tiro-de-gracia-america",
@@ -67473,7 +67917,10 @@
     "release_year": 2012,
     "duration_ms": 275000,
     "spotify_track_id": "4N6rhXhQKLDEvO5TIgKnhu",
-    "spotify_uri": "spotify:track:4N6rhXhQKLDEvO5TIgKnhu"
+    "spotify_uri": "spotify:track:4N6rhXhQKLDEvO5TIgKnhu",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/fc/e8/7a/fce87a3d-3fb2-f3ee-c203-3ab0ab0c580e/mzaf_16682069101760850789.plus.aac.p.m4a",
+    "apple_track_id": 714134154,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-275-tiro-de-gracia-joven-de-la-pobla",
@@ -67486,7 +67933,10 @@
     "release_year": 2005,
     "duration_ms": 200000,
     "spotify_track_id": "6xbvJz66W91y5ex1BnOuq6",
-    "spotify_uri": "spotify:track:6xbvJz66W91y5ex1BnOuq6"
+    "spotify_uri": "spotify:track:6xbvJz66W91y5ex1BnOuq6",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/db/54/f2/db54f2e7-f080-2a88-a52d-f9af1e9299f8/mzaf_16329409165703505274.plus.aac.p.m4a",
+    "apple_track_id": 713523462,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-276-tiro-de-gracia-eso-de-ser-papa-remaster-2004",
@@ -67499,7 +67949,8 @@
     "release_year": 2004,
     "duration_ms": 186000,
     "spotify_track_id": "0Dyi0WSpLvkfGrIjONRnL4",
-    "spotify_uri": "spotify:track:0Dyi0WSpLvkfGrIjONRnL4"
+    "spotify_uri": "spotify:track:0Dyi0WSpLvkfGrIjONRnL4",
+    "preview_estado": "sin coincidencia"
   },
   {
     "id": "chileno-100-277-tiro-de-gracia-maria",
@@ -67512,7 +67963,10 @@
     "release_year": 2012,
     "duration_ms": 141000,
     "spotify_track_id": "4i9UC8bBz67qwtFAKECU5S",
-    "spotify_uri": "spotify:track:4i9UC8bBz67qwtFAKECU5S"
+    "spotify_uri": "spotify:track:4i9UC8bBz67qwtFAKECU5S",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/20/5e/14/205e147a-1ad1-8d7e-1ad1-8a0ed9af43db/mzaf_12647580521488948656.plus.aac.p.m4a",
+    "apple_track_id": 714134065,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-278-tiro-de-gracia-mala-leche",
@@ -67525,7 +67979,10 @@
     "release_year": 2004,
     "duration_ms": 221000,
     "spotify_track_id": "2RVJVCKd3tVjJ7C0VNKQNq",
-    "spotify_uri": "spotify:track:2RVJVCKd3tVjJ7C0VNKQNq"
+    "spotify_uri": "spotify:track:2RVJVCKd3tVjJ7C0VNKQNq",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/49/76/25/497625f2-2dd9-e191-a5ad-6758ee60b51b/mzaf_15233719026308982237.plus.aac.p.m4a",
+    "apple_track_id": 713987497,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-279-makiza-la-rosa-de-los-vientos",
@@ -67538,7 +67995,10 @@
     "release_year": 1999,
     "duration_ms": 309000,
     "spotify_track_id": "3ItEUMz1CKL5CJxmnBAADO",
-    "spotify_uri": "spotify:track:3ItEUMz1CKL5CJxmnBAADO"
+    "spotify_uri": "spotify:track:3ItEUMz1CKL5CJxmnBAADO",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/93/2d/fd/932dfd22-298e-fe79-7428-9d5ba0ac0a49/mzaf_16627848094073640102.plus.aac.p.m4a",
+    "apple_track_id": 682490527,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-280-makiza-un-dia-cualquiera",
@@ -67551,7 +68011,10 @@
     "release_year": 1999,
     "duration_ms": 207000,
     "spotify_track_id": "4x1uWDrHqgXHvyaZ93UP0b",
-    "spotify_uri": "spotify:track:4x1uWDrHqgXHvyaZ93UP0b"
+    "spotify_uri": "spotify:track:4x1uWDrHqgXHvyaZ93UP0b",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/13/8c/8d/138c8d6b-14e1-9d38-7166-445ddb914696/mzaf_13098603950983968664.plus.aac.p.m4a",
+    "apple_track_id": 682490548,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-281-makiza-la-chupaya-99",
@@ -67564,7 +68027,10 @@
     "release_year": 1999,
     "duration_ms": 256000,
     "spotify_track_id": "4V8tRUNvi64DF2BlaQ605C",
-    "spotify_uri": "spotify:track:4V8tRUNvi64DF2BlaQ605C"
+    "spotify_uri": "spotify:track:4V8tRUNvi64DF2BlaQ605C",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/7c/b7/cd/7cb7cd4b-a873-3248-5e4e-94b9a6d017ce/mzaf_1567097711470942461.plus.aac.p.m4a",
+    "apple_track_id": 682490525,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-282-makiza-in-loco-parentis",
@@ -67577,7 +68043,10 @@
     "release_year": 1999,
     "duration_ms": 272000,
     "spotify_track_id": "23u6r7Q3iGs9bmu1Gl9Fnz",
-    "spotify_uri": "spotify:track:23u6r7Q3iGs9bmu1Gl9Fnz"
+    "spotify_uri": "spotify:track:23u6r7Q3iGs9bmu1Gl9Fnz",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/dc/bd/34/dcbd343c-c091-c551-0453-da4546dacad8/mzaf_9394632571618222716.plus.aac.p.m4a",
+    "apple_track_id": 682490529,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-283-makiza-la-saga",
@@ -67590,7 +68059,10 @@
     "release_year": 1999,
     "duration_ms": 245000,
     "spotify_track_id": "0mQgSct9fwpe5GJi6MkGfi",
-    "spotify_uri": "spotify:track:0mQgSct9fwpe5GJi6MkGfi"
+    "spotify_uri": "spotify:track:0mQgSct9fwpe5GJi6MkGfi",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/07/a1/24/07a12418-21ba-76d8-40bd-d32db7b77d27/mzaf_223765224166957006.plus.aac.p.m4a",
+    "apple_track_id": 682490543,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-284-ana-tijoux-mi-verdad",
@@ -67603,7 +68075,10 @@
     "release_year": 2014,
     "duration_ms": 166000,
     "spotify_track_id": "6ofSz8CfDJ91cIRKGzqnSG",
-    "spotify_uri": "spotify:track:6ofSz8CfDJ91cIRKGzqnSG"
+    "spotify_uri": "spotify:track:6ofSz8CfDJ91cIRKGzqnSG",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/d9/85/3d/d9853d36-9631-ec7d-e58c-6ca687f9ef7c/mzaf_17218376919800979197.plus.aac.p.m4a",
+    "apple_track_id": 799701010,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-285-ana-tijoux-sacar-la-voz",
@@ -67616,7 +68091,10 @@
     "release_year": 2012,
     "duration_ms": 253000,
     "spotify_track_id": "1tR0tdHtTapWhGkUAEfgVR",
-    "spotify_uri": "spotify:track:1tR0tdHtTapWhGkUAEfgVR"
+    "spotify_uri": "spotify:track:1tR0tdHtTapWhGkUAEfgVR",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/62/e2/09/62e20944-e42f-5ed2-ee3d-f377e53522a6/mzaf_10726983096079504391.plus.aac.p.m4a",
+    "apple_track_id": 1313737346,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-286-ana-tijoux-calaveritas",
@@ -67629,7 +68107,10 @@
     "release_year": 2016,
     "duration_ms": 260000,
     "spotify_track_id": "7cOkN5nwbpvMuNXzzKiHyD",
-    "spotify_uri": "spotify:track:7cOkN5nwbpvMuNXzzKiHyD"
+    "spotify_uri": "spotify:track:7cOkN5nwbpvMuNXzzKiHyD",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/21/40/79/214079b4-d123-2fec-9cad-ab09360148ab/mzaf_6092362944929543780.plus.aac.p.m4a",
+    "apple_track_id": 1128334487,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-287-ana-tijoux-shock",
@@ -67642,7 +68123,10 @@
     "release_year": 2012,
     "duration_ms": 210000,
     "spotify_track_id": "322LgcUL3uhHbpUQP57WUF",
-    "spotify_uri": "spotify:track:322LgcUL3uhHbpUQP57WUF"
+    "spotify_uri": "spotify:track:322LgcUL3uhHbpUQP57WUF",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/69/fa/0b/69fa0b03-6f21-e270-533f-28bcd4bf5064/mzaf_17675050994412312932.plus.aac.p.m4a",
+    "apple_track_id": 1313741035,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-288-ana-tijoux-cacerolazo",
@@ -67655,7 +68139,8 @@
     "release_year": 2019,
     "duration_ms": 190000,
     "spotify_track_id": "2mou1thXu5kndxfPne78kS",
-    "spotify_uri": "spotify:track:2mou1thXu5kndxfPne78kS"
+    "spotify_uri": "spotify:track:2mou1thXu5kndxfPne78kS",
+    "preview_estado": "sin coincidencia"
   },
   {
     "id": "chileno-100-289-ana-tijoux-1977",
@@ -67668,7 +68153,10 @@
     "release_year": 2010,
     "duration_ms": 201000,
     "spotify_track_id": "7tOAN6w4a1LD0iqkRnIrhZ",
-    "spotify_uri": "spotify:track:7tOAN6w4a1LD0iqkRnIrhZ"
+    "spotify_uri": "spotify:track:7tOAN6w4a1LD0iqkRnIrhZ",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/fb/ef/b7/fbefb787-c29e-3c90-6a21-7d82b7c34228/mzaf_6760189636630723760.plus.aac.p.m4a",
+    "apple_track_id": 1313736847,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-290-ana-tijoux-partir-de-cero",
@@ -67681,7 +68169,10 @@
     "release_year": 2010,
     "duration_ms": 227000,
     "spotify_track_id": "67qXtwNi3VBOBvHREnEdM5",
-    "spotify_uri": "spotify:track:67qXtwNi3VBOBvHREnEdM5"
+    "spotify_uri": "spotify:track:67qXtwNi3VBOBvHREnEdM5",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/49/90/3b/49903b44-c3f8-13b4-32c6-6b93976f85fc/mzaf_148263325727082619.plus.aac.p.m4a",
+    "apple_track_id": 1313736826,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-291-ana-tijoux-gol",
@@ -67694,7 +68185,10 @@
     "release_year": 2007,
     "duration_ms": 191000,
     "spotify_track_id": "59xxUzjGydTifjm9dbPbdV",
-    "spotify_uri": "spotify:track:59xxUzjGydTifjm9dbPbdV"
+    "spotify_uri": "spotify:track:59xxUzjGydTifjm9dbPbdV",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/93/32/d0/9332d044-bb37-265c-c026-a3706371c5f9/mzaf_11749381123369084562.plus.aac.p.m4a",
+    "apple_track_id": 596935286,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-292-los-jaivas-hijos-de-la-tierra",
@@ -67707,7 +68201,10 @@
     "release_year": 1995,
     "duration_ms": 294000,
     "spotify_track_id": "5RQAt8vgEsDIjA2NlFngZ9",
-    "spotify_uri": "spotify:track:5RQAt8vgEsDIjA2NlFngZ9"
+    "spotify_uri": "spotify:track:5RQAt8vgEsDIjA2NlFngZ9",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/6a/35/f4/6a35f472-d444-1ee3-908b-a1b932db0d28/mzaf_17303593050667194873.plus.aac.p.m4a",
+    "apple_track_id": 1607377080,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-293-los-jaivas-sube-a-nacer-conmigo-hermano",
@@ -67720,7 +68217,10 @@
     "release_year": 1981,
     "duration_ms": 287000,
     "spotify_track_id": "4fvBHLNI8Ssmzll6uXdaOr",
-    "spotify_uri": "spotify:track:4fvBHLNI8Ssmzll6uXdaOr"
+    "spotify_uri": "spotify:track:4fvBHLNI8Ssmzll6uXdaOr",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/c1/4d/97/c14d97c2-6711-708a-6b7f-0bffc975e21d/mzaf_7477268973944581281.plus.aac.p.m4a",
+    "apple_track_id": 1607401185,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-294-los-jaivas-mambo-de-machaguay",
@@ -67733,7 +68233,10 @@
     "release_year": 1982,
     "duration_ms": 293000,
     "spotify_track_id": "7oapbuQr2xcofyvWsbmXTk",
-    "spotify_uri": "spotify:track:7oapbuQr2xcofyvWsbmXTk"
+    "spotify_uri": "spotify:track:7oapbuQr2xcofyvWsbmXTk",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/58/6e/ff/586eff94-4036-8d3a-07b7-9172d09c28cb/mzaf_14423138918563958532.plus.aac.p.m4a",
+    "apple_track_id": 1607256597,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-295-los-jaivas-la-poderosa-muerte",
@@ -67746,7 +68249,10 @@
     "release_year": 1981,
     "duration_ms": 672000,
     "spotify_track_id": "2DBHJBFFUQF5RVsDbQH7lh",
-    "spotify_uri": "spotify:track:2DBHJBFFUQF5RVsDbQH7lh"
+    "spotify_uri": "spotify:track:2DBHJBFFUQF5RVsDbQH7lh",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/01/73/ab/0173ab9e-649f-08d4-dff2-35fae10a91ab/mzaf_16637459010952431035.plus.aac.p.m4a",
+    "apple_track_id": 1607400785,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-296-los-jaivas-la-conquistada",
@@ -67759,7 +68265,10 @@
     "release_year": 1975,
     "duration_ms": 433000,
     "spotify_track_id": "1iCVobzc6lYXEdvTN0bloD",
-    "spotify_uri": "spotify:track:1iCVobzc6lYXEdvTN0bloD"
+    "spotify_uri": "spotify:track:1iCVobzc6lYXEdvTN0bloD",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/9a/70/0c/9a700cf7-f2e4-3cf3-7dff-107fd4e3d498/mzaf_14218331968267928360.plus.aac.p.m4a",
+    "apple_track_id": 713659456,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-297-los-jaivas-pregon-para-iluminarse",
@@ -67772,7 +68281,10 @@
     "release_year": 1975,
     "duration_ms": 317000,
     "spotify_track_id": "3AMth1gnz9PbQnEfUVZbp2",
-    "spotify_uri": "spotify:track:3AMth1gnz9PbQnEfUVZbp2"
+    "spotify_uri": "spotify:track:3AMth1gnz9PbQnEfUVZbp2",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/6a/31/1a/6a311ac3-d53e-4849-2be0-d8d58e400770/mzaf_5832517410894486569.plus.aac.p.m4a",
+    "apple_track_id": 713659453,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-298-los-jaivas-todos-juntos-2020-remasterizado",
@@ -67785,7 +68297,8 @@
     "release_year": 1972,
     "duration_ms": 352000,
     "spotify_track_id": "1T3yi6MQ4yd4qkKbKjtv3h",
-    "spotify_uri": "spotify:track:1T3yi6MQ4yd4qkKbKjtv3h"
+    "spotify_uri": "spotify:track:1T3yi6MQ4yd4qkKbKjtv3h",
+    "preview_estado": "sin coincidencia"
   },
   {
     "id": "chileno-100-299-los-jaivas-mira-ninita-2020-remasterizado",
@@ -67798,7 +68311,8 @@
     "release_year": 1972,
     "duration_ms": 415000,
     "spotify_track_id": "5qinr9C7qMLjhwen3s3AJ7",
-    "spotify_uri": "spotify:track:5qinr9C7qMLjhwen3s3AJ7"
+    "spotify_uri": "spotify:track:5qinr9C7qMLjhwen3s3AJ7",
+    "preview_estado": "sin coincidencia"
   },
   {
     "id": "chileno-100-300-los-jaivas-valparaiso",
@@ -67811,7 +68325,8 @@
     "release_year": 1997,
     "duration_ms": 239000,
     "spotify_track_id": "6EWQsCfyj0WgYPkd2Wz5kO",
-    "spotify_uri": "spotify:track:6EWQsCfyj0WgYPkd2Wz5kO"
+    "spotify_uri": "spotify:track:6EWQsCfyj0WgYPkd2Wz5kO",
+    "preview_estado": "sin coincidencia"
   },
   {
     "id": "chileno-100-301-illapu-vuelvo-para-vivir",
@@ -67824,7 +68339,10 @@
     "release_year": 1991,
     "duration_ms": 268000,
     "spotify_track_id": "1jTR4TGDcbo10Bt66yWOz2",
-    "spotify_uri": "spotify:track:1jTR4TGDcbo10Bt66yWOz2"
+    "spotify_uri": "spotify:track:1jTR4TGDcbo10Bt66yWOz2",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/ff/58/5f/ff585f88-6495-37a1-987a-3899bd9ed65f/mzaf_482785551402485868.plus.aac.p.m4a",
+    "apple_track_id": 712955222,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-302-illapu-lejos-del-amor",
@@ -67837,7 +68355,10 @@
     "release_year": 1993,
     "duration_ms": 244000,
     "spotify_track_id": "4HzMQOMhSy9jEjPUjLix9g",
-    "spotify_uri": "spotify:track:4HzMQOMhSy9jEjPUjLix9g"
+    "spotify_uri": "spotify:track:4HzMQOMhSy9jEjPUjLix9g",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/73/7c/cb/737ccbfb-6408-0e96-4561-9b346f930b0b/mzaf_3167910935647494493.plus.aac.p.m4a",
+    "apple_track_id": 712955266,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-303-illapu-morena-esperanza",
@@ -67850,7 +68371,10 @@
     "release_year": 1998,
     "duration_ms": 264000,
     "spotify_track_id": "7n1iFPk3zZArF2oQ3ZMkVC",
-    "spotify_uri": "spotify:track:7n1iFPk3zZArF2oQ3ZMkVC"
+    "spotify_uri": "spotify:track:7n1iFPk3zZArF2oQ3ZMkVC",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/2f/c0/17/2fc01731-fa82-904f-1efd-056acd98b0ae/mzaf_12923636237781850381.plus.aac.p.m4a",
+    "apple_track_id": 712955234,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-304-illapu-baila-caporal",
@@ -67863,7 +68387,10 @@
     "release_year": 1991,
     "duration_ms": 246000,
     "spotify_track_id": "2tl8w8UHPj5b5MjBYlIer4",
-    "spotify_uri": "spotify:track:2tl8w8UHPj5b5MjBYlIer4"
+    "spotify_uri": "spotify:track:2tl8w8UHPj5b5MjBYlIer4",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/ed/3d/9a/ed3d9aa1-4b08-d1f3-b9d1-81d7f82da102/mzaf_16633132044728878133.plus.aac.p.m4a",
+    "apple_track_id": 713619178,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-305-illapu-candombe-para-jose",
@@ -67876,7 +68403,10 @@
     "release_year": 1981,
     "duration_ms": 255000,
     "spotify_track_id": "6AkRD0PiHw6DYKTUefJzAg",
-    "spotify_uri": "spotify:track:6AkRD0PiHw6DYKTUefJzAg"
+    "spotify_uri": "spotify:track:6AkRD0PiHw6DYKTUefJzAg",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/3c/0a/9c/3c0a9c18-6a4b-b745-b4a8-0aa0b4adf488/mzaf_4202994687787678585.plus.aac.p.m4a",
+    "apple_track_id": 712955265,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-306-illapu-volaras",
@@ -67889,7 +68419,10 @@
     "release_year": 1993,
     "duration_ms": 222000,
     "spotify_track_id": "1RIfvWNqwnFRiVSm6348hC",
-    "spotify_uri": "spotify:track:1RIfvWNqwnFRiVSm6348hC"
+    "spotify_uri": "spotify:track:1RIfvWNqwnFRiVSm6348hC",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/86/b0/57/86b057d1-bb7d-ae9d-c4d1-e9c366969ab7/mzaf_17915202417641562655.plus.aac.p.m4a",
+    "apple_track_id": 712955243,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-307-inti-illimani-exiliada-del-sur",
@@ -67902,7 +68435,10 @@
     "release_year": 1971,
     "duration_ms": 212000,
     "spotify_track_id": "7irxnofTcigmaOxY0TBTkr",
-    "spotify_uri": "spotify:track:7irxnofTcigmaOxY0TBTkr"
+    "spotify_uri": "spotify:track:7irxnofTcigmaOxY0TBTkr",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/46/3a/c4/463ac492-7d8a-9bd7-2023-e463bd9ec52d/mzaf_5670670366188682889.plus.aac.p.m4a",
+    "apple_track_id": 79345896,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-308-inti-illimani-samba-lando",
@@ -67915,7 +68451,10 @@
     "release_year": 1979,
     "duration_ms": 295000,
     "spotify_track_id": "2ra9LRRW3Sk6rEgaV0GbAm",
-    "spotify_uri": "spotify:track:2ra9LRRW3Sk6rEgaV0GbAm"
+    "spotify_uri": "spotify:track:2ra9LRRW3Sk6rEgaV0GbAm",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/b8/01/b3/b801b35c-89f9-b5ee-3234-f191913e33d2/mzaf_6168925385132812545.plus.aac.p.m4a",
+    "apple_track_id": 1455941210,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-309-inti-illimani-el-mercado-testaccio",
@@ -67928,7 +68467,10 @@
     "release_year": 1981,
     "duration_ms": 251000,
     "spotify_track_id": "0D9KXItWSp0eZ3Ik8gn9wF",
-    "spotify_uri": "spotify:track:0D9KXItWSp0eZ3Ik8gn9wF"
+    "spotify_uri": "spotify:track:0D9KXItWSp0eZ3Ik8gn9wF",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/f4/06/be/f406becb-2a3f-0827-b70b-64000703a5e1/mzaf_17880083195493118498.plus.aac.p.m4a",
+    "apple_track_id": 261233669,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-310-inti-illimani-run-run-se-fue-pa-l-norte",
@@ -67941,7 +68483,10 @@
     "release_year": 1974,
     "duration_ms": 269000,
     "spotify_track_id": "7xxl2XdWhHqknMcv5r4BKw",
-    "spotify_uri": "spotify:track:7xxl2XdWhHqknMcv5r4BKw"
+    "spotify_uri": "spotify:track:7xxl2XdWhHqknMcv5r4BKw",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/d6/eb/41/d6eb4160-eeeb-7049-ce33-97c5629b90d9/mzaf_4451347824123952577.plus.aac.p.m4a",
+    "apple_track_id": 79345912,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-311-quilapayun-el-pueblo-unido-jamas-sera-vencido",
@@ -67954,7 +68499,10 @@
     "release_year": 1990,
     "duration_ms": 208000,
     "spotify_track_id": "7fSZa5OqnRnhJBdeRZlbjh",
-    "spotify_uri": "spotify:track:7fSZa5OqnRnhJBdeRZlbjh"
+    "spotify_uri": "spotify:track:7fSZa5OqnRnhJBdeRZlbjh",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/18/af/fd/18affda5-7328-9a0a-0c24-3e973721cbaa/mzaf_9480636307447880699.plus.aac.p.m4a",
+    "apple_track_id": 985745033,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-312-quilapayun-venceremos",
@@ -67967,7 +68515,10 @@
     "release_year": 1990,
     "duration_ms": 152000,
     "spotify_track_id": "1uJw3GDkiUsRXMk2TiYO32",
-    "spotify_uri": "spotify:track:1uJw3GDkiUsRXMk2TiYO32"
+    "spotify_uri": "spotify:track:1uJw3GDkiUsRXMk2TiYO32",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/fb/e1/21/fbe12150-13ff-281c-aa1d-f1148901c72e/mzaf_6033860267106153384.plus.aac.p.m4a",
+    "apple_track_id": 1146844482,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-313-quilapayun-plegaria-a-un-labrador",
@@ -67980,7 +68531,10 @@
     "release_year": 1970,
     "duration_ms": 193000,
     "spotify_track_id": "6RrcBK5hXE6q11tkjbdQ4Z",
-    "spotify_uri": "spotify:track:6RrcBK5hXE6q11tkjbdQ4Z"
+    "spotify_uri": "spotify:track:6RrcBK5hXE6q11tkjbdQ4Z",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/47/40/94/474094ea-4e0d-969b-fa82-aab98b97f3e4/mzaf_18168942864937611412.plus.aac.p.m4a",
+    "apple_track_id": 713967086,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-314-quilapayun-que-dira-el-santo-padre",
@@ -67993,7 +68547,10 @@
     "release_year": 2015,
     "duration_ms": 169000,
     "spotify_track_id": "2mCvOkqNMWr8Idyzv4ypDC",
-    "spotify_uri": "spotify:track:2mCvOkqNMWr8Idyzv4ypDC"
+    "spotify_uri": "spotify:track:2mCvOkqNMWr8Idyzv4ypDC",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/d8/66/dc/d866dc6c-bfa9-c81d-8adb-de7e722a8bcf/mzaf_12043543451250089514.plus.aac.p.m4a",
+    "apple_track_id": 1580117518,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-315-quilapayun-la-muralla",
@@ -68006,7 +68563,10 @@
     "release_year": 2015,
     "duration_ms": 253000,
     "spotify_track_id": "4KaAGoSbH4ykgZaYCMLGj2",
-    "spotify_uri": "spotify:track:4KaAGoSbH4ykgZaYCMLGj2"
+    "spotify_uri": "spotify:track:4KaAGoSbH4ykgZaYCMLGj2",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/21/b9/dc/21b9dcb0-0707-add5-62fc-d929adb1a2b5/mzaf_16230756218686858128.plus.aac.p.m4a",
+    "apple_track_id": 985747592,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-316-victor-jara-te-recuerdo-amanda",
@@ -68019,7 +68579,10 @@
     "release_year": 1969,
     "duration_ms": 154000,
     "spotify_track_id": "0igRRwt1nnRIAhFFkrOgkz",
-    "spotify_uri": "spotify:track:0igRRwt1nnRIAhFFkrOgkz"
+    "spotify_uri": "spotify:track:0igRRwt1nnRIAhFFkrOgkz",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/77/ba/d3/77bad365-381a-08b4-6290-a9ff5da24a73/mzaf_16524623615466009843.plus.aac.p.m4a",
+    "apple_track_id": 890614682,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-317-victor-jara-el-cigarrito-2001-digital-remaster",
@@ -68032,7 +68595,8 @@
     "release_year": 1969,
     "duration_ms": 124000,
     "spotify_track_id": "6YRoYR5IShPHP83B17ffTu",
-    "spotify_uri": "spotify:track:6YRoYR5IShPHP83B17ffTu"
+    "spotify_uri": "spotify:track:6YRoYR5IShPHP83B17ffTu",
+    "preview_estado": "sin coincidencia"
   },
   {
     "id": "chileno-100-318-victor-jara-manifiesto",
@@ -68045,7 +68609,10 @@
     "release_year": 1973,
     "duration_ms": 269000,
     "spotify_track_id": "5MBoJQKmhf1EGzVG4znjYg",
-    "spotify_uri": "spotify:track:5MBoJQKmhf1EGzVG4znjYg"
+    "spotify_uri": "spotify:track:5MBoJQKmhf1EGzVG4znjYg",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/93/fb/c8/93fbc8b2-8ca7-1cc0-6953-70564a863ad6/mzaf_2656335444013290603.plus.aac.p.m4a",
+    "apple_track_id": 1569180220,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-319-victor-jara-cuando-voy-al-trabajo",
@@ -68058,7 +68625,10 @@
     "release_year": 1973,
     "duration_ms": 232000,
     "spotify_track_id": "0O5UMLLul6wHbuQSMZvYN1",
-    "spotify_uri": "spotify:track:0O5UMLLul6wHbuQSMZvYN1"
+    "spotify_uri": "spotify:track:0O5UMLLul6wHbuQSMZvYN1",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/bd/91/3a/bd913afa-7d99-85fa-3917-dae2d5c32f2d/mzaf_10172608857594637948.plus.aac.p.m4a",
+    "apple_track_id": 1569180336,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-320-victor-jara-luchin",
@@ -68071,7 +68641,10 @@
     "release_year": 1972,
     "duration_ms": 196000,
     "spotify_track_id": "3pbY7ooRj5NMllJJnv1sG1",
-    "spotify_uri": "spotify:track:3pbY7ooRj5NMllJJnv1sG1"
+    "spotify_uri": "spotify:track:3pbY7ooRj5NMllJJnv1sG1",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/ba/0a/91/ba0a919d-2577-9589-27ca-e174abf5e663/mzaf_12779676156032102323.plus.aac.p.m4a",
+    "apple_track_id": 472898429,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-321-victor-jara-vientos-del-pueblo",
@@ -68084,7 +68657,10 @@
     "release_year": 1973,
     "duration_ms": 157000,
     "spotify_track_id": "7jCgJzj8KW6eZToF2KMrdJ",
-    "spotify_uri": "spotify:track:7jCgJzj8KW6eZToF2KMrdJ"
+    "spotify_uri": "spotify:track:7jCgJzj8KW6eZToF2KMrdJ",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/9e/db/e5/9edbe518-bc08-e9e8-80be-694352642f88/mzaf_15029817854044228750.plus.aac.p.m4a",
+    "apple_track_id": 1569180424,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-322-victor-jara-el-aparecido",
@@ -68097,7 +68673,10 @@
     "release_year": 1967,
     "duration_ms": 138000,
     "spotify_track_id": "6fy1z2G0zRfaBgO1LIE9aM",
-    "spotify_uri": "spotify:track:6fy1z2G0zRfaBgO1LIE9aM"
+    "spotify_uri": "spotify:track:6fy1z2G0zRfaBgO1LIE9aM",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/55/00/88/55008880-5008-a21d-2497-a7640503d211/mzaf_14616360197521418419.plus.aac.p.m4a",
+    "apple_track_id": 570092370,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-323-victor-jara-plegaria-a-un-labrador",
@@ -68110,7 +68689,10 @@
     "release_year": 1971,
     "duration_ms": 192000,
     "spotify_track_id": "6ttzCXvxSBYUvItx41wTC4",
-    "spotify_uri": "spotify:track:6ttzCXvxSBYUvItx41wTC4"
+    "spotify_uri": "spotify:track:6ttzCXvxSBYUvItx41wTC4",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/84/3c/5d/843c5de6-f9db-3eac-e3c6-c54acbfd07fc/mzaf_13967364146073465760.plus.aac.p.m4a",
+    "apple_track_id": 570092078,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-324-victor-jara-canto-libre-2001-digital-remaster",
@@ -68123,7 +68705,8 @@
     "release_year": 1970,
     "duration_ms": 294000,
     "spotify_track_id": "4WD3x6VRWY3tOtKDVez4OH",
-    "spotify_uri": "spotify:track:4WD3x6VRWY3tOtKDVez4OH"
+    "spotify_uri": "spotify:track:4WD3x6VRWY3tOtKDVez4OH",
+    "preview_estado": "sin coincidencia"
   },
   {
     "id": "chileno-100-325-patricio-manns-el-cautivo-de-til-til-en-vivo",
@@ -68136,7 +68719,10 @@
     "release_year": 1990,
     "duration_ms": 306000,
     "spotify_track_id": "6P1L1oozSCKPJ89Eo2AWwY",
-    "spotify_uri": "spotify:track:6P1L1oozSCKPJ89Eo2AWwY"
+    "spotify_uri": "spotify:track:6P1L1oozSCKPJ89Eo2AWwY",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/07/7b/15/077b152d-0883-9a58-a6f2-d417cba711e2/mzaf_5904669905002708632.plus.aac.p.m4a",
+    "apple_track_id": 570405831,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-326-patricio-manns-arriba-en-la-cordillera",
@@ -68149,7 +68735,10 @@
     "release_year": 1966,
     "duration_ms": 220000,
     "spotify_track_id": "2rJzZYfw86QWHDvsbBEXXn",
-    "spotify_uri": "spotify:track:2rJzZYfw86QWHDvsbBEXXn"
+    "spotify_uri": "spotify:track:2rJzZYfw86QWHDvsbBEXXn",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/48/8b/54/488b5448-13b7-4d22-883c-e9b2c4d17c91/mzaf_2432148172129406644.plus.aac.p.m4a",
+    "apple_track_id": 570092123,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-327-osvaldo-rodriguez-valparaiso",
@@ -68162,7 +68751,10 @@
     "release_year": 1976,
     "duration_ms": 198000,
     "spotify_track_id": "1CUdRfakaBkFNn7IQTuOb2",
-    "spotify_uri": "spotify:track:1CUdRfakaBkFNn7IQTuOb2"
+    "spotify_uri": "spotify:track:1CUdRfakaBkFNn7IQTuOb2",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/e3/0e/df/e30edf4b-0de4-5f1b-81ca-8cedd2c0b2eb/mzaf_6766491200842038388.plus.aac.p.m4a",
+    "apple_track_id": 570092142,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-328-violeta-parra-gracias-a-la-vida",
@@ -68175,7 +68767,10 @@
     "release_year": 1966,
     "duration_ms": 278000,
     "spotify_track_id": "5U7MyRNbuZrWkyAI4bm3Ja",
-    "spotify_uri": "spotify:track:5U7MyRNbuZrWkyAI4bm3Ja"
+    "spotify_uri": "spotify:track:5U7MyRNbuZrWkyAI4bm3Ja",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/84/5d/a9/845da9c0-525e-beb5-3fab-82d4443280ff/mzaf_12521979578160084187.plus.aac.p.m4a",
+    "apple_track_id": 1054693770,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-329-violeta-parra-volver-a-los-diecisiete",
@@ -68188,7 +68783,10 @@
     "release_year": 1966,
     "duration_ms": 250000,
     "spotify_track_id": "07sQmRWXTtQPfT1MCJ1U14",
-    "spotify_uri": "spotify:track:07sQmRWXTtQPfT1MCJ1U14"
+    "spotify_uri": "spotify:track:07sQmRWXTtQPfT1MCJ1U14",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/8d/47/72/8d47725f-d78c-450c-0e7d-99d5f6d3d908/mzaf_378721455363401759.plus.aac.p.m4a",
+    "apple_track_id": 570833898,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-330-violeta-parra-arauco-tiene-una-pena",
@@ -68201,7 +68799,10 @@
     "release_year": 1962,
     "duration_ms": 177000,
     "spotify_track_id": "5VEn738GxQ0CGF3c0zpu6p",
-    "spotify_uri": "spotify:track:5VEn738GxQ0CGF3c0zpu6p"
+    "spotify_uri": "spotify:track:5VEn738GxQ0CGF3c0zpu6p",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/1f/ec/53/1fec531a-068e-125f-7fe8-beea46c3cb86/mzaf_18310120801397938804.plus.aac.p.m4a",
+    "apple_track_id": 951076753,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-331-violeta-parra-la-carta",
@@ -68214,7 +68815,10 @@
     "release_year": 1962,
     "duration_ms": 176000,
     "spotify_track_id": "7rd5gmtzLW8aIAxWe84i2c",
-    "spotify_uri": "spotify:track:7rd5gmtzLW8aIAxWe84i2c"
+    "spotify_uri": "spotify:track:7rd5gmtzLW8aIAxWe84i2c",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/da/46/ca/da46ca1e-c1ec-ee1f-8de5-b21fa068ac11/mzaf_4232405721396747581.plus.aac.p.m4a",
+    "apple_track_id": 1600028825,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-332-violeta-parra-arriba-quemando-el-sol",
@@ -68227,7 +68831,10 @@
     "release_year": 1962,
     "duration_ms": 159000,
     "spotify_track_id": "0LYLqBgE7h0eMKJuqLQ3gi",
-    "spotify_uri": "spotify:track:0LYLqBgE7h0eMKJuqLQ3gi"
+    "spotify_uri": "spotify:track:0LYLqBgE7h0eMKJuqLQ3gi",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/cc/7f/2c/cc7f2cb9-207c-59a9-b378-5a3633b8b494/mzaf_3465041471390321436.plus.aac.p.m4a",
+    "apple_track_id": 597727926,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-333-violeta-parra-casamiento-de-negros",
@@ -68240,7 +68847,10 @@
     "release_year": 1956,
     "duration_ms": 104000,
     "spotify_track_id": "0ppf8X4havPtqk8ZOLXGDD",
-    "spotify_uri": "spotify:track:0ppf8X4havPtqk8ZOLXGDD"
+    "spotify_uri": "spotify:track:0ppf8X4havPtqk8ZOLXGDD",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview124/v4/23/8f/be/238fbecd-bea2-46ff-5244-4284499e352c/mzaf_2663898541003647739.plus.aac.p.m4a",
+    "apple_track_id": 1453469515,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-334-sol-y-lluvia-en-un-largo-tour",
@@ -68253,7 +68863,10 @@
     "release_year": 1980,
     "duration_ms": 262000,
     "spotify_track_id": "3tN9nucnARoyrX5WsKUrWz",
-    "spotify_uri": "spotify:track:3tN9nucnARoyrX5WsKUrWz"
+    "spotify_uri": "spotify:track:3tN9nucnARoyrX5WsKUrWz",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/58/65/f9/5865f98f-7417-10c3-49b1-db9cb0ce76f1/mzaf_894156824562239577.plus.aac.p.m4a",
+    "apple_track_id": 1458595352,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-335-sol-y-lluvia-adios-general-adios-carnaval-en-viv",
@@ -68266,7 +68879,10 @@
     "release_year": 1990,
     "duration_ms": 276000,
     "spotify_track_id": "4KBWjHfAh55QOazl6QQ4O5",
-    "spotify_uri": "spotify:track:4KBWjHfAh55QOazl6QQ4O5"
+    "spotify_uri": "spotify:track:4KBWjHfAh55QOazl6QQ4O5",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/6e/2d/37/6e2d3719-2aeb-18d4-54d2-4759ce351150/mzaf_6155236700822867769.plus.aac.p.m4a",
+    "apple_track_id": 677006012,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-336-sol-y-lluvia-para-que-nunca-mas",
@@ -68279,7 +68895,10 @@
     "release_year": 1980,
     "duration_ms": 147000,
     "spotify_track_id": "3hucW9oJIdJkxjaNxAc6wd",
-    "spotify_uri": "spotify:track:3hucW9oJIdJkxjaNxAc6wd"
+    "spotify_uri": "spotify:track:3hucW9oJIdJkxjaNxAc6wd",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/61/c5/5d/61c55d6d-1bb7-5804-57df-aae6b71d3570/mzaf_2462139972435962986.plus.aac.p.m4a",
+    "apple_track_id": 1538477868,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-337-sol-y-lluvia-el-vuelo",
@@ -68292,7 +68911,10 @@
     "release_year": 1987,
     "duration_ms": 212000,
     "spotify_track_id": "6Xqyw1uVIWGvOEMVhQjln0",
-    "spotify_uri": "spotify:track:6Xqyw1uVIWGvOEMVhQjln0"
+    "spotify_uri": "spotify:track:6Xqyw1uVIWGvOEMVhQjln0",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/01/74/9f/01749fa8-8f61-df26-66f2-66eead2ddd18/mzaf_10404175697348343207.plus.aac.p.m4a",
+    "apple_track_id": 684676797,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-338-sol-y-lluvia-voy-hacer-el-amor",
@@ -68305,7 +68927,10 @@
     "release_year": 1987,
     "duration_ms": 278000,
     "spotify_track_id": "3Gn0Jh1mAlV4sRSJBIm06v",
-    "spotify_uri": "spotify:track:3Gn0Jh1mAlV4sRSJBIm06v"
+    "spotify_uri": "spotify:track:3Gn0Jh1mAlV4sRSJBIm06v",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/61/66/b9/6166b908-e8a2-67f1-4236-118245fecdcb/mzaf_3969214584986875493.plus.aac.p.m4a",
+    "apple_track_id": 684676873,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-339-cami-fuerte",
@@ -68318,7 +68943,10 @@
     "release_year": 2018,
     "duration_ms": 140000,
     "spotify_track_id": "70mIAgxSrv79ZFycKidt8T",
-    "spotify_uri": "spotify:track:70mIAgxSrv79ZFycKidt8T"
+    "spotify_uri": "spotify:track:70mIAgxSrv79ZFycKidt8T",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/86/3a/d6/863ad64c-47a5-9392-6ca3-2c15221e802f/mzaf_9484681673447941055.plus.aac.p.m4a",
+    "apple_track_id": 1389807589,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-340-julio-numhauser-maciel-numhauser-todo-cambia",
@@ -68331,7 +68959,10 @@
     "release_year": 2016,
     "duration_ms": 256000,
     "spotify_track_id": "16iMLuySIlIWsjCPGD8MFA",
-    "spotify_uri": "spotify:track:16iMLuySIlIWsjCPGD8MFA"
+    "spotify_uri": "spotify:track:16iMLuySIlIWsjCPGD8MFA",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/40/19/7b/40197b4b-8f31-aa27-3407-7d0cf6c0a2da/mzaf_16575352241611230822.plus.aac.p.m4a",
+    "apple_track_id": 1102459286,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-341-stereo-3-amanecer-sin-ti",
@@ -68344,7 +68975,10 @@
     "release_year": 1999,
     "duration_ms": 244000,
     "spotify_track_id": "3sY0l0G8vxGUrwWJXEFQ4b",
-    "spotify_uri": "spotify:track:3sY0l0G8vxGUrwWJXEFQ4b"
+    "spotify_uri": "spotify:track:3sY0l0G8vxGUrwWJXEFQ4b",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/5e/fc/12/5efc1257-70c5-9a1b-172f-f54be9929493/mzaf_12173597225022903578.plus.aac.p.m4a",
+    "apple_track_id": 1681137209,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-342-stereo-3-atrevete-a-aceptarlo",
@@ -68357,7 +68991,10 @@
     "release_year": 1999,
     "duration_ms": 200000,
     "spotify_track_id": "4C49HngAOVBtGurnFyA3dQ",
-    "spotify_uri": "spotify:track:4C49HngAOVBtGurnFyA3dQ"
+    "spotify_uri": "spotify:track:4C49HngAOVBtGurnFyA3dQ",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview126/v4/28/bf/d3/28bfd323-2c30-e06b-ba56-b9a7ab246e06/mzaf_11023115392583129111.plus.aac.p.m4a",
+    "apple_track_id": 1681137210,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-343-stereo-3-como-ya-te-ame",
@@ -68370,7 +69007,10 @@
     "release_year": 1999,
     "duration_ms": 248000,
     "spotify_track_id": "3iOFPrI0CpIilhVbgHTYix",
-    "spotify_uri": "spotify:track:3iOFPrI0CpIilhVbgHTYix"
+    "spotify_uri": "spotify:track:3iOFPrI0CpIilhVbgHTYix",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/3f/8e/df/3f8edfda-9692-b875-e5c0-306aba969a3c/mzaf_2992484802507104237.plus.aac.p.m4a",
+    "apple_track_id": 1681137211,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-344-stereo-3-todo-mi-amor",
@@ -68383,7 +69023,10 @@
     "release_year": 1999,
     "duration_ms": 249000,
     "spotify_track_id": "28hqSvSfThf5BDoNrIcrwK",
-    "spotify_uri": "spotify:track:28hqSvSfThf5BDoNrIcrwK"
+    "spotify_uri": "spotify:track:28hqSvSfThf5BDoNrIcrwK",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/33/17/98/33179813-9388-4c79-9ad8-795ba3a69f5f/mzaf_16550608112595794150.plus.aac.p.m4a",
+    "apple_track_id": 1681137219,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-345-canal-magdalena-lady-love-me",
@@ -68396,7 +69039,10 @@
     "release_year": 2009,
     "duration_ms": 240000,
     "spotify_track_id": "3ygVn4zIblI0BhtZtbh82y",
-    "spotify_uri": "spotify:track:3ygVn4zIblI0BhtZtbh82y"
+    "spotify_uri": "spotify:track:3ygVn4zIblI0BhtZtbh82y",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/b4/4f/15/b44f1584-f559-9090-7fbc-63fc9a2dfc56/mzaf_320891005279220294.plus.aac.p.m4a",
+    "apple_track_id": 303807802,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-346-difuntos-correa-el-tiempo-en-las-bastillas",
@@ -68409,7 +69055,10 @@
     "release_year": 2010,
     "duration_ms": 193000,
     "spotify_track_id": "4kdMRXEPC0f5zMvxhD7gNY",
-    "spotify_uri": "spotify:track:4kdMRXEPC0f5zMvxhD7gNY"
+    "spotify_uri": "spotify:track:4kdMRXEPC0f5zMvxhD7gNY",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/73/2d/d9/732dd927-5361-509f-d062-ac0629317411/mzaf_942615576519187621.plus.aac.p.m4a",
+    "apple_track_id": 713309246,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-347-psycho-inocencia-en-tus-ojos",
@@ -68422,7 +69071,10 @@
     "release_year": 1992,
     "duration_ms": 210000,
     "spotify_track_id": "2xQMk9GS11ZoBhwHZaGpe5",
-    "spotify_uri": "spotify:track:2xQMk9GS11ZoBhwHZaGpe5"
+    "spotify_uri": "spotify:track:2xQMk9GS11ZoBhwHZaGpe5",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/e5/ad/0c/e5ad0c97-070e-593a-0190-65ef9e258ea0/mzaf_10671347592312467591.plus.aac.p.m4a",
+    "apple_track_id": 1567287247,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-348-gufi-por-ella",
@@ -68435,7 +69087,8 @@
     "release_year": 2015,
     "duration_ms": 208000,
     "spotify_track_id": "7IvHuh3TYgeQa3Wj3gMrAK",
-    "spotify_uri": "spotify:track:7IvHuh3TYgeQa3Wj3gMrAK"
+    "spotify_uri": "spotify:track:7IvHuh3TYgeQa3Wj3gMrAK",
+    "preview_estado": "sin coincidencia"
   },
   {
     "id": "chileno-100-349-gufi-paul",
@@ -68448,7 +69101,8 @@
     "release_year": 2015,
     "duration_ms": 226000,
     "spotify_track_id": "4Dl15Nv5e6XdyzwG0hZbCJ",
-    "spotify_uri": "spotify:track:4Dl15Nv5e6XdyzwG0hZbCJ"
+    "spotify_uri": "spotify:track:4Dl15Nv5e6XdyzwG0hZbCJ",
+    "preview_estado": "sin coincidencia"
   },
   {
     "id": "chileno-100-350-tronic-combo-final",
@@ -68461,7 +69115,10 @@
     "release_year": 2003,
     "duration_ms": 178000,
     "spotify_track_id": "0zDKhwh35eqYyiIt9z03Wj",
-    "spotify_uri": "spotify:track:0zDKhwh35eqYyiIt9z03Wj"
+    "spotify_uri": "spotify:track:0zDKhwh35eqYyiIt9z03Wj",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/9a/0d/2d/9a0d2d45-5ab8-00b6-e3c4-5e06820593f8/mzaf_13667848715965072601.plus.aac.p.m4a",
+    "apple_track_id": 1240332846,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-351-tronic-mateo",
@@ -68474,7 +69131,10 @@
     "release_year": 2005,
     "duration_ms": 101000,
     "spotify_track_id": "2kRGvesjW6DsXPfSrhjYVp",
-    "spotify_uri": "spotify:track:2kRGvesjW6DsXPfSrhjYVp"
+    "spotify_uri": "spotify:track:2kRGvesjW6DsXPfSrhjYVp",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/77/5f/e0/775fe05c-11fe-4172-088c-826f6253df05/mzaf_15567270025582813746.plus.aac.p.m4a",
+    "apple_track_id": 1238265860,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-352-tronic-prendan-la-radio",
@@ -68487,7 +69147,10 @@
     "release_year": 2005,
     "duration_ms": 162000,
     "spotify_track_id": "3lZygz3srLlsWqDQXSrl9w",
-    "spotify_uri": "spotify:track:3lZygz3srLlsWqDQXSrl9w"
+    "spotify_uri": "spotify:track:3lZygz3srLlsWqDQXSrl9w",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/19/7c/cf/197ccf9d-a437-52f2-525c-99744d66bc17/mzaf_17596413278952961509.plus.aac.p.m4a",
+    "apple_track_id": 1238265861,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-353-tronic-malos-amigos",
@@ -68500,7 +69163,10 @@
     "release_year": 2003,
     "duration_ms": 132000,
     "spotify_track_id": "66Z8IxmtD0ohwTTkT7WpUM",
-    "spotify_uri": "spotify:track:66Z8IxmtD0ohwTTkT7WpUM"
+    "spotify_uri": "spotify:track:66Z8IxmtD0ohwTTkT7WpUM",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/ec/06/79/ec06791a-7bf6-024c-086e-7e47b061f53f/mzaf_4209653004943906663.plus.aac.p.m4a",
+    "apple_track_id": 1240332847,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-354-tronic-somos-iguales",
@@ -68513,7 +69179,10 @@
     "release_year": 2005,
     "duration_ms": 164000,
     "spotify_track_id": "1gXAOrVN8fJ2CaASrNhofk",
-    "spotify_uri": "spotify:track:1gXAOrVN8fJ2CaASrNhofk"
+    "spotify_uri": "spotify:track:1gXAOrVN8fJ2CaASrNhofk",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/86/25/c6/8625c65a-b851-aabe-c06f-c1f54453db1e/mzaf_8009740751072313723.plus.aac.p.m4a",
+    "apple_track_id": 1238265872,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-355-tronic-hoy",
@@ -68526,7 +69195,10 @@
     "release_year": 2003,
     "duration_ms": 131000,
     "spotify_track_id": "5a2UEK7RTqh292NKyPUyqd",
-    "spotify_uri": "spotify:track:5a2UEK7RTqh292NKyPUyqd"
+    "spotify_uri": "spotify:track:5a2UEK7RTqh292NKyPUyqd",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/c8/d7/00/c8d700d3-3fff-85ca-529d-0c780c23c702/mzaf_5476815429958793104.plus.aac.p.m4a",
+    "apple_track_id": 1240332849,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-356-chancho-en-piedra-locura-espacial",
@@ -68539,7 +69211,10 @@
     "release_year": 1998,
     "duration_ms": 183000,
     "spotify_track_id": "0FauDhvAuanceOTIGQZAl4",
-    "spotify_uri": "spotify:track:0FauDhvAuanceOTIGQZAl4"
+    "spotify_uri": "spotify:track:0FauDhvAuanceOTIGQZAl4",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/8b/f7/15/8bf71580-cd0e-f4d7-0031-fabc275a5ce2/mzaf_861360552636463510.plus.aac.p.m4a",
+    "apple_track_id": 602792390,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-357-chancho-en-piedra-eligiendo-una-reina",
@@ -68552,7 +69227,10 @@
     "release_year": 2000,
     "duration_ms": 245000,
     "spotify_track_id": "4isHeZRxdYw7IgGvl8OPwq",
-    "spotify_uri": "spotify:track:4isHeZRxdYw7IgGvl8OPwq"
+    "spotify_uri": "spotify:track:4isHeZRxdYw7IgGvl8OPwq",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/a7/8f/54/a78f5402-3c9c-edb7-2808-7a41046460e6/mzaf_17724441900715842932.plus.aac.p.m4a",
+    "apple_track_id": 327456688,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-358-chancho-en-piedra-volantin",
@@ -68565,7 +69243,10 @@
     "release_year": 1998,
     "duration_ms": 243000,
     "spotify_track_id": "7aeHztFLa7y9oRCmnJiS7U",
-    "spotify_uri": "spotify:track:7aeHztFLa7y9oRCmnJiS7U"
+    "spotify_uri": "spotify:track:7aeHztFLa7y9oRCmnJiS7U",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/46/db/1b/46db1bc4-2fac-7ce1-259c-57b163dce340/mzaf_17897143752363072596.plus.aac.p.m4a",
+    "apple_track_id": 602792346,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-359-chancho-en-piedra-historias-de-amor-y-condon",
@@ -68578,7 +69259,10 @@
     "release_year": 2000,
     "duration_ms": 287000,
     "spotify_track_id": "5dMaHqWYTJyDuCsBbVFqXd",
-    "spotify_uri": "spotify:track:5dMaHqWYTJyDuCsBbVFqXd"
+    "spotify_uri": "spotify:track:5dMaHqWYTJyDuCsBbVFqXd",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/d3/fc/7d/d3fc7dbe-c379-7b93-ebd3-919b6d63a274/mzaf_2063336645068907790.plus.aac.p.m4a",
+    "apple_track_id": 327456694,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-360-chancho-en-piedra-el-impostor",
@@ -68591,7 +69275,10 @@
     "release_year": 2002,
     "duration_ms": 247000,
     "spotify_track_id": "0G1muZ0GZ2WnFO1SJenL3W",
-    "spotify_uri": "spotify:track:0G1muZ0GZ2WnFO1SJenL3W"
+    "spotify_uri": "spotify:track:0G1muZ0GZ2WnFO1SJenL3W",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/64/03/ff/6403ff29-30ac-6be4-eb81-e04ef3a71c98/mzaf_3580662910166981208.plus.aac.p.m4a",
+    "apple_track_id": 327457218,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-361-chancho-en-piedra-lophophora",
@@ -68604,7 +69291,10 @@
     "release_year": 2000,
     "duration_ms": 141000,
     "spotify_track_id": "58fFlF7sOSo0eOgNajFWO9",
-    "spotify_uri": "spotify:track:58fFlF7sOSo0eOgNajFWO9"
+    "spotify_uri": "spotify:track:58fFlF7sOSo0eOgNajFWO9",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/a5/56/21/a55621fa-65e1-57c4-86eb-311043cece0c/mzaf_12389179610236847005.plus.aac.p.m4a",
+    "apple_track_id": 327456689,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-362-chancho-en-piedra-multirricachon",
@@ -68617,7 +69307,10 @@
     "release_year": 2005,
     "duration_ms": 184000,
     "spotify_track_id": "4HbPeJG4bfP3SmInSoxnLL",
-    "spotify_uri": "spotify:track:4HbPeJG4bfP3SmInSoxnLL"
+    "spotify_uri": "spotify:track:4HbPeJG4bfP3SmInSoxnLL",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/0a/ae/e0/0aaee02e-5039-f1d5-086d-217ee14c7a85/mzaf_7270623304872319098.plus.aac.p.m4a",
+    "apple_track_id": 326700748,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-363-chancho-en-piedra-da-la-claridad-a-nuestro-sol",
@@ -68630,7 +69323,10 @@
     "release_year": 1997,
     "duration_ms": 298000,
     "spotify_track_id": "5y72L9qFKi4SYvbkWLEzh0",
-    "spotify_uri": "spotify:track:5y72L9qFKi4SYvbkWLEzh0"
+    "spotify_uri": "spotify:track:5y72L9qFKi4SYvbkWLEzh0",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/46/19/6c/46196cd6-dd73-e68f-b568-091f3a3a625c/mzaf_5321335097797259858.plus.aac.p.m4a",
+    "apple_track_id": 686428328,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-364-chancho-en-piedra-guach-perry",
@@ -68643,7 +69339,10 @@
     "release_year": 1995,
     "duration_ms": 236000,
     "spotify_track_id": "3kZG4EIgS0dZjhVbst5RkU",
-    "spotify_uri": "spotify:track:3kZG4EIgS0dZjhVbst5RkU"
+    "spotify_uri": "spotify:track:3kZG4EIgS0dZjhVbst5RkU",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/47/34/1c/47341c05-321b-b074-ac57-1c93074b950f/mzaf_9786055272105893471.plus.aac.p.m4a",
+    "apple_track_id": 687060801,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-365-chancho-en-piedra-condor",
@@ -68656,7 +69355,10 @@
     "release_year": 2007,
     "duration_ms": 332000,
     "spotify_track_id": "01liw2951Dy4HwGzHYtaEC",
-    "spotify_uri": "spotify:track:01liw2951Dy4HwGzHYtaEC"
+    "spotify_uri": "spotify:track:01liw2951Dy4HwGzHYtaEC",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/9d/41/0b/9d410bee-20a1-1414-4845-ae3f1ba61ef4/mzaf_2235911777809777712.plus.aac.p.m4a",
+    "apple_track_id": 326700662,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-366-31-minutos-mi-equilibrio-espiritual",
@@ -68669,7 +69371,10 @@
     "release_year": 2003,
     "duration_ms": 145000,
     "spotify_track_id": "4Qs3OEgzBPGPmRR5QJ0UIs",
-    "spotify_uri": "spotify:track:4Qs3OEgzBPGPmRR5QJ0UIs"
+    "spotify_uri": "spotify:track:4Qs3OEgzBPGPmRR5QJ0UIs",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/92/f0/2e/92f02e5e-84aa-22c3-58d4-75883eb2e30b/mzaf_4411593168479836148.plus.aac.p.m4a",
+    "apple_track_id": 6775917142,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-367-chancho-en-piedra-el-curanto",
@@ -68682,7 +69387,10 @@
     "release_year": 2000,
     "duration_ms": 259000,
     "spotify_track_id": "0lnbIDYQKrD9VzNq3Ezyn2",
-    "spotify_uri": "spotify:track:0lnbIDYQKrD9VzNq3Ezyn2"
+    "spotify_uri": "spotify:track:0lnbIDYQKrD9VzNq3Ezyn2",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/21/a2/8b/21a28b96-0ba3-8f86-09f9-a2d7ddcd166a/mzaf_17681440181818375146.plus.aac.p.m4a",
+    "apple_track_id": 327456697,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-368-los-prisioneros-estrechez-de-corazon",
@@ -68695,7 +69403,10 @@
     "release_year": 1990,
     "duration_ms": 383000,
     "spotify_track_id": "3NJRgHeqBfHW8EI7ZYpg0z",
-    "spotify_uri": "spotify:track:3NJRgHeqBfHW8EI7ZYpg0z"
+    "spotify_uri": "spotify:track:3NJRgHeqBfHW8EI7ZYpg0z",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/0a/04/42/0a044209-d77f-4838-a1fa-34ec8af4b80f/mzaf_10509864970526591473.plus.aac.p.m4a",
+    "apple_track_id": 723429489,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-369-los-bunkers-llueve-sobre-la-ciudad",
@@ -68708,7 +69419,10 @@
     "release_year": 2005,
     "duration_ms": 236000,
     "spotify_track_id": "6ftHPJyEHGqMaml3ZEwPm1",
-    "spotify_uri": "spotify:track:6ftHPJyEHGqMaml3ZEwPm1"
+    "spotify_uri": "spotify:track:6ftHPJyEHGqMaml3ZEwPm1",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/b6/12/90/b6129089-4c5d-0636-7a54-b83259ac26b0/mzaf_11499949844730259997.plus.aac.p.m4a",
+    "apple_track_id": 1776311924,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-370-los-bunkers-ven-aqui",
@@ -68721,7 +69435,10 @@
     "release_year": 2005,
     "duration_ms": 217000,
     "spotify_track_id": "13eBG1b8pd7PxlEAAChfHO",
-    "spotify_uri": "spotify:track:13eBG1b8pd7PxlEAAChfHO"
+    "spotify_uri": "spotify:track:13eBG1b8pd7PxlEAAChfHO",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/21/38/f1/2138f1b0-cd41-353a-692b-30937aa7a402/mzaf_9988427395714940889.plus.aac.p.m4a",
+    "apple_track_id": 1776311920,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-371-los-bunkers-cancion-para-manana",
@@ -68734,7 +69451,10 @@
     "release_year": 2003,
     "duration_ms": 195000,
     "spotify_track_id": "36VJrVTuKwedxqftzsIXXU",
-    "spotify_uri": "spotify:track:36VJrVTuKwedxqftzsIXXU"
+    "spotify_uri": "spotify:track:36VJrVTuKwedxqftzsIXXU",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/df/a9/8d/dfa98dbd-bdc0-171c-e690-7b50483405c7/mzaf_15334092270435232241.plus.aac.p.m4a",
+    "apple_track_id": 321580950,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-372-los-bunkers-mientele",
@@ -68747,7 +69467,10 @@
     "release_year": 2005,
     "duration_ms": 238000,
     "spotify_track_id": "2D7i2dmTCqHMlWFa0pz3Kw",
-    "spotify_uri": "spotify:track:2D7i2dmTCqHMlWFa0pz3Kw"
+    "spotify_uri": "spotify:track:2D7i2dmTCqHMlWFa0pz3Kw",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/c5/32/0d/c5320d9d-3121-3a22-fdbc-5fcd10bd8aad/mzaf_6240922288890496878.plus.aac.p.m4a",
+    "apple_track_id": 1776312050,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-373-los-bunkers-las-cosas-que-cambie-y-deje-for-ti",
@@ -68760,7 +69483,10 @@
     "release_year": 2002,
     "duration_ms": 193000,
     "spotify_track_id": "2BgZV27wmn0Pa8sJFiPZqp",
-    "spotify_uri": "spotify:track:2BgZV27wmn0Pa8sJFiPZqp"
+    "spotify_uri": "spotify:track:2BgZV27wmn0Pa8sJFiPZqp",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/e2/cb/81/e2cb81ba-f3f5-991c-7e7a-5b6bf7cfe9f1/mzaf_3408676590225947514.plus.aac.p.m4a",
+    "apple_track_id": 647268639,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-374-los-bunkers-angel-para-un-final",
@@ -68773,7 +69499,10 @@
     "release_year": 2010,
     "duration_ms": 243000,
     "spotify_track_id": "6MV5epXO1r9krAVGSDJz5L",
-    "spotify_uri": "spotify:track:6MV5epXO1r9krAVGSDJz5L"
+    "spotify_uri": "spotify:track:6MV5epXO1r9krAVGSDJz5L",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/89/94/42/89944267-d7e5-dbba-d573-1f6bc0f35119/mzaf_11629786866708777053.plus.aac.p.m4a",
+    "apple_track_id": 1443529978,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-375-los-bunkers-ahora-que-no-estas",
@@ -68786,7 +69515,10 @@
     "release_year": 2005,
     "duration_ms": 351000,
     "spotify_track_id": "4YtvPDN9v12yXIwRdGWXYz",
-    "spotify_uri": "spotify:track:4YtvPDN9v12yXIwRdGWXYz"
+    "spotify_uri": "spotify:track:4YtvPDN9v12yXIwRdGWXYz",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/22/18/d1/2218d134-6107-f1c0-6100-824dbfad607a/mzaf_5115983433011187479.plus.aac.p.m4a",
+    "apple_track_id": 1776312049,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-376-los-bunkers-no-me-hables-de-sufrir",
@@ -68799,7 +69531,10 @@
     "release_year": 2003,
     "duration_ms": 234000,
     "spotify_track_id": "7y8UFkYgOei3yc3EG3u8BX",
-    "spotify_uri": "spotify:track:7y8UFkYgOei3yc3EG3u8BX"
+    "spotify_uri": "spotify:track:7y8UFkYgOei3yc3EG3u8BX",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/b1/68/a0/b168a0ac-9977-2bc6-b7e1-9da021bc978c/mzaf_10630488267491951149.plus.aac.p.m4a",
+    "apple_track_id": 647268636,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-377-los-bunkers-te-vistes-y-te-vas",
@@ -68812,7 +69547,10 @@
     "release_year": 2005,
     "duration_ms": 209000,
     "spotify_track_id": "5tz0gxE0XJgPEEVpKAJh3Q",
-    "spotify_uri": "spotify:track:5tz0gxE0XJgPEEVpKAJh3Q"
+    "spotify_uri": "spotify:track:5tz0gxE0XJgPEEVpKAJh3Q",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/06/37/af/0637af77-ad14-ee16-78a8-0c34b71c94ec/mzaf_3624947568849487471.plus.aac.p.m4a",
+    "apple_track_id": 1776312052,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-378-los-bunkers-entre-mis-brazos",
@@ -68825,7 +69563,10 @@
     "release_year": 2001,
     "duration_ms": 302000,
     "spotify_track_id": "1hM3r9AKtL3XZwPqRHcCMG",
-    "spotify_uri": "spotify:track:1hM3r9AKtL3XZwPqRHcCMG"
+    "spotify_uri": "spotify:track:1hM3r9AKtL3XZwPqRHcCMG",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/8e/11/85/8e1185ad-f0c2-f707-f8f5-cf5a3c08e1a9/mzaf_15142665026193833609.plus.aac.p.m4a",
+    "apple_track_id": 1540235236,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-379-los-bunkers-vida-de-perros",
@@ -68838,7 +69579,10 @@
     "release_year": 2005,
     "duration_ms": 215000,
     "spotify_track_id": "7xQqhz5NJSJaj8WDZnfarb",
-    "spotify_uri": "spotify:track:7xQqhz5NJSJaj8WDZnfarb"
+    "spotify_uri": "spotify:track:7xQqhz5NJSJaj8WDZnfarb",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/7e/e1/96/7ee19677-e775-76c8-4173-a06b34d673f2/mzaf_6018039296645383060.plus.aac.p.m4a",
+    "apple_track_id": 1776312054,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-380-los-bunkers-nada-nuevo-bajo-el-sol",
@@ -68851,7 +69595,10 @@
     "release_year": 2008,
     "duration_ms": 290000,
     "spotify_track_id": "2iRon0NaUEXFzkSTpFtaV2",
-    "spotify_uri": "spotify:track:2iRon0NaUEXFzkSTpFtaV2"
+    "spotify_uri": "spotify:track:2iRon0NaUEXFzkSTpFtaV2",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/6c/12/12/6c12127c-1871-548d-b795-86110d23e858/mzaf_6487609014837004340.plus.aac.p.m4a",
+    "apple_track_id": 1443529968,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-381-los-bunkers-una-nube-cuelga-sobre-mi",
@@ -68864,7 +69611,10 @@
     "release_year": 2008,
     "duration_ms": 237000,
     "spotify_track_id": "1zv3TxegZ8E7aaZ3Vwxpoi",
-    "spotify_uri": "spotify:track:1zv3TxegZ8E7aaZ3Vwxpoi"
+    "spotify_uri": "spotify:track:1zv3TxegZ8E7aaZ3Vwxpoi",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/35/c6/8f/35c68f92-0c02-7a54-9030-d7eacb107487/mzaf_7130085151180033179.plus.aac.p.m4a",
+    "apple_track_id": 1445743787,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-382-denise-rosenthal-lucha-en-equilibrio",
@@ -68877,7 +69627,10 @@
     "release_year": 2017,
     "duration_ms": 221000,
     "spotify_track_id": "5XXRbcWjc6jQhAS6MxyYmu",
-    "spotify_uri": "spotify:track:5XXRbcWjc6jQhAS6MxyYmu"
+    "spotify_uri": "spotify:track:5XXRbcWjc6jQhAS6MxyYmu",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/1b/53/dc/1b53dc5d-e0da-add4-2fca-cff39a31537d/mzaf_6411606584444245886.plus.aac.p.m4a",
+    "apple_track_id": 1442970648,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-383-denise-rosenthal-agua-segura",
@@ -68890,7 +69643,10 @@
     "release_year": 2019,
     "duration_ms": 220000,
     "spotify_track_id": "370og6FUM8StmfUu0HlNHg",
-    "spotify_uri": "spotify:track:370og6FUM8StmfUu0HlNHg"
+    "spotify_uri": "spotify:track:370og6FUM8StmfUu0HlNHg",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/5a/6c/77/5a6c775e-643a-d169-ae74-0cc49f5d25c6/mzaf_11062586336659667926.plus.aac.p.m4a",
+    "apple_track_id": 1468007334,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-384-denise-rosenthal-cambio-de-piel",
@@ -68903,7 +69659,10 @@
     "release_year": 2017,
     "duration_ms": 217000,
     "spotify_track_id": "2zUvNMEE2tAGlxmVa52BAc",
-    "spotify_uri": "spotify:track:2zUvNMEE2tAGlxmVa52BAc"
+    "spotify_uri": "spotify:track:2zUvNMEE2tAGlxmVa52BAc",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/a7/d1/f6/a7d1f68f-0d42-d644-1a76-d10e9bb0e82d/mzaf_13783159168325913675.plus.aac.p.m4a",
+    "apple_track_id": 1444332772,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-385-denise-rosenthal-isidora",
@@ -68916,7 +69675,10 @@
     "release_year": 2017,
     "duration_ms": 229000,
     "spotify_track_id": "4pKtuftWSg5EIuk72ZF4IC",
-    "spotify_uri": "spotify:track:4pKtuftWSg5EIuk72ZF4IC"
+    "spotify_uri": "spotify:track:4pKtuftWSg5EIuk72ZF4IC",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/c4/73/99/c47399a8-19b9-3583-733a-9691b8f51607/mzaf_10570001177826291143.plus.aac.p.m4a",
+    "apple_track_id": 1442970657,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-386-denise-rosenthal-el-amor-no-duele",
@@ -68929,7 +69691,10 @@
     "release_year": 2019,
     "duration_ms": 198000,
     "spotify_track_id": "0hmK3e2aQRc6geYdguHvNW",
-    "spotify_uri": "spotify:track:0hmK3e2aQRc6geYdguHvNW"
+    "spotify_uri": "spotify:track:0hmK3e2aQRc6geYdguHvNW",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/56/b3/3a/56b33af8-59e4-35de-ebae-193a349d7c17/mzaf_10816591466204635329.plus.aac.p.m4a",
+    "apple_track_id": 1476608155,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-387-denise-rosenthal-tiene-sabor",
@@ -68942,7 +69707,10 @@
     "release_year": 2020,
     "duration_ms": 184000,
     "spotify_track_id": "3D4s7bVcwLr9xA8U0DriRr",
-    "spotify_uri": "spotify:track:3D4s7bVcwLr9xA8U0DriRr"
+    "spotify_uri": "spotify:track:3D4s7bVcwLr9xA8U0DriRr",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/d4/7b/dc/d47bdc11-c56a-7bfb-7e43-1a65805a9638/mzaf_15348554352865860861.plus.aac.p.m4a",
+    "apple_track_id": 1498003574,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-388-denise-rosenthal-supernova",
@@ -68955,7 +69723,10 @@
     "release_year": 2023,
     "duration_ms": 176000,
     "spotify_track_id": "2sWvP6KZamacAzZxEPkQE3",
-    "spotify_uri": "spotify:track:2sWvP6KZamacAzZxEPkQE3"
+    "spotify_uri": "spotify:track:2sWvP6KZamacAzZxEPkQE3",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/92/45/72/924572ff-0c07-c13e-56cf-458a7c92165e/mzaf_18359651821476613075.plus.aac.p.m4a",
+    "apple_track_id": 1708989944,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-389-myriam-hernandez-herida",
@@ -68968,7 +69739,10 @@
     "release_year": 1990,
     "duration_ms": 246000,
     "spotify_track_id": "0Ez9Dymu8W3XwLKwY98WuO",
-    "spotify_uri": "spotify:track:0Ez9Dymu8W3XwLKwY98WuO"
+    "spotify_uri": "spotify:track:0Ez9Dymu8W3XwLKwY98WuO",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/25/1b/6e/251b6eba-0f0e-6326-e72b-60e26b3fd78e/mzaf_6517710341188934188.plus.aac.p.m4a",
+    "apple_track_id": 714357212,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-390-myriam-hernandez-el-hombre-que-yo-amo",
@@ -68981,7 +69755,10 @@
     "release_year": 1988,
     "duration_ms": 216000,
     "spotify_track_id": "2yIUUOe7UVhvxQmaLVqRKr",
-    "spotify_uri": "spotify:track:2yIUUOe7UVhvxQmaLVqRKr"
+    "spotify_uri": "spotify:track:2yIUUOe7UVhvxQmaLVqRKr",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/cd/cd/72/cdcd72ac-1461-5889-59c9-e6e054081097/mzaf_6085717663870047154.plus.aac.p.m4a",
+    "apple_track_id": 714009643,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-391-myriam-hernandez-huele-a-peligro",
@@ -68994,7 +69771,10 @@
     "release_year": 1998,
     "duration_ms": 297000,
     "spotify_track_id": "5qPsvYBxpqxZYwRgq1SQ9j",
-    "spotify_uri": "spotify:track:5qPsvYBxpqxZYwRgq1SQ9j"
+    "spotify_uri": "spotify:track:5qPsvYBxpqxZYwRgq1SQ9j",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/35/a6/9c/35a69cae-5e07-de84-42a9-7974ee9b6c9c/mzaf_17906408282399332876.plus.aac.p.m4a",
+    "apple_track_id": 578030690,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-392-myriam-hernandez-rescatame",
@@ -69007,7 +69787,10 @@
     "release_year": 2010,
     "duration_ms": 249000,
     "spotify_track_id": "3WTKgij73EQJnwtnKyFd9B",
-    "spotify_uri": "spotify:track:3WTKgij73EQJnwtnKyFd9B"
+    "spotify_uri": "spotify:track:3WTKgij73EQJnwtnKyFd9B",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/5c/c1/d6/5cc1d6ba-2f9a-69a7-914c-71ae8221eda9/mzaf_17585178150150025860.plus.aac.p.m4a",
+    "apple_track_id": 1519319400,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-393-myriam-hernandez-si-yo-me-vuelvo-a-enamorar",
@@ -69020,7 +69803,10 @@
     "release_year": 2000,
     "duration_ms": 238000,
     "spotify_track_id": "36wNyYn5H9zCclx468s9AM",
-    "spotify_uri": "spotify:track:36wNyYn5H9zCclx468s9AM"
+    "spotify_uri": "spotify:track:36wNyYn5H9zCclx468s9AM",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/34/81/bd/3481bd03-f772-5e57-88af-03c6877a8218/mzaf_17927886971114144074.plus.aac.p.m4a",
+    "apple_track_id": 682491696,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-394-myriam-hernandez-mio",
@@ -69033,7 +69819,10 @@
     "release_year": 1990,
     "duration_ms": 211000,
     "spotify_track_id": "7kEjUGRbtBDDxasgq6coRN",
-    "spotify_uri": "spotify:track:7kEjUGRbtBDDxasgq6coRN"
+    "spotify_uri": "spotify:track:7kEjUGRbtBDDxasgq6coRN",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/e1/0c/37/e10c3714-a376-3087-abdb-410706e43e0b/mzaf_6847960855398134047.plus.aac.p.m4a",
+    "apple_track_id": 1466675125,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-395-myriam-hernandez-he-vuelto-por-ti",
@@ -69046,7 +69835,10 @@
     "release_year": 2007,
     "duration_ms": 241000,
     "spotify_track_id": "0Gxmctv2GT8U8ElB4sQgna",
-    "spotify_uri": "spotify:track:0Gxmctv2GT8U8ElB4sQgna"
+    "spotify_uri": "spotify:track:0Gxmctv2GT8U8ElB4sQgna",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/7a/c4/93/7ac4932c-9213-3216-ac1c-274a2820fa21/mzaf_221761828760012941.plus.aac.p.m4a",
+    "apple_track_id": 714357127,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-396-myriam-hernandez-manana",
@@ -69059,7 +69851,10 @@
     "release_year": 2000,
     "duration_ms": 279000,
     "spotify_track_id": "3J7Oqt1hDKjL40Spz5GIiL",
-    "spotify_uri": "spotify:track:3J7Oqt1hDKjL40Spz5GIiL"
+    "spotify_uri": "spotify:track:3J7Oqt1hDKjL40Spz5GIiL",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/1d/88/15/1d881528-87f1-cf7b-7dbd-07cd48d315f5/mzaf_7887503729950215530.plus.aac.p.m4a",
+    "apple_track_id": 682491693,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-397-myriam-hernandez-la-fuerza-del-amor",
@@ -69072,7 +69867,10 @@
     "release_year": 1998,
     "duration_ms": 300000,
     "spotify_track_id": "1Je8yiBHeNpsGfAaVcluhI",
-    "spotify_uri": "spotify:track:1Je8yiBHeNpsGfAaVcluhI"
+    "spotify_uri": "spotify:track:1Je8yiBHeNpsGfAaVcluhI",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/ef/45/f3/ef45f30d-5d77-6743-5e3b-d4749c755900/mzaf_7273150267273286823.plus.aac.p.m4a",
+    "apple_track_id": 578030693,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-398-myriam-hernandez-se-me-fue",
@@ -69085,7 +69883,10 @@
     "release_year": 1992,
     "duration_ms": 219000,
     "spotify_track_id": "2vUQqdHx0gOWTccBdJ4ddi",
-    "spotify_uri": "spotify:track:2vUQqdHx0gOWTccBdJ4ddi"
+    "spotify_uri": "spotify:track:2vUQqdHx0gOWTccBdJ4ddi",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview126/v4/a2/3f/87/a23f87da-ffc7-bbf0-a8b7-c7620c4de54b/mzaf_11446809420392138561.plus.aac.p.m4a",
+    "apple_track_id": 1670245437,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-399-nelson-schwenke-el-viaje",
@@ -69098,7 +69899,10 @@
     "release_year": 1987,
     "duration_ms": 236000,
     "spotify_track_id": "5CxcUvcxpsUpmPPEPoCMxF",
-    "spotify_uri": "spotify:track:5CxcUvcxpsUpmPPEPoCMxF"
+    "spotify_uri": "spotify:track:5CxcUvcxpsUpmPPEPoCMxF",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/e4/8d/67/e48d673a-2df9-7043-9a65-580b2f36f1a2/mzaf_11242086348140131982.plus.aac.p.m4a",
+    "apple_track_id": 591996745,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-400-joe-vasconcellos-ciudad-traicionera",
@@ -69111,7 +69915,10 @@
     "release_year": 2001,
     "duration_ms": 254000,
     "spotify_track_id": "4y2TczbD66oe1FKlOkhuGZ",
-    "spotify_uri": "spotify:track:4y2TczbD66oe1FKlOkhuGZ"
+    "spotify_uri": "spotify:track:4y2TczbD66oe1FKlOkhuGZ",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/89/06/70/89067093-6e36-167a-7d4a-b043cd3e2d86/mzaf_5115932529572997616.plus.aac.p.m4a",
+    "apple_track_id": 1160323936,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-401-la-rue-morgue-blues-a-dos-mujeres",
@@ -69124,7 +69931,10 @@
     "release_year": 1997,
     "duration_ms": 197000,
     "spotify_track_id": "6W7c7B526zf3zAF3tptnyG",
-    "spotify_uri": "spotify:track:6W7c7B526zf3zAF3tptnyG"
+    "spotify_uri": "spotify:track:6W7c7B526zf3zAF3tptnyG",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/05/0a/f5/050af5ae-2adb-40c8-884a-4d226ac32976/mzaf_13159417713934976813.plus.aac.p.m4a",
+    "apple_track_id": 578031505,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-402-chancho-en-piedra-dejando-libre-el-amor",
@@ -69137,7 +69947,10 @@
     "release_year": 2016,
     "duration_ms": 262000,
     "spotify_track_id": "447wKwUxBNLV2S6boeVDaX",
-    "spotify_uri": "spotify:track:447wKwUxBNLV2S6boeVDaX"
+    "spotify_uri": "spotify:track:447wKwUxBNLV2S6boeVDaX",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/97/ed/d5/97edd583-230f-8295-a40e-8cfcd9950a83/mzaf_7425821303132633369.plus.aac.p.m4a",
+    "apple_track_id": 1137026648,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-403-macha-y-el-bloque-depresivo-solo-tu",
@@ -69150,7 +69963,10 @@
     "release_year": 2018,
     "duration_ms": 197000,
     "spotify_track_id": "5CDP299C3ZPz6lGLbOcXle",
-    "spotify_uri": "spotify:track:5CDP299C3ZPz6lGLbOcXle"
+    "spotify_uri": "spotify:track:5CDP299C3ZPz6lGLbOcXle",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/8b/01/a2/8b01a2a6-ecab-8966-8f4e-d008dfc89f13/mzaf_633502690838744827.plus.aac.p.m4a",
+    "apple_track_id": 1825693215,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-404-manuel-garcia-tempera",
@@ -69163,7 +69979,10 @@
     "release_year": 2008,
     "duration_ms": 178000,
     "spotify_track_id": "6dFryzF8qjYCxExeCLU2hE",
-    "spotify_uri": "spotify:track:6dFryzF8qjYCxExeCLU2hE"
+    "spotify_uri": "spotify:track:6dFryzF8qjYCxExeCLU2hE",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/58/4e/97/584e978e-3fa3-3375-9014-248c8b5f1a5b/mzaf_6107470986362090173.plus.aac.p.m4a",
+    "apple_track_id": 568623115,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-405-chancho-en-piedra-mi-mejor-momento",
@@ -69176,7 +69995,10 @@
     "release_year": 2016,
     "duration_ms": 203000,
     "spotify_track_id": "59BrZsOLmIcQzikhOZr1cy",
-    "spotify_uri": "spotify:track:59BrZsOLmIcQzikhOZr1cy"
+    "spotify_uri": "spotify:track:59BrZsOLmIcQzikhOZr1cy",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/32/6e/7a/326e7af1-ece8-0b8b-e32e-1c8339aef9e9/mzaf_15540848015183957361.plus.aac.p.m4a",
+    "apple_track_id": 1137026588,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-406-saiko-lo-que-mereces",
@@ -69189,7 +70011,10 @@
     "release_year": 2004,
     "duration_ms": 289000,
     "spotify_track_id": "7lHYFGJE6gAW5IIbDXndv0",
-    "spotify_uri": "spotify:track:7lHYFGJE6gAW5IIbDXndv0"
+    "spotify_uri": "spotify:track:7lHYFGJE6gAW5IIbDXndv0",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/56/37/b7/5637b7a2-7177-be88-383f-aeaad610b455/mzaf_9987049349516889908.plus.aac.p.m4a",
+    "apple_track_id": 1459582426,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-407-la-rue-morgue-sigues-dando-vueltas",
@@ -69202,7 +70027,10 @@
     "release_year": 1997,
     "duration_ms": 276000,
     "spotify_track_id": "0Xx3oZp0MawleVVxr9MOlG",
-    "spotify_uri": "spotify:track:0Xx3oZp0MawleVVxr9MOlG"
+    "spotify_uri": "spotify:track:0Xx3oZp0MawleVVxr9MOlG",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/79/05/7f/79057f00-060d-7882-7543-df28c36e982d/mzaf_7135014733683785076.plus.aac.p.m4a",
+    "apple_track_id": 578031506,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-408-joe-vasconcellos-huellas",
@@ -69215,7 +70043,10 @@
     "release_year": 1995,
     "duration_ms": 216000,
     "spotify_track_id": "1uY1pL5XU7UTx13mx2wXu8",
-    "spotify_uri": "spotify:track:1uY1pL5XU7UTx13mx2wXu8"
+    "spotify_uri": "spotify:track:1uY1pL5XU7UTx13mx2wXu8",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/38/9a/7f/389a7fa5-9ed2-c7c2-28b0-e0d04f9d82ca/mzaf_8013885990879642761.plus.aac.p.m4a",
+    "apple_track_id": 714026354,
+    "preview_estado": "ok"
   },
   {
     "id": "chileno-100-409-melvin-crema-juego-cruel",
@@ -69228,6 +70059,9 @@
     "release_year": 2004,
     "duration_ms": 208000,
     "spotify_track_id": "5h8bi026xSjnLQDbxfClIp",
-    "spotify_uri": "spotify:track:5h8bi026xSjnLQDbxfClIp"
+    "spotify_uri": "spotify:track:5h8bi026xSjnLQDbxfClIp",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/61/70/5f/61705f7d-da21-a04a-b20a-52f43cc8469a/mzaf_9910789556669085424.plus.aac.p.m4a",
+    "apple_track_id": 712946113,
+    "preview_estado": "ok"
   }
 ]
