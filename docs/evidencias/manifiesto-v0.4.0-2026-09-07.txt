@@ -4,28 +4,28 @@ MANIFIESTO DE EVIDENCIA — DEDICALO PLAY
 Proyecto      : Dedicalo Play
 Autor         : Rodrigo Negrete Aros
 Version       : v0.4.0
-Generado      : 2026-09-07T14:54:43.128Z  (UTC)
-Local         : Mon Sep 07 2026 16:54:43 GMT+0200 (hora de verano de Europa central)
+Generado      : 2026-09-07T15:21:58.613Z  (UTC)
+Local         : Mon Sep 07 2026 17:21:58 GMT+0200 (hora de verano de Europa central)
 
 ESTADO DEL REPOSITORIO
 ----------------------------------------------------------------
-Commit        : 4b6449e813869e15be0912c7e9ca1ef6d29fd115
+Commit        : 555fcb2350d54b1f1b3b9da6201791ebc5e39808
 Rama          : main
-Fecha commit  : 2026-09-07T16:54:42+02:00
+Fecha commit  : 2026-09-07T17:21:58+02:00
 Autor commit  : Rodrigo Negrete Aros <rodrigo.negrete.aros@gmail.com>
-Total commits : 162
+Total commits : 164
 Primer commit : 2026-06-13T22:52:54+02:00
 Remoto        : https://github.com/Ronegret/playdedicalo.git
 Sin cambios   : SI (arbol limpio)
 
 CONTENIDO
 ----------------------------------------------------------------
-Archivos      : 341
-Tamano total  : 19.56 MB
+Archivos      : 342
+Tamano total  : 19.57 MB
 
 HASH GLOBAL DEL PROYECTO (SHA-256)
 ----------------------------------------------------------------
-82e180a7b9ac4a3bbc8def25038367948e177a6d57ca14e6b5b022132c9fd282
+cfa71cc7c3969d882ccf69346a8644aa44383fada706298b009b51aa647a087d
 
   Este hash identifica de forma unica el estado completo del
   proyecto en la fecha indicada. Cualquier modificacion de
@@ -73,7 +73,7 @@ de6e83a84bbe77e1188b27fd428adeb85180b6252bbaf5edc435137fea77eac0  docs/evidencia
 b949ca0b6f9d6e2da4497348707284274c47b37ecc6850e8b98196ab3b87d7e3  docs/evidencias/import-chileno-100-2026-09-04.json
 f8cd97cb963870abd8e165683109436671be473ac8f0987d96668f22d06349a3  docs/evidencias/import-chileno-100-2026-09-07.json
 accb0a6a41232eb7d58e0a85cbe15997be35b806a426a22a7bcfc265c5106082  docs/evidencias/lista.txt
-60111d73e077ea87a4770378add940f2cfb76f3a4826824cc9852ae91a4ae8c0  docs/evidencias/manifiesto-v0.4.0-2026-09-07.txt
+e2ef8e9c01bdb3bf5dd3b033de7c050fe2eab8304c5b6f46a36e75169f7623d6  docs/evidencias/manifiesto-v0.4.0-2026-09-07.txt
 f55ea5caa0ea383e402c2b56de251766e2b9f19faf73293652e00d28793b3e89  docs/evidencias/README.md
 922743ceefbbad15d7a77228c5d02773910b3e77156d2fcf37f5d60fedaed355  docs/evidencias/sospechosas-chileno-2026-09-04-musicbrainz.json
 33b0d3ee5e13fcda4b2a85e5ba00ad1d3a3d89c3be38652f8a2967791e6dbb1c  docs/evidencias/sospechosas-chileno-2026-09-04.json
@@ -319,7 +319,7 @@ a1b6b591e8c5a0a111a35d00553979dd0ee2d4608d0ba656808f7d8be96142fb  src/App.jsx
 5be21acd42eb7b896e517f4e0f0f11eb5c5d9e54fbbcebe9453f033008fcca6f  src/assets/vite.svg
 a00f1944b782f5d0557b5c8337917a10f1d1ce5e437e449c512c5106092a4e7b  src/components/AlertDialog.jsx
 417e91e9667562b677711987cac92bef45dce00c9cc1a5736470609028995239  src/components/AvatarPicker.jsx
-98e58ef42082791fbb5ef7dc72d181cff5f2c505d187af2d119f682f9a13676e  src/components/ConectarTv.jsx
+1193a6bf1d8f140887a35176ff57c69956ff4db7da714578bcd47b5e61c718bf  src/components/ConectarTv.jsx
 bf92e319ba2d73cf418193648f3d62eecf303d8d752216b0aba34f93ff203d65  src/components/ErrorBoundary.jsx
 1369f7b50f99b8497f585491fb26b4b91fde54cbffc6dcfd39c1e80a2b1b073f  src/components/FontSizeControl.jsx
 df432836c625ec6fdfb8641e654b4a9e1fbfefad9adbf0eb779d9512c0eee26f  src/components/HeaderHUD.jsx
@@ -334,7 +334,7 @@ a4cf56c1d15da519d034499175990a5a7f4415bf3356cca7aaa046d204739780  src/components
 e9df488bef823cec859b824bd15ddedd3e7e69d6d70e8efdf505d9c149a7e145  src/components/SabotageSettings.jsx
 acb88fbb853ac32b14cb0c7c6f90df3ef6c1472a29c63f7e5b60a6a311b1f0a9  src/components/ShaderBackground.jsx
 5a62b6ebc299be774c70026ce0c2b8440f6c54bebab175234ae36a2347477530  src/components/SupportButton.jsx
-73eac567f16d2f2278dff1b4b21d49570b50245bf85c145f8c35413d5ffcd037  src/components/tv/VinilloJugador.jsx
+eb8a465a75cf301273b0e23089ec3f3a9ae18e2eb832a74f751ee2eee197c821  src/components/tv/VinilloJugador.jsx
 084d0b7fe1432e24aeb9529655a2d71398d509ab3c60010fb370cc633a607895  src/components/VinylVisualizer.jsx
 7bf0ffcfb26e467df4c48eca2ac08ed90266b538d2592d1f47305b299971dfbe  src/components/WizardSteps.jsx
 3699958076bcdeb8f7672a3cef3a0f7a3c164d9253e8318a6024043a8397161d  src/config/support.js
@@ -343,21 +343,22 @@ acb88fbb853ac32b14cb0c7c6f90df3ef6c1472a29c63f7e5b60a6a311b1f0a9  src/components
 7aedeb822317ed5b9a39add590dc435b1d3ffaeb0cdd4f472acb49f72c434455  src/hooks/useBgMusic.js
 7c8e46704bce2f673294cc5d64037892c3e4537f4cfbc390cd213aa300241850  src/hooks/useFontScale.js
 d2a0d7eaefaf5bfeb7b0b09b8afe9822214f6a2ad76743839e7f240626796586  src/hooks/useOrientation.js
-ad9c129a2d5ee6a5a9078d6d446b8a319ef7449eabe033e5ef06f1a21725373f  src/index.css
+710f24f33cbd268765b38eef0000936f035740a333beb22b8adfa3c2e72ad584  src/index.css
 ed96ed0781b8b93d110777bf5e3c4d345158b0c3895f06ada610f9f9952a2ed1  src/main.jsx
-cad444479bc4b7b1ab2be177b9b2436313a89ed6e96dc5302312479f23a7b019  src/pages/GameScreen.jsx
-c976650f45dfc47ddae8fbad4479df0a546846b20f2e6b9b34321404fa4074d9  src/pages/GuestJoinScreen.jsx
-6aeb5d6dd94567b0cf8f964f7bb12b0e923f8f38324a0cf08aee907b7ac0efb0  src/pages/HostSyncScreen.jsx
+74b7d6b0afcaa2d075456b64ba74d0e204f425e3d33ff8eb6fcc98fbdccfb7e0  src/pages/GameScreen.jsx
+9b076ba1f735fd5fe459b6c9a7e996cbe7845b85d27d12eb47d43efe7a8d1ee0  src/pages/GuestJoinScreen.jsx
+a624ac13ca1102baeda20dafd4ba7fca419726217ca19555f2f749663266aa33  src/pages/HostSyncScreen.jsx
 18ea9f36ea8625f3ace97f80c876991749f9eb487963720b10e444f56705dab8  src/pages/HowToPlayScreen.jsx
 8f06696762062c7e6043f215df81ef6e165d5c296feaa937f5303d2d28fd067e  src/pages/LobbyScreen.jsx
 cb23cca53babd2d63c797dd5a101968f462b53f8efce05206f1c1bbeffebffce  src/pages/ResultScreen.jsx
 d0f398680e852dcf25e128ae2cc411b8c9127f0182c43cf5e56afeddc8f1ac96  src/pages/RoleSelectionScreen.jsx
 f8b321af04ed68b82a127fc0ab3f3ae70b8cb153c3b2d86896c3d9980cc8b868  src/pages/TvLinkScreen.jsx
-05a3e4c59872187d9800c3696c577251d6caa9cd9f3b876122c034e634217057  src/pages/TvScreen.jsx
+8e403e79fea6d0f5cdb3ffc6a78d4a21ebc353d084eacf6e0d1806bb64c1383d  src/pages/TvScreen.jsx
 bb44363668eb0cc19affff821a058a531e7bf91626c79d7999aec709ffa12c1b  src/pages/WelcomeScreen.jsx
 66ba9d4e030cb50e68ced2e6c0d715a08ca0a15fa11000801b8f85cc44e8c34b  src/services/escanerQr.js
 e509a210613f10bf420781f16958646bcfc16c3d99776186bb8e5c90caded3e3  src/services/musica.js
 046a4b778fd7c31efe95172f3464ea352007aebc03a2802c7905cbd559c18cf9  src/services/preguntas.js
+4b3ccbffb7ad9f21c69f1f41a3bb35ee22b8e26c571220df237f6c7699482c80  src/services/rendimiento.js
 a1166fdd4ab8594f0c26ef6328262887539d5f0e67f307f2960d2127e97a9de3  src/store/useGameStore.js
 808087f79275a17659c4c7cfbd06218cf1647fa088aa6e29e81f6ab8cdee0c32  tailwind.config.js
 886dcc0fee3c4bdd489cef11f8d2ec12b2549cff3ed8c70dc22156ce712462ba  tools/capture-spotify-playlist-rows.mjs
@@ -381,4 +382,4 @@ ef413740f467520dd6fe255b02d24127e748085499d76d1463875931f853c5a3  tv-android/set
 4d36db3522a7b2dd10e0936e1004373c7ee65f10f7cd7920cd76410459c15a45  vite.config.js
 
 ================================================================
-Fin del manifiesto — v0.4.0 — 2026-09-07T14:54:43.128Z
+Fin del manifiesto — v0.4.0 — 2026-09-07T15:21:58.613Z
