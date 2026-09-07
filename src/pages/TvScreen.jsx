@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getTimelineProgress, useGameStore } from '../store/useGameStore';
-import { isImageAvatar } from '../data/characterAvatars';
+import VinilloJugador from '../components/tv/VinilloJugador';
 import { desbloquearAudio, pararMusica, segundosRestantes, sonarCancionAleatoria } from '../services/musica';
 
 /**
@@ -112,92 +112,6 @@ function Teclado({ onConfirmar }) {
           </button>
         ))}
       </div>
-    </div>
-  );
-}
-
-// ── Ficha de jugador del marcador ───────────────────────────────────────────
-// Concentra TODO lo que hay que saber de alguien: quién es, cuántas canciones
-// lleva (que es lo que gana la partida), sus puntos, si ya respondió, si le
-// han saboteado y —en el momento del reveal— si acertó y cuánto se lleva.
-function Ficha({ jugador, tam, estado, resultado, meta }) {
-  const acerto = resultado?.isCorrect;
-  const fallo = resultado && !resultado.isCorrect && !resultado.blocked;
-  const bloqueado = resultado?.blocked || estado === 'bloqueado';
-
-  const borde = acerto ? '#39ff14'
-    : fallo ? '#ff4d4d'
-      : bloqueado ? '#ff7a1a'
-        : estado === 'respondio' ? '#39ff14'
-          : 'rgba(255,255,255,.18)';
-
-  const fondo = acerto ? 'rgba(57,255,20,.14)'
-    : fallo ? 'rgba(255,77,77,.12)'
-      : bloqueado ? 'rgba(255,122,26,.12)'
-        : 'rgba(255,255,255,.04)';
-
-  const canciones = getTimelineProgress(jugador);
-
-  return (
-    <div
-      className="tv-entra flex shrink-0 flex-col items-center rounded-[1.4vmin] px-[1vmin] py-[1.2vmin] transition-colors"
-      style={{ width: `calc(${tam} * 2)`, background: fondo, border: `0.25vmin solid ${borde}` }}
-    >
-      <div className="relative">
-        <div
-          className="flex items-center justify-center overflow-hidden rounded-full"
-          style={{ width: tam, height: tam, border: `0.4vmin solid ${borde}`, background: 'rgba(255,255,255,.06)' }}
-        >
-          {isImageAvatar(jugador.avatar) ? (
-            <img src={jugador.avatar} alt="" className="h-full w-full object-cover" />
-          ) : (
-            <span style={{ fontSize: `calc(${tam} * 0.45)` }}>{jugador.avatar || '🎵'}</span>
-          )}
-        </div>
-
-        {/* Marca de acierto, fallo o bloqueo, encima del avatar */}
-        {(acerto || fallo || bloqueado) && (
-          <span
-            className="absolute -right-[0.6vmin] -top-[0.6vmin] flex items-center justify-center rounded-full tv-pop"
-            style={{
-              width: `calc(${tam} * 0.42)`, height: `calc(${tam} * 0.42)`,
-              background: acerto ? '#39ff14' : fallo ? '#ff4d4d' : '#ff7a1a'
-            }}
-          >
-            <span
-              className="material-symbols-outlined text-black"
-              style={{ fontSize: `calc(${tam} * 0.3)` }}
-            >
-              {acerto ? 'check' : fallo ? 'close' : 'block'}
-            </span>
-          </span>
-        )}
-      </div>
-
-      <p className="mt-[0.6vmin] w-full truncate text-center font-bold" style={{ fontSize: '1.7vmin', color: '#eef3ff' }}>
-        {jugador.name}
-      </p>
-
-      {/* Canciones (lo que gana) y puntos (lo que se gasta en sabotear) */}
-      <div className="mt-[0.3vmin] flex items-baseline gap-[0.8vmin]">
-        <span className="font-black tabular-nums" style={{ fontSize: '2vmin', color: '#39ff14' }}>
-          {canciones}<span style={{ color: '#93a0b8', fontWeight: 400 }}>/{meta}</span>
-        </span>
-        <span className="tabular-nums" style={{ fontSize: '1.6vmin', color: '#93a0b8' }}>
-          {jugador.points ?? 0} pts
-        </span>
-      </div>
-
-      {/* En el reveal: cuánto se lleva esta ronda */}
-      {resultado && typeof resultado.delta === 'number' && (
-        <p
-          className="tv-pop font-black tabular-nums"
-          style={{ fontSize: '1.9vmin', color: resultado.delta >= 0 ? '#39ff14' : '#ff4d4d' }}
-        >
-          {resultado.delta >= 0 ? '+' : ''}{resultado.delta}
-          {resultado.speedBonus > 0 && <span style={{ color: '#ffbf4d' }}> ⚡</span>}
-        </p>
-      )}
     </div>
   );
 }
@@ -370,9 +284,37 @@ export default function TvScreen() {
 
   const ganadorRapido = Object.values(revealResults).find((r) => r?.speedWinnerName)?.speedWinnerName;
 
-  // Con mucha gente las fichas se encogen para que quepan todas sin
-  // desplazar: nadie va a hacer scroll en una tele.
-  const tamFicha = conectados.length > 14 ? '5vmin' : conectados.length > 8 ? '6.5vmin' : '8vmin';
+  // Tamaño de los jugadores.
+  //
+  // Con pocos salen enormes y se van encogiendo según entra gente. Pero no
+  // basta con mirar cuántos son: hay que contar las FILAS, porque al partirse
+  // en dos la altura se duplica y la última fila se salía de la pantalla.
+  // Así que el tamaño es el menor entre lo que permite el ancho y lo que
+  // permite el alto.
+  const n = conectados.length;
+  const { tamVinilo, columnas } = useMemo(() => {
+    if (!n) return { tamVinilo: '12vmin', columnas: 1 };
+
+    // Ancho útil: la pantalla menos la columna del PIN (25vmin, y en la sala
+    // de espera ni siquiera está) y los márgenes.
+    const anchoUtil = 100 * (window.innerWidth / Math.min(window.innerWidth, window.innerHeight)) - 40;
+    // Alto reservado a los jugadores: un tercio largo de la pantalla.
+    const altoUtil = 38;
+
+    let mejor = { tamVinilo: '8vmin', columnas: n };
+    // Se prueban repartos y se queda el que da el disco más grande.
+    for (let cols = Math.min(n, 12); cols >= 1; cols -= 1) {
+      const filas = Math.ceil(n / cols);
+      const porAncho = (anchoUtil - cols * 2) / cols;
+      // Cada jugador ocupa su disco más el nombre y el marcador debajo.
+      const porAlto = (altoUtil - filas * 2) / filas / 1.45;
+      const lado = Math.min(porAncho, porAlto, 30);
+      if (lado > parseFloat(mejor.tamVinilo)) {
+        mejor = { tamVinilo: `${lado.toFixed(1)}vmin`, columnas: cols };
+      }
+    }
+    return mejor;
+  }, [n]);
 
   const enlaceJugar = typeof window !== 'undefined'
     ? `${window.location.origin}/guest/join?pin=${pin || pinElegido}` : '';
@@ -523,7 +465,7 @@ export default function TvScreen() {
             )}
           </header>
 
-          <main className="flex flex-1 flex-col items-center justify-center">
+          <main className="flex min-h-0 flex-1 flex-col items-center justify-center overflow-hidden">
             {phase === 'lobby' && !hayReveal && (
               /* Sala de espera: el QR manda, porque es el momento en que todo
                  el mundo tiene que entrar. Grande y en el centro. */
@@ -560,39 +502,43 @@ export default function TvScreen() {
                 {/* Disco de vinilo girando con ondas saliendo: la seña de
                     identidad del juego, y lo que hace que la pantalla se
                     sienta viva mientras suena la canción. */}
-                <div className="relative flex items-center justify-center" style={{ width: '38vmin', height: '38vmin' }}>
+                <div className="relative flex shrink-0 items-center justify-center" style={{ width: '30vmin', height: '30vmin' }}>
                   {[0, 1, 2].map((i) => (
                     <span
                       key={i}
                       className="tv-onda absolute rounded-full"
                       style={{
-                        width: '26vmin', height: '26vmin',
+                        width: '21vmin', height: '21vmin',
                         border: '0.35vmin solid #39ff14',
                         animationDelay: `${i * 0.73}s`
                       }}
                     />
                   ))}
 
-                  <div
-                    className="tv-vinilo relative flex items-center justify-center rounded-full"
-                    style={{
-                      width: '26vmin', height: '26vmin',
-                      background: 'repeating-radial-gradient(circle,#0a0d14 0 0.7vmin,#161c28 0.75vmin 0.95vmin)',
-                      border: '0.6vmin solid #39ff14'
-                    }}
-                  >
-                    <span className="absolute rounded-full" style={{ inset: '18%', border: '0.2vmin solid rgba(255,255,255,.07)' }} />
+                  {/* Imagen girada, no un degradado: girar un mapa de bits es
+                      casi gratis, y redibujar surcos generados en cada
+                      fotograma es lo que se quedaba pegado. */}
+                  <div className="relative" style={{ width: '21vmin', height: '21vmin' }}>
+                    <img
+                      src="/images/vinilo.png"
+                      alt=""
+                      className="tv-vinilo"
+                      style={{
+                        width: '100%', height: '100%', display: 'block',
+                        borderRadius: '50%', boxShadow: '0 0 0 0.6vmin #39ff14'
+                      }}
+                    />
                     <div
-                      className="flex items-center justify-center overflow-hidden rounded-full"
-                      style={{ width: '38%', height: '38%', background: '#0b0f17', border: '0.3vmin solid #39ff14' }}
+                      className="absolute flex items-center justify-center overflow-hidden rounded-full"
+                      style={{ inset: '31%', background: '#0b0f17', border: '0.3vmin solid #39ff14' }}
                     >
-                      <img src="/images/icon-app.png" alt="" style={{ width: '82%', height: '82%', objectFit: 'contain' }} />
+                      <img src="/images/icon-app.png" alt="" style={{ width: '78%', height: '78%', objectFit: 'contain' }} />
                     </div>
                   </div>
                 </div>
 
                 {/* Ecualizador: doce barras con su propio ritmo. */}
-                <div className="mt-[2vmin] flex items-end gap-[0.7vmin]" style={{ height: '7vmin' }}>
+                <div className="mt-[1.5vmin] flex shrink-0 items-end gap-[0.7vmin]" style={{ height: '5vmin' }}>
                   {[0.5, 0.8, 0.35, 1, 0.6, 0.9, 0.45, 0.75, 0.55, 0.95, 0.4, 0.7].map((alto, i) => (
                     <span
                       key={i}
@@ -682,17 +628,28 @@ export default function TvScreen() {
             </div>
           )}
 
-          {/* MARCADOR: todo de cada jugador en un sitio — canciones, puntos,
-              si respondió, si le sabotearon y, al revelar, si acertó. */}
+          {/* LOS JUGADORES: cada uno un vinilo con su puesto en la carrera,
+              ordenados por canciones. Es lo que la sala mira entre rondas. */}
           {conectados.length > 0 && (
-            <footer className="flex flex-wrap justify-center gap-[1.2vmin]">
-              {clasificacion.map((jugador) => (
-                <Ficha
+            <footer
+              className="grid shrink-0 justify-center gap-x-[2vmin] gap-y-[1.5vmin] pt-[1.5vmin]"
+              style={{
+                gridTemplateColumns: `repeat(${columnas}, auto)`,
+                justifyItems: 'center',
+                maxHeight: '42vmin'
+              }}
+            >
+              {clasificacion.map((jugador, i) => (
+                <VinilloJugador
                   key={jugador.id}
                   jugador={jugador}
-                  tam={tamFicha}
+                  tam={tamVinilo}
+                  puesto={i}
                   meta={targetYears}
                   resultado={revealResults[jugador.id]}
+                  // Solo gira el disco de quien acaba de acertar: veinte
+                  // discos girando a la vez tumban cualquier televisor.
+                  girando={Boolean(revealResults[jugador.id]?.isCorrect)}
                   estado={
                     jugador.activeAttack?.type === 'block_vote' && jugador.activeAttack?.round === round
                       ? 'bloqueado'

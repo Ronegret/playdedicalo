@@ -185,13 +185,20 @@ html.fs-xl {
   ─────────────────────────────────────────────────────────────────────── */
 
   /* Disco girando: la seña de identidad del juego. */
-  .tv-vinilo { animation: tv-girar 2.6s linear infinite; }
+  .tv-vinilo {
+    animation: tv-girar 3.2s linear infinite;
+    will-change: transform;
+    /* La imagen se gira como capa propia: sin esto la tele repinta lo de
+       alrededor en cada vuelta. */
+    backface-visibility: hidden;
+  }
   @keyframes tv-girar { to { transform: rotate(360deg); } }
 
   /* Ondas que salen del disco al ritmo de la música. */
   .tv-onda {
     animation: tv-onda 2.2s cubic-bezier(.2,.6,.3,1) infinite;
     opacity: 0;
+    will-change: transform, opacity;
   }
   @keyframes tv-onda {
     0%   { transform: scale(.86); opacity: .55; }
@@ -202,6 +209,7 @@ html.fs-xl {
   .tv-barra {
     transform-origin: bottom;
     animation: tv-barra .62s ease-in-out infinite alternate;
+    will-change: transform;
   }
   @keyframes tv-barra {
     from { transform: scaleY(.22); }
