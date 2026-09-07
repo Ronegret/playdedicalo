@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { getTimelineProgress, useGameStore } from '../store/useGameStore';
 import VinilloJugador from '../components/tv/VinilloJugador';
 import { desbloquearAudio, pararMusica, segundosRestantes, sonarCancionAleatoria } from '../services/musica';
+import { vigilarFluidez } from '../services/rendimiento';
 
 /**
  * PANTALLA DE TELEVISIÓN
@@ -118,6 +119,37 @@ function Teclado({ onConfirmar }) {
 
 const COLOR_PODIO = ['#ffbf4d', '#dbe4f0', '#ff9a4d'];
 
+/**
+ * Cuenta atrás del fragmento, aislada a propósito.
+ *
+ * Estaba dentro de TvScreen con un `setInterval` de medio segundo, así que
+ * dos veces por segundo se repintaba la pantalla entera —los veinte discos
+ * incluidos— para cambiar un número de dos cifras. En un ordenador no se
+ * nota; en una caja de Android TV es medio segundo de trabajo por cada
+ * segundo de reloj, y es de donde salía buena parte del atasco.
+ *
+ * Aquí dentro, ese repintado afecta a este párrafo y a nada más.
+ */
+function CuentaAtras() {
+  const [segundos, setSegundos] = useState(null);
+  // Se monta y se desmonta con la fase, así que no hace falta apagarlo por
+  // dentro: cuando deja de hacer falta, deja de existir.
+  useEffect(() => {
+    const tick = window.setInterval(() => {
+      const quedan = segundosRestantes();
+      setSegundos(quedan > 0 ? Math.ceil(quedan) : null);
+    }, 500);
+    return () => window.clearInterval(tick);
+  }, []);
+
+  if (segundos === null) return null;
+  return (
+    <p style={{ fontSize: '2.4vmin' }} className="mt-[1vmin] tabular-nums text-tv-dim">
+      {segundos}s
+    </p>
+  );
+}
+
 export default function TvScreen() {
   const [params] = useSearchParams();
   const [pinElegido, setPinElegido] = useState(() => (params.get('pin') || '').replace(/\D/g, '').slice(0, 4));
@@ -215,20 +247,6 @@ export default function TvScreen() {
 
   useEffect(() => { if (phase !== 'listen') pararMusica(); }, [phase]);
 
-  // Cuenta atrás del fragmento, solo si la música suena aquí. Da sensación
-  // de ritmo en vez de que la canción desaparezca de golpe.
-  const [segundosAudio, setSegundosAudio] = useState(null);
-  useEffect(() => {
-    if (!audioEnTv || phase !== 'listen') {
-      const limpiar = window.setTimeout(() => setSegundosAudio(null), 0);
-      return () => window.clearTimeout(limpiar);
-    }
-    const tick = window.setInterval(() => {
-      const quedan = segundosRestantes();
-      setSegundosAudio(quedan > 0 ? Math.ceil(quedan) : null);
-    }, 500);
-    return () => window.clearInterval(tick);
-  }, [audioEnTv, phase, round]);
   useEffect(() => () => pararMusica(), []);
 
   const conectados = useMemo(() => (players || []).filter((p) => p.status !== 'kicked'), [players]);
@@ -247,19 +265,85 @@ export default function TvScreen() {
   const [bienvenida, setBienvenida] = useState(false);
   const yaSaludoRef = useRef(false);
 
-  // Si el anfitrión cierra la sala, el store se vacía: la tele vuelve sola a
-  // pedir código, lista para la siguiente partida. Antes se quedaba enseñando
-  // una sala que ya no existía, con su PIN y sus jugadores, para siempre.
-  const salaCerrada = pinElegido.length === 4 && rol === null && pin === null;
+  // ── CUANDO EL ANFITRIÓN SE VA ─────────────────────────────────────────
+  //
+  // Antes había un solo camino: que la sala se BORRARA de la base. Pero el
+  // anfitrión casi nunca la borra — cierra la app, bloquea el móvil o se va
+  // de la fiesta. La sala seguía existiendo, la tele seguía enseñándola, y
+  // allí se quedaba: un PIN al que ya no responde nadie, para siempre. Es lo
+  // que se veía en el salón.
+  //
+  // Ahora la tele mira lo mismo que miraría cualquiera: ¿sigue ahí el
+  // anfitrión? Si no, se despide en condiciones y vuelve al inicio sola.
+  //
+  // Con diez segundos de margen, y no de golpe, por dos motivos: da tiempo a
+  // leer quién ha ganado, y a un anfitrión que solo ha perdido la cobertura o
+  // ha bloqueado el móvil le da tiempo a volver sin que la tele lo dé por
+  // muerto. Si vuelve, la despedida se cancela sola.
+  const salaBorrada = pinElegido.length === 4 && rol === null && pin === null;
+  const anfitrionSeFue = pinElegido.length === 4 && Boolean(pin)
+    && (!anfitrion || anfitrion.status === 'kicked');
+  const hayQueCerrar = salaBorrada || anfitrionSeFue;
+
+  const SEGUNDOS_DESPEDIDA = 10;
+  const [restanDespedida, setRestanDespedida] = useState(null);
+
+  const volverAlInicio = useCallback(() => {
+    yaSaludoRef.current = false;
+    setBienvenida(false);
+    setRestanDespedida(null);
+    setPinElegido('');
+    dejarDeObservar();
+    // Se retira la entrada que dejamos al entrar en la sala, para que el
+    // historial no crezca una entrada por cada partida de la noche. No se
+    // repite en bucle: al volver, `state.sala` ya no está.
+    if (window.history.state?.sala) window.history.back();
+  }, [dejarDeObservar]);
+
   useEffect(() => {
-    if (!salaCerrada) return undefined;
-    const volver = window.setTimeout(() => {
-      yaSaludoRef.current = false;
-      setBienvenida(false);
-      setPinElegido('');
-    }, 0);
-    return () => window.clearTimeout(volver);
-  }, [salaCerrada]);
+    if (!hayQueCerrar) {
+      // El anfitrión ha vuelto: se cancela la despedida y sigue la partida.
+      const limpiar = window.setTimeout(() => setRestanDespedida(null), 0);
+      return () => window.clearTimeout(limpiar);
+    }
+    let quedan = SEGUNDOS_DESPEDIDA;
+    const arranque = window.setTimeout(() => setRestanDespedida(quedan), 0);
+    const tick = window.setInterval(() => {
+      quedan -= 1;
+      if (quedan <= 0) {
+        window.clearInterval(tick);
+        volverAlInicio();
+        return;
+      }
+      setRestanDespedida(quedan);
+    }, 1000);
+    return () => { window.clearTimeout(arranque); window.clearInterval(tick); };
+  }, [hayQueCerrar, volverAlInicio]);
+
+  // ── SALIR CON EL MANDO, EN CUALQUIER MOMENTO ──────────────────────────
+  //
+  // Va por el historial del navegador a propósito. La app de televisión ya
+  // hace `webView.goBack()` cuando hay a dónde volver, así que dejando una
+  // entrada en el historial al entrar en la sala, el botón ATRÁS del mando
+  // sale de la sala en vez de cerrar la aplicación entera — y funciona con
+  // el APK que ya está instalado, sin reinstalar nada.
+  //
+  // El `keydown` cubre lo demás: un televisor con navegador, un teclado, un
+  // mando que manda Escape.
+  useEffect(() => {
+    if (pinElegido.length !== 4) return undefined;
+    window.history.pushState({ sala: pinElegido }, '');
+    const alSalir = () => volverAlInicio();
+    const alTeclado = (e) => {
+      if (e.key === 'Escape' || e.key === 'Backspace' || e.key === 'GoBack') volverAlInicio();
+    };
+    window.addEventListener('popstate', alSalir);
+    window.addEventListener('keydown', alTeclado);
+    return () => {
+      window.removeEventListener('popstate', alSalir);
+      window.removeEventListener('keydown', alTeclado);
+    };
+  }, [pinElegido, volverAlInicio]);
 
   useEffect(() => {
     if (yaSaludoRef.current || pinElegido.length !== 4 || !hayAnfitrion) return undefined;
@@ -268,6 +352,17 @@ export default function TvScreen() {
     const quitar = window.setTimeout(() => setBienvenida(false), 5000);
     return () => { window.clearTimeout(mostrar); window.clearTimeout(quitar); };
   }, [pinElegido, hayAnfitrion]);
+  // La tele se mide a sí misma y baja la calidad si no da abasto. Es la
+  // única forma honesta de acertar: el aparato del salón no se parece en nada
+  // al ordenador donde se programa esto.
+  const [ligero, setLigero] = useState(false);
+  useEffect(() => vigilarFluidez((debeAligerar, datos) => {
+    setLigero(debeAligerar);
+    console.info(debeAligerar
+      ? `Tele justa de potencia (${datos.medianaMs.toFixed(1)}ms por fotograma): se apagan las animaciones.`
+      : 'La tele va sobrada: animaciones completas.');
+  }), []);
+
   const respondieron = Object.keys(roundAnswers).length;
   const hayReveal = Object.keys(revealResults).length > 0;
 
@@ -316,7 +411,7 @@ export default function TvScreen() {
     // de espera ni siquiera está) y los márgenes.
     const anchoUtil = 100 * (window.innerWidth / Math.min(window.innerWidth, window.innerHeight)) - 40;
     // Alto reservado a los jugadores: un tercio largo de la pantalla.
-    const altoUtil = 38;
+    const altoUtil = 40;
 
     let mejor = { tamVinilo: '8vmin', columnas: n };
     // Se prueban repartos y se queda el que da el disco más grande.
@@ -325,7 +420,9 @@ export default function TvScreen() {
       const porAncho = (anchoUtil - cols * 2) / cols;
       // Cada jugador ocupa su disco más el nombre y el marcador debajo.
       const porAlto = (altoUtil - filas * 2) / filas / 1.45;
-      const lado = Math.min(porAncho, porAlto, 30);
+      // Tope de 34 y no de 30: con tres o cuatro jugadores sobra pantalla, y
+      // lo que se pide desde el sofá es ver la cara, no el hueco.
+      const lado = Math.min(porAncho, porAlto, 34);
       if (lado > parseFloat(mejor.tamVinilo)) {
         mejor = { tamVinilo: `${lado.toFixed(1)}vmin`, columnas: cols };
       }
@@ -341,7 +438,7 @@ export default function TvScreen() {
     const enlaceTv = typeof window !== 'undefined'
       ? `${window.location.origin}/tv-link?tv=${codigoTv}` : '';
     return (
-      <div className="tv-root" style={{ padding: SAFE }}>
+      <div className={ligero ? 'tv-root tv-ligero' : 'tv-root'} style={{ padding: SAFE }}>
         <div className="flex h-full flex-col items-center justify-center">
           <img
             src="/images/logo-main.png"
@@ -409,10 +506,75 @@ export default function TvScreen() {
 
   // ── Partida ───────────────────────────────────────────────────────────────
   return (
-    <div className="tv-root" style={{ padding: SAFE }}>
+    <div className={ligero ? 'tv-root tv-ligero' : 'tv-root'} style={{ padding: SAFE }}>
       {/* Franja de bienvenida: encima de todo, sin quitarle el sitio a nada.
           Si alguna vez se quedara pegada, el QR se seguiría viendo debajo. */}
-      {bienvenida && anfitrion && (
+      {/* ── DESPEDIDA ────────────────────────────────────────────────────
+          Se pone DELANTE de todo, a pantalla completa. Una sala sin
+          anfitrión no es una sala: enseñar el PIN debajo, como si aún se
+          pudiera entrar, sería mentir a quien esté mirando. */}
+      {restanDespedida !== null && (
+        <div
+          className="tv-pop absolute inset-0 z-30 flex flex-col items-center justify-center"
+          style={{ background: '#070a10' }}
+        >
+          <img src="/images/logo-main.png" alt="Dedícalo Play"
+            style={{ height: '7vmin', width: 'auto' }} />
+
+          <p style={{ fontSize: '5vmin', letterSpacing: '0.12em' }}
+            className="mt-[3vmin] font-black" >
+            <span style={{ color: '#ffbf4d' }}>SE ACABÓ LA PARTIDA</span>
+          </p>
+
+          {clasificacion[0] && (
+            <p style={{ fontSize: '3.2vmin' }} className="mt-[1vmin] font-black text-tv-ink">
+              Ganó {clasificacion[0].name} con{' '}
+              <span style={{ color: '#39ff14' }}>{getTimelineProgress(clasificacion[0])}</span> canciones
+            </p>
+          )}
+
+          <p style={{ fontSize: '2.2vmin' }} className="mt-[3vmin] text-tv-dim">
+            El anfitrión ha salido
+          </p>
+
+          {/* La cuenta atrás se ve, no se adivina: quien mira sabe que la
+              pantalla va a hacer algo y cuándo. */}
+          <div className="mt-[2vmin] flex items-center gap-[2vmin]">
+            <div
+              className="flex items-center justify-center rounded-full font-black tabular-nums"
+              style={{
+                width: '10vmin', height: '10vmin', fontSize: '4.6vmin',
+                color: '#39ff14', border: '0.45vmin solid rgba(57,255,20,.5)'
+              }}
+            >
+              {restanDespedida}
+            </div>
+            <p style={{ fontSize: '2.4vmin' }} className="text-left text-tv-dim">
+              Volviendo a la pantalla<br />de inicio...
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={volverAlInicio}
+            autoFocus
+            className="tv-boton mt-[3.5vmin] rounded-full font-black"
+            style={{
+              fontSize: '2.4vmin', letterSpacing: '0.18em',
+              padding: '1.4vmin 4.5vmin',
+              color: '#0b0f17', background: '#39ff14'
+            }}
+          >
+            VOLVER AHORA
+          </button>
+
+          <p style={{ fontSize: '1.8vmin' }} className="mt-[2vmin] text-tv-dim">
+            o pulsa ATRÁS en el mando
+          </p>
+        </div>
+      )}
+
+      {bienvenida && anfitrion && phase === 'lobby' && (
         <div
           className="tv-pop absolute left-1/2 z-10 flex -translate-x-1/2 items-center gap-[2vmin] rounded-full px-[4vmin] py-[1.6vmin]"
           style={{
@@ -520,14 +682,16 @@ export default function TvScreen() {
                     identidad del juego, y lo que hace que la pantalla se
                     sienta viva mientras suena la canción. */}
                 <div className="relative flex shrink-0 items-center justify-center" style={{ width: '30vmin', height: '30vmin' }}>
-                  {[0, 1, 2].map((i) => (
+                  {/* Dos ondas, no tres. La tercera no se distinguía y era una
+                      capa más animándose sin parar en un aparato que va justo. */}
+                  {[0, 1].map((i) => (
                     <span
                       key={i}
                       className="tv-onda absolute rounded-full"
                       style={{
                         width: '21vmin', height: '21vmin',
                         border: '0.35vmin solid #39ff14',
-                        animationDelay: `${i * 0.73}s`
+                        animationDelay: `${i * 1.1}s`
                       }}
                     />
                   ))}
@@ -536,14 +700,17 @@ export default function TvScreen() {
                       casi gratis, y redibujar surcos generados en cada
                       fotograma es lo que se quedaba pegado. */}
                   <div className="relative" style={{ width: '21vmin', height: '21vmin' }}>
+                    {/* El aro va aparte y quieto. Cuando era una `box-shadow`
+                        de la propia imagen, la tele recalculaba la sombra en
+                        cada vuelta para dibujar el mismo círculo — un anillo
+                        girado no cambia. */}
+                    <div className="absolute rounded-full"
+                      style={{ inset: '-3%', border: '0.6vmin solid #39ff14' }} />
                     <img
                       src="/images/vinilo.png"
                       alt=""
                       className="tv-vinilo"
-                      style={{
-                        width: '100%', height: '100%', display: 'block',
-                        borderRadius: '50%', boxShadow: '0 0 0 0.6vmin #39ff14'
-                      }}
+                      style={{ width: '100%', height: '100%', display: 'block', borderRadius: '50%' }}
                     />
                     <div
                       className="absolute flex items-center justify-center overflow-hidden rounded-full"
@@ -556,7 +723,7 @@ export default function TvScreen() {
 
                 {/* Ecualizador: doce barras con su propio ritmo. */}
                 <div className="mt-[1.5vmin] flex shrink-0 items-end gap-[0.7vmin]" style={{ height: '5vmin' }}>
-                  {[0.5, 0.8, 0.35, 1, 0.6, 0.9, 0.45, 0.75, 0.55, 0.95, 0.4, 0.7].map((alto, i) => (
+                  {[0.5, 0.85, 0.35, 1, 0.55, 0.9, 0.45].map((alto, i) => (
                     <span
                       key={i}
                       className="tv-barra rounded-full"
@@ -574,11 +741,7 @@ export default function TvScreen() {
                 <p style={{ fontSize: '3.4vmin', color: '#39ff14' }} className="mt-[1.5vmin] font-black tracking-[0.3em]">
                   ESCUCHA
                 </p>
-                {segundosAudio !== null && (
-                  <p style={{ fontSize: '2.2vmin' }} className="tabular-nums text-tv-dim">
-                    {segundosAudio}s
-                  </p>
-                )}
+                {audioEnTv && <CuentaAtras />}
               </div>
             )}
 

@@ -194,9 +194,11 @@ html.fs-xl {
   /* Disco girando: la seña de identidad del juego. */
   .tv-vinilo {
     animation: tv-girar 3.2s linear infinite;
-    will-change: transform;
-    /* La imagen se gira como capa propia: sin esto la tele repinta lo de
-       alrededor en cada vuelta. */
+    /* Sin `will-change`. Un elemento que YA está animando transform lo
+       promociona el navegador solo; declararlo además obliga a mantener la
+       capa viva para siempre, y en una tele con poca memoria de vídeo son
+       capas que le quitan sitio a las que sí hacen falta. Se dejaba puesto
+       en dieciséis elementos a la vez. */
     backface-visibility: hidden;
   }
   @keyframes tv-girar { to { transform: rotate(360deg); } }
@@ -205,7 +207,6 @@ html.fs-xl {
   .tv-onda {
     animation: tv-onda 2.2s cubic-bezier(.2,.6,.3,1) infinite;
     opacity: 0;
-    will-change: transform, opacity;
   }
   @keyframes tv-onda {
     0%   { transform: scale(.86); opacity: .55; }
@@ -216,7 +217,6 @@ html.fs-xl {
   .tv-barra {
     transform-origin: bottom;
     animation: tv-barra .62s ease-in-out infinite alternate;
-    will-change: transform;
   }
   @keyframes tv-barra {
     from { transform: scaleY(.22); }
@@ -251,6 +251,36 @@ html.fs-xl {
     0%, 100% { transform: scale(1); }
     50%      { transform: scale(1.035); }
   }
+
+  /* Único botón de toda la pantalla de tele. Se ve el foco a tres metros,
+     porque en una tele el foco es el cursor: si no se ve, no se sabe qué
+     está seleccionado. */
+  .tv-boton { outline: none; transition: transform 120ms ease; }
+  .tv-boton:focus-visible,
+  .tv-boton:focus {
+    box-shadow: 0 0 0 0.55vmin rgba(255,255,255,.9);
+    transform: scale(1.04);
+  }
+
+  /* ── Modo ligero ──────────────────────────────────────────────────────
+     Lo enciende la propia tele cuando se mide y ve que no llega (ver
+     services/rendimiento.js). Se apaga TODO lo que se repite sin parar; se
+     dejan las entradas, que duran medio segundo y no pueden atascar nada.
+     La pantalla dice exactamente lo mismo, solo que quieta — que es mucho
+     mejor que moverse a trompicones.
+  ─────────────────────────────────────────────────────────────────────── */
+  .tv-ligero .tv-vinilo,
+  .tv-ligero .tv-onda,
+  .tv-ligero .tv-barra,
+  .tv-ligero .tv-latido,
+  .tv-ligero .tv-campeon {
+    animation: none !important;
+  }
+  /* Las ondas viven en opacity 0 mientras animan: sin animación habría que
+     esconderlas, o quedarían tres aros muertos alrededor del disco. */
+  .tv-ligero .tv-onda { display: none !important; }
+  /* El ecualizador quieto a media altura sigue leyéndose como ecualizador. */
+  .tv-ligero .tv-barra { transform: scaleY(.6); }
 
   @media (prefers-reduced-motion: reduce) {
     .tv-vinilo, .tv-onda, .tv-barra, .tv-latido, .tv-entra, .tv-pop,

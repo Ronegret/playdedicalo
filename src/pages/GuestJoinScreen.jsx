@@ -296,23 +296,6 @@ export default function GuestJoinScreen() {
     await cancelJoinRequest();
   };
 
-  const handleNextStep = async () => {
-    if (step === 0) {
-      if (pin.length !== 4) {
-        setAlert({
-          tone: 'warning',
-          title: 'Falta el PIN',
-          message: 'Escribe los 4 dígitos que te muestra el anfitrión, o escanea su código QR.'
-        });
-        return;
-      }
-      await advanceFromPin(pin);
-      return;
-    }
-
-    setStep((prev) => prev + 1);
-  };
-
   return (
     <motion.main className="app-screen safe-bottom-action app-shell relative z-10 overflow-y-auto pt-safe-header text-center">
       <header className="fixed top-0 w-full z-50 bg-glass-surface backdrop-blur-md border-b border-white/10 flex items-center justify-between px-margin-mobile h-16 left-0">
@@ -347,7 +330,7 @@ export default function GuestJoinScreen() {
                 className="mt-5 flex min-h-touch w-full items-center justify-center gap-2 rounded-2xl border-2 border-neon-green/45 bg-neon-green/10 px-4 py-3 font-label-caps text-base font-black text-neon-green active:scale-95 transition-transform"
               >
                 <span className="material-symbols-outlined text-2xl">qr_code_scanner</span>
-                ESCANEAR QR
+                {isCheckingPin ? 'COMPROBANDO...' : 'ESCANEAR QR'}
               </button>
 
               <div className="my-4 flex items-center gap-3">
@@ -395,12 +378,27 @@ export default function GuestJoinScreen() {
                 className="mt-6 h-20 w-full rounded-2xl border-2 border-white/10 bg-black/30 px-4 text-center text-3xl font-black text-on-surface outline-none transition-colors focus:border-neon-green focus:ring-2 focus:ring-neon-green/30 placeholder:text-on-surface-variant/40"
                 value={name}
                 onChange={(event) => { hasEditedNameRef.current = true; setName(event.target.value); }}
+                onKeyDown={(event) => { if (event.key === 'Enter') setStep(2); }}
                 placeholder={findCharacterAvatarByUrl(avatar)?.name || 'DJ Invitado'}
                 autoComplete="nickname"
+                enterKeyHint="next"
               />
               <p className="mt-3 text-center text-sm text-on-surface-variant">
                 Si lo dejas vacío usamos el nombre de tu personaje · máx. 18 caracteres
               </p>
+
+              {/* Aquí, justo debajo del campo, y no en una barra pegada al
+                  fondo: el nombre es lo único que se escribe en todo el
+                  juego, y la barra fija se comía media pantalla con el
+                  teclado abierto. La tecla "intro" hace lo mismo. */}
+              <button
+                type="button"
+                onClick={() => setStep(2)}
+                className="mt-4 flex min-h-touch w-full items-center justify-center gap-2 rounded-2xl bg-neon-green px-4 font-label-caps text-base font-black text-black transition-transform active:scale-[0.98]"
+              >
+                ELEGIR PERSONAJE
+                <span className="material-symbols-outlined">arrow_forward</span>
+              </button>
 
               <section className="mt-6 w-full rounded-2xl border border-white/8 bg-white/[0.03] p-3 text-left">
                 <div className="flex items-center justify-between gap-3">
@@ -465,20 +463,20 @@ export default function GuestJoinScreen() {
 
       </div>
 
-      <StepActionBar
-        onBack={step > 0 ? () => setStep((prev) => prev - 1) : undefined}
-        onNext={step === GUEST_STEPS.length - 1 ? handleJoin : handleNextStep}
-        nextLabel={
-          step === GUEST_STEPS.length - 1
-            ? (isLoading ? 'ENTRANDO...' : 'UNIRSE')
-            : (isCheckingPin ? 'COMPROBANDO...' : 'SIGUIENTE')
-        }
-        nextIcon={step === GUEST_STEPS.length - 1 ? 'login' : 'arrow_forward'}
-        // El botón ya no se deshabilita por un PIN incompleto: se deja
-        // pulsar a propósito para poder explicar en el aviso qué falta,
-        // en vez de dejar a la persona mirando un botón apagado sin motivo.
-        nextDisabled={isCheckingPin || (step === GUEST_STEPS.length - 1 && !canJoin)}
-      />
+      {/* Barra de abajo SOLO para entrar en la sala.
+          El PIN ya avanzaba solo al cuarto dígito y el nombre se confirma
+          desde el propio campo, así que en esos pasos la barra no hacía otra
+          cosa que ocupar sitio. "UNIRSE" se queda: es la acción de verdad, y
+          esa conviene pulsarla a propósito. */}
+      {step === GUEST_STEPS.length - 1 && (
+        <StepActionBar
+          onBack={() => setStep((prev) => prev - 1)}
+          onNext={handleJoin}
+          nextLabel={isLoading ? 'ENTRANDO...' : 'UNIRSE'}
+          nextIcon="login"
+          nextDisabled={!canJoin}
+        />
+      )}
 
       <AlertDialog
         open={Boolean(alert)}

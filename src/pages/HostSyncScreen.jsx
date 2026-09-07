@@ -170,6 +170,10 @@ export default function HostSyncScreen() {
       setGoogleUser(result.user);
       await loadUserProfile(result.user);
       setAuthStatus('idle');
+      // Entrar con la cuenta ya era la decisión de este paso. Quedarse
+      // enseñando "Rodrigo listo" y pedir además un "SIGUIENTE" era un toque
+      // de más para decir lo que la pantalla ya sabía.
+      setStep(1);
     } catch (loginError) {
       let error = loginError;
       const fallbackToRedirect = [
@@ -197,23 +201,6 @@ export default function HostSyncScreen() {
       setAuthMessage(msg[error.code] || 'No pudimos entrar con Google. Inténtalo de nuevo.');
     }
   };
-  // Igual que en el flujo de invitado: en vez de dejar el botón apagado sin
-  // explicación, se deja pulsar y el aviso emergente dice exactamente qué
-  // falta.
-  const handleNextStep = () => {
-    if (step === 0) {
-      if (!googleUser) {
-        setAlert({
-          tone: 'warning',
-          title: 'Falta tu cuenta de Google',
-          message: 'El anfitrión entra con Google para que la sala quede ligada a su perfil. Toca "Entrar con Google" para continuar.'
-        });
-        return;
-      }
-    }
-    setStep((prev) => prev + 1);
-  };
-
   const handleHostCreate = async () => {
     if (createStartedRef.current) return;
     if (!canCreateRoom) {
@@ -307,10 +294,17 @@ export default function HostSyncScreen() {
                 {authStatus === 'loading' ? 'CONECTANDO...' : 'ENTRAR CON GOOGLE'}
               </NeonButton>
             ) : (
-              <div className="rounded-2xl border border-vinyl-orange/30 bg-vinyl-orange/10 px-4 py-3 flex items-center justify-center gap-2 font-bold text-sm text-white">
+              /* Si se vuelve atrás con la sesión ya hecha, esta tarjeta es la
+                 forma de seguir: se toca y adelante. */
+              <button
+                type="button"
+                onClick={() => setStep(1)}
+                className="flex min-h-touch w-full items-center justify-center gap-2 rounded-2xl border border-vinyl-orange/30 bg-vinyl-orange/10 px-4 py-3 text-sm font-bold text-white active:scale-[0.98]"
+              >
                 <span className="material-symbols-outlined text-vinyl-orange text-lg">check_circle</span>
                 {googleUser.displayName?.split(' ')[0] || 'Google'} listo
-              </div>
+                <span className="material-symbols-outlined text-vinyl-orange">arrow_forward</span>
+              </button>
             )}
             {authMessage && (
               <p className={`text-xs text-center leading-relaxed ${authStatus === 'error' ? 'text-error' : 'text-on-surface-variant'}`}>
@@ -453,7 +447,13 @@ export default function HostSyncScreen() {
                   <motion.button
                     key={playlist.id}
                     type="button"
-                    onClick={() => setSelectedPlaylist(playlist.id)}
+                    onClick={() => {
+                      // Elegir ES avanzar. Antes había que tocar la lista y
+                      // luego bajar a "SIGUIENTE": dos gestos para una sola
+                      // decisión, y la barra de abajo tapando las tarjetas.
+                      setSelectedPlaylist(playlist.id);
+                      setStep(2);
+                    }}
                     whileTap={{ scale: 0.94 }}
                     whileHover={{ scale: 1.015, y: -2 }}
                     className="group relative min-h-[120px] w-full overflow-hidden rounded-3xl border p-3 text-left transition-all duration-200 sm:min-h-[150px] sm:p-4"
@@ -554,20 +554,22 @@ export default function HostSyncScreen() {
         </AnimatePresence>
       </div>
 
-      <StepActionBar
-        onBack={step > 0 ? () => setStep((prev) => prev - 1) : undefined}
-        onNext={step === HOST_STEPS.length - 1 ? handleHostCreate : handleNextStep}
-        nextLabel={
-          step === HOST_STEPS.length - 1
-            ? (isCreating ? 'CREANDO SALA...' : 'CREAR SALA')
-            : 'SIGUIENTE'
-        }
-        nextIcon={step === HOST_STEPS.length - 1 ? 'meeting_room' : 'arrow_forward'}
-        nextDisabled={isCreating}
-        hint={
-          step === 0 && !googleUser ? 'Entra con Google para continuar' : undefined
-        }
-      />
+      {/* Barra de abajo SOLO en el último paso.
+          En los dos primeros no hay nada que confirmar: entrar con la cuenta
+          y elegir la lista ya son la decisión, así que avanzan solas. La
+          barra fija se comía la parte baja de la pantalla y obligaba a un
+          toque de más en cada paso.
+          Aquí sí se queda, porque "CREAR SALA" no es un "siguiente": es la
+          acción que abre la partida, y esa conviene pulsarla a propósito. */}
+      {step === HOST_STEPS.length - 1 && (
+        <StepActionBar
+          onBack={() => setStep((prev) => prev - 1)}
+          onNext={handleHostCreate}
+          nextLabel={isCreating ? 'CREANDO SALA...' : 'CREAR SALA'}
+          nextIcon="meeting_room"
+          nextDisabled={isCreating}
+        />
+      )}
 
       <AlertDialog
         open={Boolean(alert)}

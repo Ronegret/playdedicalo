@@ -504,10 +504,22 @@ function VinylDisc({ year, wildcard = false, size }) {
 // Hueco entre dos discos. Se agranda y se enciende cuando queda centrado en
 // el riel: el jugador siempre ve cuál va a elegir sin tener que apuntar con
 // el dedo a un círculo pequeño.
-function VinylGap({ activo, size }) {
+/**
+ * El hueco ES el botón.
+ *
+ * Antes había que centrar el hueco deslizando y luego bajar la vista y pulsar
+ * "COLOCAR AQUÍ": dos gestos y dos sitios distintos de la pantalla para una
+ * sola decisión. Ahora se toca donde va el año y ya está, que es lo que
+ * cualquiera intenta hacer la primera vez.
+ */
+function VinylGap({ activo, size, alTocar, etiqueta, disabled }) {
   return (
-    <div
-      className="flex shrink-0 items-center justify-center rounded-full border-[3px] border-dashed transition-all duration-200"
+    <button
+      type="button"
+      onClick={alTocar}
+      disabled={disabled}
+      aria-label={etiqueta}
+      className="flex shrink-0 items-center justify-center rounded-full border-[3px] border-dashed transition-all duration-200 active:scale-95 disabled:active:scale-100"
       style={{
         width: activo ? size : `calc(${size} * 0.62)`,
         height: activo ? size : `calc(${size} * 0.62)`,
@@ -522,7 +534,7 @@ function VinylGap({ activo, size }) {
       >
         add
       </span>
-    </div>
+    </button>
   );
 }
 
@@ -570,6 +582,10 @@ function TimelinePlacementQuestion({
   // el botón de confirmar, ambos en rem.
   const size = apaisado ? '94px' : '72px';
 
+  // Cuándo fue el último desplazamiento del riel, para no confundir el dedo
+  // que frena el carrusel con un dedo que elige.
+  const ultimoScrollRef = useRef(0);
+
   const recalcularFoco = useCallback(() => {
     const rail = railRef.current;
     if (!rail) return;
@@ -590,6 +606,7 @@ function TimelinePlacementQuestion({
     if (!rail) return undefined;
     let pendiente = false;
     const alDesplazar = () => {
+      ultimoScrollRef.current = performance.now();
       if (pendiente) return;
       pendiente = true;
       window.requestAnimationFrame(() => { pendiente = false; recalcularFoco(); });
@@ -621,6 +638,26 @@ function TimelinePlacementQuestion({
     rail.scrollTo({ left: el.offsetLeft + el.offsetWidth / 2 - rail.clientWidth / 2, behavior: 'smooth' });
   }, []);
 
+  /**
+   * Tocar un hueco.
+   *
+   * Mientras suena la música todavía no se puede colocar, así que el toque
+   * solo centra el hueco: sirve para ir mirando dónde encajaría.
+   *
+   * Ya con la música parada, un toque COLOCA. La única guarda es invisible:
+   * se ignoran los toques que llegan justo después de deslizar. Al parar un
+   * carrusel con el dedo, ese contacto lo registra el navegador como un clic
+   * en lo que hubiera debajo, y aquí colocar donde no era cuesta puntos.
+   */
+  const tocarHueco = useCallback((index, hueco) => {
+    if (performance.now() - ultimoScrollRef.current < 320) {
+      irA(index);
+      return;
+    }
+    if (preview || disabled) { irA(index); return; }
+    onPick({ isCorrect: hueco.slot === correctSlot, timelineSlot: hueco.slot });
+  }, [preview, disabled, onPick, correctSlot, irA]);
+
   const huecoActivo = huecos[focoIndex] || huecos[0];
   const etiqueta = huecoActivo ? etiquetaHueco(huecoActivo.from, huecoActivo.to) : '';
 
@@ -644,7 +681,7 @@ function TimelinePlacementQuestion({
           <div>
             <p className="font-label-caps text-sm tracking-[0.16em] text-neon-green">TU RUTA DE AÑOS</p>
             <p className="mt-1 text-base font-bold text-white">
-              {preview ? 'Ve buscando dónde encaja' : 'Desliza y confirma'}
+              {preview ? 'Ve buscando dónde encaja' : 'Toca dónde va'}
             </p>
           </div>
           <span className="shrink-0 rounded-full border border-white/10 bg-black/25 px-3 py-1.5 text-sm font-label-caps text-on-surface-variant">
@@ -670,7 +707,13 @@ function TimelinePlacementQuestion({
                   ref={(el) => { gapRefs.current[index] = el; }}
                   style={{ scrollSnapAlign: 'center' }}
                 >
-                  <VinylGap activo={index === focoIndex} size={size} />
+                  <VinylGap
+                    activo={index === focoIndex}
+                    size={size}
+                    disabled={disabled}
+                    etiqueta={etiquetaHueco(hueco.from, hueco.to)}
+                    alTocar={() => tocarHueco(index, hueco)}
+                  />
                 </div>
                 {hueco.to != null && <VinylDisc year={hueco.to} size={size} />}
               </div>
@@ -681,45 +724,16 @@ function TimelinePlacementQuestion({
           </div>
         </div>
 
-        {/* Paso a paso: quien no quiera deslizar con precisión avanza hueco a
-            hueco con las flechas. */}
-        <div className="mt-3 flex items-center gap-2">
-          <button
-            type="button"
-            aria-label="Hueco anterior"
-            disabled={focoIndex === 0}
-            onClick={() => irA(Math.max(0, focoIndex - 1))}
-            className="flex min-h-touch w-12 shrink-0 items-center justify-center rounded-xl border border-white/15 bg-white/5 text-white disabled:opacity-30"
-          >
-            <span className="material-symbols-outlined">arrow_back</span>
-          </button>
-          <p className="flex-1 text-center text-base font-black leading-tight text-white">{etiqueta}</p>
-          <button
-            type="button"
-            aria-label="Hueco siguiente"
-            disabled={focoIndex >= huecos.length - 1}
-            onClick={() => irA(Math.min(huecos.length - 1, focoIndex + 1))}
-            className="flex min-h-touch w-12 shrink-0 items-center justify-center rounded-xl border border-white/15 bg-white/5 text-white disabled:opacity-30"
-          >
-            <span className="material-symbols-outlined">arrow_forward</span>
-          </button>
-        </div>
+        {/* Solo la etiqueta del hueco centrado: dice dónde caería sin tener
+            que interpretar la fila de discos. Las flechas se fueron con el
+            botón de confirmar — sobran cuando se toca directamente. */}
+        <p className="mt-3 text-center text-base font-black leading-tight text-white">{etiqueta}</p>
 
-        {preview ? (
-          <p className="mt-3 text-center text-sm leading-relaxed text-on-surface-variant">
-            Podrás confirmar cuando pare la música.
-          </p>
-        ) : (
-          <button
-            type="button"
-            disabled={disabled || !huecoActivo}
-            onClick={() => onPick({ isCorrect: huecoActivo.slot === correctSlot, timelineSlot: huecoActivo.slot })}
-            className="mt-3 flex min-h-touch w-full items-center justify-center gap-2 rounded-2xl bg-neon-green px-4 font-label-caps text-base font-black text-black transition-transform active:scale-[0.98] disabled:opacity-40"
-          >
-            <span className="material-symbols-outlined">add</span>
-            COLOCAR AQUÍ
-          </button>
-        )}
+        <p className="mt-2 text-center text-sm leading-relaxed text-on-surface-variant">
+          {preview
+            ? 'Podrás colocarlo cuando pare la música.'
+            : 'Toca el hueco donde crees que va'}
+        </p>
 
         {wildcards > 0 && !preview && (
           <p className="mt-3 flex items-center gap-1.5 text-sm text-chaos-gold">

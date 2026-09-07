@@ -27,22 +27,56 @@ export default function ConectarTv({ onCerrar }) {
 
   const videoRef = useRef(null);
 
+  // EL FALLO DE LOS DESTELLOS
+  //
+  // `onCerrar` llega como función nueva en cada repintado del lobby (está
+  // escrita en línea allí), y el lobby se repinta cada vez que Firebase manda
+  // presencia: cada pocos segundos, y más aún según entra gente. Como el
+  // efecto de la cámara dependía de `intentar`, y `intentar` de `onCerrar`,
+  // el efecto se desmontaba y se volvía a montar TODO EL RATO: cerrar la
+  // cámara, pedirla otra vez, reajustar exposición y enfoque.
+  //
+  // Eso es exactamente lo que se veía: destellos, tirones, y un escáner que
+  // tardaba en leer porque nunca llegaba a estabilizarse. La cámara ahora se
+  // abre UNA vez; lo que puede cambiar se guarda en referencias.
+  const alCerrarRef = useRef(onCerrar);
+  const enlazarRef = useRef(enlazar);
+  useEffect(() => {
+    alCerrarRef.current = onCerrar;
+    enlazarRef.current = enlazar;
+  }, [onCerrar, enlazar]);
+
   const intentar = useCallback(async (valor) => {
     const limpio = String(valor || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6);
     if (limpio.length !== 6) return false;
     setEstado('Conectando...');
     setError('');
-    const r = await enlazar(limpio);
+    const r = await enlazarRef.current(limpio);
     if (r.ok) {
       setEstado('¡Tele conectada!');
       if (navigator.vibrate) navigator.vibrate([20, 40, 20]);
-      setTimeout(() => onCerrar(), 1200);
+      setTimeout(() => alCerrarRef.current(), 1200);
       return true;
     }
     setEstado('');
     setError(r.message);
     return false;
-  }, [enlazar, onCerrar]);
+  }, []);
+
+  // El botón "atrás" del móvil cierra el escáner, no el juego. Sin esto, la
+  // única salida era acertar con la X mientras la pantalla iba a tirones, y
+  // atrás te sacaba de la partida entera.
+  useEffect(() => {
+    window.history.pushState({ escaner: true }, '');
+    const alAtras = () => alCerrarRef.current();
+    window.addEventListener('popstate', alAtras);
+    return () => {
+      window.removeEventListener('popstate', alAtras);
+      // Si se cerró con la X, esa entrada del historial sigue ahí y habría
+      // que pulsar atrás dos veces para salir del lobby.
+      if (window.history.state?.escaner) window.history.back();
+    };
+  }, []);
 
   // Cámara: se busca el código dentro de la URL del QR de la tele.
   useEffect(() => {
@@ -57,6 +91,8 @@ export default function ConectarTv({ onCerrar }) {
       },
       () => setModo('manual')
     );
+    // Solo `modo`: la cámara se abre al entrar y se cierra al salir, y nada
+    // de lo que pase mientras tanto la reinicia.
   }, [modo, intentar]);
 
   return createPortal(
