@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getTimelineProgress, useGameStore } from '../store/useGameStore';
 import { isImageAvatar } from '../data/characterAvatars';
+import { desbloquearAudio, pararMusica, sonarCancionAleatoria } from '../services/musica';
 
 /**
  * PANTALLA DE TELEVISIÓN
@@ -161,6 +162,12 @@ export default function TvScreen() {
   const targetYears = useGameStore((s) => s.targetYears);
   const observarSala = useGameStore((s) => s.tvObserveRoom);
   const dejarDeObservar = useGameStore((s) => s.tvStopObserving);
+  const reclamarAudio = useGameStore((s) => s.tvClaimAudio);
+  const soltarAudio = useGameStore((s) => s.tvReleaseAudio);
+  const audioEnTv = useGameStore((s) => s.audioEnTv);
+  const listaUrl = useGameStore((s) => s.spotifyPlaylistUrl);
+  const [puedeSonar, setPuedeSonar] = useState(false);
+  const rondaSonandoRef = useRef('');
 
   useEffect(() => {
     if (pinElegido.length !== 4) return undefined;
@@ -189,6 +196,38 @@ export default function TvScreen() {
     };
   }, []);
 
+  // La tele reclama la música solo si CONSIGUIÓ desbloquear el audio. Decir
+  // "estoy conectada" y "puedo sonar" son cosas distintas: prometer un
+  // altavoz que luego no suena dejaría la sala en silencio.
+  useEffect(() => {
+    if (pinElegido.length !== 4 || !puedeSonar) return undefined;
+    const idTele = `tv-${Math.random().toString(36).slice(2, 10)}`;
+    reclamarAudio(idTele);
+    return () => { soltarAudio(); };
+  }, [pinElegido, puedeSonar, reclamarAudio, soltarAudio]);
+
+  // Reproducir la canción de la ronda, si la música es suya. El cambio de
+  // altavoz solo ocurre entre rondas: mudarlo a mitad de canción sería un
+  // corte feo, así que esto solo actúa al empezar una nueva.
+  useEffect(() => {
+    if (!audioEnTv || phase !== 'listen' || !listaUrl) return;
+    const clave = `${round}-${listaUrl}`;
+    if (rondaSonandoRef.current === clave) return;
+    rondaSonandoRef.current = clave;
+    sonarCancionAleatoria(listaUrl).catch((error) => {
+      console.error('La tele no pudo poner la música:', error);
+      // Se suelta el audio para que el móvil del anfitrión lo recupere en
+      // vez de dejar la ronda muda.
+      soltarAudio();
+    });
+  }, [audioEnTv, phase, round, listaUrl, soltarAudio]);
+
+  // Cortar en cuanto acaba la escucha, y al apagar la pantalla.
+  useEffect(() => {
+    if (phase !== 'listen') pararMusica();
+  }, [phase]);
+  useEffect(() => () => pararMusica(), []);
+
   const conectados = useMemo(() => (players || []).filter((p) => p.status !== 'kicked'), [players]);
   const respondieron = Object.keys(roundAnswers).length;
   const hayReveal = Object.keys(revealResults).length > 0;
@@ -210,7 +249,16 @@ export default function TvScreen() {
           <p style={{ fontSize: '2.6vmin' }} className="mt-[1vmin] mb-[5vmin] text-tv-dim">
             Crea la sala en el móvil y escribe aquí su PIN
           </p>
-          <Teclado onConfirmar={setPinElegido} />
+          <Teclado
+            onConfirmar={(codigo) => {
+              // Pulsar ENTRAR con el mando ES el gesto que el navegador
+              // exige para dejar sonar audio. Se aprovecha aquí, que es el
+              // único momento en toda la partida en que alguien toca la
+              // tele.
+              desbloquearAudio().then(setPuedeSonar).catch(() => setPuedeSonar(false));
+              setPinElegido(codigo);
+            }}
+          />
         </div>
       </div>
     );

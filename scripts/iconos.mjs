@@ -40,7 +40,11 @@ const NO_SON_ICONOS = new Set([
 
 const iconos = new Set();
 const anadir = (v) => {
-  if (v && NOMBRE.test(v) && !NO_SON_ICONOS.has(v) && v.length > 2) iconos.add(v);
+  // 2 caracteres es un nombre válido: 'tv' existe y se estaba descartando,
+  // que es justo el fallo que este script tiene que evitar. Un falso
+  // positivo solo añade unos bytes a la fuente; un icono que falta se dibuja
+  // como una palabra en mitad de la pantalla.
+  if (v && NOMBRE.test(v) && !NO_SON_ICONOS.has(v) && v.length >= 2) iconos.add(v);
 };
 
 for (const archivo of fuentes) {
@@ -50,7 +54,12 @@ for (const archivo of fuentes) {
   for (const m of src.matchAll(/material-symbols-outlined[^>]*>\s*([a-z_]+)\s*</g)) anadir(m[1]);
 
   // 2) Ternarios y expresiones dentro de esos spans: {a ? 'check' : 'close'}
-  for (const m of src.matchAll(/material-symbols-outlined[^>]*>\{([^}]*)\}/g)) {
+  // El \s* después del > es imprescindible: cuando el JSX se parte en varias
+  // líneas la llave no va pegada al cierre de etiqueta, y sin esto el
+  // extractor no veía esos iconos. Pasó de verdad con el interruptor de
+  // "dónde suena", que habría publicado las palabras "tv" y "smartphone"
+  // escritas en pantalla en vez de los dibujos.
+  for (const m of src.matchAll(/material-symbols-outlined[^>]*>\s*\{([^}]*)\}/g)) {
     for (const s of m[1].matchAll(/'([a-z_]+)'/g)) anadir(s[1]);
   }
 

@@ -764,6 +764,9 @@ export default function GameScreen() {
   const [countdownValue, setCountdownValue] = useState(3);
   const [softSecondsLeft, setSoftSecondsLeft] = useState(null);
   const [segundosAudio, setSegundosAudio] = useState(null);
+  const audioEnTv = useGameStore((state) => state.audioEnTv);
+  const audioForzadoEnMovil = useGameStore((state) => state.audioForzadoEnMovil);
+  const hostSetAudioOutput = useGameStore((state) => state.hostSetAudioOutput);
   const { layout } = useOrientation();
   const [mensajeAudio, setMensajeAudio] = useState('');
   const [audioListo, setAudioListo] = useState(false);
@@ -847,7 +850,10 @@ export default function GameScreen() {
   }, [phase, round]);
 
   useEffect(() => {
-    if (role !== 'host' || phase !== 'listen') return;
+    // Si hay una tele que puede sonar, la música es suya: el móvil se calla.
+    // Esto es lo que hace que el traspaso se sienta como un Chromecast —
+    // nadie eligió nada, simplemente se mudó.
+    if (role !== 'host' || phase !== 'listen' || audioEnTv) return;
 
     const playKey = `${round}-${spotifyPlaylistUrl}`;
     if (rondaYaSonandoRef.current === playKey) return;
@@ -889,7 +895,7 @@ export default function GameScreen() {
       cancelled = true;
       window.clearTimeout(preparingTimeout);
     };
-  }, [role, phase, round, gameMode, spotifyPlaylistUrl, setAudioPlaying]);
+  }, [role, phase, round, gameMode, spotifyPlaylistUrl, setAudioPlaying, audioEnTv]);
 
   const questionKey = useMemo(() => {
     if (!currentQuestion) return '';
@@ -1018,16 +1024,23 @@ export default function GameScreen() {
     }
   }, [isBlackoutPending, gameMode, round, ownTimelineYears, setAudioPlaying, hostTriggerBlackout]);
 
+  // La tele acaba de reclamar la música: el móvil calla. El corte automático
+  // por fin de fragmento también deja de aplicar, porque quien reproduce
+  // ahora es la tele.
+  useEffect(() => {
+    if (audioEnTv) pararMusica();
+  }, [audioEnTv]);
+
   // El fragmento dura 30 segundos y se acaba solo. Con Spotify la canción
   // sonaba entera y el anfitrión cortaba cuando quería; ahora, si nadie corta
   // a tiempo, la música se para y la sala se queda esperando una pregunta que
   // no llega. Al terminar el fragmento se corta solo.
   useEffect(() => {
-    if (role !== 'host' || phase !== 'listen') return undefined;
+    if (role !== 'host' || phase !== 'listen' || audioEnTv) return undefined;
     return alTerminarFragmento(() => {
       handleHostBlackout();
     });
-  }, [role, phase, handleHostBlackout]);
+  }, [role, phase, handleHostBlackout, audioEnTv]);
 
   // Cuenta atrás visible del fragmento: que se vea cuánto queda en vez de
   // que la música desaparezca de golpe.
@@ -1262,6 +1275,25 @@ export default function GameScreen() {
             )}
             {redeemError && (
               <p className="text-sm text-intense-red text-center">{redeemError}</p>
+            )}
+
+            {/* Dónde está sonando. Solo aparece si hay una tele en la sala:
+                sin tele no hay nada que elegir y sería ruido. */}
+            {role === 'host' && (audioEnTv || audioForzadoEnMovil) && (
+              <button
+                type="button"
+                onClick={() => hostSetAudioOutput(audioEnTv ? 'movil' : 'tv')}
+                className={`flex min-h-touch items-center gap-2 rounded-full border px-4 font-label-caps text-sm font-bold transition-colors ${
+                  audioEnTv
+                    ? 'border-neon-green/50 bg-neon-green/10 text-neon-green'
+                    : 'border-white/20 bg-white/5 text-on-surface-variant'
+                }`}
+              >
+                <span className="material-symbols-outlined text-lg">
+                  {audioEnTv ? 'tv' : 'smartphone'}
+                </span>
+                {audioEnTv ? 'SONANDO EN LA TELE' : 'SONANDO EN ESTE MÓVIL'}
+              </button>
             )}
 
             {role === 'host' && (

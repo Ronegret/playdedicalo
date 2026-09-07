@@ -36,3 +36,4 @@ assets-source/
 *.sw?
 
 .vercel
+.resolver-previews.lock

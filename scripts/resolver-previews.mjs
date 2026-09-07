@@ -21,7 +21,7 @@
  * Guarda cada pocas canciones: si se corta, relanzar retoma donde iba.
  */
 
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, unlinkSync } from 'node:fs';
 import { join } from 'node:path';
 
 const RAIZ = process.cwd();
@@ -109,6 +109,24 @@ async function buscar(cancion) {
   }
   return { estado: 'limitado tras 4 intentos' };
 }
+
+// ── Cerrojo ───────────────────────────────────────────────────────────────
+// Dos resolvedores a la vez se pisan: cada uno guarda el catálogo ENTERO
+// desde su copia en memoria, así que el segundo en escribir borra lo que
+// hizo el primero. Pasó de verdad — el progreso llegó a retroceder de 1710
+// a 1215 canciones con cuatro procesos vivos.
+const CERROJO = join(RAIZ, '.resolver-previews.lock');
+if (existsSync(CERROJO)) {
+  const desde = readFileSync(CERROJO, 'utf8').trim();
+  console.error(`Ya hay un resolvedor en marcha (arrancó ${desde}).`);
+  console.error(`Si estás seguro de que no, borra ${CERROJO}`);
+  process.exit(1);
+}
+writeFileSync(CERROJO, new Date().toISOString(), 'utf8');
+const soltarCerrojo = () => { try { unlinkSync(CERROJO); } catch { /* ya no está */ } };
+process.on('exit', soltarCerrojo);
+process.on('SIGINT', () => { soltarCerrojo(); process.exit(130); });
+process.on('SIGTERM', () => { soltarCerrojo(); process.exit(143); });
 
 const catalogo = JSON.parse(readFileSync(CATALOGO, 'utf8'));
 // Se atienden primero las listas con menos canciones listas: una lista a

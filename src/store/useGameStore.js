@@ -322,6 +322,16 @@ export const useGameStore = create((setStore, getStore) => ({
   joinRequestSubscription: null,
 
   isAudioPlaying: false,
+  // Dónde suena la música. Por defecto en el móvil del anfitrión, que
+  // siempre funciona. Cuando una tele entra en la sala Y consigue
+  // reproducir, la reclama y la música se muda sola — igual que al enviar
+  // algo a un Chromecast: nadie declara nada por adelantado.
+  audioEnTv: false,
+  // El anfitrión puede forzar que suene en su móvil aunque haya tele. No es
+  // un plan B por si falla: hay motivos legítimos (los altavoces de la tele
+  // suenan peor que un bluetooth, la tele está lejos, alguien la está
+  // usando para otra cosa).
+  audioForzadoEnMovil: false,
   isAudioMuted: false,
   spotifyPlaylistUrl: DEFAULT_SPOTIFY_PLAYLIST_URL,
 
@@ -1155,6 +1165,43 @@ export const useGameStore = create((setStore, getStore) => ({
     getStore()._subscribeToRoom(limpio);
   },
 
+  /**
+   * La tele reclama la música. Se llama SOLO después de haber conseguido
+   * reproducir de verdad, para no dejar la sala en silencio prometiendo un
+   * altavoz que no suena.
+   *
+   * El onDisconnect es lo que hace que esto se sienta bien: si apagas la
+   * tele o se va el wifi, Firebase borra la marca solo y el móvil del
+   * anfitrión recupera la música sin que nadie toque nada.
+   */
+  tvClaimAudio: async (tvId) => {
+    const { pin } = getStore();
+    if (!pin) return;
+    const marca = ref(database, `rooms/${pin}/audio/tv`);
+    try {
+      await onDisconnect(marca).remove();
+      await set(marca, { id: tvId, listo: true, at: serverTimestamp() });
+    } catch (error) {
+      console.error('La tele no pudo reclamar el audio:', error);
+    }
+  },
+
+  tvReleaseAudio: async () => {
+    const { pin } = getStore();
+    if (!pin) return;
+    await deleteData(`rooms/${pin}/audio/tv`).catch(() => {});
+  },
+
+  /**
+   * El anfitrión decide dónde suena. Solo cambia la preferencia: quién
+   * reproduce de verdad lo deciden las pantallas al mirar `audioEnTv`.
+   */
+  hostSetAudioOutput: async (destino) => {
+    const { pin, role } = getStore();
+    if (role !== 'host' || !pin) return;
+    await patchData(`rooms/${pin}/audio`, { forzarMovil: destino === 'movil' });
+  },
+
   tvStopObserving: () => {
     const sub = getStore().roomSubscription;
     if (typeof sub === 'function') sub();
@@ -1233,11 +1280,19 @@ export const useGameStore = create((setStore, getStore) => ({
       });
 
       if (data.audio) {
+        // La tele solo cuenta si dijo que PUEDE sonar, no solo que está
+        // conectada: un navegador de tele puede bloquear la reproducción, y
+        // en ese caso el móvil ni se entera y sigue sonando él.
+        const teleLista = Boolean(data.audio.tv && data.audio.tv.listo);
         setStore({
           isAudioPlaying: Boolean(data.audio.isPlaying),
           isAudioMuted: Boolean(data.audio.isMuted),
+          audioEnTv: teleLista && !data.audio.forzarMovil,
+          audioForzadoEnMovil: Boolean(data.audio.forzarMovil),
           spotifyPlaylistUrl: normalizeSpotifyPlaylistUrl(data.audio.playlistUrl || data.audio.playlistId)
         });
+      } else {
+        setStore({ audioEnTv: false, audioForzadoEnMovil: false });
       }
     }, (error) => {
       console.error('Error en la suscripción de sala:', error);
