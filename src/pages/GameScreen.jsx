@@ -765,11 +765,17 @@ export default function GameScreen() {
   const [softSecondsLeft, setSoftSecondsLeft] = useState(null);
   const [segundosAudio, setSegundosAudio] = useState(null);
   const audioEnTv = useGameStore((state) => state.audioEnTv);
+  const cancionRonda = useGameStore((state) => state.cancionRonda);
+  const publicarCancionDeRonda = useGameStore((state) => state.publicarCancionDeRonda);
   const audioForzadoEnMovil = useGameStore((state) => state.audioForzadoEnMovil);
   const hostSetAudioOutput = useGameStore((state) => state.hostSetAudioOutput);
   const { layout } = useOrientation();
   const [mensajeAudio, setMensajeAudio] = useState('');
   const [audioListo, setAudioListo] = useState(false);
+  // Puede cortar si su propio móvil ya tiene la canción cargada O si la está
+  // poniendo la televisión: en ese caso aquí no se carga nada, y esperar a
+  // que se cargara dejaba el botón muerto.
+  const puedeCortar = audioListo || audioEnTv;
   const [errorAudio, setErrorAudio] = useState(false);
   const [audioNecesitaToque, setAudioNecesitaToque] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
@@ -867,7 +873,8 @@ export default function GameScreen() {
     setErrorAudio(false);
     setAudioNecesitaToque(false);
     sonarCancionAleatoria(spotifyPlaylistUrl)
-      .then(() => {
+      .then((cancion) => {
+        publicarCancionDeRonda(cancion);
         if (!cancelled) {
           setMensajeAudio('Música sonando. Para cuando quieras.');
           setErrorAudio(false);
@@ -895,7 +902,7 @@ export default function GameScreen() {
       cancelled = true;
       window.clearTimeout(preparingTimeout);
     };
-  }, [role, phase, round, gameMode, spotifyPlaylistUrl, setAudioPlaying, audioEnTv]);
+  }, [role, phase, round, gameMode, spotifyPlaylistUrl, setAudioPlaying, audioEnTv, publicarCancionDeRonda]);
 
   const questionKey = useMemo(() => {
     if (!currentQuestion) return '';
@@ -1011,7 +1018,9 @@ export default function GameScreen() {
     if (isBlackoutPending) return;
     setIsBlackoutPending(true);
     try {
-      const hiddenTrack = getCancionOculta();
+      // La de la sala manda: es la que ha sonado de verdad, la haya puesto
+      // este móvil o la televisión.
+      const hiddenTrack = cancionRonda || getCancionOculta();
       const spotifyQuestion = hiddenTrack
         ? await crearPreguntaDeCancion(hiddenTrack, gameMode, round, ownTimelineYears)
         : null;
@@ -1022,7 +1031,7 @@ export default function GameScreen() {
       console.error('Error al activar blackout:', error);
       setIsBlackoutPending(false);
     }
-  }, [isBlackoutPending, gameMode, round, ownTimelineYears, setAudioPlaying, hostTriggerBlackout]);
+  }, [isBlackoutPending, gameMode, round, ownTimelineYears, setAudioPlaying, hostTriggerBlackout, cancionRonda]);
 
   // La tele acaba de reclamar la música: el móvil calla. El corte automático
   // por fin de fragmento también deja de aplicar, porque quien reproduce
@@ -1073,7 +1082,8 @@ export default function GameScreen() {
     setMensajeAudio('Reintentando...');
     desbloquearAudio()
       .then(() => sonarCancionAleatoria(spotifyPlaylistUrl))
-      .then(() => {
+      .then((cancion) => {
+        publicarCancionDeRonda(cancion);
         setMensajeAudio('Música sonando. Para cuando quieras.');
         setErrorAudio(false);
         setAudioPlaying(true);
@@ -1301,14 +1311,14 @@ export default function GameScreen() {
                 <p className="text-center text-sm text-on-surface-variant">Para cuando lo veas claro 👇</p>
                 <motion.button
                   whileHover={{ y: -2 }}
-                  whileTap={{ scale: (isBlackoutPending || !audioListo) ? 1 : 0.94, y: 4 }}
+                  whileTap={{ scale: (isBlackoutPending || !puedeCortar) ? 1 : 0.94, y: 4 }}
                   onClick={handleHostBlackout}
-                  disabled={isBlackoutPending || !audioListo}
+                  disabled={isBlackoutPending || !puedeCortar}
                   className="w-full h-16 bg-intense-red hover:bg-red-600 text-white font-headline-lg-mobile text-2xl rounded-2xl shadow-[0_10px_0_rgba(90,0,18,0.95),0_0_34px_rgba(255,107,139,0.55)] transition-colors font-black border-2 border-white/15 relative overflow-hidden disabled:opacity-60 disabled:cursor-not-allowed disabled:shadow-[0_6px_0_rgba(90,0,18,0.65),0_0_20px_rgba(255,107,139,0.25)]"
                 >
                   <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
                   <div className="absolute inset-x-0 bottom-0 h-1/2 bg-black/10 pointer-events-none" />
-                  {isBlackoutPending ? 'PARANDO...' : !audioListo ? 'CARGANDO...' : 'PARAR MÚSICA'}
+                  {isBlackoutPending ? 'PARANDO...' : !puedeCortar ? 'CARGANDO...' : 'PARAR MÚSICA'}
                 </motion.button>
               </div>
             )}

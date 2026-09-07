@@ -10,6 +10,7 @@ import AlertDialog from '../components/AlertDialog';
 import HeaderLogo from '../components/HeaderLogo';
 import { StepActionBar, StepPanel, StepProgress } from '../components/WizardSteps';
 import { findCharacterAvatarByUrl, isImageAvatar } from '../data/characterAvatars';
+import { escanearQr } from '../services/escanerQr';
 import { auth, authReady, googleProvider } from '../firebase';
 
 // Orden deliberado: primero el PIN (lo que la persona tiene delante en ese
@@ -38,8 +39,6 @@ export default function GuestJoinScreen() {
   const inputRefs = useRef([]);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
-  const scanLoopRef = useRef(null);
-  const streamRef = useRef(null);
   const [pin, setPin] = useState(() => searchParams.get('pin')?.replace(/\D/g, '').slice(0, 4) || '');
   const [name, setName] = useState('');
   const [avatar, setAvatar] = useState('😎');
@@ -173,82 +172,34 @@ export default function GuestJoinScreen() {
 
   useEffect(() => {
     if (!scannerOpen) return undefined;
+    // El estado se toca solo desde callbacks, nunca en el cuerpo del efecto.
+    const limpiar = window.setTimeout(() => setScannerError(''), 0);
 
-    let isActive = true;
-
-    async function startScanner() {
-      setScannerError('');
-
-      if (!navigator.mediaDevices?.getUserMedia) {
-        setScannerError('Tu navegador no permite acceder a la cámara. Escribe el PIN manualmente.');
-        return;
+    // El escáner vive en services/escanerQr: analiza la imagen reducida y
+    // unas diez veces por segundo, no a resolución completa en cada
+    // fotograma como antes. Eso era lo que hacía tiritar la vista previa
+    // incluso en móviles potentes.
+    const parar = escanearQr(
+      videoRef.current,
+      (texto) => {
+        const nextPin = getPinFromQrValue(texto);
+        if (nextPin.length !== 4) return false;
+        setPin(nextPin);
+        setScannerOpen(false);
+        if (navigator.vibrate) navigator.vibrate([20, 40, 20]);
+        // Mismo camino que escribirlo a mano: así un QR de una sala ya
+        // cerrada también avisa en vez de dejar seguir.
+        advanceFromPin(nextPin);
+        return true;
+      },
+      (motivo) => {
+        setScannerError(motivo === 'permiso-denegado'
+          ? 'No pudimos abrir la cámara. Revisa los permisos y vuelve a intentarlo.'
+          : 'Tu navegador no permite acceder a la cámara. Escribe el PIN manualmente.');
       }
+    );
 
-      try {
-        // Se descarga aqui, no al abrir la pantalla: quien escribe el PIN a
-        // mano no llega a pedirla nunca.
-        const { default: jsQR } = await import('jsqr');
-        if (!isActive) return;
-
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: { ideal: 'environment' } },
-          audio: false
-        });
-        streamRef.current = stream;
-
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-          await videoRef.current.play();
-        }
-
-        const canvas = canvasRef.current || document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-
-        const scan = () => {
-          if (!isActive || !videoRef.current || videoRef.current.readyState < 2) {
-            scanLoopRef.current = window.requestAnimationFrame(scan);
-            return;
-          }
-
-          const { videoWidth: w, videoHeight: h } = videoRef.current;
-          if (w && h) {
-            canvas.width = w;
-            canvas.height = h;
-            ctx.drawImage(videoRef.current, 0, 0, w, h);
-            const imageData = ctx.getImageData(0, 0, w, h);
-            const code = jsQR(imageData.data, w, h, { inversionAttempts: 'dontInvert' });
-            if (code) {
-              const nextPin = getPinFromQrValue(code.data);
-              if (nextPin.length === 4) {
-                setPin(nextPin);
-                setScannerOpen(false);
-                if (navigator.vibrate) navigator.vibrate([20, 40, 20]);
-                // El QR resolvió el paso — comprobar la sala y avanzar solo
-                // (mismo camino que escribirlo a mano, así un QR de una sala
-                // ya cerrada también avisa en vez de dejar seguir).
-                advanceFromPin(nextPin);
-                return;
-              }
-            }
-          }
-
-          scanLoopRef.current = window.requestAnimationFrame(scan);
-        };
-
-        scan();
-      } catch {
-        setScannerError('No pudimos abrir la cámara. Revisa los permisos del navegador y vuelve a intentarlo.');
-      }
-    }
-
-    startScanner();
-
-    return () => {
-      isActive = false;
-      if (scanLoopRef.current) window.cancelAnimationFrame(scanLoopRef.current);
-      streamRef.current?.getTracks().forEach((track) => track.stop());
-      streamRef.current = null;
-    };
+    return () => { window.clearTimeout(limpiar); parar(); };
   }, [scannerOpen, advanceFromPin]);
 
   const updatePinAt = (index, value) => {

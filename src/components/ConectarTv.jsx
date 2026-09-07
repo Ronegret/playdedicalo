@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useGameStore } from '../store/useGameStore';
+import { escanearQr } from '../services/escanerQr';
 
 /**
  * CONECTAR LA TELE — desde dentro del juego
@@ -25,8 +26,6 @@ export default function ConectarTv({ onCerrar }) {
   const [error, setError] = useState('');
 
   const videoRef = useRef(null);
-  const bucleRef = useRef(null);
-  const streamRef = useRef(null);
 
   const intentar = useCallback(async (valor) => {
     const limpio = String(valor || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6);
@@ -48,59 +47,16 @@ export default function ConectarTv({ onCerrar }) {
   // Cámara: se busca el código dentro de la URL del QR de la tele.
   useEffect(() => {
     if (modo !== 'camara') return undefined;
-    let activo = true;
-
-    (async () => {
-      if (!navigator.mediaDevices?.getUserMedia) {
-        setModo('manual');
-        return;
-      }
-      try {
-        const { default: jsQR } = await import('jsqr');
-        if (!activo) return;
-
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: { ideal: 'environment' } }, audio: false
-        });
-        streamRef.current = stream;
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-          await videoRef.current.play();
-        }
-
-        const lienzo = document.createElement('canvas');
-        const ctx = lienzo.getContext('2d');
-
-        const mirar = () => {
-          if (!activo || !videoRef.current || videoRef.current.readyState < 2) {
-            bucleRef.current = requestAnimationFrame(mirar);
-            return;
-          }
-          const { videoWidth: w, videoHeight: h } = videoRef.current;
-          if (w && h) {
-            lienzo.width = w; lienzo.height = h;
-            ctx.drawImage(videoRef.current, 0, 0, w, h);
-            const leido = jsQR(ctx.getImageData(0, 0, w, h).data, w, h, { inversionAttempts: 'dontInvert' });
-            if (leido) {
-              // El QR lleva la URL completa; interesa solo el parámetro.
-              const m = String(leido.data).match(/[?&]tv=([A-Z0-9]{6})/i);
-              if (m) { activo = false; intentar(m[1]); return; }
-            }
-          }
-          bucleRef.current = requestAnimationFrame(mirar);
-        };
-        mirar();
-      } catch {
-        if (activo) setModo('manual');
-      }
-    })();
-
-    return () => {
-      activo = false;
-      if (bucleRef.current) cancelAnimationFrame(bucleRef.current);
-      streamRef.current?.getTracks().forEach((t) => t.stop());
-      streamRef.current = null;
-    };
+    return escanearQr(
+      videoRef.current,
+      (texto) => {
+        const m = String(texto).match(/[?&]tv=([A-Z0-9]{6})/i);
+        if (!m) return false;
+        intentar(m[1]);
+        return true;
+      },
+      () => setModo('manual')
+    );
   }, [modo, intentar]);
 
   return createPortal(

@@ -172,11 +172,60 @@ html.fs-xl {
   }
   .text-tv-ink { color: #eef3ff; }
   .text-tv-dim { color: #93a0b8; }
-  /* Único movimiento: el año al revelarse. Una vez, sin bucle. */
   .tv-pop { animation: tv-pop 420ms cubic-bezier(.2,.9,.3,1.2) both; }
   @keyframes tv-pop {
     from { transform: scale(.72); opacity: 0; }
     to   { transform: scale(1);   opacity: 1; }
+  }
+
+  /* ── Vida en la pantalla ──────────────────────────────────────────────
+     Todo lo de abajo es animación por GPU (transform y opacity) y nada más:
+     las teles mueven mal cualquier otra cosa. Sin desenfoques, sin sombras
+     animadas, sin filtros. Así se ve viva sin ir a tirones.
+  ─────────────────────────────────────────────────────────────────────── */
+
+  /* Disco girando: la seña de identidad del juego. */
+  .tv-vinilo { animation: tv-girar 2.6s linear infinite; }
+  @keyframes tv-girar { to { transform: rotate(360deg); } }
+
+  /* Ondas que salen del disco al ritmo de la música. */
+  .tv-onda {
+    animation: tv-onda 2.2s cubic-bezier(.2,.6,.3,1) infinite;
+    opacity: 0;
+  }
+  @keyframes tv-onda {
+    0%   { transform: scale(.86); opacity: .55; }
+    100% { transform: scale(1.5); opacity: 0; }
+  }
+
+  /* Barras de ecualizador. Cada una lleva su propio retardo en línea. */
+  .tv-barra {
+    transform-origin: bottom;
+    animation: tv-barra .62s ease-in-out infinite alternate;
+  }
+  @keyframes tv-barra {
+    from { transform: scaleY(.22); }
+    to   { transform: scaleY(1); }
+  }
+
+  /* Latido suave para lo que espera (el PIN, el código). */
+  .tv-latido { animation: tv-latido 2.4s ease-in-out infinite; }
+  @keyframes tv-latido {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: .72; }
+  }
+
+  /* Entrada de las fichas del marcador y de los avisos. */
+  .tv-entra { animation: tv-entra 380ms cubic-bezier(.2,.9,.3,1.1) both; }
+  @keyframes tv-entra {
+    from { transform: translateY(1.2vmin); opacity: 0; }
+    to   { transform: translateY(0); opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tv-vinilo, .tv-onda, .tv-barra, .tv-latido, .tv-entra, .tv-pop {
+      animation: none !important;
+    }
   }
 
   /* Reserva espacio para una barra de acción fija al fondo (p. ej. "PARAR

@@ -326,6 +326,9 @@ export const useGameStore = create((setStore, getStore) => ({
   // siempre funciona. Cuando una tele entra en la sala Y consigue
   // reproducir, la reclama y la música se muda sola — igual que al enviar
   // algo a un Chromecast: nadie declara nada por adelantado.
+  // La canción que suena esta ronda, compartida por toda la sala. Sin esto,
+  // quien reproduce y quien revela podían tener canciones distintas.
+  cancionRonda: null,
   audioEnTv: false,
   // El anfitrión puede forzar que suene en su móvil aunque haya tele. No es
   // un plan B por si falla: hay motivos legítimos (los altavoces de la tele
@@ -1234,6 +1237,30 @@ export const useGameStore = create((setStore, getStore) => ({
     }
   },
 
+  /**
+   * Publicar la canción que suena esta ronda.
+   *
+   * Antes cada aparato guardaba la suya en su propio almacenamiento: la tele
+   * elegía una, sonaba esa, y el anfitrión revelaba OTRA distinta —la última
+   * que hubiera elegido él— porque leía la suya. De ahí que la canción no
+   * coincidiera con lo que se veía en pantalla.
+   *
+   * La canción de la ronda es de la SALA, no del aparato. La publica quien
+   * la reproduce y todos leen la misma.
+   */
+  publicarCancionDeRonda: async (cancion) => {
+    const { pin } = getStore();
+    if (!pin || !cancion) return;
+    await patchData(`rooms/${pin}/audio`, {
+      cancionRonda: {
+        name: cancion.name,
+        artist: cancion.artist,
+        releaseYear: cancion.releaseYear ?? null,
+        uri: cancion.uri || null
+      }
+    }).catch((error) => console.error('No se pudo publicar la canción:', error));
+  },
+
   tvClaimAudio: async (tvId) => {
     const { pin } = getStore();
     if (!pin) return;
@@ -1285,6 +1312,18 @@ export const useGameStore = create((setStore, getStore) => ({
           setStore({ roomError: 'La sala ha sido cerrada por el anfitrión.' });
         } else if (current.role === 'host') {
           setStore({ roomError: null });
+        } else if (current.role === 'tv') {
+          // La sala se cerró: la tele vuelve a su pantalla de conectar, lista
+          // para la siguiente partida. Antes se quedaba enseñando una sala
+          // que ya no existía, con sus jugadores y su PIN, para siempre.
+          const sub = getStore().roomSubscription;
+          if (typeof sub === 'function') sub();
+          setStore({
+            role: null, pin: null, roomSubscription: null,
+            players: [], phase: 'lobby', roundAnswers: {}, revealResults: {},
+            currentQuestion: null, currentTrack: null, cancionRonda: null,
+            audioEnTv: false
+          });
         }
         return;
       }
@@ -1356,6 +1395,7 @@ export const useGameStore = create((setStore, getStore) => ({
           isAudioMuted: Boolean(data.audio.isMuted),
           audioEnTv: teleLista && !data.audio.forzarMovil,
           audioForzadoEnMovil: Boolean(data.audio.forzarMovil),
+          cancionRonda: data.audio.cancionRonda || null,
           spotifyPlaylistUrl: normalizeSpotifyPlaylistUrl(data.audio.playlistUrl || data.audio.playlistId)
         });
       } else {

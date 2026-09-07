@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getTimelineProgress, useGameStore } from '../store/useGameStore';
 import { isImageAvatar } from '../data/characterAvatars';
-import { desbloquearAudio, pararMusica, sonarCancionAleatoria } from '../services/musica';
+import { desbloquearAudio, pararMusica, segundosRestantes, sonarCancionAleatoria } from '../services/musica';
 
 /**
  * PANTALLA DE TELEVISIÓN
@@ -140,7 +140,7 @@ function Ficha({ jugador, tam, estado, resultado, meta }) {
 
   return (
     <div
-      className="flex shrink-0 flex-col items-center rounded-[1.4vmin] px-[1vmin] py-[1.2vmin] transition-colors"
+      className="tv-entra flex shrink-0 flex-col items-center rounded-[1.4vmin] px-[1vmin] py-[1.2vmin] transition-colors"
       style={{ width: `calc(${tam} * 2)`, background: fondo, border: `0.25vmin solid ${borde}` }}
     >
       <div className="relative">
@@ -209,6 +209,7 @@ export default function TvScreen() {
   const [verTeclado, setVerTeclado] = useState(false);
 
   const pin = useGameStore((s) => s.pin);
+  const rol = useGameStore((s) => s.role);
   const phase = useGameStore((s) => s.phase);
   const round = useGameStore((s) => s.round);
   const players = useGameStore((s) => s.players);
@@ -223,6 +224,7 @@ export default function TvScreen() {
   const reclamarAudio = useGameStore((s) => s.tvClaimAudio);
   const soltarAudio = useGameStore((s) => s.tvReleaseAudio);
   const audioEnTv = useGameStore((s) => s.audioEnTv);
+  const publicarCancion = useGameStore((s) => s.publicarCancionDeRonda);
   const listaUrl = useGameStore((s) => s.spotifyPlaylistUrl);
 
   const [puedeSonar, setPuedeSonar] = useState(false);
@@ -285,13 +287,32 @@ export default function TvScreen() {
     const clave = `${round}-${listaUrl}`;
     if (rondaSonandoRef.current === clave) return;
     rondaSonandoRef.current = clave;
-    sonarCancionAleatoria(listaUrl).catch((error) => {
+    sonarCancionAleatoria(listaUrl).then((cancion) => {
+      // La tele publica lo que ha puesto para que el anfitrión revele ESA y
+      // no otra. Sin esto la canción no coincidía con la pantalla.
+      publicarCancion(cancion);
+    }).catch((error) => {
       console.error('La tele no pudo poner la música:', error);
       soltarAudio();
     });
-  }, [audioEnTv, phase, round, listaUrl, soltarAudio]);
+  }, [audioEnTv, phase, round, listaUrl, soltarAudio, publicarCancion]);
 
   useEffect(() => { if (phase !== 'listen') pararMusica(); }, [phase]);
+
+  // Cuenta atrás del fragmento, solo si la música suena aquí. Da sensación
+  // de ritmo en vez de que la canción desaparezca de golpe.
+  const [segundosAudio, setSegundosAudio] = useState(null);
+  useEffect(() => {
+    if (!audioEnTv || phase !== 'listen') {
+      const limpiar = window.setTimeout(() => setSegundosAudio(null), 0);
+      return () => window.clearTimeout(limpiar);
+    }
+    const tick = window.setInterval(() => {
+      const quedan = segundosRestantes();
+      setSegundosAudio(quedan > 0 ? Math.ceil(quedan) : null);
+    }, 500);
+    return () => window.clearInterval(tick);
+  }, [audioEnTv, phase, round]);
   useEffect(() => () => pararMusica(), []);
 
   const conectados = useMemo(() => (players || []).filter((p) => p.status !== 'kicked'), [players]);
@@ -309,6 +330,21 @@ export default function TvScreen() {
   const hayAnfitrion = Boolean(anfitrion);
   const [bienvenida, setBienvenida] = useState(false);
   const yaSaludoRef = useRef(false);
+
+  // Si el anfitrión cierra la sala, el store se vacía: la tele vuelve sola a
+  // pedir código, lista para la siguiente partida. Antes se quedaba enseñando
+  // una sala que ya no existía, con su PIN y sus jugadores, para siempre.
+  const salaCerrada = pinElegido.length === 4 && rol === null && pin === null;
+  useEffect(() => {
+    if (!salaCerrada) return undefined;
+    const volver = window.setTimeout(() => {
+      yaSaludoRef.current = false;
+      setBienvenida(false);
+      setPinElegido('');
+    }, 0);
+    return () => window.clearTimeout(volver);
+  }, [salaCerrada]);
+
   useEffect(() => {
     if (yaSaludoRef.current || pinElegido.length !== 4 || !hayAnfitrion) return undefined;
     yaSaludoRef.current = true;
@@ -392,7 +428,8 @@ export default function TvScreen() {
               <p style={{ fontSize: '2vmin', letterSpacing: '0.3em' }} className="mt-[2.5vmin] text-tv-dim">
                 O ESCRIBE EN play.dedicalo.es/tv-link
               </p>
-              <p style={{ fontSize: '5vmin', letterSpacing: '0.22em', color: '#39ff14' }} className="font-black">
+              <p style={{ fontSize: '5vmin', letterSpacing: '0.22em', color: '#39ff14' }}
+                className="tv-latido font-black">
                 {codigoTv}
               </p>
 
@@ -418,17 +455,24 @@ export default function TvScreen() {
           Si alguna vez se quedara pegada, el QR se seguiría viendo debajo. */}
       {bienvenida && anfitrion && (
         <div
-          className="tv-pop absolute left-1/2 z-10 flex -translate-x-1/2 items-center gap-[1.5vmin] rounded-full px-[3vmin] py-[1.2vmin]"
+          className="tv-pop absolute left-1/2 z-10 flex -translate-x-1/2 items-center gap-[2vmin] rounded-full px-[4vmin] py-[1.6vmin]"
           style={{
             top: SAFE,
-            background: 'rgba(57,255,20,.14)',
-            border: '0.25vmin solid rgba(57,255,20,.5)'
+            background: 'linear-gradient(90deg,rgba(57,255,20,.20),rgba(168,85,247,.18))',
+            border: '0.3vmin solid rgba(57,255,20,.6)'
           }}
         >
-          <span className="material-symbols-outlined text-neon-green" style={{ fontSize: '3vmin' }}>tv</span>
-          <p style={{ fontSize: '2.6vmin' }} className="font-black text-tv-ink">
-            Bienvenido, <span style={{ color: '#39ff14' }}>{anfitrion.name}</span>
-          </p>
+          <span className="material-symbols-outlined text-neon-green tv-latido" style={{ fontSize: '3.4vmin' }}>
+            check_circle
+          </span>
+          <div className="text-left">
+            <p style={{ fontSize: '1.7vmin', letterSpacing: '0.24em' }} className="text-neon-green">
+              TELE CONECTADA
+            </p>
+            <p style={{ fontSize: '3vmin' }} className="font-black text-tv-ink">
+              Bienvenido, <span style={{ color: '#39ff14' }}>{anfitrion.name}</span>
+            </p>
+          </div>
         </div>
       )}
 
@@ -496,7 +540,7 @@ export default function TvScreen() {
                     AHORA ESCANEAD PARA JUGAR
                   </p>
                   <p style={{ fontSize: '11vmin', lineHeight: 1.05, color: '#39ff14', letterSpacing: '0.06em' }}
-                    className="font-black tabular-nums">
+                    className="tv-latido font-black tabular-nums">
                     {pin || pinElegido}
                   </p>
                   <p style={{ fontSize: '2.4vmin' }} className="text-tv-dim">
@@ -513,15 +557,65 @@ export default function TvScreen() {
 
             {phase === 'listen' && (
               <div className="flex flex-col items-center">
-                <div className="flex items-center justify-center rounded-full"
-                  style={{
-                    width: '24vmin', height: '24vmin', border: '0.7vmin solid #39ff14',
-                    background: 'radial-gradient(circle,#141a26 0 32%,#0b0f17 32% 100%)'
-                  }}>
-                  <p style={{ fontSize: '3.8vmin', color: '#39ff14' }} className="font-black tracking-widest">
-                    ESCUCHA
-                  </p>
+                {/* Disco de vinilo girando con ondas saliendo: la seña de
+                    identidad del juego, y lo que hace que la pantalla se
+                    sienta viva mientras suena la canción. */}
+                <div className="relative flex items-center justify-center" style={{ width: '38vmin', height: '38vmin' }}>
+                  {[0, 1, 2].map((i) => (
+                    <span
+                      key={i}
+                      className="tv-onda absolute rounded-full"
+                      style={{
+                        width: '26vmin', height: '26vmin',
+                        border: '0.35vmin solid #39ff14',
+                        animationDelay: `${i * 0.73}s`
+                      }}
+                    />
+                  ))}
+
+                  <div
+                    className="tv-vinilo relative flex items-center justify-center rounded-full"
+                    style={{
+                      width: '26vmin', height: '26vmin',
+                      background: 'repeating-radial-gradient(circle,#0a0d14 0 0.7vmin,#161c28 0.75vmin 0.95vmin)',
+                      border: '0.6vmin solid #39ff14'
+                    }}
+                  >
+                    <span className="absolute rounded-full" style={{ inset: '18%', border: '0.2vmin solid rgba(255,255,255,.07)' }} />
+                    <div
+                      className="flex items-center justify-center overflow-hidden rounded-full"
+                      style={{ width: '38%', height: '38%', background: '#0b0f17', border: '0.3vmin solid #39ff14' }}
+                    >
+                      <img src="/images/icon-app.png" alt="" style={{ width: '82%', height: '82%', objectFit: 'contain' }} />
+                    </div>
+                  </div>
                 </div>
+
+                {/* Ecualizador: doce barras con su propio ritmo. */}
+                <div className="mt-[2vmin] flex items-end gap-[0.7vmin]" style={{ height: '7vmin' }}>
+                  {[0.5, 0.8, 0.35, 1, 0.6, 0.9, 0.45, 0.75, 0.55, 0.95, 0.4, 0.7].map((alto, i) => (
+                    <span
+                      key={i}
+                      className="tv-barra rounded-full"
+                      style={{
+                        width: '1vmin',
+                        height: `${alto * 100}%`,
+                        background: i % 3 === 0 ? '#39ff14' : i % 3 === 1 ? '#a855f7' : '#ff7a1a',
+                        animationDelay: `${(i % 5) * 0.13}s`,
+                        animationDuration: `${0.5 + (i % 4) * 0.11}s`
+                      }}
+                    />
+                  ))}
+                </div>
+
+                <p style={{ fontSize: '3.4vmin', color: '#39ff14' }} className="mt-[1.5vmin] font-black tracking-[0.3em]">
+                  ESCUCHA
+                </p>
+                {segundosAudio !== null && (
+                  <p style={{ fontSize: '2.2vmin' }} className="tabular-nums text-tv-dim">
+                    {segundosAudio}s
+                  </p>
+                )}
               </div>
             )}
 
