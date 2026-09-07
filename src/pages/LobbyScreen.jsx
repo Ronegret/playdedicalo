@@ -5,6 +5,7 @@ import MusicNotesBubbles from '../components/MusicNotesBubbles';
 import { DEDICALO_PLAYLISTS, MAX_TIMELINE_GOAL_YEARS, MIN_TIMELINE_GOAL_YEARS, PLAYLIST_META, getCombinedTimelineYears, getPlayerPresence, getTimelineProgress, normalizeSpotifyPlaylistUrl, useGameStore } from '../store/useGameStore';
 import { isImageAvatar } from '../data/characterAvatars';
 import { desbloquearAudio } from '../services/musica';
+import ConectarTv from '../components/ConectarTv';
 import ProfileMenu from '../components/ProfileMenu';
 import HeaderLogo from '../components/HeaderLogo';
 import SabotageSettings from '../components/SabotageSettings';
@@ -69,6 +70,7 @@ export default function LobbyScreen() {
   const [pinCopied, setPinCopied] = useState(false);
   const [linkShared, setLinkShared] = useState(false);
   const [startError, setStartError] = useState('');
+  const [conectandoTv, setConectandoTv] = useState(false);
   const [disconnectToast, setDisconnectToast] = useState('');
   const [now, setNow] = useState(() => Date.now());
   const gameLocked = round > 1;
@@ -295,12 +297,24 @@ export default function LobbyScreen() {
                 <p className="mt-0.5 text-sm leading-snug text-on-surface-variant">
                   {audioEnTv
                     ? 'La partida y la música se ven y suenan en la pantalla grande.'
-                    : 'Abre Dedícalo en la tele y escanea con este móvil el código que aparezca.'}
+                    : 'Abre Dedícalo en la televisión y conecta el código que aparezca.'}
                 </p>
               </div>
             </div>
+            {!audioEnTv && (
+              <button
+                type="button"
+                onClick={() => setConectandoTv(true)}
+                className="mt-3 flex min-h-touch w-full items-center justify-center gap-2 rounded-xl border border-neon-green/40 bg-neon-green/10 font-label-caps text-sm font-black text-neon-green active:scale-[0.98]"
+              >
+                <span className="material-symbols-outlined">qr_code_scanner</span>
+                CONECTAR TELE
+              </button>
+            )}
           </div>
         )}
+
+        {conectandoTv && <ConectarTv onCerrar={() => setConectandoTv(false)} />}
 
         {role === 'host' && (
           <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-4 text-left">

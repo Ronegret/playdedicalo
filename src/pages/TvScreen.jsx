@@ -374,11 +374,14 @@ export default function TvScreen() {
             </>
           ) : (
             <>
-              <p style={{ fontSize: '3.2vmin' }} className="mt-[1.5vmin] font-bold text-tv-ink">
-                Escanea este código con el móvil del anfitrión
+              <p style={{ fontSize: '2vmin', letterSpacing: '0.3em' }} className="mt-[2vmin] text-tv-dim">
+                PASO 1 DE 2 · CONECTAR LA TELE
               </p>
-              <p style={{ fontSize: '2.2vmin' }} className="mt-[0.5vmin] text-tv-dim">
-                La tele se conecta sola a tu sala
+              <p style={{ fontSize: '3.2vmin' }} className="mt-[0.8vmin] font-bold text-tv-ink">
+                En tu móvil: <span style={{ color: '#39ff14' }}>Conectar tele</span>
+              </p>
+              <p style={{ fontSize: '2.1vmin' }} className="mt-[0.5vmin] text-tv-dim">
+                Crea la sala, pulsa «Conectar tele» y apunta aquí
               </p>
 
               <div className="mt-[3vmin] rounded-[2vmin] bg-white p-[1.6vmin]">
@@ -486,8 +489,11 @@ export default function TvScreen() {
                     style={{ width: '30vmin', height: '30vmin', display: 'block' }} />
                 </div>
                 <div className="text-left">
-                  <p style={{ fontSize: '2.4vmin', letterSpacing: '0.26em' }} className="text-tv-dim">
-                    ESCANEA PARA JUGAR
+                  <p style={{ fontSize: '1.9vmin', letterSpacing: '0.24em' }} className="text-neon-green">
+                    ✓ TELE CONECTADA
+                  </p>
+                  <p style={{ fontSize: '2.4vmin', letterSpacing: '0.26em' }} className="mt-[0.8vmin] text-tv-dim">
+                    AHORA ESCANEAD PARA JUGAR
                   </p>
                   <p style={{ fontSize: '11vmin', lineHeight: 1.05, color: '#39ff14', letterSpacing: '0.06em' }}
                     className="font-black tabular-nums">
