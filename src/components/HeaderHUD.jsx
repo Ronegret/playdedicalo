@@ -3,7 +3,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { getPlayerPresence, getTimelineProgress, useGameStore } from '../store/useGameStore';
 import { isImageAvatar } from '../data/characterAvatars';
 import ProfileMenu from './ProfileMenu';
-import SpotifyReconnect from './SpotifyReconnect';
 import { auth } from '../firebase';
 
 const PRESENCE_STYLES = {
@@ -103,7 +102,6 @@ export default function HeaderHUD({ onExit }) {
             {/* Solo el anfitrión pone música, así que solo él necesita el
                 control de reconexión — y lo necesita SIEMPRE a mano, no
                 solo cuando ya falló una ronda. */}
-            {role === 'host' && <SpotifyReconnect />}
             <button
               type="button"
               onClick={() => setRosterOpen((prev) => !prev)}

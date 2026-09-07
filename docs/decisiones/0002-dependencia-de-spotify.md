@@ -1,7 +1,7 @@
 # ADR-0002 — Dependencia de Spotify
 
 - **Fecha:** 30 de agosto de 2026
-- **Estado:** 🔴 **Abierta — decisión bloqueante para comercializar**
+- **Estado:** ✅ **RESUELTA el 7 de septiembre de 2026 — se sale de Spotify**
 
 ## Contexto
 
@@ -122,3 +122,57 @@ de dos derechos a la vez (composición y grabación máster), es detectable por
 huella acústica, el proveedor de hosting corta el servicio ante un aviso, y
 **contradice el propio aviso legal de la app**, que declara que no se descarga
 ni redistribuye audio.
+
+
+---
+
+# RESOLUCIÓN — 7 de septiembre de 2026
+
+**Decisión tomada: salir de Spotify.** El SDK, el login y la cuenta Premium
+se han retirado de la aplicación. La música pasa a ser fragmentos de vista
+previa de 30 segundos servidos públicamente, ya guardados en el catálogo.
+
+## Qué se ha quitado
+
+| Antes | Ahora |
+|---|---|
+| El anfitrión necesitaba **Spotify Premium** | **Nadie necesita cuenta de música** |
+| Techo de **5 usuarios** del modo desarrollo | Desaparece: no hay OAuth |
+| Tokens que caducaban a mitad de partida | No hay tokens |
+| Botón de reconectar, diagnósticos, precalentado del SDK | Todo eliminado |
+| Incumplía la prohibición de juegos de Spotify | Ya no se usa su API |
+
+Archivos borrados: `src/services/spotify.js`, `src/components/SpotifyPlayer.jsx`,
+`src/components/SpotifyReconnect.jsx`, `src/pages/SpotifyCallbackScreen.jsx`,
+y la ruta `/spotify/callback`. Las claves `VITE_SPOTIFY_*` ya no las usa la
+aplicación (siguen sirviendo para las herramientas de importación).
+
+## Cómo funciona ahora
+
+1. `npm run resolver-previews` busca el fragmento de cada canción en la API
+   pública de Apple y guarda la URL en el catálogo. Se hace **una vez, en
+   frío**, porque Apple corta sobre las 20 peticiones por minuto y pedirlo
+   durante la partida dejaría la fiesta sin música.
+2. `src/services/musica.js` reproduce esa URL con una etiqueta de audio
+   normal. Sin SDK, sin sesión, sin dispositivo remoto.
+
+Comprobado en navegador: el fragmento carga y avanza, 30 segundos exactos.
+Los 30 segundos sobran para este juego, que corta la música y pregunta el año.
+
+## El emparejamiento es estricto a propósito
+
+Título + artista + duración con ±7 s de margen. Una canción mal emparejada
+no deja un hueco: pone **otra canción** y da por mala la respuesta correcta.
+Ante la duda, se queda sin fragmento y no se ofrece en la partida.
+
+## Lo que sigue abierto
+
+- **Cobertura ~93 %.** Las canciones sin fragmento no se ofrecen. Hay que
+  vigilar que ninguna lista baje demasiado.
+- **Las URLs pueden cambiar.** Habrá que volver a pasar el resolvedor de vez
+  en cuando; el script detecta lo que falta y solo pide eso.
+- **Zona gris legal.** Los fragmentos son públicos y se reproducen en
+  streaming, sin alojar ni redistribuir nada — el mismo encuadre que usa
+  WhatTheHit. Sigue pendiente la consulta con un abogado de propiedad
+  intelectual **antes de facturar el primer euro**, y pesa más si algún día
+  se publica en la tienda de un televisor.

@@ -1,0 +1,1334 @@
+[
+  {
+    "ids": [
+      "chileno-100-317-victor-jara-el-cigarrito-2001-digital-remaster"
+    ],
+    "title": "El Cigarrito - 2001 Digital Remaster",
+    "artist": "Victor Jara",
+    "album": "Victor Jara 1959-1969",
+    "current_release_year": 2006,
+    "duration_ms": 124000,
+    "motivos": [
+      "recopilatorio",
+      "outlier(+32 sobre ~1974 de su artista)",
+      "IMPOSIBLE(el artista murio en 1973)"
+    ],
+    "fuerza": 3
+  },
+  {
+    "ids": [
+      "chileno-100-322-victor-jara-el-aparecido"
+    ],
+    "title": "El Aparecido",
+    "artist": "Victor Jara",
+    "album": "La Nueva Cancion Chilena, Vol. 1",
+    "current_release_year": 1995,
+    "duration_ms": 138000,
+    "motivos": [
+      "recopilatorio",
+      "outlier(+21 sobre ~1974 de su artista)",
+      "IMPOSIBLE(el artista murio en 1973)"
+    ],
+    "fuerza": 3
+  },
+  {
+    "ids": [
+      "chileno-100-323-victor-jara-plegaria-a-un-labrador"
+    ],
+    "title": "Plegaria a un Labrador",
+    "artist": "Victor Jara",
+    "album": "La Nueva Cancion Chilena, Vol. 1",
+    "current_release_year": 1995,
+    "duration_ms": 192000,
+    "motivos": [
+      "recopilatorio",
+      "outlier(+21 sobre ~1974 de su artista)",
+      "IMPOSIBLE(el artista murio en 1973)"
+    ],
+    "fuerza": 3
+  },
+  {
+    "ids": [
+      "chileno-100-324-victor-jara-canto-libre-2001-digital-remaster"
+    ],
+    "title": "Canto Libre - 2001 Digital Remaster",
+    "artist": "Victor Jara",
+    "album": "Folklore Especial",
+    "current_release_year": 2020,
+    "duration_ms": 294000,
+    "motivos": [
+      "recopilatorio",
+      "outlier(+46 sobre ~1974 de su artista)",
+      "IMPOSIBLE(el artista murio en 1973)"
+    ],
+    "fuerza": 3
+  },
+  {
+    "ids": [
+      "chileno-100-141-los-prisioneros-estrechez-de-corazon"
+    ],
+    "title": "Estrechez De Corazón",
+    "artist": "Los Prisioneros",
+    "album": "Coleccion Suprema",
+    "current_release_year": 2007,
+    "duration_ms": 298000,
+    "motivos": [
+      "recopilatorio",
+      "outlier(+21 sobre ~1986 de su artista)"
+    ],
+    "fuerza": 2
+  },
+  {
+    "ids": [
+      "chileno-100-218-gondwana-ignorancia-remaster-2008"
+    ],
+    "title": "Ignorancia - Remaster 2008",
+    "artist": "Gondwana",
+    "album": "Reggae Tune",
+    "current_release_year": 2020,
+    "duration_ms": 276000,
+    "motivos": [
+      "recopilatorio",
+      "outlier(+12 sobre ~2008 de su artista)"
+    ],
+    "fuerza": 2
+  },
+  {
+    "ids": [
+      "chileno-100-221-gondwana-la-barca-2008-remaster"
+    ],
+    "title": "La Barca - 2008 Remaster",
+    "artist": "Gondwana",
+    "album": "Estación Reggae",
+    "current_release_year": 2020,
+    "duration_ms": 270000,
+    "motivos": [
+      "recopilatorio",
+      "outlier(+12 sobre ~2008 de su artista)"
+    ],
+    "fuerza": 2
+  },
+  {
+    "ids": [
+      "chileno-100-222-gondwana-fuego-2008-remaster"
+    ],
+    "title": "Fuego - 2008 Remaster",
+    "artist": "Gondwana",
+    "album": "Melodía Reggae",
+    "current_release_year": 2020,
+    "duration_ms": 239000,
+    "motivos": [
+      "recopilatorio",
+      "outlier(+12 sobre ~2008 de su artista)"
+    ],
+    "fuerza": 2
+  },
+  {
+    "ids": [
+      "chileno-100-308-inti-illimani-samba-lando"
+    ],
+    "title": "Samba Lando",
+    "artist": "Inti-Illimani",
+    "album": "Antologia: Grandes Exitos en Vivo en el Estadio Victor Jara",
+    "current_release_year": 2009,
+    "duration_ms": 295000,
+    "motivos": [
+      "recopilatorio",
+      "directo"
+    ],
+    "fuerza": 2
+  },
+  {
+    "ids": [
+      "chileno-100-309-inti-illimani-el-mercado-testaccio"
+    ],
+    "title": "El Mercado Testaccio",
+    "artist": "Inti-Illimani",
+    "album": "Antologia: Grandes Exitos en Vivo en el Estadio Victor Jara",
+    "current_release_year": 2009,
+    "duration_ms": 251000,
+    "motivos": [
+      "recopilatorio",
+      "directo"
+    ],
+    "fuerza": 2
+  },
+  {
+    "ids": [
+      "chileno-100-329-violeta-parra-volver-a-los-diecisiete"
+    ],
+    "title": "Volver a los Diecisiete",
+    "artist": "Violeta Parra",
+    "album": "La Nueva Canción Chilena, Vol. 2",
+    "current_release_year": 2003,
+    "duration_ms": 250000,
+    "motivos": [
+      "recopilatorio",
+      "IMPOSIBLE(el artista murio en 1967)"
+    ],
+    "fuerza": 2
+  },
+  {
+    "ids": [
+      "chileno-100-331-violeta-parra-la-carta"
+    ],
+    "title": "La Carta",
+    "artist": "Violeta Parra",
+    "album": "La Nueva Cancion Chilena, Vol. 1",
+    "current_release_year": 1995,
+    "duration_ms": 176000,
+    "motivos": [
+      "recopilatorio",
+      "IMPOSIBLE(el artista murio en 1967)"
+    ],
+    "fuerza": 2
+  },
+  {
+    "ids": [
+      "chileno-100-18-supernova-se-te-olvida"
+    ],
+    "title": "Se Te Olvida",
+    "artist": "Supernova",
+    "album": "Retráctate",
+    "current_release_year": 2017,
+    "duration_ms": 257000,
+    "motivos": [
+      "outlier(+18 sobre ~1999 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-20-supernova-herida"
+    ],
+    "title": "Herida",
+    "artist": "Supernova",
+    "album": "Retráctate",
+    "current_release_year": 2017,
+    "duration_ms": 188000,
+    "motivos": [
+      "outlier(+18 sobre ~1999 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-30-francisca-valenzuela-afortunada"
+    ],
+    "title": "Afortunada",
+    "artist": "Francisca Valenzuela",
+    "album": "Muérdete La Lengua (Edición Especial)",
+    "current_release_year": 2008,
+    "duration_ms": 214000,
+    "motivos": [
+      "aniversario"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-32-francisca-valenzuela-muerdete-la-lengua"
+    ],
+    "title": "Muérdete La Lengua",
+    "artist": "Francisca Valenzuela",
+    "album": "Muérdete La Lengua (Edición Especial)",
+    "current_release_year": 2008,
+    "duration_ms": 178000,
+    "motivos": [
+      "aniversario"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-33-francisca-valenzuela-dulce"
+    ],
+    "title": "Dulce",
+    "artist": "Francisca Valenzuela",
+    "album": "Muérdete La Lengua (Edición Especial)",
+    "current_release_year": 2008,
+    "duration_ms": 207000,
+    "motivos": [
+      "aniversario"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-49-camila-moreno-4-heridas"
+    ],
+    "title": "4 Heridas",
+    "artist": "Camila Moreno",
+    "album": "Acústico San José",
+    "current_release_year": 2016,
+    "duration_ms": 203000,
+    "motivos": [
+      "directo"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-57-nicole-hoy"
+    ],
+    "title": "Hoy",
+    "artist": "Nicole",
+    "album": "Hoy",
+    "current_release_year": 2009,
+    "duration_ms": 257000,
+    "motivos": [
+      "outlier(+12 sobre ~1997 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-74-andres-de-leon-me-estas-matando-home-studio-2002"
+    ],
+    "title": "Me Estás Matando - Home Studio 2002",
+    "artist": "Andres De Leon",
+    "album": "20 Años Grandes Éxitos",
+    "current_release_year": 2017,
+    "duration_ms": 210000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-77-andres-de-leon-si-me-amaras"
+    ],
+    "title": "Si Me Amaras",
+    "artist": "Andres De Leon",
+    "album": "20 Años Grandes Éxitos",
+    "current_release_year": 2017,
+    "duration_ms": 225000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-100-los-bunkers-cancion-para-manana"
+    ],
+    "title": "Canción para mañana",
+    "artist": "Los Bunkers",
+    "album": "Grandes Exitos",
+    "current_release_year": 2013,
+    "duration_ms": 193000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-101-los-bunkers-la-exiliada-del-sur"
+    ],
+    "title": "La Exiliada del Sur",
+    "artist": "Los Bunkers",
+    "album": "Grandes Exitos",
+    "current_release_year": 2013,
+    "duration_ms": 251000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-103-los-bunkers-el-necio"
+    ],
+    "title": "El Necio",
+    "artist": "Los Bunkers",
+    "album": "Chelas & Rock",
+    "current_release_year": 2020,
+    "duration_ms": 208000,
+    "motivos": [
+      "outlier(+15 sobre ~2005 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-106-los-bunkers-las-cosas-que-cambie-y-deje-for-ti"
+    ],
+    "title": "Las Cosas Que Cambié y Dejé For Ti",
+    "artist": "Los Bunkers",
+    "album": "Grandes Exitos",
+    "current_release_year": 2013,
+    "duration_ms": 194000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-113-los-tres-quien-es-la-que-viene-alli-unplugged-ve"
+    ],
+    "title": "Quien es la Que Viene Alli - Unplugged Version",
+    "artist": "Los Tres",
+    "album": "Los Tres MTV Unplugged",
+    "current_release_year": 1996,
+    "duration_ms": 249000,
+    "motivos": [
+      "directo"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-116-los-tres-quizas-con-quien"
+    ],
+    "title": "Quizás con quien",
+    "artist": "Los Tres",
+    "album": "Quizás con quien",
+    "current_release_year": 2015,
+    "duration_ms": 251000,
+    "motivos": [
+      "outlier(+19 sobre ~1996 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-120-los-tres-la-primera-vez"
+    ],
+    "title": "La Primera Vez",
+    "artist": "Los Tres",
+    "album": "Grandes Exitos",
+    "current_release_year": 2007,
+    "duration_ms": 221000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-122-los-tres-no-me-falles"
+    ],
+    "title": "No Me Falles",
+    "artist": "Los Tres",
+    "album": "Grandes Exitos",
+    "current_release_year": 2007,
+    "duration_ms": 218000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-123-los-tres-tirate"
+    ],
+    "title": "Tirate",
+    "artist": "Los Tres",
+    "album": "Grandes Exitos",
+    "current_release_year": 2007,
+    "duration_ms": 196000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-125-los-tres-olor-a-gas"
+    ],
+    "title": "Olor a Gas",
+    "artist": "Los Tres",
+    "album": "Grandes Exitos",
+    "current_release_year": 2007,
+    "duration_ms": 222000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-136-jorge-gonzalez-nunca-te-haria-dano"
+    ],
+    "title": "Nunca te haria daño",
+    "artist": "Jorge González",
+    "album": "Libro",
+    "current_release_year": 2013,
+    "duration_ms": 177000,
+    "motivos": [
+      "outlier(+20 sobre ~1993 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-153-los-prisioneros-we-are-sudamerican-rockers"
+    ],
+    "title": "We Are Sudamerican Rockers",
+    "artist": "Los Prisioneros",
+    "album": "Ni Por La Razón, Ni Por La Fuerza (Edición Especial)",
+    "current_release_year": 1996,
+    "duration_ms": 215000,
+    "motivos": [
+      "aniversario"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-164-los-prisioneros-por-amarte"
+    ],
+    "title": "Por Amarte",
+    "artist": "Los Prisioneros",
+    "album": "Cena Rockera",
+    "current_release_year": 2020,
+    "duration_ms": 363000,
+    "motivos": [
+      "outlier(+34 sobre ~1986 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-170-los-prisioneros-ultra-derecha"
+    ],
+    "title": "Ultra Derecha",
+    "artist": "Los Prisioneros",
+    "album": "Los Prisioneros",
+    "current_release_year": 2003,
+    "duration_ms": 202000,
+    "motivos": [
+      "outlier(+17 sobre ~1986 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-172-la-ley-mentira"
+    ],
+    "title": "Mentira",
+    "artist": "La Ley",
+    "album": "La Ley MTV Unplugged",
+    "current_release_year": 2001,
+    "duration_ms": 288000,
+    "motivos": [
+      "directo"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-175-la-ley-fuera-de-mi"
+    ],
+    "title": "Fuera de mí",
+    "artist": "La Ley",
+    "album": "La Ley MTV Unplugged",
+    "current_release_year": 2001,
+    "duration_ms": 298000,
+    "motivos": [
+      "directo"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-176-la-ley-sin-ti"
+    ],
+    "title": "Sin Ti",
+    "artist": "La Ley",
+    "album": "Sin Ti",
+    "current_release_year": 2014,
+    "duration_ms": 253000,
+    "motivos": [
+      "outlier(+13 sobre ~2001 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-178-la-ley-prisioneros-de-la-piel"
+    ],
+    "title": "Prisioneros De La Piel",
+    "artist": "La Ley",
+    "album": "Grandes Exitos",
+    "current_release_year": 2012,
+    "duration_ms": 198000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-179-la-ley-tejedores-de-ilusion"
+    ],
+    "title": "Tejedores De Ilusion",
+    "artist": "La Ley",
+    "album": "Grandes Exitos",
+    "current_release_year": 2012,
+    "duration_ms": 256000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-180-la-ley-intenta-amar"
+    ],
+    "title": "Intenta Amar",
+    "artist": "La Ley",
+    "album": "La Ley MTV Unplugged",
+    "current_release_year": 2001,
+    "duration_ms": 291000,
+    "motivos": [
+      "directo"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-181-la-ley-placer"
+    ],
+    "title": "Placer",
+    "artist": "La Ley",
+    "album": "A ROCKEAR",
+    "current_release_year": 2020,
+    "duration_ms": 264000,
+    "motivos": [
+      "outlier(+19 sobre ~2001 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-183-la-ley-olvidar"
+    ],
+    "title": "Olvidar",
+    "artist": "La Ley",
+    "album": "Olvidar",
+    "current_release_year": 2014,
+    "duration_ms": 217000,
+    "motivos": [
+      "outlier(+13 sobre ~2001 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-188-la-ley-amate-y-salvate"
+    ],
+    "title": "¡Ámate y sálvate!",
+    "artist": "La Ley",
+    "album": "Retour",
+    "current_release_year": 2014,
+    "duration_ms": 262000,
+    "motivos": [
+      "outlier(+13 sobre ~2001 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-191-amaral-te-necesito-acustico"
+    ],
+    "title": "Te necesito - Acústico",
+    "artist": "Amaral",
+    "album": "Estrella De Mar",
+    "current_release_year": 2002,
+    "duration_ms": 245000,
+    "motivos": [
+      "directo"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-198-lucybell-tu-sangre-en-vivo"
+    ],
+    "title": "Tu sangre - En vivo",
+    "artist": "Lucybell",
+    "album": "Sesion Futura (En vivo)",
+    "current_release_year": 2001,
+    "duration_ms": 203000,
+    "motivos": [
+      "directo"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-199-lucybell-vete"
+    ],
+    "title": "Vete",
+    "artist": "Lucybell",
+    "album": "Mil Caminos",
+    "current_release_year": 2020,
+    "duration_ms": 234000,
+    "motivos": [
+      "outlier(+16 sobre ~2004 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-217-gondwana-verde-amarillo-y-rojo"
+    ],
+    "title": "Verde, amarillo y rojo",
+    "artist": "Gondwana",
+    "album": "Gondwana En Vivo En Buenos Aires",
+    "current_release_year": 2010,
+    "duration_ms": 338000,
+    "motivos": [
+      "directo"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-228-gondwana-alabanza"
+    ],
+    "title": "Alabanza",
+    "artist": "Gondwana",
+    "album": "Grandes Exitos",
+    "current_release_year": 2015,
+    "duration_ms": 261000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-231-gondwana-dulce-amor"
+    ],
+    "title": "Dulce Amor",
+    "artist": "Gondwana",
+    "album": "Grandes Exitos",
+    "current_release_year": 2015,
+    "duration_ms": 229000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-234-shamanes-crew-la-crew"
+    ],
+    "title": "La Crew",
+    "artist": "Shamanes Crew",
+    "album": "Antología",
+    "current_release_year": 2016,
+    "duration_ms": 211000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-235-shamanes-crew-amor-de-luto"
+    ],
+    "title": "Amor De Luto",
+    "artist": "Shamanes Crew",
+    "album": "Antología",
+    "current_release_year": 2016,
+    "duration_ms": 235000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-236-shamanes-crew-espartaco"
+    ],
+    "title": "Espartaco",
+    "artist": "Shamanes Crew",
+    "album": "Antología",
+    "current_release_year": 2016,
+    "duration_ms": 317000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-240-shamanes-crew-marihuana"
+    ],
+    "title": "Marihuana",
+    "artist": "Shamanes Crew",
+    "album": "Antología",
+    "current_release_year": 2016,
+    "duration_ms": 203000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-241-shamanes-crew-ninos-de-barrio"
+    ],
+    "title": "Niños De Barrio",
+    "artist": "Shamanes Crew",
+    "album": "Antología",
+    "current_release_year": 2016,
+    "duration_ms": 236000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-243-shamanes-crew-huellas-en-el-tiempo"
+    ],
+    "title": "Huellas En El Tiempo",
+    "artist": "Shamanes Crew",
+    "album": "Antología",
+    "current_release_year": 2016,
+    "duration_ms": 220000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-244-shamanes-crew-todo-por-nada"
+    ],
+    "title": "Todo Por Nada",
+    "artist": "Shamanes Crew",
+    "album": "Antología",
+    "current_release_year": 2016,
+    "duration_ms": 302000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-246-shamanes-crew-dicen-estar-vivos"
+    ],
+    "title": "Dicen Estar Vivos",
+    "artist": "Shamanes Crew",
+    "album": "Antología",
+    "current_release_year": 2016,
+    "duration_ms": 222000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-254-movimiento-original-grandes-pasos"
+    ],
+    "title": "Grandes pasos",
+    "artist": "Movimiento Original",
+    "album": "Edicion Especial",
+    "current_release_year": 2010,
+    "duration_ms": 218000,
+    "motivos": [
+      "aniversario"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-257-movimiento-original-lova"
+    ],
+    "title": "Lova",
+    "artist": "Movimiento Original",
+    "album": "Edicion Especial",
+    "current_release_year": 2010,
+    "duration_ms": 214000,
+    "motivos": [
+      "aniversario"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-259-movimiento-original-soldados-del-ghetto"
+    ],
+    "title": "Soldados del ghetto",
+    "artist": "Movimiento Original",
+    "album": "Edicion Especial",
+    "current_release_year": 2010,
+    "duration_ms": 207000,
+    "motivos": [
+      "aniversario"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-260-movimiento-original-m-o"
+    ],
+    "title": "M.O.",
+    "artist": "Movimiento Original",
+    "album": "Edicion Especial",
+    "current_release_year": 2010,
+    "duration_ms": 248000,
+    "motivos": [
+      "aniversario"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-276-tiro-de-gracia-eso-de-ser-papa-remaster-2004"
+    ],
+    "title": "Eso De Ser Papá - Remaster 2004",
+    "artist": "Tiro De Gracia",
+    "album": "Impacto Certero - Grandes Éxitos",
+    "current_release_year": 2004,
+    "duration_ms": 186000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-278-tiro-de-gracia-mala-leche"
+    ],
+    "title": "Mala Leche",
+    "artist": "Tiro De Gracia",
+    "album": "Impacto Certero - Grandes Éxitos",
+    "current_release_year": 2004,
+    "duration_ms": 221000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-292-los-jaivas-hijos-de-la-tierra"
+    ],
+    "title": "Hijos de la Tierra",
+    "artist": "Los Jaivas",
+    "album": "Hijos De la Tierra",
+    "current_release_year": 1995,
+    "duration_ms": 294000,
+    "motivos": [
+      "outlier(+14 sobre ~1981 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-298-los-jaivas-todos-juntos-2020-remasterizado"
+    ],
+    "title": "Todos Juntos - 2020 Remasterizado",
+    "artist": "Los Jaivas",
+    "album": "Todos Juntos",
+    "current_release_year": 1972,
+    "duration_ms": 352000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-299-los-jaivas-mira-ninita-2020-remasterizado"
+    ],
+    "title": "Mira Niñita - 2020 Remasterizado",
+    "artist": "Los Jaivas",
+    "album": "Todos Juntos",
+    "current_release_year": 1972,
+    "duration_ms": 415000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-300-los-jaivas-valparaiso"
+    ],
+    "title": "Valparaíso",
+    "artist": "Los Jaivas",
+    "album": "Trilogía El Rencuentro",
+    "current_release_year": 1997,
+    "duration_ms": 239000,
+    "motivos": [
+      "outlier(+16 sobre ~1981 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-303-illapu-morena-esperanza"
+    ],
+    "title": "Morena Esperanza",
+    "artist": "Illapu",
+    "album": "Mis Mas Grandes Exitos",
+    "current_release_year": 2002,
+    "duration_ms": 264000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-305-illapu-candombe-para-jose"
+    ],
+    "title": "Candombe Para José",
+    "artist": "Illapu",
+    "album": "Mis Mas Grandes Exitos",
+    "current_release_year": 2002,
+    "duration_ms": 255000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-307-inti-illimani-exiliada-del-sur"
+    ],
+    "title": "Exiliada del sur",
+    "artist": "Inti-Illimani",
+    "album": "Antología I (1973-1978)",
+    "current_release_year": 2000,
+    "duration_ms": 212000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-310-inti-illimani-run-run-se-fue-pa-l-norte"
+    ],
+    "title": "Run Run se fue pa'l norte",
+    "artist": "Inti-Illimani",
+    "album": "Antología I (1973-1978)",
+    "current_release_year": 2000,
+    "duration_ms": 269000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-313-quilapayun-plegaria-a-un-labrador"
+    ],
+    "title": "Plegaria A Un Labrador",
+    "artist": "Quilapayún",
+    "album": "20 Grandes Exitos",
+    "current_release_year": 2005,
+    "duration_ms": 193000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-318-victor-jara-manifiesto"
+    ],
+    "title": "Manifiesto",
+    "artist": "Victor Jara",
+    "album": "Manifiesto",
+    "current_release_year": 1974,
+    "duration_ms": 269000,
+    "motivos": [
+      "IMPOSIBLE(el artista murio en 1973)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-319-victor-jara-cuando-voy-al-trabajo"
+    ],
+    "title": "Cuando Voy al Trabajo",
+    "artist": "Victor Jara",
+    "album": "Manifiesto",
+    "current_release_year": 1974,
+    "duration_ms": 232000,
+    "motivos": [
+      "IMPOSIBLE(el artista murio en 1973)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-321-victor-jara-vientos-del-pueblo"
+    ],
+    "title": "Vientos del Pueblo",
+    "artist": "Victor Jara",
+    "album": "Manifiesto",
+    "current_release_year": 1974,
+    "duration_ms": 157000,
+    "motivos": [
+      "IMPOSIBLE(el artista murio en 1973)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-325-patricio-manns-el-cautivo-de-til-til-en-vivo"
+    ],
+    "title": "El Cautivo de Til Til (En Vivo)",
+    "artist": "Patricio Manns",
+    "album": "Patricio Manns en Chile (En Vivo)",
+    "current_release_year": 1990,
+    "duration_ms": 306000,
+    "motivos": [
+      "directo"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-326-patricio-manns-arriba-en-la-cordillera"
+    ],
+    "title": "Arriba en la Cordillera",
+    "artist": "Patricio Manns",
+    "album": "La Nueva Cancion Chilena, Vol. 1",
+    "current_release_year": 1995,
+    "duration_ms": 220000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-327-osvaldo-rodriguez-valparaiso"
+    ],
+    "title": "Valparaiso",
+    "artist": "Osvaldo Rodriguez",
+    "album": "La Nueva Cancion Chilena, Vol. 1",
+    "current_release_year": 1995,
+    "duration_ms": 198000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-328-violeta-parra-gracias-a-la-vida"
+    ],
+    "title": "Gracias a la Vida",
+    "artist": "Violeta Parra",
+    "album": "Mi Chile Lindo",
+    "current_release_year": 2014,
+    "duration_ms": 278000,
+    "motivos": [
+      "IMPOSIBLE(el artista murio en 1967)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-330-violeta-parra-arauco-tiene-una-pena"
+    ],
+    "title": "Arauco Tiene una Pena",
+    "artist": "Violeta Parra",
+    "album": "Canciones Reencontradas en París",
+    "current_release_year": 2011,
+    "duration_ms": 177000,
+    "motivos": [
+      "IMPOSIBLE(el artista murio en 1967)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-332-violeta-parra-arriba-quemando-el-sol"
+    ],
+    "title": "Arriba Quemando el Sol",
+    "artist": "Violeta Parra",
+    "album": "Canciones Reencontradas en París",
+    "current_release_year": 2011,
+    "duration_ms": 159000,
+    "motivos": [
+      "IMPOSIBLE(el artista murio en 1967)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-333-violeta-parra-casamiento-de-negros"
+    ],
+    "title": "Casamiento De Negros",
+    "artist": "Violeta Parra",
+    "album": "La Jardinera Y Su Canto",
+    "current_release_year": 2006,
+    "duration_ms": 104000,
+    "motivos": [
+      "IMPOSIBLE(el artista murio en 1967)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-334-sol-y-lluvia-en-un-largo-tour"
+    ],
+    "title": "En un Largo Tour",
+    "artist": "Sol y Lluvia",
+    "album": "Clima Humana",
+    "current_release_year": 2013,
+    "duration_ms": 262000,
+    "motivos": [
+      "outlier(+23 sobre ~1990 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-335-sol-y-lluvia-adios-general-adios-carnaval-en-viv"
+    ],
+    "title": "Adios General... Adios Carnaval (En Vivo)",
+    "artist": "Sol y Lluvia",
+    "album": "Adiós General, Adiós Carnaval. En Vivo!!",
+    "current_release_year": 1990,
+    "duration_ms": 276000,
+    "motivos": [
+      "directo"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-336-sol-y-lluvia-para-que-nunca-mas"
+    ],
+    "title": "Para Que Nunca Mas",
+    "artist": "Sol y Lluvia",
+    "album": "Antología del Canto Nuevo Vol. 2",
+    "current_release_year": 1995,
+    "duration_ms": 147000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-360-chancho-en-piedra-el-impostor"
+    ],
+    "title": "El Impostor",
+    "artist": "Chancho En Piedra",
+    "album": "Grandes Exitos De Ayer y Oink!!",
+    "current_release_year": 2007,
+    "duration_ms": 247000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-364-chancho-en-piedra-guach-perry"
+    ],
+    "title": "Guach Perry",
+    "artist": "Chancho En Piedra",
+    "album": "Grandes Exitos De Ayer y Oink!!",
+    "current_release_year": 2007,
+    "duration_ms": 236000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-365-chancho-en-piedra-condor"
+    ],
+    "title": "Condor",
+    "artist": "Chancho En Piedra",
+    "album": "Grandes Exitos De Ayer y Oink!!",
+    "current_release_year": 2007,
+    "duration_ms": 332000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-376-los-bunkers-no-me-hables-de-sufrir"
+    ],
+    "title": "No Me Hables de sufrir",
+    "artist": "Los Bunkers",
+    "album": "Grandes Exitos",
+    "current_release_year": 2013,
+    "duration_ms": 234000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-392-myriam-hernandez-rescatame"
+    ],
+    "title": "Rescátame",
+    "artist": "Myriam Hernandez",
+    "album": "Rescátame",
+    "current_release_year": 2010,
+    "duration_ms": 249000,
+    "motivos": [
+      "outlier(+12 sobre ~1998 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-399-nelson-schwenke-el-viaje"
+    ],
+    "title": "El Viaje",
+    "artist": "Nelson Schwenke",
+    "album": "Schwenke y Nilo, Vol. 1",
+    "current_release_year": 1987,
+    "duration_ms": 236000,
+    "motivos": [
+      "recopilatorio"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-402-chancho-en-piedra-dejando-libre-el-amor"
+    ],
+    "title": "Dejando Libre el Amor",
+    "artist": "Chancho En Piedra",
+    "album": "Funkybarítico Hedónico Fantástico",
+    "current_release_year": 2016,
+    "duration_ms": 262000,
+    "motivos": [
+      "outlier(+16 sobre ~2000 de su artista)"
+    ],
+    "fuerza": 1
+  },
+  {
+    "ids": [
+      "chileno-100-405-chancho-en-piedra-mi-mejor-momento"
+    ],
+    "title": "Mi Mejor Momento",
+    "artist": "Chancho En Piedra",
+    "album": "Funkybarítico Hedónico Fantástico",
+    "current_release_year": 2016,
+    "duration_ms": 203000,
+    "motivos": [
+      "outlier(+16 sobre ~2000 de su artista)"
+    ],
+    "fuerza": 1
+  }
+]

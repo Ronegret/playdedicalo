@@ -10,7 +10,7 @@ const HOW_TO_STEPS = [
   {
     icon: 'meeting_room',
     title: '1. Crea la sala',
-    text: 'El anfitrión conecta Spotify Premium, elige playlist y enseña el PIN o QR.'
+    text: 'El anfitrión elige la lista y enseña el PIN o el QR. Nadie necesita cuenta de música.'
   },
   {
     icon: 'groups',
@@ -40,8 +40,8 @@ const HOW_TO_STEPS = [
 ];
 
 const PLAYER_RULES = [
-  ['Anfitrión', 'Crea la sala, conecta Spotify, prueba el sonido y también juega.'],
-  ['Invitados', 'Solo necesitan PIN o QR. No hace falta Spotify ni cuenta premium.'],
+  ['Anfitrión', 'Crea la sala, elige la música, marca el ritmo y también juega.'],
+  ['Invitados', 'Solo necesitan el PIN o el QR. Nada que instalar, ninguna cuenta.'],
   ['Todos', 'Escuchan, responden, suben en el ranking y pueden recibir sabotajes.']
 ];
 
@@ -362,7 +362,7 @@ export default function HowToPlayScreen() {
             </button>
           </div>
           <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-on-surface-variant">
-            Contacto: {SUPPORT_EMAIL}. Dedícalo reproduce música con la cuenta Premium del anfitrión mediante Spotify. No descarga ni redistribuye audio.
+            Contacto: {SUPPORT_EMAIL}. Dedícalo reproduce fragmentos de vista previa de 30 segundos servidos públicamente por sus proveedores. No aloja, descarga ni redistribuye audio.
           </p>
         </section>
 

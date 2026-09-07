@@ -1,7 +1,7 @@
 ﻿import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { useGameStore } from '../store/useGameStore';
-import { explainSpotifyError, pauseSpotifyPlayback, startRandomPlaylistTrack } from '../services/spotify';
+import { pararMusica, sonarCancionAleatoria } from '../services/musica';
 
 export default function MusicVinylControl() {
   const [error, setError] = useState('');
@@ -21,16 +21,16 @@ export default function MusicVinylControl() {
     setError('');
 
     if (isAudioPlaying) {
-      await pauseSpotifyPlayback().catch((error) => console.warn('No se pudo pausar Spotify:', error));
+      pararMusica();
       setAudioPlaying(false);
       return;
     }
 
     try {
-      await startRandomPlaylistTrack(spotifyPlaylistUrl);
-    } catch (spotifyError) {
-      console.warn('No se pudo iniciar Spotify:', spotifyError);
-      setError(explainSpotifyError(spotifyError));
+      await sonarCancionAleatoria(spotifyPlaylistUrl);
+    } catch (errorAudio) {
+      console.warn('No se pudo poner la música:', errorAudio);
+      setError(errorAudio?.message || 'No pudimos poner la música.');
       return;
     }
     setAudioPlaying(true);

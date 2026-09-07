@@ -1,0 +1,434 @@
+[
+  {
+    "id": "chileno-100-322-victor-jara-el-aparecido",
+    "artist": "Victor Jara",
+    "title": "El Aparecido",
+    "antes": 1995,
+    "despues": 1967,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-323-victor-jara-plegaria-a-un-labrador",
+    "artist": "Victor Jara",
+    "title": "Plegaria a un Labrador",
+    "antes": 1995,
+    "despues": 1971,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-141-los-prisioneros-estrechez-de-corazon",
+    "artist": "Los Prisioneros",
+    "title": "Estrechez De Corazón",
+    "antes": 2007,
+    "despues": 1991,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-218-gondwana-ignorancia-remaster-2008",
+    "artist": "Gondwana",
+    "title": "Ignorancia - Remaster 2008",
+    "antes": 2020,
+    "despues": 2002,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-308-inti-illimani-samba-lando",
+    "artist": "Inti-Illimani",
+    "title": "Samba Lando",
+    "antes": 2009,
+    "despues": 1979,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-309-inti-illimani-el-mercado-testaccio",
+    "artist": "Inti-Illimani",
+    "title": "El Mercado Testaccio",
+    "antes": 2009,
+    "despues": 1981,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-329-violeta-parra-volver-a-los-diecisiete",
+    "artist": "Violeta Parra",
+    "title": "Volver a los Diecisiete",
+    "antes": 2003,
+    "despues": 1966,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-331-violeta-parra-la-carta",
+    "artist": "Violeta Parra",
+    "title": "La Carta",
+    "antes": 1995,
+    "despues": 1971,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-18-supernova-se-te-olvida",
+    "artist": "Supernova",
+    "title": "Se Te Olvida",
+    "antes": 2017,
+    "despues": 2002,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-20-supernova-herida",
+    "artist": "Supernova",
+    "title": "Herida",
+    "antes": 2017,
+    "despues": 2002,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-30-francisca-valenzuela-afortunada",
+    "artist": "Francisca Valenzuela",
+    "title": "Afortunada",
+    "antes": 2008,
+    "despues": 2007,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-32-francisca-valenzuela-muerdete-la-lengua",
+    "artist": "Francisca Valenzuela",
+    "title": "Muérdete La Lengua",
+    "antes": 2008,
+    "despues": 2007,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-33-francisca-valenzuela-dulce",
+    "artist": "Francisca Valenzuela",
+    "title": "Dulce",
+    "antes": 2008,
+    "despues": 2007,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-77-andres-de-leon-si-me-amaras",
+    "artist": "Andres De Leon",
+    "title": "Si Me Amaras",
+    "antes": 2017,
+    "despues": 2009,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-100-los-bunkers-cancion-para-manana",
+    "artist": "Los Bunkers",
+    "title": "Canción para mañana",
+    "antes": 2013,
+    "despues": 2003,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-101-los-bunkers-la-exiliada-del-sur",
+    "artist": "Los Bunkers",
+    "title": "La Exiliada del Sur",
+    "antes": 2013,
+    "despues": 2003,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-103-los-bunkers-el-necio",
+    "artist": "Los Bunkers",
+    "title": "El Necio",
+    "antes": 2020,
+    "despues": 2010,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-120-los-tres-la-primera-vez",
+    "artist": "Los Tres",
+    "title": "La Primera Vez",
+    "antes": 2007,
+    "despues": 1991,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-122-los-tres-no-me-falles",
+    "artist": "Los Tres",
+    "title": "No Me Falles",
+    "antes": 2007,
+    "despues": 1999,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-123-los-tres-tirate",
+    "artist": "Los Tres",
+    "title": "Tirate",
+    "antes": 2007,
+    "despues": 1995,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-125-los-tres-olor-a-gas",
+    "artist": "Los Tres",
+    "title": "Olor a Gas",
+    "antes": 2007,
+    "despues": 1997,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-153-los-prisioneros-we-are-sudamerican-rockers",
+    "artist": "Los Prisioneros",
+    "title": "We Are Sudamerican Rockers",
+    "antes": 1996,
+    "despues": 1988,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-164-los-prisioneros-por-amarte",
+    "artist": "Los Prisioneros",
+    "title": "Por Amarte",
+    "antes": 2020,
+    "despues": 1990,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-175-la-ley-fuera-de-mi",
+    "artist": "La Ley",
+    "title": "Fuera de mí",
+    "antes": 2001,
+    "despues": 2000,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-178-la-ley-prisioneros-de-la-piel",
+    "artist": "La Ley",
+    "title": "Prisioneros De La Piel",
+    "antes": 2012,
+    "despues": 1991,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-179-la-ley-tejedores-de-ilusion",
+    "artist": "La Ley",
+    "title": "Tejedores De Ilusion",
+    "antes": 2012,
+    "despues": 1993,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-181-la-ley-placer",
+    "artist": "La Ley",
+    "title": "Placer",
+    "antes": 2020,
+    "despues": 1991,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-188-la-ley-amate-y-salvate",
+    "artist": "La Ley",
+    "title": "¡Ámate y sálvate!",
+    "antes": 2014,
+    "despues": 2003,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-199-lucybell-vete",
+    "artist": "Lucybell",
+    "title": "Vete",
+    "antes": 2020,
+    "despues": 1995,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-217-gondwana-verde-amarillo-y-rojo",
+    "artist": "Gondwana",
+    "title": "Verde, amarillo y rojo",
+    "antes": 2010,
+    "despues": 2000,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-228-gondwana-alabanza",
+    "artist": "Gondwana",
+    "title": "Alabanza",
+    "antes": 2015,
+    "despues": 2000,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-231-gondwana-dulce-amor",
+    "artist": "Gondwana",
+    "title": "Dulce Amor",
+    "antes": 2015,
+    "despues": 2001,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-303-illapu-morena-esperanza",
+    "artist": "Illapu",
+    "title": "Morena Esperanza",
+    "antes": 2002,
+    "despues": 1998,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-305-illapu-candombe-para-jose",
+    "artist": "Illapu",
+    "title": "Candombe Para José",
+    "antes": 2002,
+    "despues": 1981,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-307-inti-illimani-exiliada-del-sur",
+    "artist": "Inti-Illimani",
+    "title": "Exiliada del sur",
+    "antes": 2000,
+    "despues": 1971,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-310-inti-illimani-run-run-se-fue-pa-l-norte",
+    "artist": "Inti-Illimani",
+    "title": "Run Run se fue pa'l norte",
+    "antes": 2000,
+    "despues": 1974,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-313-quilapayun-plegaria-a-un-labrador",
+    "artist": "Quilapayún",
+    "title": "Plegaria A Un Labrador",
+    "antes": 2005,
+    "despues": 1970,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-326-patricio-manns-arriba-en-la-cordillera",
+    "artist": "Patricio Manns",
+    "title": "Arriba en la Cordillera",
+    "antes": 1995,
+    "despues": 1966,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-327-osvaldo-rodriguez-valparaiso",
+    "artist": "Osvaldo Rodriguez",
+    "title": "Valparaiso",
+    "antes": 1995,
+    "despues": 1976,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-328-violeta-parra-gracias-a-la-vida",
+    "artist": "Violeta Parra",
+    "title": "Gracias a la Vida",
+    "antes": 2014,
+    "despues": 1966,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-330-violeta-parra-arauco-tiene-una-pena",
+    "artist": "Violeta Parra",
+    "title": "Arauco Tiene una Pena",
+    "antes": 2011,
+    "despues": 1962,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-332-violeta-parra-arriba-quemando-el-sol",
+    "artist": "Violeta Parra",
+    "title": "Arriba Quemando el Sol",
+    "antes": 2011,
+    "despues": 1962,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-333-violeta-parra-casamiento-de-negros",
+    "artist": "Violeta Parra",
+    "title": "Casamiento De Negros",
+    "antes": 2006,
+    "despues": 1956,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-334-sol-y-lluvia-en-un-largo-tour",
+    "artist": "Sol y Lluvia",
+    "title": "En un Largo Tour",
+    "antes": 2013,
+    "despues": 1980,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-336-sol-y-lluvia-para-que-nunca-mas",
+    "artist": "Sol y Lluvia",
+    "title": "Para Que Nunca Mas",
+    "antes": 1995,
+    "despues": 1980,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-360-chancho-en-piedra-el-impostor",
+    "artist": "Chancho En Piedra",
+    "title": "El Impostor",
+    "antes": 2007,
+    "despues": 2002,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-364-chancho-en-piedra-guach-perry",
+    "artist": "Chancho En Piedra",
+    "title": "Guach Perry",
+    "antes": 2007,
+    "despues": 1995,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-376-los-bunkers-no-me-hables-de-sufrir",
+    "artist": "Los Bunkers",
+    "title": "No Me Hables de sufrir",
+    "antes": 2013,
+    "despues": 2003,
+    "fuente": "musicbrainz"
+  },
+  {
+    "id": "chileno-100-317-victor-jara-el-cigarrito-2001-digital-remaster",
+    "artist": "Victor Jara",
+    "title": "El Cigarrito - 2001 Digital Remaster",
+    "antes": 2006,
+    "despues": 1969,
+    "note": "Del album Pongo en tus manos abiertas (junio de 1969)"
+  },
+  {
+    "id": "chileno-100-318-victor-jara-manifiesto",
+    "artist": "Victor Jara",
+    "title": "Manifiesto",
+    "antes": 1974,
+    "despues": 1973,
+    "note": "Grabado en 1973; el disco salio postumo en 1974"
+  },
+  {
+    "id": "chileno-100-319-victor-jara-cuando-voy-al-trabajo",
+    "artist": "Victor Jara",
+    "title": "Cuando Voy al Trabajo",
+    "antes": 1974,
+    "despues": 1973,
+    "note": "Grabado en 1973; disco postumo"
+  },
+  {
+    "id": "chileno-100-321-victor-jara-vientos-del-pueblo",
+    "artist": "Victor Jara",
+    "title": "Vientos del Pueblo",
+    "antes": 1974,
+    "despues": 1973,
+    "note": "Grabado en 1973; disco postumo"
+  },
+  {
+    "id": "chileno-100-324-victor-jara-canto-libre-2001-digital-remaster",
+    "artist": "Victor Jara",
+    "title": "Canto Libre - 2001 Digital Remaster",
+    "antes": 2020,
+    "despues": 1970,
+    "note": "Del album Canto Libre (1970)"
+  },
+  {
+    "id": "chileno-100-331-violeta-parra-la-carta",
+    "artist": "Violeta Parra",
+    "title": "La Carta",
+    "antes": 1971,
+    "despues": 1962,
+    "note": "Grabada en Paris a principios de los 60; el disco de 1971 es una reedicion postuma"
+  }
+]

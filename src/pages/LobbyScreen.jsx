@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import MusicNotesBubbles from '../components/MusicNotesBubbles';
 import { DEDICALO_PLAYLISTS, MAX_TIMELINE_GOAL_YEARS, MIN_TIMELINE_GOAL_YEARS, PLAYLIST_META, getCombinedTimelineYears, getPlayerPresence, getTimelineProgress, normalizeSpotifyPlaylistUrl, useGameStore } from '../store/useGameStore';
 import { isImageAvatar } from '../data/characterAvatars';
-import { explainSpotifyError, prepareSpotifyPlayback } from '../services/spotify';
+import { desbloquearAudio } from '../services/musica';
 import ProfileMenu from '../components/ProfileMenu';
 import HeaderLogo from '../components/HeaderLogo';
 import SabotageSettings from '../components/SabotageSettings';
@@ -121,11 +121,11 @@ export default function LobbyScreen() {
   const handleHostStartGame = async () => {
     setStartError('');
     try {
-      await prepareSpotifyPlayback();
+      await desbloquearAudio();
       await hostStartGame();
     } catch (error) {
       console.error(error);
-      setStartError(explainSpotifyError(error));
+      setStartError(error?.message || 'No pudimos empezar la partida. Inténtalo otra vez.');
     }
   };
 

@@ -127,7 +127,7 @@ export const DEDICALO_PLAYLISTS = [
   { id: 'hits-todo-tiempo', icon: 'public', name: 'HITS DE SIEMPRE', mood: 'Hits reconocibles para cualquier mesa.', url: 'https://open.spotify.com/playlist/5TOMoP3KEWtRASGeFsksUY' },
   { id: 'hits-rock-espanol', icon: 'electric_bolt', name: 'HITS ROCK ESPAÑOL', mood: 'Guitarras, himnos y memoria colectiva.', url: 'https://open.spotify.com/playlist/2cT61hYCfIkwHAyVMwej9D' },
   { id: 'fiesta-mayor-verbena', icon: 'celebration', name: 'FIESTA MAYOR', mood: 'Verbena, pueblo y canciones para gritar.', url: 'https://open.spotify.com/playlist/7xcdrzs58PmLIZa4P5Qk3s' },
-  { id: 'chileno-100', icon: 'public', name: 'CHILENO 100%', mood: 'De Los Prisioneros a hoy: himnos de Chile.', url: 'https://open.spotify.com/playlist/3jP5j1yCgXSFzg0hgsWM7Z' }
+  { id: 'chileno-100', icon: 'public', name: 'CHILENO 100%', mood: 'De Víctor Jara a hoy: himnos de Chile.', url: 'https://open.spotify.com/playlist/4WwElfdU1VTTUD48yZrbNv' }
 ];
 export const DEFAULT_SPOTIFY_PLAYLIST_URL = DEDICALO_PLAYLISTS[0].url;
 

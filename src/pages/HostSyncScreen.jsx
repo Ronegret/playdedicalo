@@ -18,16 +18,7 @@ import { StepActionBar, StepPanel, StepProgress } from '../components/WizardStep
 // aparece en el lobby, donde además se puede seguir cambiando playlist y
 // duración antes de arrancar.
 const HOST_STEPS = ['Conectar cuentas', 'Elige la música', 'Duración'];
-import {
-  connectSpotify,
-  explainSpotifyError,
-  getSpotifyDiagnostics,
-  getSpotifyStatus,
-  pauseSpotifyPlayback,
-  preWarmSpotifyPlayer,
-  prepareSpotifyPlayback,
-  startRandomPlaylistTrack
-} from '../services/spotify';
+// Ya no se importa nada del SDK de Spotify: la música la pone el juego.
 
 // La mini "carátula" solo tiene que comunicar la vibra con color + ícono —
 // el nombre y el formato de la playlist ya se leen justo al lado (pill +
@@ -85,17 +76,14 @@ export default function HostSyncScreen() {
   const [authMessage, setAuthMessage] = useState('');
   const [isCreating, setIsCreating] = useState(false);
   const [selectedPlaylist, setSelectedPlaylist] = useState(DEDICALO_PLAYLISTS[0].id);
-  const [spotifyStatus, setSpotifyStatus] = useState(() => getSpotifyStatus());
-  const [spotifyCheck, setSpotifyCheck] = useState(null);
-  const [isTestingSpotify, setIsTestingSpotify] = useState(false);
-  const [isSpotifyPlaying, setIsSpotifyPlaying] = useState(false);
   const [step, setStep] = useState(0);
   const [alert, setAlert] = useState(null);
   const createStartedRef = useRef(false);
 
   const selectedPlaylistData = DEDICALO_PLAYLISTS.find((p) => p.id === selectedPlaylist) || DEDICALO_PLAYLISTS[0];
   const selectedMeta = PLAYLIST_META[selectedPlaylist] || { icon: 'music_note', color: '#ff7a1a' };
-  const canCreateRoom = Boolean(googleUser && spotifyStatus.connected && selectedPlaylistData);
+  // Ya no se exige cuenta de música: la pone el juego.
+  const canCreateRoom = Boolean(googleUser && selectedPlaylistData);
   const targetOptions = [6, 8, 12, 15, 20];
 
   // Todo el mundo (host incluido) recibe una sesión anónima automática solo
@@ -156,18 +144,6 @@ export default function HostSyncScreen() {
       });
   }, [loadUserProfile]);
 
-  useEffect(() => {
-    const onFocus = () => setSpotifyStatus(getSpotifyStatus());
-    window.addEventListener('focus', onFocus);
-    return () => window.removeEventListener('focus', onFocus);
-  }, []);
-
-  // Pre-warm Spotify SDK so activateElement() fires instantly on user click
-  useEffect(() => {
-    if (!spotifyStatus.connected) return;
-    preWarmSpotifyPlayer();
-  }, [spotifyStatus.connected]);
-
   const handleGoogleLogin = async () => {
     setAuthStatus('loading');
     setAuthMessage('');
@@ -221,14 +197,6 @@ export default function HostSyncScreen() {
         });
         return;
       }
-      if (!spotifyStatus.connected) {
-        setAlert({
-          tone: 'warning',
-          title: 'Falta conectar Spotify',
-          message: 'Necesitas una cuenta de Spotify Premium conectada para poner la música. Toca "Conectar" en la tarjeta verde.'
-        });
-        return;
-      }
     }
     setStep((prev) => prev + 1);
   };
@@ -241,18 +209,12 @@ export default function HostSyncScreen() {
         title: 'Faltan datos',
         message: !googleUser
           ? 'Vuelve al primer paso y entra con Google.'
-          : !spotifyStatus.connected
-            ? 'Vuelve al primer paso y conecta tu Spotify Premium.'
-            : 'Elige una playlist antes de crear la sala.'
+          : 'Elige una playlist antes de crear la sala.'
       });
       return;
     }
     createStartedRef.current = true;
     setIsCreating(true);
-    if (isSpotifyPlaying) {
-      await pauseSpotifyPlayback().catch(() => {});
-      setIsSpotifyPlaying(false);
-    }
     try {
       setSpotifyPlaylistUrl(selectedPlaylistData.url);
       await hostCreateRoom(googleUser);
@@ -266,36 +228,6 @@ export default function HostSyncScreen() {
       createStartedRef.current = false;
     } finally {
       setIsCreating(false);
-    }
-  };
-
-  const handleToggleSpotify = async () => {
-    if (isSpotifyPlaying) {
-      await pauseSpotifyPlayback().catch(() => {});
-      setIsSpotifyPlaying(false);
-      setSpotifyCheck({ type: 'info', message: 'Música pausada.' });
-      return;
-    }
-    setIsTestingSpotify(true);
-    setSpotifyCheck({ type: 'info', message: 'Conectando con Spotify...' });
-    try {
-      // activateElement() debe ejecutarse dentro de la gestura del usuario o móvil bloquea el audio
-      await prepareSpotifyPlayback();
-      const diagnostic = await getSpotifyDiagnostics();
-      if (!diagnostic.ok) {
-        setSpotifyCheck({ type: 'error', message: diagnostic.message });
-        return;
-      }
-      await startRandomPlaylistTrack(selectedPlaylistData.url);
-      setIsSpotifyPlaying(true);
-      setSpotifyCheck({ type: 'success', message: '¡Suena! Toca el botón para parar.' });
-    } catch (error) {
-      setSpotifyCheck({ type: 'error', message: explainSpotifyError(error) });
-      // Refresh connection state — if invalid_grant occurred, the token was
-      // discarded and the UI must reflect "not connected" immediately.
-      setSpotifyStatus(getSpotifyStatus());
-    } finally {
-      setIsTestingSpotify(false);
     }
   };
 
@@ -329,14 +261,15 @@ export default function HostSyncScreen() {
         <StepProgress steps={HOST_STEPS} current={step} onGoTo={setStep} />
 
         <AnimatePresence mode="wait">
-        {/* PASO 1 — Conectar (Google + Spotify). Son requisitos: sin
-            esto no hay sala posible, así que van primero y solos. */}
+        {/* PASO 1 — Entrar con la cuenta. Antes aquí también había que
+            conectar Spotify Premium; ya no hace falta ninguna cuenta de
+            música porque la pone el propio juego. */}
         {step === 0 && (
         <StepPanel stepKey="connect">
         <div className="flex w-full flex-col items-center gap-4">
 
           <div className="mt-1">
-            <VinylVisualizer rotating={spotifyStatus.connected} size="compact" logoSrc="/images/icon-app.png" />
+            <VinylVisualizer rotating={Boolean(googleUser)} size="compact" logoSrc="/images/icon-app.png" />
           </div>
 
           <div className="text-center">
@@ -345,13 +278,12 @@ export default function HostSyncScreen() {
               Tú mandas la música y también juegas
             </h2>
             <p className="text-on-surface-variant text-sm mt-2 leading-relaxed">
-              Conecta tu cuenta y tu Spotify Premium para tomar la cabina.
+              Entra con tu cuenta para guardar tu perfil. La música la pone el juego.
             </p>
           </div>
 
           <div className="w-full flex flex-col gap-3">
-
-                        {!googleUser ? (
+            {!googleUser ? (
               <NeonButton
                 color="white"
                 onClick={handleGoogleLogin}
@@ -372,143 +304,15 @@ export default function HostSyncScreen() {
               </p>
             )}
 
-                        {googleUser && (
-              <div className="overflow-hidden rounded-3xl border border-[#1ed760]/35 bg-[linear-gradient(160deg,rgba(30,215,96,0.16),rgba(168,85,247,0.10),rgba(0,0,0,0.28))] p-5 text-center shadow-[0_0_42px_rgba(30,215,96,0.12)]">
-                <div className="mb-4 flex items-center justify-center gap-2">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#1ed760] text-black">
-                    <span className="material-symbols-outlined text-lg">graphic_eq</span>
-                  </span>
-                  <p className="font-label-caps text-[#1ed760] text-[0.588rem] tracking-[0.22em]">SPOTIFY PREMIUM</p>
-                </div>
-
-                <div className="flex items-center justify-between gap-3 mb-5">
-                  <div className="text-left min-w-0">
-                    <p className="text-sm font-bold text-white truncate">
-                      {spotifyStatus.connected ? 'Cuenta conectada' : 'Conecta tu cuenta'}
-                    </p>
-                    <p className="text-xs text-on-surface-variant mt-0.5">Solo el anfitrión necesita Premium para tomar la cabina.</p>
-                  </div>
-                  <motion.button
-                    type="button"
-                    onClick={() => connectSpotify('/host/sync')}
-                    whileTap={{ scale: 0.94 }}
-                    className={`min-h-touch px-3 rounded-xl font-label-caps text-[0.588rem] tracking-[0.15em] shrink-0 ${
-                      spotifyStatus.connected
-                        ? 'border border-white/15 bg-white/5 text-on-surface-variant'
-                        : 'bg-[#1ed760] text-black font-bold'
-                    }`}
-                  >
-                    {spotifyStatus.connected ? 'RECONECTAR' : 'CONECTAR'}
-                  </motion.button>
-                </div>
-
-                                {spotifyStatus.connected && (
-                  <div className="flex flex-col items-center gap-3">
-                    <div className="relative flex items-center justify-center">
-                                            <div
-                        className="absolute rounded-full pointer-events-none transition-all duration-500"
-                        style={{
-                          inset: '-16px',
-                          background: isSpotifyPlaying
-                            ? 'radial-gradient(circle, rgba(255,122,26,0.35) 0%, transparent 65%)'
-                            : 'radial-gradient(circle, rgba(0,0,0,0.55) 0%, transparent 65%)',
-                          filter: 'blur(12px)',
-                          transform: 'translateY(8px)',
-                        }}
-                      />
-                      <motion.button
-                        type="button"
-                        onClick={handleToggleSpotify}
-                        disabled={isTestingSpotify}
-                        whileHover={!isTestingSpotify ? { scale: 1.06, y: -2 } : {}}
-                        whileTap={!isTestingSpotify ? { scale: 0.95, y: 5 } : {}}
-                        aria-label={isSpotifyPlaying ? 'Parar música de prueba' : 'Probar música'}
-                        className="relative w-24 h-24 rounded-full flex items-center justify-center disabled:opacity-50 select-none"
-                        style={{
-                          background: 'repeating-radial-gradient(circle, #060606 0 3px, #111 4px 5px, #060606 6px 9px)',
-                          boxShadow: isSpotifyPlaying
-                            ? [
-                                '0 0 0 2px #ff7a1a66',
-                                '0 0 28px #ff7a1a66',
-                                '0 6px 0 #1a0800',
-                                '0 10px 30px rgba(0,0,0,0.9)',
-                                'inset 0 1px 0 rgba(255,255,255,0.07)',
-                              ].join(', ')
-                            : [
-                                '0 0 0 1px rgba(255,255,255,0.07)',
-                                '0 6px 0 #050505',
-                                '0 10px 30px rgba(0,0,0,0.9)',
-                                'inset 0 1px 0 rgba(255,255,255,0.05)',
-                              ].join(', '),
-                          transition: 'box-shadow 0.3s',
-                        }}
-                      >
-                                                {isSpotifyPlaying && (
-                          <motion.div
-                            animate={{ rotate: 360 }}
-                            transition={{ repeat: Infinity, duration: 2.5, ease: 'linear' }}
-                            className="absolute inset-0 rounded-full pointer-events-none"
-                            style={{
-                              background: 'conic-gradient(from 0deg, transparent 0%, rgba(255,122,26,0.25) 8%, rgba(255,122,26,0.06) 16%, transparent 24%)',
-                            }}
-                          />
-                        )}
-                                                <div
-                          className="absolute inset-0 rounded-full pointer-events-none"
-                          style={{
-                            background: 'linear-gradient(145deg, rgba(255,255,255,0.08) 0%, transparent 45%)',
-                          }}
-                        />
-                                                <div
-                          className="absolute rounded-full"
-                          style={{
-                            inset: '28%',
-                            background: isSpotifyPlaying ? '#ff7a1a' : 'rgba(255,122,26,0.15)',
-                            border: `2px solid ${isSpotifyPlaying ? '#ff9a40' : 'rgba(255,122,26,0.35)'}`,
-                            boxShadow: isSpotifyPlaying
-                              ? '0 0 10px rgba(255,122,26,0.8), inset 0 1px 0 rgba(255,255,255,0.3)'
-                              : 'inset 0 1px 0 rgba(255,255,255,0.08)',
-                            transition: 'all 0.3s',
-                          }}
-                        />
-                                                <div className="absolute w-2 h-2 rounded-full bg-black z-10" />
-                                                <span
-                          className="relative z-20 material-symbols-outlined"
-                          style={{
-                            fontSize: '2rem',
-                            color: isSpotifyPlaying ? '#000' : '#ff7a1a',
-                            textShadow: isSpotifyPlaying ? 'none' : '0 0 12px rgba(255,122,26,0.5)',
-                          }}
-                        >
-                          {isTestingSpotify ? 'hourglass_empty' : isSpotifyPlaying ? 'pause' : 'play_arrow'}
-                        </span>
-                      </motion.button>
-                    </div>
-
-                    <p className="font-label-caps text-[0.588rem] text-on-surface-variant tracking-[0.2em]">
-                      {isTestingSpotify
-                        ? 'CONECTANDO...'
-                        : isSpotifyPlaying
-                          ? 'SONANDO · TOCA PARA PARAR'
-                          : 'PROBAR SONIDO'}
-                    </p>
-                  </div>
-                )}
-
-                {spotifyCheck && (
-                  <p className={`mt-4 rounded-xl border px-3 py-2 text-xs leading-relaxed ${
-                    spotifyCheck.type === 'success'
-                      ? 'border-[#1ed760]/45 bg-[#1ed760]/10 text-white'
-                      : spotifyCheck.type === 'error'
-                        ? 'border-intense-red/40 bg-intense-red/10 text-intense-red'
-                        : 'border-white/10 bg-black/15 text-on-surface-variant'
-                  }`}>
-                    {spotifyCheck.message}
-                  </p>
-                )}
+            <div className="rounded-2xl border border-neon-green/25 bg-neon-green/8 p-4 text-center">
+              <div className="mb-2 flex items-center justify-center gap-2">
+                <span className="material-symbols-outlined text-neon-green text-lg">music_note</span>
+                <p className="font-label-caps text-neon-green text-[0.7rem] tracking-[0.2em]">MÚSICA INCLUIDA</p>
               </div>
-            )}
-
+              <p className="text-sm leading-relaxed text-on-surface-variant">
+                No hace falta Spotify ni ninguna otra cuenta de música. Ni tú ni tus invitados.
+              </p>
+            </div>
           </div>
         </div>
         </StepPanel>
@@ -749,11 +553,7 @@ export default function HostSyncScreen() {
         nextIcon={step === HOST_STEPS.length - 1 ? 'meeting_room' : 'arrow_forward'}
         nextDisabled={isCreating}
         hint={
-          step === 0 && !googleUser
-            ? 'Entra con Google para continuar'
-            : step === 0 && !spotifyStatus.connected
-              ? 'Conecta Spotify Premium para continuar'
-              : undefined
+          step === 0 && !googleUser ? 'Entra con Google para continuar' : undefined
         }
       />
 

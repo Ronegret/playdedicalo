@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
 import { useGameStore } from '../store/useGameStore';
-import { resetSpotifyConnection } from '../services/spotify';
 import FontSizeControl from './FontSizeControl';
 import OrientationControl from './OrientationControl';
 import AvatarPicker from './AvatarPicker';
@@ -91,7 +90,6 @@ export default function ProfileMenu({ user, guestAvatar }) {
 
     if (role === 'host') {
       hostCloseRoom();
-      resetSpotifyConnection();
     } else if (role === 'guest') {
       guestLeaveRoom();
     }

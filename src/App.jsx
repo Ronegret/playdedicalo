@@ -39,7 +39,6 @@ const GuestJoinScreen = lazyWithReload(() => import('./pages/GuestJoinScreen'));
 const LobbyScreen = lazyWithReload(() => import('./pages/LobbyScreen'));
 const GameScreen = lazyWithReload(() => import('./pages/GameScreen'));
 const ResultScreen = lazyWithReload(() => import('./pages/ResultScreen'));
-const SpotifyCallbackScreen = lazyWithReload(() => import('./pages/SpotifyCallbackScreen'));
 
 function PageLoader() {
   return (
@@ -169,7 +168,6 @@ function App() {
               <Route path="/how-to-play" element={<HowToPlayScreen />} />
               <Route path="/role-selection" element={<RoleSelectionScreen />} />
               <Route path="/host/sync" element={<HostSyncScreen />} />
-              <Route path="/spotify/callback" element={<SpotifyCallbackScreen />} />
               <Route path="/guest/join" element={<GuestJoinScreen />} />
               <Route path="/lobby" element={<LobbyScreen />} />
               <Route path="/game" element={<GameScreen />} />

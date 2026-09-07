@@ -19,7 +19,7 @@ export function getPlaylistRequestUrl() {
     'Hola, ya hice una donación voluntaria y quiero incluir mi propia playlist en Dedícalo Play.',
     '',
     'Comprobante de la donación: (adjunta la captura aquí)',
-    'Link de mi playlist de Spotify:',
+    'Link de la playlist que quiero:',
     'Nombre de la playlist:',
     'Estilo musical:',
     'Mi nombre:',

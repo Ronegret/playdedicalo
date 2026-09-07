@@ -7,7 +7,8 @@ import HeaderHUD from '../components/HeaderHUD';
 import RotatePrompt from '../components/RotatePrompt';
 import { useOrientation } from '../hooks/useOrientation';
 import JoinRequestBanner from '../components/JoinRequestBanner';
-import { connectSpotify, createQuestionFromTrack, explainSpotifyError, getCurrentHiddenTrack, getSpotifyStatus, pauseSpotifyPlayback, prepareSpotifyPlayback, startRandomPlaylistTrack } from '../services/spotify';
+import { crearPreguntaDeCancion } from '../services/preguntas';
+import { desbloquearAudio, getCancionOculta, pararMusica, sonarCancionAleatoria } from '../services/musica';
 
 const EQUALIZER_BARS = [0.35, 0.58, 0.42, 0.71, 0.49, 0.64, 0.39];
 
@@ -763,10 +764,10 @@ export default function GameScreen() {
   const [countdownValue, setCountdownValue] = useState(3);
   const [softSecondsLeft, setSoftSecondsLeft] = useState(null);
   const { layout } = useOrientation();
-  const [spotifyMessage, setSpotifyMessage] = useState('');
-  const [spotifyTrackReady, setSpotifyTrackReady] = useState(false);
-  const [spotifyError, setSpotifyError] = useState(false);
-  const [spotifyNeedsReconnect, setSpotifyNeedsReconnect] = useState(false);
+  const [mensajeAudio, setMensajeAudio] = useState('');
+  const [audioListo, setAudioListo] = useState(false);
+  const [errorAudio, setErrorAudio] = useState(false);
+  const [audioNecesitaToque, setAudioNecesitaToque] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
   const [showAttackModal, setShowAttackModal] = useState(false);
   const [attackError, setAttackError] = useState('');
@@ -779,7 +780,7 @@ export default function GameScreen() {
   const [isRedeeming, setIsRedeeming] = useState(false);
   const [redeemError, setRedeemError] = useState('');
   const [redeemToast, setRedeemToast] = useState(false);
-  const startedSpotifyRoundRef = useRef('');
+  const rondaYaSonandoRef = useRef('');
   const roleRef = useRef(role);
   useEffect(() => { roleRef.current = role; }, [role]);
 
@@ -787,7 +788,7 @@ export default function GameScreen() {
   useEffect(() => {
     return () => {
       if (roleRef.current === 'host') {
-        pauseSpotifyPlayback().catch(() => {});
+        pararMusica();
       }
     };
   }, []);
@@ -840,7 +841,7 @@ export default function GameScreen() {
 
   useEffect(() => {
     if (phase !== 'listen') return undefined;
-    const reset = window.setTimeout(() => setSpotifyTrackReady(false), 0);
+    const reset = window.setTimeout(() => setAudioListo(false), 0);
     return () => window.clearTimeout(reset);
   }, [phase, round]);
 
@@ -848,31 +849,37 @@ export default function GameScreen() {
     if (role !== 'host' || phase !== 'listen') return;
 
     const playKey = `${round}-${spotifyPlaylistUrl}`;
-    if (startedSpotifyRoundRef.current === playKey) return;
-    startedSpotifyRoundRef.current = playKey;
+    if (rondaYaSonandoRef.current === playKey) return;
+    rondaYaSonandoRef.current = playKey;
 
     let cancelled = false;
     const preparingTimeout = window.setTimeout(() => {
-      if (!cancelled) setSpotifyMessage('Preparando Spotify...');
+      if (!cancelled) setMensajeAudio('Preparando la música...');
     }, 0);
 
-    setSpotifyError(false);
-    setSpotifyNeedsReconnect(false);
-    startRandomPlaylistTrack(spotifyPlaylistUrl)
+    setErrorAudio(false);
+    setAudioNecesitaToque(false);
+    sonarCancionAleatoria(spotifyPlaylistUrl)
       .then(() => {
         if (!cancelled) {
-          setSpotifyMessage('Música sonando. Para cuando quieras.');
-          setSpotifyError(false);
+          setMensajeAudio('Música sonando. Para cuando quieras.');
+          setErrorAudio(false);
           setAudioPlaying(true);
-          setSpotifyTrackReady(true);
+          setAudioListo(true);
         }
       })
       .catch((error) => {
         console.error(error);
         if (!cancelled) {
-          setSpotifyMessage(explainSpotifyError(error));
-          setSpotifyError(true);
-          setSpotifyNeedsReconnect(!getSpotifyStatus().connected);
+          // Sin sesiones ni tokens, los fallos posibles se reducen a dos:
+          // el navegador aún no ha dado permiso para sonar, o esa lista no
+          // tiene fragmentos. Ambos se arreglan con un toque.
+          setMensajeAudio(
+            /fragmento/i.test(error?.message || '')
+              ? error.message
+              : 'Toca para que empiece la música.'
+          );
+          setErrorAudio(true);
           setAudioPlaying(false);
         }
       });
@@ -997,11 +1004,11 @@ export default function GameScreen() {
     if (isBlackoutPending) return;
     setIsBlackoutPending(true);
     try {
-      const hiddenTrack = getCurrentHiddenTrack();
+      const hiddenTrack = getCancionOculta();
       const spotifyQuestion = hiddenTrack
-        ? await createQuestionFromTrack(hiddenTrack, gameMode, round, ownTimelineYears)
+        ? await crearPreguntaDeCancion(hiddenTrack, gameMode, round, ownTimelineYears)
         : null;
-      await pauseSpotifyPlayback().catch((error) => console.warn('No se pudo pausar Spotify:', error));
+      pararMusica();
       setAudioPlaying(false);
       await hostTriggerBlackout(spotifyQuestion, hiddenTrack);
     } catch (error) {
@@ -1017,35 +1024,25 @@ export default function GameScreen() {
     return () => window.clearTimeout(reset);
   }, [phase, round]);
 
-  const handleSpotifyRetry = () => {
-    if (spotifyNeedsReconnect) {
-      // Antes esto mandaba a /host/sync (la pantalla de "crear sala"),
-      // lejos de la partida en curso y con riesgo de armar una sala nueva
-      // sin querer. connectSpotify('/game') hace el login de Spotify y
-      // vuelve derecho aquí — la ronda retoma sola al recargar.
-      setSpotifyMessage('Abriendo Spotify...');
-      connectSpotify('/game').catch(() => setSpotifyMessage('No pudimos abrir Spotify. Inténtalo de nuevo.'));
-      return;
-    }
-    setSpotifyError(false);
-    setSpotifyNeedsReconnect(false);
-    setSpotifyMessage('Reintentando...');
-    // prepareSpotifyPlayback() llama a activateElement() — hace falta lo
-    // más cerca posible de un toque real (como este) para que el navegador
-    // deje reanudar audio después de que la pestaña estuvo en segundo
-    // plano (pantalla bloqueada), que es la causa más común de que el
-    // reproductor se caiga a mitad de partida.
-    prepareSpotifyPlayback()
-      .catch(() => {})
-      .then(() => startRandomPlaylistTrack(spotifyPlaylistUrl))
+  // Ya no hay sesión que reconectar ni reproductor remoto que despertar: el
+  // único motivo real por el que puede no sonar es que el navegador no haya
+  // recibido todavía un toque del usuario. Se desbloquea desde aquí, que ES
+  // ese toque, y se vuelve a intentar.
+  const reintentarAudio = () => {
+    setErrorAudio(false);
+    setAudioNecesitaToque(false);
+    setMensajeAudio('Reintentando...');
+    desbloquearAudio()
+      .then(() => sonarCancionAleatoria(spotifyPlaylistUrl))
       .then(() => {
-        setSpotifyMessage('Música sonando. Para cuando quieras.');
+        setMensajeAudio('Música sonando. Para cuando quieras.');
+        setErrorAudio(false);
         setAudioPlaying(true);
+        setAudioListo(true);
       })
       .catch((error) => {
-        setSpotifyMessage(explainSpotifyError(error));
-        setSpotifyError(true);
-        setSpotifyNeedsReconnect(!getSpotifyStatus().connected);
+        setMensajeAudio(error?.message || 'No pudimos poner la música. Inténtalo otra vez.');
+        setErrorAudio(true);
         setAudioPlaying(false);
       });
   };
@@ -1170,16 +1167,16 @@ export default function GameScreen() {
 
             {role === 'host' ? (
               <div className="flex flex-col items-center gap-2 text-center">
-                <p className="max-w-xs text-sm text-on-surface-variant">{spotifyMessage || 'Preparando Spotify...'}</p>
-                {spotifyError && (
+                <p className="max-w-xs text-sm text-on-surface-variant">{mensajeAudio || 'Preparando la música...'}</p>
+                {errorAudio && (
                   <button
-                    onClick={handleSpotifyRetry}
+                    onClick={reintentarAudio}
                     className="flex min-h-touch items-center gap-2 rounded-xl border-2 border-vinyl-orange bg-vinyl-orange/20 px-5 py-3 text-base font-label-caps font-black text-vinyl-orange shadow-[0_0_20px_rgba(255,122,26,0.25)] transition-all active:scale-95"
                   >
                     <span className="material-symbols-outlined text-xl">
-                      {spotifyNeedsReconnect ? 'login' : 'refresh'}
+                      {audioNecesitaToque ? 'login' : 'refresh'}
                     </span>
-                    {spotifyNeedsReconnect ? 'RECONECTAR SPOTIFY' : 'REINTENTAR SPOTIFY'}
+                    {audioNecesitaToque ? 'RECONECTAR SPOTIFY' : 'REINTENTAR SPOTIFY'}
                   </button>
                 )}
               </div>
@@ -1244,14 +1241,14 @@ export default function GameScreen() {
                 <p className="text-center text-sm text-on-surface-variant">Para cuando lo veas claro 👇</p>
                 <motion.button
                   whileHover={{ y: -2 }}
-                  whileTap={{ scale: (isBlackoutPending || !spotifyTrackReady) ? 1 : 0.94, y: 4 }}
+                  whileTap={{ scale: (isBlackoutPending || !audioListo) ? 1 : 0.94, y: 4 }}
                   onClick={handleHostBlackout}
-                  disabled={isBlackoutPending || !spotifyTrackReady}
+                  disabled={isBlackoutPending || !audioListo}
                   className="w-full h-16 bg-intense-red hover:bg-red-600 text-white font-headline-lg-mobile text-2xl rounded-2xl shadow-[0_10px_0_rgba(90,0,18,0.95),0_0_34px_rgba(255,107,139,0.55)] transition-colors font-black border-2 border-white/15 relative overflow-hidden disabled:opacity-60 disabled:cursor-not-allowed disabled:shadow-[0_6px_0_rgba(90,0,18,0.65),0_0_20px_rgba(255,107,139,0.25)]"
                 >
                   <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
                   <div className="absolute inset-x-0 bottom-0 h-1/2 bg-black/10 pointer-events-none" />
-                  {isBlackoutPending ? 'PARANDO...' : !spotifyTrackReady ? 'CARGANDO...' : 'PARAR MÚSICA'}
+                  {isBlackoutPending ? 'PARANDO...' : !audioListo ? 'CARGANDO...' : 'PARAR MÚSICA'}
                 </motion.button>
               </div>
             )}
@@ -1643,7 +1640,7 @@ export default function GameScreen() {
                   onClick={async () => {
                     setShowExitConfirm(false);
                     if (role === 'host') {
-                      await pauseSpotifyPlayback().catch(() => {});
+                      pararMusica();
                       // No cierra la sala de inmediato — el anfitrión también
                       // tiene que ver el ranking final antes de irse, igual
                       // que los demás. hostEndGame solo marca fase 'final'
