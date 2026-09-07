@@ -12,6 +12,7 @@ import FontSizeControl from '../components/FontSizeControl';
 import AlertDialog from '../components/AlertDialog';
 import SabotageSettings from '../components/SabotageSettings';
 import { StepActionBar, StepPanel, StepProgress } from '../components/WizardSteps';
+import ConectarTv from '../components/ConectarTv';
 
 // Crear sala en pasos en vez de un solo muro con todo a la vez: primero
 // los requisitos (cuentas), después la música, después la duración. El PIN
@@ -78,6 +79,9 @@ export default function HostSyncScreen() {
   const [isCreating, setIsCreating] = useState(false);
   const [selectedPlaylist, setSelectedPlaylist] = useState(DEDICALO_PLAYLISTS[0].id);
   const [step, setStep] = useState(0);
+  const contarALaTv = useGameStore((s) => s.contarALaTv);
+  const [conectandoTv, setConectandoTv] = useState(false);
+  const [tvConectada, setTvConectada] = useState(false);
   const [alert, setAlert] = useState(null);
   const createStartedRef = useRef(false);
 
@@ -373,6 +377,32 @@ export default function HostSyncScreen() {
                 </p>
               </div>
 
+              {/* Conectar la tele AQUÍ, antes de crear la sala.
+                  Antes había que crear la sala, entrar al lobby y conectarla
+                  allí, con lo que el televisor se pasaba todo el montaje
+                  enseñando un código y nada más. Conectándola ahora, la tele
+                  acompaña: dice quién está montando la partida y va contando
+                  lo que falta. */}
+              <div className="mt-4">
+                <button
+                  type="button"
+                  onClick={() => setConectandoTv(true)}
+                  className={`flex min-h-touch w-full items-center justify-center gap-2 rounded-2xl border px-4 font-label-caps text-sm font-black transition-transform active:scale-[0.98] ${
+                    tvConectada
+                      ? 'border-neon-green/50 bg-neon-green/15 text-neon-green'
+                      : 'border-white/15 bg-white/5 text-white'
+                  }`}
+                >
+                  <span className="material-symbols-outlined">{tvConectada ? 'check_circle' : 'tv'}</span>
+                  {tvConectada ? 'TELE CONECTADA' : 'JUGAR EN LA TELE (OPCIONAL)'}
+                </button>
+                <p className="mt-2 text-center text-sm leading-relaxed text-on-surface-variant">
+                  {tvConectada
+                    ? 'La tele entra sola en cuanto crees la sala.'
+                    : 'La música sonará en el televisor y todos verán el marcador.'}
+                </p>
+              </div>
+
               {/* El sabotaje es opcional: se decide aqui, junto a la
                   duracion, antes de crear la sala. */}
               <div className="mt-4">
@@ -452,6 +482,7 @@ export default function HostSyncScreen() {
                       // luego bajar a "SIGUIENTE": dos gestos para una sola
                       // decisión, y la barra de abajo tapando las tarjetas.
                       setSelectedPlaylist(playlist.id);
+                      contarALaTv('musica', playlist.name);
                       setStep(2);
                     }}
                     whileTap={{ scale: 0.94 }}
@@ -568,6 +599,15 @@ export default function HostSyncScreen() {
           nextLabel={isCreating ? 'CREANDO SALA...' : 'CREAR SALA'}
           nextIcon="meeting_room"
           nextDisabled={isCreating}
+        />
+      )}
+
+      {conectandoTv && (
+        <ConectarTv
+          antesDeCrearSala
+          nombreAnfitrion={googleUser?.displayName?.split(' ')[0] || 'El anfitrión'}
+          alConectar={() => setTvConectada(true)}
+          onCerrar={() => setConectandoTv(false)}
         />
       )}
 

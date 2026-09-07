@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getTimelineProgress, useGameStore } from '../store/useGameStore';
-import VinilloJugador from '../components/tv/VinilloJugador';
-import { desbloquearAudio, pararMusica, segundosRestantes, sonarCancionAleatoria } from '../services/musica';
+import FichaJugador from '../components/tv/FichaJugador';
+import { desbloquearAudio, duracionFragmento, pararMusica, sonarCancionAleatoria } from '../services/musica';
 import { vigilarFluidez } from '../services/rendimiento';
 
 /**
@@ -119,6 +119,14 @@ function Teclado({ onConfirmar }) {
 
 const COLOR_PODIO = ['#ffbf4d', '#dbe4f0', '#ff9a4d'];
 
+// Lo que el anfitrión va haciendo en su móvil, para que la tele lo cuente en
+// vez de quedarse en blanco esperando.
+const PASOS_MONTAJE = [
+  { clave: 'preparando', icono: 'person', texto: 'Entrando' },
+  { clave: 'musica', icono: 'library_music', texto: 'Eligiendo música' },
+  { clave: 'listo', icono: 'sports_esports', texto: '¡A jugar!' }
+];
+
 /**
  * Cuenta atrás del fragmento, aislada a propósito.
  *
@@ -130,23 +138,52 @@ const COLOR_PODIO = ['#ffbf4d', '#dbe4f0', '#ff9a4d'];
  *
  * Aquí dentro, ese repintado afecta a este párrafo y a nada más.
  */
-function CuentaAtras() {
-  const [segundos, setSegundos] = useState(null);
-  // Se monta y se desmonta con la fase, así que no hace falta apagarlo por
-  // dentro: cuando deja de hacer falta, deja de existir.
-  useEffect(() => {
-    const tick = window.setInterval(() => {
-      const quedan = segundosRestantes();
-      setSegundos(quedan > 0 ? Math.ceil(quedan) : null);
-    }, 500);
-    return () => window.clearInterval(tick);
-  }, []);
+/**
+ * Cuenta atrás del fragmento.
+ *
+ * Va aislada en su propio componente a propósito: estaba dentro de TvScreen
+ * con un `setInterval`, así que dos veces por segundo se repintaba la
+ * pantalla entera —los jugadores incluidos— para cambiar un número de dos
+ * cifras. Aquí dentro, ese repintado afecta a este círculo y a nada más.
+ *
+ * Y se calcula desde la hora en que empezó la canción, no desde el
+ * reproductor: así la cuenta sale también cuando la música la pone el móvil
+ * del anfitrión y la tele solo mira. Antes, en ese caso, no salía.
+ */
+function CuentaAtras({ empezadoEn, duracion, tam = '9vmin' }) {
+  // key={empezadoEn} en quien lo usa: cada canción monta uno nuevo.
+  const quedanAhora = () => Math.max(0, Math.ceil((duracion || 30) - (Date.now() - empezadoEn) / 1000));
+  const [restan, setRestan] = useState(quedanAhora);
 
-  if (segundos === null) return null;
+  useEffect(() => {
+    const tick = window.setInterval(() => setRestan(quedanAhora()), 500);
+    return () => window.clearInterval(tick);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [empezadoEn, duracion]);
+
+  const total = duracion || 30;
+  const queda = Math.max(0, Math.min(1, restan / total));
+  // Se pone naranja en los últimos cinco segundos: hay que darse prisa y eso
+  // se tiene que ver desde el sofá sin leer el número.
+  const color = restan <= 5 ? '#ff7a1a' : '#39ff14';
+
   return (
-    <p style={{ fontSize: '2.4vmin' }} className="mt-[1vmin] tabular-nums text-tv-dim">
-      {segundos}s
-    </p>
+    <div
+      className="relative flex items-center justify-center rounded-full"
+      style={{
+        width: tam, height: tam,
+        background: `conic-gradient(${color} ${queda * 360}deg, rgba(255,255,255,.08) 0deg)`
+      }}
+    >
+      <div
+        className="flex items-center justify-center rounded-full"
+        style={{ position: 'absolute', inset: '9%', background: '#0b0f17' }}
+      >
+        <span className="font-black tabular-nums" style={{ fontSize: `calc(${tam} * 0.42)`, color }}>
+          {restan}
+        </span>
+      </div>
+    </div>
   );
 }
 
@@ -174,17 +211,30 @@ export default function TvScreen() {
   const audioEnTv = useGameStore((s) => s.audioEnTv);
   const publicarCancion = useGameStore((s) => s.publicarCancionDeRonda);
   const listaUrl = useGameStore((s) => s.spotifyPlaylistUrl);
+  const audioEmpezadoEn = useGameStore((s) => s.audioEmpezadoEn);
+  const audioDuracion = useGameStore((s) => s.audioDuracion);
 
   const [puedeSonar, setPuedeSonar] = useState(false);
+  // Lo que el anfitrión está montando en su móvil, para irlo contando.
+  const [reserva, setReserva] = useState(null);
   const rondaSonandoRef = useRef('');
 
   // Publicar el código y quedarse escuchando hasta que el anfitrión escanee.
   useEffect(() => {
     if (pinElegido.length === 4) return undefined;
-    return esperarEnlace(codigoTv, (pinRecibido) => {
-      // Llega el PIN por el QR: eso NO es un gesto del usuario en esta
-      // pantalla, así que el audio puede seguir bloqueado. Se intenta igual
-      // y, si no cuela, la música se queda en el móvil del anfitrión.
+    return esperarEnlace(codigoTv, (pinRecibido, buzon) => {
+      // Quién ha conectado la tele y qué está haciendo. Con esto la pantalla
+      // deja de ser un código muerto durante todo el montaje de la partida.
+      setReserva(buzon?.anfitrion ? {
+        anfitrion: buzon.anfitrion,
+        estado: buzon.estado || 'preparando',
+        detalle: buzon.detalle || null
+      } : null);
+
+      if (pinRecibido.length !== 4) return;
+      // Llega el PIN: eso NO es un gesto del usuario en esta pantalla, así
+      // que el audio puede seguir bloqueado. Se intenta igual y, si no cuela,
+      // la música se queda en el móvil del anfitrión.
       desbloquearAudio().then(setPuedeSonar).catch(() => setPuedeSonar(false));
       setPinElegido(pinRecibido);
     });
@@ -238,7 +288,7 @@ export default function TvScreen() {
     sonarCancionAleatoria(listaUrl).then((cancion) => {
       // La tele publica lo que ha puesto para que el anfitrión revele ESA y
       // no otra. Sin esto la canción no coincidía con la pantalla.
-      publicarCancion(cancion);
+      publicarCancion(cancion, duracionFragmento());
     }).catch((error) => {
       console.error('La tele no pudo poner la música:', error);
       soltarAudio();
@@ -352,6 +402,20 @@ export default function TvScreen() {
     const quitar = window.setTimeout(() => setBienvenida(false), 5000);
     return () => { window.clearTimeout(mostrar); window.clearTimeout(quitar); };
   }, [pinElegido, hayAnfitrion]);
+  // Cuenta de entrada entre pistas: 3-2-1, igual que en el móvil y desde el
+  // mismo momento (cuando llega la fase), para que la sala no vea dos relojes
+  // distintos. Se calcula aquí y no se publica: publicar un número por
+  // segundo llenaría la base de escrituras para algo que dura tres segundos.
+  const [cuentaEntrada, setCuentaEntrada] = useState(3);
+  useEffect(() => {
+    if (phase !== 'countdown') return undefined;
+    const desde = Date.now();
+    const tick = window.setInterval(() => {
+      setCuentaEntrada(Math.max(1, 3 - Math.floor((Date.now() - desde) / 1000)));
+    }, 120);
+    return () => window.clearInterval(tick);
+  }, [phase, round]);
+
   // La tele se mide a sí misma y baja la calidad si no da abasto. Es la
   // única forma honesta de acertar: el aparato del salón no se parece en nada
   // al ordenador donde se programa esto.
@@ -404,8 +468,8 @@ export default function TvScreen() {
   // Así que el tamaño es el menor entre lo que permite el ancho y lo que
   // permite el alto.
   const n = conectados.length;
-  const { tamVinilo, columnas } = useMemo(() => {
-    if (!n) return { tamVinilo: '12vmin', columnas: 1 };
+  const { tamFicha, columnas } = useMemo(() => {
+    if (!n) return { tamFicha: '12vmin', columnas: 1 };
 
     // Ancho útil: la pantalla menos la columna del PIN (25vmin, y en la sala
     // de espera ni siquiera está) y los márgenes.
@@ -413,7 +477,7 @@ export default function TvScreen() {
     // Alto reservado a los jugadores: un tercio largo de la pantalla.
     const altoUtil = 40;
 
-    let mejor = { tamVinilo: '8vmin', columnas: n };
+    let mejor = { tamFicha: '8vmin', columnas: n };
     // Se prueban repartos y se queda el que da el disco más grande.
     for (let cols = Math.min(n, 12); cols >= 1; cols -= 1) {
       const filas = Math.ceil(n / cols);
@@ -423,8 +487,8 @@ export default function TvScreen() {
       // Tope de 34 y no de 30: con tres o cuatro jugadores sobra pantalla, y
       // lo que se pide desde el sofá es ver la cara, no el hueco.
       const lado = Math.min(porAncho, porAlto, 34);
-      if (lado > parseFloat(mejor.tamVinilo)) {
-        mejor = { tamVinilo: `${lado.toFixed(1)}vmin`, columnas: cols };
+      if (lado > parseFloat(mejor.tamFicha)) {
+        mejor = { tamFicha: `${lado.toFixed(1)}vmin`, columnas: cols };
       }
     }
     return mejor;
@@ -466,37 +530,132 @@ export default function TvScreen() {
             </>
           ) : (
             <>
-              <p style={{ fontSize: '2vmin', letterSpacing: '0.3em' }} className="mt-[2vmin] text-tv-dim">
-                PASO 1 DE 2 · CONECTAR LA TELE
-              </p>
-              <p style={{ fontSize: '3.2vmin' }} className="mt-[0.8vmin] font-bold text-tv-ink">
-                En tu móvil: <span style={{ color: '#39ff14' }}>Conectar tele</span>
-              </p>
-              <p style={{ fontSize: '2.1vmin' }} className="mt-[0.5vmin] text-tv-dim">
-                Crea la sala, pulsa «Conectar tele» y apunta aquí
-              </p>
+              {reserva ? (
+                /* La tele ya está conectada y el anfitrión sigue montando la
+                   partida en su móvil. Antes esto era un código muerto durante
+                   todo ese rato; ahora la pantalla acompaña y cuenta qué
+                   falta, que es lo que hace que no parezca colgada. */
+                <div className="flex flex-col items-center">
+                  <div
+                    className="tv-pop mt-[3vmin] flex items-center gap-[1.6vmin] rounded-full px-[3.5vmin] py-[1.4vmin]"
+                    style={{ background: 'rgba(57,255,20,.14)', border: '0.3vmin solid rgba(57,255,20,.55)' }}
+                  >
+                    <span className="material-symbols-outlined text-neon-green" style={{ fontSize: '3.4vmin' }}>
+                      check_circle
+                    </span>
+                    <p style={{ fontSize: '2.6vmin' }} className="font-black text-tv-ink">Tele conectada</p>
+                  </div>
 
-              <div className="mt-[3vmin] rounded-[2vmin] bg-white p-[1.6vmin]">
-                <img src={urlQr(enlaceTv, 600)} alt="Código para conectar la tele"
-                  style={{ width: '46vmin', height: '46vmin', display: 'block' }} />
-              </div>
+                  <p style={{ fontSize: '5.5vmin' }} className="mt-[4vmin] text-center font-black text-tv-ink">
+                    <span style={{ color: '#39ff14' }}>{reserva.anfitrion}</span> está
+                    <br />montando la partida
+                  </p>
 
-              <p style={{ fontSize: '2vmin', letterSpacing: '0.3em' }} className="mt-[2.5vmin] text-tv-dim">
-                O ESCRIBE EN play.dedicalo.es/tv-link
-              </p>
-              <p style={{ fontSize: '5vmin', letterSpacing: '0.22em', color: '#39ff14' }}
-                className="tv-latido font-black">
-                {codigoTv}
-              </p>
+                  {/* Los pasos, con el que toca encendido: cualquiera que mire
+                      la tele sabe por dónde va la cosa. */}
+                  <div className="mt-[5vmin] flex items-center gap-[2vmin]">
+                    {PASOS_MONTAJE.map((paso, i) => {
+                      const actual = PASOS_MONTAJE.findIndex((x) => x.clave === reserva.estado);
+                      const hecho = actual > i;
+                      const activo = actual === i;
+                      const encendido = hecho || activo;
+                      return (
+                        <div key={paso.clave} className="flex items-center gap-[2vmin]">
+                          <div className="flex flex-col items-center" style={{ width: '20vmin' }}>
+                            <div
+                              className={activo ? 'tv-latido flex items-center justify-center rounded-full' : 'flex items-center justify-center rounded-full'}
+                              style={{
+                                width: '9vmin', height: '9vmin',
+                                background: encendido ? 'rgba(57,255,20,.16)' : 'rgba(255,255,255,.05)',
+                                border: `0.35vmin solid ${encendido ? '#39ff14' : 'rgba(255,255,255,.15)'}`
+                              }}
+                            >
+                              <span
+                                className="material-symbols-outlined"
+                                style={{ fontSize: '4.4vmin', color: encendido ? '#39ff14' : '#4a5568' }}
+                              >
+                                {hecho ? 'check' : paso.icono}
+                              </span>
+                            </div>
+                            <p
+                              style={{ fontSize: '1.9vmin', color: encendido ? '#eef3ff' : '#4a5568' }}
+                              className="mt-[1.2vmin] text-center font-bold"
+                            >
+                              {paso.texto}
+                            </p>
+                          </div>
+                          {i < PASOS_MONTAJE.length - 1 && (
+                            <div style={{
+                              width: '6vmin', height: '0.35vmin',
+                              background: hecho ? '#39ff14' : 'rgba(255,255,255,.12)'
+                            }} />
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
 
-              <button
-                type="button"
-                onClick={() => setVerTeclado(true)}
-                className="mt-[3vmin] rounded-[1vmin] border-[0.25vmin] border-white/20 px-[2.5vmin] py-[1.2vmin]"
-                style={{ fontSize: '1.9vmin', color: '#93a0b8' }}
-              >
-                No puedo escanear · escribir el PIN
-              </button>
+                  {reserva.detalle && (
+                    <p style={{ fontSize: '2.4vmin' }} className="mt-[4vmin] text-tv-dim">
+                      Música: <span className="font-black" style={{ color: '#ffbf4d' }}>{reserva.detalle}</span>
+                    </p>
+                  )}
+                </div>
+              ) : (
+                <>
+                  <p style={{ fontSize: '2vmin', letterSpacing: '0.3em' }} className="mt-[2.5vmin] text-tv-dim">
+                    PARA JUGAR EN ESTA TELE
+                  </p>
+                  <p style={{ fontSize: '3.4vmin' }} className="mt-[1vmin] font-bold text-tv-ink">
+                    Escribe este código en <span style={{ color: '#39ff14' }}>play.dedicalo.es</span>
+                  </p>
+
+                  {/* EL CÓDIGO MANDA, y el QR es el atajo.
+                      Es como emparejan YouTube, Netflix o Disney+, y no por
+                      casualidad: apuntar una cámara a un televisor encendido en
+                      un salón a oscuras es el peor caso posible para el enfoque
+                      y la exposición del móvil. Escribir seis caracteres
+                      funciona siempre. */}
+                  <div className="mt-[3vmin] flex gap-[1.4vmin]">
+                    {codigoTv.split('').map((caracter, i) => (
+                      <span
+                        key={i}
+                        className="flex items-center justify-center rounded-[1.4vmin] font-black"
+                        style={{
+                          width: '11vmin', height: '14vmin', fontSize: '9vmin',
+                          color: '#39ff14',
+                          background: 'rgba(57,255,20,.08)',
+                          border: '0.35vmin solid rgba(57,255,20,.45)'
+                        }}
+                      >
+                        {caracter}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className="mt-[3.5vmin] flex items-center gap-[3vmin]">
+                    <div className="rounded-[1.4vmin] bg-white p-[1vmin]">
+                      <img
+                        src={urlQr(enlaceTv, 420)}
+                        alt="Código QR para conectar la tele"
+                        style={{ width: '20vmin', height: '20vmin', display: 'block' }}
+                      />
+                    </div>
+                    <p style={{ fontSize: '2.1vmin' }} className="max-w-[34vmin] text-left leading-relaxed text-tv-dim">
+                      O escanea esto con el móvil, si lo prefieres.
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => setVerTeclado(true)}
+                    className="tv-boton mt-[3vmin] rounded-[1vmin] border-[0.25vmin] border-white/20 px-[2.5vmin] py-[1.2vmin]"
+                    style={{ fontSize: '1.9vmin', color: '#93a0b8' }}
+                  >
+                    Ya hay una sala · escribir su PIN
+                  </button>
+                </>
+              )}
             </>
           )}
         </div>
@@ -678,57 +837,55 @@ export default function TvScreen() {
 
             {phase === 'listen' && (
               <div className="flex flex-col items-center">
-                {/* Disco de vinilo girando con ondas saliendo: la seña de
-                    identidad del juego, y lo que hace que la pantalla se
-                    sienta viva mientras suena la canción. */}
-                <div className="relative flex shrink-0 items-center justify-center" style={{ width: '30vmin', height: '30vmin' }}>
-                  {/* Dos ondas, no tres. La tercera no se distinguía y era una
-                      capa más animándose sin parar en un aparato que va justo. */}
+                {/* Sin el disco de vinilo.
+                    Era una imagen de 512 px girando sin parar, y era además
+                    lo único que quedaba animándose en bucle a pantalla
+                    completa. Un anillo y unas ondas dicen lo mismo —"esto
+                    está sonando"— y no le cuestan nada al televisor. */}
+                <div className="relative flex shrink-0 items-center justify-center"
+                  style={{ width: '38vmin', height: '38vmin' }}>
                   {[0, 1].map((i) => (
                     <span
                       key={i}
                       className="tv-onda absolute rounded-full"
                       style={{
-                        width: '21vmin', height: '21vmin',
+                        width: '31vmin', height: '31vmin',
                         border: '0.35vmin solid #39ff14',
                         animationDelay: `${i * 1.1}s`
                       }}
                     />
                   ))}
 
-                  {/* Imagen girada, no un degradado: girar un mapa de bits es
-                      casi gratis, y redibujar surcos generados en cada
-                      fotograma es lo que se quedaba pegado. */}
-                  <div className="relative" style={{ width: '21vmin', height: '21vmin' }}>
-                    {/* El aro va aparte y quieto. Cuando era una `box-shadow`
-                        de la propia imagen, la tele recalculaba la sombra en
-                        cada vuelta para dibujar el mismo círculo — un anillo
-                        girado no cambia. */}
-                    <div className="absolute rounded-full"
-                      style={{ inset: '-3%', border: '0.6vmin solid #39ff14' }} />
-                    <img
-                      src="/images/vinilo.png"
-                      alt=""
-                      className="tv-vinilo"
-                      style={{ width: '100%', height: '100%', display: 'block', borderRadius: '50%' }}
-                    />
-                    <div
-                      className="absolute flex items-center justify-center overflow-hidden rounded-full"
-                      style={{ inset: '31%', background: '#0b0f17', border: '0.3vmin solid #39ff14' }}
-                    >
-                      <img src="/images/icon-app.png" alt="" style={{ width: '78%', height: '78%', objectFit: 'contain' }} />
+                  <div
+                    className="relative flex flex-col items-center justify-center rounded-full"
+                    style={{
+                      width: '31vmin', height: '31vmin',
+                      background: 'radial-gradient(circle at 50% 35%, rgba(57,255,20,.12), rgba(11,15,23,.9) 70%)',
+                      border: '0.6vmin solid #39ff14'
+                    }}
+                  >
+                    <p style={{ fontSize: '1.8vmin', letterSpacing: '0.24em' }} className="text-electric-purple">
+                      AÑOS LOCOS
+                    </p>
+                    {/* Cabe dentro del círculo con margen: a 4,4vmin y con
+                        mucho espaciado, "ESCUCHANDO" se salía por los lados. */}
+                    <p style={{ fontSize: '3.4vmin', letterSpacing: '0.06em', color: '#39ff14' }}
+                      className="mt-[0.5vmin] font-black">
+                      {audioEnTv ? 'ESCUCHANDO' : 'ESCUCHA'}
+                    </p>
+                    <div className="mt-[1.4vmin]">
+                      <CuentaAtras empezadoEn={audioEmpezadoEn} duracion={audioDuracion} tam="10vmin" />
                     </div>
                   </div>
                 </div>
 
-                {/* Ecualizador: doce barras con su propio ritmo. */}
-                <div className="mt-[1.5vmin] flex shrink-0 items-end gap-[0.7vmin]" style={{ height: '5vmin' }}>
+                <div className="mt-[2.2vmin] flex shrink-0 items-end gap-[1.2vmin]" style={{ height: '9vmin' }}>
                   {[0.5, 0.85, 0.35, 1, 0.55, 0.9, 0.45].map((alto, i) => (
                     <span
                       key={i}
                       className="tv-barra rounded-full"
                       style={{
-                        width: '1vmin',
+                        width: '2.1vmin',
                         height: `${alto * 100}%`,
                         background: i % 3 === 0 ? '#39ff14' : i % 3 === 1 ? '#a855f7' : '#ff7a1a',
                         animationDelay: `${(i % 5) * 0.13}s`,
@@ -738,24 +895,83 @@ export default function TvScreen() {
                   ))}
                 </div>
 
-                <p style={{ fontSize: '3.4vmin', color: '#39ff14' }} className="mt-[1.5vmin] font-black tracking-[0.3em]">
-                  ESCUCHA
+                <p style={{ fontSize: '2.2vmin' }} className="mt-[1.5vmin] text-tv-dim">
+                  {audioEnTv
+                    ? 'Suena aquí · nadie ve el título'
+                    : 'Suena en el móvil del anfitrión'}
                 </p>
-                {audioEnTv && <CuentaAtras />}
+              </div>
+            )}
+
+            {/* Cuenta de entrada entre pistas.
+                La tele no la tenía: el móvil hacía 3-2-1 y aquí no pasaba
+                nada, con lo que la sala miraba dos relojes distintos. Se
+                calcula igual que en el móvil, desde que llega la fase. */}
+            {phase === 'countdown' && (
+              <div className="flex flex-col items-center">
+                <p style={{ fontSize: '2.4vmin', letterSpacing: '0.3em' }} className="text-electric-purple">
+                  PREPARA EL OÍDO
+                </p>
+                <div className="relative mt-[3vmin] flex items-center justify-center"
+                  style={{ width: '34vmin', height: '34vmin' }}>
+                  {[0, 1].map((i) => (
+                    <span
+                      key={i}
+                      className="tv-onda absolute rounded-full"
+                      style={{
+                        width: '24vmin', height: '24vmin',
+                        border: '0.35vmin solid #39ff14',
+                        animationDelay: `${i * 1.1}s`
+                      }}
+                    />
+                  ))}
+                  <span
+                    key={cuentaEntrada}
+                    className="tv-pop font-black tabular-nums"
+                    style={{ fontSize: '20vmin', lineHeight: 1, color: '#39ff14' }}
+                  >
+                    {cuentaEntrada}
+                  </span>
+                </div>
+                <p style={{ fontSize: '2.4vmin' }} className="mt-[2vmin] text-tv-dim">
+                  La música empieza al terminar la cuenta
+                </p>
               </div>
             )}
 
             {phase === 'blackout' && !hayReveal && (
-              <div className="text-center">
+              <div className="flex w-full flex-col items-center">
                 <p style={{ fontSize: '4.6vmin' }} className="font-black text-tv-ink">
                   {currentQuestion?.text || '¿De qué año es?'}
                 </p>
-                <p style={{ fontSize: '7vmin', color: '#39ff14' }} className="mt-[1vmin] font-black tabular-nums">
-                  {respondieron}<span className="text-tv-dim">/{conectados.length}</span>
+
+                <p style={{ fontSize: '9vmin', lineHeight: 1.05 }} className="mt-[1vmin] font-black tabular-nums">
+                  <span style={{ color: '#39ff14' }}>{respondieron}</span>
+                  <span className="text-tv-dim">/{conectados.length}</span>
                 </p>
                 <p style={{ fontSize: '2.2vmin', letterSpacing: '0.24em' }} className="text-tv-dim">
-                  HAN RESPONDIDO
+                  HAN CONTESTADO
                 </p>
+
+                {/* La barra hace que se vea desde lejos cuánto falta, sin
+                    tener que leer dos números pequeños y dividirlos. */}
+                <div className="mt-[2vmin] overflow-hidden rounded-full"
+                  style={{ width: '52vmin', height: '1.6vmin', background: 'rgba(255,255,255,.09)' }}>
+                  <div
+                    style={{
+                      width: `${conectados.length ? (respondieron / conectados.length) * 100 : 0}%`,
+                      height: '100%',
+                      background: 'linear-gradient(90deg,#39ff14,#a855f7)',
+                      transition: 'width 320ms ease'
+                    }}
+                  />
+                </div>
+
+                {respondieron > 0 && respondieron < conectados.length && (
+                  <p style={{ fontSize: '2.2vmin' }} className="mt-[1.6vmin] text-tv-dim">
+                    Faltan {conectados.length - respondieron}
+                  </p>
+                )}
               </div>
             )}
 
@@ -763,12 +979,17 @@ export default function TvScreen() {
               <div className="flex items-center gap-[4vmin]">
                 {/* La carátula sobre el disco: convierte el reveal en un
                     momento, en vez de un año suelto sobre negro. */}
-                <div className="relative shrink-0" style={{ width: '24vmin', height: '24vmin' }}>
-                  <img src="/images/vinilo.png" alt="" className="tv-vinilo"
-                    style={{ width: '100%', height: '100%', borderRadius: '50%', display: 'block' }} />
+                <div className="tv-pop relative shrink-0" style={{ width: '26vmin', height: '26vmin' }}>
+                  {/* La carátula sola, sin disco detrás: el disco girando la
+                      tapaba a medias y era lo último que quedaba animándose
+                      en bucle en esta pantalla. */}
                   <div
-                    className="tv-pop absolute overflow-hidden"
-                    style={{ inset: '13%', borderRadius: '1.2vmin', boxShadow: '0 1vmin 3vmin rgba(0,0,0,.6)' }}
+                    className="absolute overflow-hidden"
+                    style={{
+                      inset: 0, borderRadius: '1.6vmin',
+                      boxShadow: '0 1.4vmin 4vmin rgba(0,0,0,.65)',
+                      border: '0.3vmin solid rgba(255,255,255,.12)'
+                    }}
                   >
                     {/* El respaldo va DEBAJO, siempre pintado: así una carátula
                         que no cargue (una de cada cinco no la tiene) deja un
@@ -830,12 +1051,11 @@ export default function TvScreen() {
                       style={{ animationDelay: `${p.retraso}ms` }}
                     >
                       <div className={p.puesto === 0 ? 'tv-campeon' : undefined}>
-                        <VinilloJugador
+                        <FichaJugador
                           jugador={p.jugador}
                           tam={p.puesto === 0 ? '20vmin' : '15vmin'}
                           puesto={p.puesto}
                           meta={targetYears}
-                          girando={p.puesto === 0}
                         />
                       </div>
                       <div
@@ -891,7 +1111,7 @@ export default function TvScreen() {
               ordenados por canciones. Es lo que la sala mira entre rondas. */}
           {conectados.length > 0 && phase !== 'final' && (
             <footer
-              className="grid shrink-0 justify-center gap-x-[2vmin] gap-y-[1.5vmin] pt-[1.5vmin]"
+              className="grid shrink-0 justify-center gap-x-[3.2vmin] gap-y-[1.5vmin] pt-[1.5vmin]"
               style={{
                 gridTemplateColumns: `repeat(${columnas}, auto)`,
                 justifyItems: 'center',
@@ -900,16 +1120,13 @@ export default function TvScreen() {
             >
               {clasificacion.map((jugador, i) => {
                 return (
-                <VinilloJugador
+                <FichaJugador
                   key={jugador.id}
                   jugador={jugador}
-                  tam={tamVinilo}
+                  tam={tamFicha}
                   puesto={i}
                   meta={targetYears}
                   resultado={revealResults[jugador.id]}
-                  // Solo gira el disco de quien acaba de acertar: veinte
-                  // discos girando a la vez tumban cualquier televisor.
-                  girando={Boolean(revealResults[jugador.id]?.isCorrect)}
                   estado={
                     jugador.activeAttack?.type === 'block_vote' && jugador.activeAttack?.round === round
                       ? 'bloqueado'

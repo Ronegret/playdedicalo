@@ -68,11 +68,17 @@ export function escanearQr(video, alLeer, alFallar) {
           // reducirla nosotros.
           width: { ideal: 1280 },
           height: { ideal: 720 },
-          // Enfoque continuo: sin esto el móvil enfoca una vez al abrir y un
-          // código a tres metros se queda borroso para siempre. Va como
-          // "advanced" porque no todos los navegadores lo admiten y así no
-          // tumba la petición entera si no lo soportan.
-          advanced: [{ focusMode: 'continuous' }]
+          // Fotogramas limitados a 30: pedir más solo hace que el móvil
+          // trabaje de más para una imagen que se analiza ocho veces por
+          // segundo.
+          frameRate: { ideal: 30, max: 30 }
+          // NO se pide `focusMode: 'continuous'`. Se probó y fue peor: los
+          // móviles ya enfocan en continuo por su cuenta, y forzarlo por
+          // restricción hace que la cámara "busque" el enfoque una y otra
+          // vez. Ese vaivén de enfoque y exposición es lo que se veía como
+          // parpadeos, y en una tele encendida dentro de una habitación a
+          // oscuras —mucha luz en el centro y negro alrededor— es donde peor
+          // se porta.
         },
         audio: false
       });
@@ -87,6 +93,12 @@ export function escanearQr(video, alLeer, alFallar) {
       try { await video.play(); } catch { /* algunos navegadores lo reanudan solos */ }
     }
 
+    // La cámara tarda un momento en asentar exposición y balance de blancos.
+    // Analizar durante ese arranque no aporta —la imagen aún está cambiando—
+    // y sí quita tiempo de CPU justo cuando el navegador está montando la
+    // vista previa.
+    const listoDesde = performance.now() + 600;
+
     let vuelta = 0;
     const lienzo = document.createElement('canvas');
     const ctx = lienzo.getContext('2d', { willReadFrequently: true });
@@ -99,7 +111,7 @@ export function escanearQr(video, alLeer, alFallar) {
       }
 
       const { videoWidth: vw, videoHeight: vh } = video;
-      if (vw && vh) {
+      if (vw && vh && performance.now() >= listoDesde) {
         // Reducción manteniendo la proporción.
         const escala = Math.min(1, LADO_MAXIMO / Math.max(vw, vh));
         const w = Math.round(vw * escala);

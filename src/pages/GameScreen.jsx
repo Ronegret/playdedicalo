@@ -8,7 +8,7 @@ import RotatePrompt from '../components/RotatePrompt';
 import { useOrientation } from '../hooks/useOrientation';
 import JoinRequestBanner from '../components/JoinRequestBanner';
 import { crearPreguntaDeCancion } from '../services/preguntas';
-import { alTerminarFragmento, desbloquearAudio, getCancionOculta, pararMusica, segundosRestantes, sonarCancionAleatoria } from '../services/musica';
+import { alTerminarFragmento, duracionFragmento, desbloquearAudio, getCancionOculta, pararMusica, segundosRestantes, sonarCancionAleatoria } from '../services/musica';
 
 const EQUALIZER_BARS = [0.35, 0.58, 0.42, 0.71, 0.49, 0.64, 0.39];
 
@@ -888,7 +888,7 @@ export default function GameScreen() {
     setAudioNecesitaToque(false);
     sonarCancionAleatoria(spotifyPlaylistUrl)
       .then((cancion) => {
-        publicarCancionDeRonda(cancion);
+        publicarCancionDeRonda(cancion, duracionFragmento());
         if (!cancelled) {
           setMensajeAudio('Música sonando. Para cuando quieras.');
           setErrorAudio(false);
@@ -1097,7 +1097,7 @@ export default function GameScreen() {
     desbloquearAudio()
       .then(() => sonarCancionAleatoria(spotifyPlaylistUrl))
       .then((cancion) => {
-        publicarCancionDeRonda(cancion);
+        publicarCancionDeRonda(cancion, duracionFragmento());
         setMensajeAudio('Música sonando. Para cuando quieras.');
         setErrorAudio(false);
         setAudioPlaying(true);
@@ -1241,7 +1241,10 @@ export default function GameScreen() {
                     <span className="material-symbols-outlined text-xl">
                       {audioNecesitaToque ? 'login' : 'refresh'}
                     </span>
-                    {audioNecesitaToque ? 'RECONECTAR SPOTIFY' : 'REINTENTAR SPOTIFY'}
+                    {/* Ni aquí ni en ninguna pantalla se nombra de dónde
+                        sale la música: al jugador no le aporta y ya no es
+                        cierto. */}
+                    {audioNecesitaToque ? 'TOCA PARA ACTIVAR EL SONIDO' : 'REINTENTAR LA MÚSICA'}
                   </button>
                 )}
               </div>

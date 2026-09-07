@@ -329,7 +329,12 @@ export const useGameStore = create((setStore, getStore) => ({
   // La canción que suena esta ronda, compartida por toda la sala. Sin esto,
   // quien reproduce y quien revela podían tener canciones distintas.
   cancionRonda: null,
+  audioEmpezadoEn: null,
+  audioDuracion: 30,
   audioEnTv: false,
+  // Código de la tele que el anfitrión ya conectó, antes incluso de que la
+  // sala exista. Se guarda para pasarle el PIN en cuanto se cree.
+  tvPendiente: null,
   // El anfitrión puede forzar que suene en su móvil aunque haya tele. No es
   // un plan B por si falla: hay motivos legítimos (los altavoces de la tele
   // suenan peor que un bluetooth, la tele está lejos, alguien la está
@@ -471,6 +476,14 @@ export const useGameStore = create((setStore, getStore) => ({
         timelineYears: []
       });
       getStore()._subscribeToRoom(newPin);
+
+      // La tele que se reservó durante el asistente entra sola: nadie tiene
+      // que volver a escanear ni escribir el código una segunda vez.
+      const tvReservada = getStore().tvPendiente;
+      if (tvReservada) {
+        patchData(`tvLinks/${tvReservada}`, { pin: newPin, estado: 'listo', at: serverTimestamp() })
+          .catch((error) => console.error('No se pudo pasar el PIN a la tele:', error));
+      }
     } catch (error) {
       console.error('Error al crear la sala:', error);
       const message = /auth|permission/i.test(error?.code || error?.message || '')
@@ -1200,9 +1213,11 @@ export const useGameStore = create((setStore, getStore) => ({
     });
 
     const cancelar = onValue(buzon, (snap) => {
-      const datos = snap.val();
-      const pinRecibido = String(datos?.pin || '').replace(/\D/g, '');
-      if (pinRecibido.length === 4) alRecibirPin(pinRecibido);
+      const datos = snap.val() || {};
+      // Se pasa el buzón entero: además del PIN lleva quién ha reservado la
+      // tele y qué está haciendo, que es lo que la pantalla va contando
+      // mientras el anfitrión monta la partida.
+      alRecibirPin(String(datos.pin || '').replace(/\D/g, ''), datos);
     });
 
     return () => {
@@ -1212,9 +1227,47 @@ export const useGameStore = create((setStore, getStore) => ({
   },
 
   /**
-   * El anfitrión ha escaneado el QR de la tele: le pasa el PIN de su sala.
-   * Devuelve un mensaje de por qué no se pudo, para poder decírselo en vez
-   * de dejar la pantalla en blanco.
+   * Reservar la tele antes de tener sala.
+   *
+   * Así el televisor deja de ser una pantalla muerta durante el minuto que
+   * el anfitrión tarda en elegir música y duración: se enlaza al principio y
+   * va contando lo que pasa ("Rodrigo está creando la partida"). Cuando la
+   * sala existe, `linkTvToRoom` le pasa el PIN y entra sola.
+   */
+  reservarTv: async (codigo, nombreAnfitrion) => {
+    const limpio = String(codigo || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6);
+    if (limpio.length !== 6) return { ok: false, message: 'Ese código de tele no es válido.' };
+
+    try {
+      await ensureAuthenticated();
+      const existe = await readData(`tvLinks/${limpio}`);
+      if (!existe) {
+        return { ok: false, message: 'Esa tele ya no está esperando. Vuelve a abrir la app en el televisor.' };
+      }
+      await patchData(`tvLinks/${limpio}`, {
+        anfitrion: nombreAnfitrion || 'El anfitrión',
+        estado: 'preparando',
+        at: serverTimestamp()
+      });
+      setStore({ tvPendiente: limpio });
+      return { ok: true };
+    } catch (error) {
+      console.error('No se pudo reservar la tele:', error);
+      return { ok: false, message: 'No pudimos conectar con la tele. Inténtalo otra vez.' };
+    }
+  },
+
+  /** Qué está haciendo el anfitrión, para que la tele lo cuente. */
+  contarALaTv: (estado, detalle = null) => {
+    const codigo = getStore().tvPendiente;
+    if (!codigo) return;
+    patchData(`tvLinks/${codigo}`, { estado, detalle }).catch(() => {});
+  },
+
+  /**
+   * La sala ya existe: se le pasa el PIN a la tele. Devuelve un mensaje de
+   * por qué no se pudo, para poder decírselo en vez de dejar la pantalla en
+   * blanco.
    */
   linkTvToRoom: async (codigo) => {
     const limpio = String(codigo || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6);
@@ -1248,10 +1301,20 @@ export const useGameStore = create((setStore, getStore) => ({
    * La canción de la ronda es de la SALA, no del aparato. La publica quien
    * la reproduce y todos leen la misma.
    */
-  publicarCancionDeRonda: async (cancion) => {
+  publicarCancionDeRonda: async (cancion, duracionSegundos = 30) => {
     const { pin } = getStore();
     if (!pin || !cancion) return;
     await patchData(`rooms/${pin}/audio`, {
+      // Cuándo empezó y cuánto dura, NO cuántos segundos quedan.
+      //
+      // Publicar los segundos restantes obligaría a escribir en la base una
+      // vez por segundo, con toda la sala escuchando esos cambios. Con la
+      // hora de arranque se escribe UNA vez por ronda y cada pantalla calcula
+      // lo que le queda ella sola. Así la cuenta atrás sale también en la
+      // tele cuando la música la pone el móvil del anfitrión, que era lo que
+      // faltaba.
+      empezadoEn: Date.now(),
+      duracion: Math.round(duracionSegundos),
       cancionRonda: {
         name: cancion.name,
         artist: cancion.artist,
@@ -1399,6 +1462,10 @@ export const useGameStore = create((setStore, getStore) => ({
           audioEnTv: teleLista && !data.audio.forzarMovil,
           audioForzadoEnMovil: Boolean(data.audio.forzarMovil),
           cancionRonda: data.audio.cancionRonda || null,
+          // Con estos dos, cualquier pantalla calcula sola lo que queda de
+          // fragmento, sin que nadie tenga que ir publicando los segundos.
+          audioEmpezadoEn: Number(data.audio.empezadoEn) || null,
+          audioDuracion: Number(data.audio.duracion) || 30,
           spotifyPlaylistUrl: normalizeSpotifyPlaylistUrl(data.audio.playlistUrl || data.audio.playlistId)
         });
       } else {

@@ -201,6 +201,18 @@ export function segundosRestantes() {
   return Math.max(0, audio.duration - audio.currentTime);
 }
 
+/**
+ * Duración del fragmento cargado, para poder publicarla.
+ *
+ * Los fragmentos de Apple son de 30 s casi siempre, pero "casi" no basta:
+ * si se anuncia 30 y dura 28, la cuenta atrás de la tele se queda clavada en
+ * 2 y parece rota. Se lee la de verdad y solo se cae a 30 si el navegador
+ * aún no la sabe.
+ */
+export function duracionFragmento() {
+  return audio && Number.isFinite(audio.duration) && audio.duration > 0 ? audio.duration : 30;
+}
+
 export function getCancionOculta() {
   try { return JSON.parse(sessionStorage.getItem(CLAVE_CANCION) || 'null'); } catch { return null; }
 }

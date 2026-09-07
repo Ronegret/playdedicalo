@@ -63,8 +63,14 @@ for (const archivo of fuentes) {
     for (const s of m[1].matchAll(/'([a-z_]+)'/g)) anadir(s[1]);
   }
 
-  // 3) Iconos declarados en datos: { icon: 'bolt', … }
-  for (const m of src.matchAll(/\bicon:\s*'([a-z_]+)'/g)) anadir(m[1]);
+  // 3) Iconos declarados en datos: { icon: 'bolt', … } o { icono: 'bolt', … }
+  //
+  // El nombre en castellano hace falta de verdad: el código nuevo se escribe
+  // en castellano, y buscando solo `icon:` se colaron `library_music` y
+  // `sports_esports` en la pantalla de televisión — dibujados como esas dos
+  // palabras enormes en mitad del televisor. Es exactamente el fallo que
+  // este script existe para evitar, y se escapó por el idioma.
+  for (const m of src.matchAll(/\b(?:icon|icono):\s*'([a-z_]+)'/g)) anadir(m[1]);
 
   // 4) Iconos pasados como prop: icon="bolt" / nextIcon="arrow_forward"
   for (const m of src.matchAll(/\b(?:icon|nextIcon|fallbackIcon)=["']([a-z_]+)["']/g)) anadir(m[1]);
