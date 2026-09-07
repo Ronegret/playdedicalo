@@ -36,6 +36,15 @@ function FichaJugador({ jugador, tam, puesto, meta, resultado, estado }) {
         : enPodio ? COLOR_PUESTO[puesto]
           : 'rgba(255,255,255,.28)';
 
+  // El arco puede ser tenue —es decoración— pero el número NO: con el mismo
+  // color, los años del cuarto en adelante se quedaban en un gris que no se
+  // leía desde el sofá, y ese número es medio marcador de la partida.
+  const colorCifra = acerto ? '#39ff14'
+    : fallo ? '#ff4d4d'
+      : bloqueado ? '#ff7a1a'
+        : enPodio ? COLOR_PUESTO[puesto]
+          : '#dfe7f5';
+
   return (
     <div className="tv-entra flex shrink-0 flex-col items-center" style={{ width: tam }}>
       <div className="relative" style={{ width: tam, height: tam }}>
@@ -50,7 +59,12 @@ function FichaJugador({ jugador, tam, puesto, meta, resultado, estado }) {
         {/* La cara, de borde a borde. */}
         <div
           className="absolute overflow-hidden rounded-full"
-          style={{ inset: '7%', background: '#0b0f17', border: `0.25vmin solid ${aro}` }}
+          style={{
+            inset: '7%',
+            background: 'repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,.05) 0 0.1vmin, transparent 0.1vmin 0.7vmin), #0b0f17',
+            border: `0.25vmin solid ${aro}`,
+            boxShadow: `0 0 2.4vmin ${aro}33`
+          }}
         >
           {isImageAvatar(jugador.avatar) ? (
             <img src={jugador.avatar} alt="" className="h-full w-full object-cover" />
@@ -66,7 +80,7 @@ function FichaJugador({ jugador, tam, puesto, meta, resultado, estado }) {
 
         {/* Puesto en la carrera */}
         <div
-          className="absolute flex items-center justify-center rounded-full font-black tabular-nums"
+          className="tv-cifra absolute flex items-center justify-center rounded-full"
           style={{
             left: '-3%', top: '-3%',
             width: `calc(${tam} * 0.36)`, height: `calc(${tam} * 0.36)`,
@@ -104,9 +118,11 @@ function FichaJugador({ jugador, tam, puesto, meta, resultado, estado }) {
             descuadraba la fila entera. */}
         {resultado && typeof resultado.delta === 'number' && resultado.delta !== 0 && (
           <div
-            className="tv-pop absolute left-1/2 flex -translate-x-1/2 items-center justify-center rounded-full font-black tabular-nums"
+            className="tv-pop tv-cifra absolute left-1/2 flex -translate-x-1/2 items-center justify-center rounded-full"
             style={{
-              bottom: '-8%',
+              // Dentro del círculo, no colgando por debajo: colgando se
+              // comía el nombre del jugador.
+              bottom: '2%',
               padding: `calc(${tam} * 0.03) calc(${tam} * 0.12)`,
               fontSize: `calc(${tam} * 0.18)`,
               color: '#0b0f17',
@@ -121,18 +137,18 @@ function FichaJugador({ jugador, tam, puesto, meta, resultado, estado }) {
       </div>
 
       <p
-        className="mt-[0.9vmin] w-full truncate text-center font-black"
-        style={{ fontSize: `calc(${tam} * 0.17)`, color: '#eef3ff' }}
+        className="tv-titular mt-[0.9vmin] w-full truncate text-center"
+        style={{ fontSize: `calc(${tam} * 0.18)`, color: '#eef3ff' }}
       >
         {jugador.name}
       </p>
 
       {/* Años acumulados: el marcador de verdad de esta partida. */}
       <div className="flex items-baseline gap-[0.6vmin] whitespace-nowrap">
-        <span className="font-black tabular-nums" style={{ fontSize: `calc(${tam} * 0.24)`, color: aro }}>
+        <span className="tv-cifra" style={{ fontSize: `calc(${tam} * 0.26)`, color: colorCifra }}>
           {acumulados}
         </span>
-        <span className="tabular-nums" style={{ fontSize: `calc(${tam} * 0.14)`, color: '#6b7686' }}>
+        <span className="tv-etiqueta" style={{ fontSize: `calc(${tam} * 0.13)`, color: '#8695ad' }}>
           /{meta} años
         </span>
       </div>

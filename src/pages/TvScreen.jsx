@@ -546,8 +546,8 @@ export default function TvScreen() {
                     <p style={{ fontSize: '2.6vmin' }} className="font-black text-tv-ink">Tele conectada</p>
                   </div>
 
-                  <p style={{ fontSize: '5.5vmin' }} className="mt-[4vmin] text-center font-black text-tv-ink">
-                    <span style={{ color: '#39ff14' }}>{reserva.anfitrion}</span> está
+                  <p style={{ fontSize: '5.8vmin' }} className="tv-titular mt-[4vmin] text-center text-tv-ink">
+                    <span className="tv-degradado">{reserva.anfitrion}</span> está
                     <br />montando la partida
                   </p>
 
@@ -603,11 +603,11 @@ export default function TvScreen() {
                 </div>
               ) : (
                 <>
-                  <p style={{ fontSize: '2vmin', letterSpacing: '0.3em' }} className="mt-[2.5vmin] text-tv-dim">
-                    PARA JUGAR EN ESTA TELE
+                  <p style={{ fontSize: '2vmin' }} className="tv-etiqueta mt-[2.5vmin] text-tv-dim">
+                    Para jugar en esta tele
                   </p>
-                  <p style={{ fontSize: '3.4vmin' }} className="mt-[1vmin] font-bold text-tv-ink">
-                    Escribe este código en <span style={{ color: '#39ff14' }}>play.dedicalo.es</span>
+                  <p style={{ fontSize: '3.6vmin' }} className="tv-titular mt-[1.2vmin] text-tv-ink">
+                    Escribe este código en <span className="tv-degradado">play.dedicalo.es</span>
                   </p>
 
                   {/* EL CÓDIGO MANDA, y el QR es el atajo.
@@ -618,17 +618,19 @@ export default function TvScreen() {
                       funciona siempre. */}
                   <div className="mt-[3vmin] flex gap-[1.4vmin]">
                     {codigoTv.split('').map((caracter, i) => (
+                      /* El degradado del texto y el de la tarjeta NO pueden
+                         ir en el mismo elemento: los dos son background-image
+                         y el de la tarjeta gana, así que el carácter se
+                         quedaba invisible. La caja es la tarjeta; el
+                         carácter, un span dentro. */
                       <span
                         key={i}
-                        className="flex items-center justify-center rounded-[1.4vmin] font-black"
-                        style={{
-                          width: '11vmin', height: '14vmin', fontSize: '9vmin',
-                          color: '#39ff14',
-                          background: 'rgba(57,255,20,.08)',
-                          border: '0.35vmin solid rgba(57,255,20,.45)'
-                        }}
+                        className="tv-carta flex items-center justify-center rounded-[1.6vmin]"
+                        style={{ width: '11vmin', height: '14vmin', borderColor: 'rgba(57,255,20,.35)' }}
                       >
-                        {caracter}
+                        <span className="tv-cifra tv-degradado-verde" style={{ fontSize: '8.6vmin' }}>
+                          {caracter}
+                        </span>
                       </span>
                     ))}
                   </div>
@@ -764,29 +766,35 @@ export default function TvScreen() {
             reaparece, que es cuando hace falta para quien llega tarde. */}
         {phase !== 'lobby' && (
         <aside
-          className="flex shrink-0 flex-col items-center rounded-[1.8vmin] px-[2vmin] py-[2.4vmin]"
-          style={{ width: '25vmin', background: 'rgba(255,255,255,.04)', border: '0.22vmin solid rgba(255,255,255,.10)' }}
+          className="tv-carta relative flex shrink-0 flex-col items-center overflow-hidden rounded-[2.2vmin] px-[2vmin] py-[2.4vmin]"
+          style={{ width: '25vmin' }}
         >
-          <p style={{ fontSize: '1.8vmin', letterSpacing: '0.24em' }} className="text-tv-dim">ENTRA CON</p>
-          <p style={{ fontSize: '8vmin', lineHeight: 1.05, color: '#39ff14', letterSpacing: '0.06em' }}
-            className="font-black tabular-nums">
+          {/* Cinta de ecualizador arriba: dice "esto va de música" sin
+              ocupar sitio ni moverse. */}
+          <div className="tv-cinta-musica absolute left-0 right-0 top-0" style={{ height: '0.6vmin' }} />
+
+          <p style={{ fontSize: '1.7vmin' }} className="tv-etiqueta mt-[0.8vmin] text-tv-dim">Entra con</p>
+          <p style={{ fontSize: '8.4vmin', letterSpacing: '0.02em' }}
+            className="tv-cifra tv-degradado-verde">
             {pin || pinElegido}
           </p>
           {enlaceJugar && (
-            <div className="mt-[1.5vmin] rounded-[1vmin] bg-white p-[0.8vmin]">
+            <div className="mt-[1.5vmin] rounded-[1.2vmin] bg-white p-[0.8vmin]"
+              style={{ boxShadow: '0 0 3vmin rgba(57,255,20,.22)' }}>
               <img src={urlQr(enlaceJugar, 260)} alt="Código QR para entrar"
                 style={{ width: '16vmin', height: '16vmin', display: 'block' }} />
             </div>
           )}
-          <p style={{ fontSize: '1.7vmin' }} className="mt-[1.2vmin] text-center text-tv-dim">
+          <p style={{ fontSize: '1.6vmin' }} className="tv-etiqueta mt-[1.4vmin] text-center text-tv-dim">
             play.dedicalo.es
           </p>
-          <p style={{ fontSize: '1.6vmin' }} className="mt-[1.2vmin] text-center leading-snug text-tv-dim">
+          <p style={{ fontSize: '1.7vmin' }} className="mt-[1.2vmin] text-center leading-snug text-tv-dim">
             Puedes unirte en cualquier momento
           </p>
           {audioEnTv && (
-            <p style={{ fontSize: '1.7vmin' }} className="mt-auto flex items-center gap-[0.6vmin] pt-[1.5vmin] text-neon-green">
-              <span className="material-symbols-outlined" style={{ fontSize: '2vmin' }}>volume_up</span>
+            <p style={{ fontSize: '1.6vmin' }}
+              className="tv-etiqueta mt-auto flex items-center gap-[0.6vmin] pt-[1.5vmin] text-neon-green">
+              <span className="material-symbols-outlined" style={{ fontSize: '2.2vmin' }}>volume_up</span>
               Suena aquí
             </p>
           )}
@@ -797,8 +805,15 @@ export default function TvScreen() {
           <header className="flex items-baseline justify-between">
             <img src="/images/logo-main.png" alt="Dedícalo Play" style={{ height: '5.5vmin', width: 'auto' }} />
             {phase !== 'lobby' && phase !== 'final' && (
-              <p style={{ fontSize: '2.2vmin', letterSpacing: '0.2em' }} className="text-tv-dim">
-                RONDA {round}
+              <p
+                className="tv-etiqueta rounded-full px-[2vmin] py-[0.7vmin] text-tv-ink"
+                style={{
+                  fontSize: '1.9vmin',
+                  background: 'rgba(168,85,247,.16)',
+                  border: '0.2vmin solid rgba(168,85,247,.45)'
+                }}
+              >
+                Ronda {round}
               </p>
             )}
           </header>
@@ -813,20 +828,19 @@ export default function TvScreen() {
                     style={{ width: '38vmin', height: '38vmin', display: 'block' }} />
                 </div>
                 <div className="text-left">
-                  <p style={{ fontSize: '1.9vmin', letterSpacing: '0.24em' }} className="text-neon-green">
-                    ✓ TELE CONECTADA
+                  {/* Sin repetir "tele conectada": ya lo dice la franja de
+                      bienvenida que sale justo encima al enlazar. */}
+                  <p style={{ fontSize: '2.2vmin' }} className="tv-etiqueta text-tv-dim">
+                    Escanead para jugar
                   </p>
-                  <p style={{ fontSize: '2.4vmin', letterSpacing: '0.26em' }} className="mt-[0.8vmin] text-tv-dim">
-                    AHORA ESCANEAD PARA JUGAR
-                  </p>
-                  <p style={{ fontSize: '11vmin', lineHeight: 1.05, color: '#39ff14', letterSpacing: '0.06em' }}
-                    className="tv-latido font-black tabular-nums">
+                  <p style={{ fontSize: '12vmin', lineHeight: 1 }}
+                    className="tv-cifra tv-degradado-verde tv-latido mt-[0.5vmin]">
                     {pin || pinElegido}
                   </p>
-                  <p style={{ fontSize: '2.4vmin' }} className="text-tv-dim">
+                  <p style={{ fontSize: '2.2vmin' }} className="text-tv-dim">
                     o entra en play.dedicalo.es
                   </p>
-                  <p style={{ fontSize: '3vmin' }} className="mt-[2vmin] font-black text-tv-ink">
+                  <p style={{ fontSize: '3.2vmin' }} className="tv-titular mt-[2.2vmin] text-tv-ink">
                     {conectados.length === 0
                       ? 'Esperando jugadores...'
                       : `${conectados.length} ${conectados.length === 1 ? 'jugador dentro' : 'jugadores dentro'}`}
@@ -856,21 +870,29 @@ export default function TvScreen() {
                     />
                   ))}
 
+                  {/* El halo que gira: UN elemento con un `rotate`, sin
+                      ninguna imagen que redibujar. Devuelve la sensación de
+                      disco girando —que es la seña del juego— por una
+                      milésima de lo que costaba el vinilo de 512 px. */}
+                  <div className="tv-halo absolute rounded-full"
+                    style={{ width: '33vmin', height: '33vmin' }} />
+
                   <div
-                    className="relative flex flex-col items-center justify-center rounded-full"
+                    className="relative flex flex-col items-center justify-center overflow-hidden rounded-full"
                     style={{
                       width: '31vmin', height: '31vmin',
-                      background: 'radial-gradient(circle at 50% 35%, rgba(57,255,20,.12), rgba(11,15,23,.9) 70%)',
-                      border: '0.6vmin solid #39ff14'
+                      background:
+                        'repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,.035) 0 0.12vmin, transparent 0.12vmin 0.9vmin),'
+                        + 'radial-gradient(circle at 50% 30%, rgba(57,255,20,.16), rgba(9,13,20,.96) 72%)',
+                      border: '0.5vmin solid rgba(57,255,20,.9)',
+                      boxShadow: '0 0 6vmin rgba(57,255,20,.22), inset 0 0 4vmin rgba(0,0,0,.6)'
                     }}
                   >
-                    <p style={{ fontSize: '1.8vmin', letterSpacing: '0.24em' }} className="text-electric-purple">
-                      AÑOS LOCOS
+                    <p style={{ fontSize: '1.7vmin' }} className="tv-etiqueta text-electric-purple">
+                      Años Locos
                     </p>
-                    {/* Cabe dentro del círculo con margen: a 4,4vmin y con
-                        mucho espaciado, "ESCUCHANDO" se salía por los lados. */}
-                    <p style={{ fontSize: '3.4vmin', letterSpacing: '0.06em', color: '#39ff14' }}
-                      className="mt-[0.5vmin] font-black">
+                    <p style={{ fontSize: '3.6vmin', letterSpacing: '0.02em' }}
+                      className="tv-titular tv-degradado mt-[0.5vmin]">
                       {audioEnTv ? 'ESCUCHANDO' : 'ESCUCHA'}
                     </p>
                     <div className="mt-[1.4vmin]">
@@ -895,7 +917,7 @@ export default function TvScreen() {
                   ))}
                 </div>
 
-                <p style={{ fontSize: '2.2vmin' }} className="mt-[1.5vmin] text-tv-dim">
+                <p style={{ fontSize: '1.9vmin' }} className="tv-etiqueta mt-[1.8vmin] text-tv-dim">
                   {audioEnTv
                     ? 'Suena aquí · nadie ve el título'
                     : 'Suena en el móvil del anfitrión'}
@@ -909,8 +931,8 @@ export default function TvScreen() {
                 calcula igual que en el móvil, desde que llega la fase. */}
             {phase === 'countdown' && (
               <div className="flex flex-col items-center">
-                <p style={{ fontSize: '2.4vmin', letterSpacing: '0.3em' }} className="text-electric-purple">
-                  PREPARA EL OÍDO
+                <p style={{ fontSize: '2.2vmin' }} className="tv-etiqueta text-electric-purple">
+                  Prepara el oído
                 </p>
                 <div className="relative mt-[3vmin] flex items-center justify-center"
                   style={{ width: '34vmin', height: '34vmin' }}>
@@ -927,13 +949,13 @@ export default function TvScreen() {
                   ))}
                   <span
                     key={cuentaEntrada}
-                    className="tv-pop font-black tabular-nums"
-                    style={{ fontSize: '20vmin', lineHeight: 1, color: '#39ff14' }}
+                    className="tv-pop tv-cifra tv-degradado"
+                    style={{ fontSize: '22vmin', lineHeight: 1 }}
                   >
                     {cuentaEntrada}
                   </span>
                 </div>
-                <p style={{ fontSize: '2.4vmin' }} className="mt-[2vmin] text-tv-dim">
+                <p style={{ fontSize: '2vmin' }} className="tv-etiqueta mt-[2vmin] text-tv-dim">
                   La música empieza al terminar la cuenta
                 </p>
               </div>
@@ -941,16 +963,16 @@ export default function TvScreen() {
 
             {phase === 'blackout' && !hayReveal && (
               <div className="flex w-full flex-col items-center">
-                <p style={{ fontSize: '4.6vmin' }} className="font-black text-tv-ink">
+                <p style={{ fontSize: '5.2vmin' }} className="tv-titular text-tv-ink">
                   {currentQuestion?.text || '¿De qué año es?'}
                 </p>
 
-                <p style={{ fontSize: '9vmin', lineHeight: 1.05 }} className="mt-[1vmin] font-black tabular-nums">
-                  <span style={{ color: '#39ff14' }}>{respondieron}</span>
+                <p style={{ fontSize: '10vmin', lineHeight: 1.02 }} className="tv-cifra mt-[1.4vmin]">
+                  <span className="tv-degradado">{respondieron}</span>
                   <span className="text-tv-dim">/{conectados.length}</span>
                 </p>
-                <p style={{ fontSize: '2.2vmin', letterSpacing: '0.24em' }} className="text-tv-dim">
-                  HAN CONTESTADO
+                <p style={{ fontSize: '2vmin' }} className="tv-etiqueta text-tv-dim">
+                  Han contestado
                 </p>
 
                 {/* La barra hace que se vea desde lejos cuánto falta, sin
@@ -968,7 +990,7 @@ export default function TvScreen() {
                 </div>
 
                 {respondieron > 0 && respondieron < conectados.length && (
-                  <p style={{ fontSize: '2.2vmin' }} className="mt-[1.6vmin] text-tv-dim">
+                  <p style={{ fontSize: '1.9vmin' }} className="tv-etiqueta mt-[1.6vmin] text-tv-dim">
                     Faltan {conectados.length - respondieron}
                   </p>
                 )}
@@ -976,7 +998,11 @@ export default function TvScreen() {
             )}
 
             {hayReveal && currentTrack && (
-              <div className="flex items-center gap-[4vmin]">
+              <div className="tv-carta tv-pop relative flex items-center gap-[4vmin] overflow-hidden rounded-[2.4vmin] px-[4vmin] py-[3vmin]">
+                {/* Destello que cruza la tarjeta: un elemento moviéndose en
+                    horizontal, y hace que el momento del revelado se sienta
+                    como un premio y no como un cartel. */}
+                <div className="tv-destello pointer-events-none absolute inset-0" />
                 {/* La carátula sobre el disco: convierte el reveal en un
                     momento, en vez de un año suelto sobre negro. */}
                 <div className="tv-pop relative shrink-0" style={{ width: '26vmin', height: '26vmin' }}>
@@ -1011,23 +1037,25 @@ export default function TvScreen() {
                   </div>
                 </div>
 
-                <div className="min-w-0 text-left">
-                  <p style={{ fontSize: '2vmin', letterSpacing: '0.3em' }} className="text-tv-dim">
-                    LA CANCIÓN ERA
+                <div className="relative min-w-0 text-left">
+                  <p style={{ fontSize: '1.8vmin' }} className="tv-etiqueta text-tv-dim">
+                    La canción era
                   </p>
-                  <p style={{ fontSize: '3.8vmin' }} className="mt-[0.4vmin] truncate font-black text-tv-ink">
+                  <p style={{ fontSize: '4vmin' }} className="tv-titular mt-[0.5vmin] truncate text-tv-ink">
                     {currentTrack.name || currentTrack.title}
                   </p>
                   <p style={{ fontSize: '2.4vmin' }} className="truncate text-tv-dim">
                     {currentTrack.artist || currentTrack.artists}
                   </p>
-                  <p style={{ fontSize: '13vmin', lineHeight: 1, color: '#ffbf4d' }}
-                    className="mt-[0.5vmin] font-black tabular-nums tv-pop">
+                  <p style={{ fontSize: '13vmin', lineHeight: 0.98 }}
+                    className="tv-cifra tv-degradado-calido tv-pop mt-[0.8vmin]">
                     {currentQuestion?.songYear ?? currentTrack.releaseYear}
                   </p>
                   {ganadorRapido && (
-                    <p style={{ fontSize: '2.1vmin' }} className="font-bold text-chaos-gold">
-                      ⚡ {ganadorRapido} respondió primero
+                    <p style={{ fontSize: '1.9vmin' }}
+                      className="tv-etiqueta mt-[0.4vmin] flex items-center gap-[0.6vmin] text-chaos-gold">
+                      <span className="material-symbols-outlined" style={{ fontSize: '2.4vmin' }}>bolt</span>
+                      {ganadorRapido} respondió primero
                     </p>
                   )}
                 </div>
@@ -1036,7 +1064,7 @@ export default function TvScreen() {
 
             {phase === 'final' && (
               <div className="flex w-full flex-col items-center">
-                <p style={{ fontSize: '4.4vmin', color: '#ffbf4d', letterSpacing: '0.1em' }} className="font-black">
+                <p style={{ fontSize: '5vmin' }} className="tv-titular tv-degradado-calido">
                   FIN DE LA PARTIDA
                 </p>
 

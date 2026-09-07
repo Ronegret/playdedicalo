@@ -155,14 +155,29 @@ html.fs-xl {
     inset: 0;
     display: flex;
     flex-direction: column;
-    /* Fondo con algo de sala de fiestas en vez de negro plano: dos focos de
-       color muy suaves sobre el azul oscuro. Son degradados ESTÁTICOS —no se
-       animan— para que no cuesten nada: se pintan una vez y ya. */
+    /* ESCENARIO, no fondo.
+       Que una pantalla no se mueva no quiere decir que tenga que parecer
+       vieja: lo moderno sale de la profundidad, del color y de la
+       tipografía, no del movimiento. Aquí hay cuatro capas —focos de
+       colores de marca, los surcos de un vinilo gigante saliendo de la
+       esquina, y un viñeteado que hunde los bordes— y todas son ESTÁTICAS:
+       se pintan una vez y no cuestan un solo fotograma después.
+
+       Los surcos son la seña de identidad del juego. Antes eran un disco
+       girando que se atascaba; ahora son la textura de la sala entera, y
+       quietos no cuestan nada. */
     background:
-      radial-gradient(ellipse 60% 50% at 12% 8%, rgba(168,85,247,.16), transparent 70%),
-      radial-gradient(ellipse 55% 45% at 92% 92%, rgba(57,255,20,.10), transparent 70%),
-      radial-gradient(ellipse 70% 60% at 50% 120%, rgba(255,122,26,.09), transparent 70%),
-      #0b0f17;
+      /* viñeteado: hunde las esquinas y hace que el centro pese */
+      radial-gradient(ellipse 90% 80% at 50% 50%, transparent 40%, rgba(0,0,0,.55) 100%),
+      /* surcos de vinilo saliendo de la esquina inferior izquierda */
+      repeating-radial-gradient(circle at 8% 108%,
+        rgba(255,255,255,.030) 0 0.18vmin,
+        transparent 0.18vmin 1.5vmin),
+      /* focos de marca */
+      radial-gradient(ellipse 70% 60% at 10% 4%, rgba(168,85,247,.26), transparent 68%),
+      radial-gradient(ellipse 60% 55% at 95% 96%, rgba(57,255,20,.16), transparent 70%),
+      radial-gradient(ellipse 80% 65% at 62% 108%, rgba(255,122,26,.16), transparent 72%),
+      linear-gradient(160deg, #131a2b 0%, #0a0e18 45%, #070a12 100%);
     color: #eef3ff;
     font-size: 2.4vmin;
     /* `hidden` recortaría en silencio si algo no cupiera, y en una tele nadie
@@ -262,6 +277,110 @@ html.fs-xl {
     transform: scale(1.04);
   }
 
+
+  /* ── Lenguaje visual de la tele ───────────────────────────────────────
+     La pantalla usaba la tipografía de cuerpo para TODO, y eso solita ya la
+     hacía parecer una página cualquiera. Estas clases traen las fuentes de
+     la marca —Montserrat negra para lo que grita, Barlow Condensed para las
+     etiquetas— y las superficies con volumen.
+  ─────────────────────────────────────────────────────────────────────── */
+
+  /* Titulares. Negrita de verdad y letra apretada: así se lee de lejos y
+     parece un rótulo, no un párrafo. */
+  .tv-titular {
+    font-family: 'Montserrat', Arial, sans-serif;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    line-height: 0.98;
+  }
+
+  /* Etiquetas: condensada, mayúsculas y muy espaciada. Es el gesto que más
+     "marca" aporta de toda la interfaz, y en el móvil ya se usa así. */
+  .tv-etiqueta {
+    font-family: 'Barlow Condensed', 'Montserrat', Arial, sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.26em;
+  }
+
+  /* Números que se leen a tres metros y no bailan al cambiar de cifra. */
+  .tv-cifra {
+    font-family: 'Montserrat', Arial, sans-serif;
+    font-weight: 900;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.03em;
+  }
+
+  /* Texto relleno de degradado. Cuesta lo mismo que un texto normal y es la
+     diferencia entre "una palabra en verde" y un rótulo de programa. */
+  .tv-degradado {
+    background-image: linear-gradient(100deg, #39ff14 0%, #7cff5e 38%, #a855f7 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  /* Verde de arriba abajo, sin pasar por el morado. Para lo que hay que
+     LEER —el PIN, el código—, no para lo que hay que admirar: el degradado
+     a morado dejaba el último dígito del PIN casi ilegible sobre el fondo
+     oscuro, y el PIN es lo único de esta pantalla que no puede costar
+     trabajo leer. */
+  .tv-degradado-verde {
+    background-image: linear-gradient(180deg, #b9ffab 0%, #39ff14 55%, #2fd60f 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .tv-degradado-calido {
+    background-image: linear-gradient(100deg, #ffbf4d 0%, #ff9a4d 45%, #ff7a1a 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Superficie con volumen: borde fino, brillo interior arriba y sombra
+     debajo. Tres detalles que separan una caja plana de una tarjeta. */
+  .tv-carta {
+    background: linear-gradient(165deg, rgba(255,255,255,.07), rgba(255,255,255,.02) 45%, rgba(0,0,0,.18));
+    border: 0.18vmin solid rgba(255,255,255,.12);
+    box-shadow:
+      inset 0 0.15vmin 0 rgba(255,255,255,.14),
+      0 1.4vmin 4vmin rgba(0,0,0,.45);
+  }
+
+  /* Franja de ecualizador como adorno: dice "esto va de música" sin ocupar
+     sitio ni moverse. */
+  .tv-cinta-musica {
+    background-image: repeating-linear-gradient(90deg,
+      rgba(57,255,20,.55) 0 0.5vmin, transparent 0.5vmin 1.1vmin,
+      rgba(168,85,247,.5) 1.1vmin 1.6vmin, transparent 1.6vmin 2.4vmin,
+      rgba(255,122,26,.5) 2.4vmin 2.9vmin, transparent 2.9vmin 3.8vmin);
+  }
+
+  /* Anillo de luz que gira despacio: UN elemento, un `transform: rotate`, y
+     devuelve la sensación de disco sin ninguna imagen que redibujar. */
+  .tv-halo {
+    animation: tv-girar 8s linear infinite;
+    background: conic-gradient(from 0deg,
+      transparent 0deg, rgba(57,255,20,.55) 40deg, transparent 110deg,
+      transparent 180deg, rgba(168,85,247,.45) 220deg, transparent 300deg);
+  }
+
+  /* Destello que recorre una tarjeta cada pocos segundos. Un solo elemento
+     moviéndose en horizontal: de lo más barato que hay y de lo que más
+     "vivo" hace parecer algo quieto. */
+  .tv-destello {
+    animation: tv-destello 5.5s ease-in-out infinite;
+    background: linear-gradient(105deg, transparent 35%, rgba(255,255,255,.10) 50%, transparent 65%);
+  }
+  @keyframes tv-destello {
+    0%, 100% { transform: translateX(-120%); }
+    55%      { transform: translateX(120%); }
+  }
+
+  /* Entrada escalonada de las fichas: se pone en línea el retardo. */
+  .tv-entra-escalonado { animation: tv-entra 460ms cubic-bezier(.2,.9,.3,1.1) both; }
+
   /* ── Modo ligero ──────────────────────────────────────────────────────
      Lo enciende la propia tele cuando se mide y ve que no llega (ver
      services/rendimiento.js). Se apaga TODO lo que se repite sin parar; se
@@ -273,9 +392,14 @@ html.fs-xl {
   .tv-ligero .tv-onda,
   .tv-ligero .tv-barra,
   .tv-ligero .tv-latido,
-  .tv-ligero .tv-campeon {
+  .tv-ligero .tv-campeon,
+  .tv-ligero .tv-halo,
+  .tv-ligero .tv-destello {
     animation: none !important;
   }
+  /* El halo quieto seguiría siendo un aro de color con sentido, pero el
+     destello parado es una mancha blanca sin explicación. */
+  .tv-ligero .tv-destello { display: none !important; }
   /* Las ondas viven en opacity 0 mientras animan: sin animación habría que
      esconderlas, o quedarían tres aros muertos alrededor del disco. */
   .tv-ligero .tv-onda { display: none !important; }
@@ -284,7 +408,7 @@ html.fs-xl {
 
   @media (prefers-reduced-motion: reduce) {
     .tv-vinilo, .tv-onda, .tv-barra, .tv-latido, .tv-entra, .tv-pop,
-    .tv-sube, .tv-campeon {
+    .tv-sube, .tv-campeon, .tv-halo, .tv-destello, .tv-entra-escalonado {
       animation: none !important;
     }
   }
