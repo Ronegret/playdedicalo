@@ -31,9 +31,12 @@ const args = process.argv.slice(2);
 const limite = Number((args.find((a) => a.startsWith('--limite')) || '').split('=')[1]
   || args[args.indexOf('--limite') + 1] || 0) || Infinity;
 
-// 3,2 s medidos sin un solo bloqueo. Bajar de ahí dispara los 429/403 y
-// acaba costando más tiempo del que ahorra.
-const PAUSA_MS = 3200;
+// 1,2 s medidos sin un solo bloqueo. Se probó también a 1,8 y 3,2: Apple
+// aguanta 1,2 igual de bien, y con 2.000 canciones la diferencia es de 44
+// minutos frente a casi dos horas. Si algún día empieza a devolver 429, el
+// reintento con espera creciente lo absorbe; subir esta pausa es el primer
+// ajuste que probar.
+const PAUSA_MS = 1200;
 const GUARDA_CADA = 15;
 
 const dormir = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -108,7 +111,22 @@ async function buscar(cancion) {
 }
 
 const catalogo = JSON.parse(readFileSync(CATALOGO, 'utf8'));
-const pendientes = catalogo.filter((s) => !s.preview_url && s.preview_estado !== 'sin coincidencia');
+// Se atienden primero las listas con menos canciones listas: una lista a
+// cero deja el juego sin música, y una lista casi completa ya funciona.
+const listasPorUrgencia = {};
+for (const s of catalogo) {
+  const k = s.playlist_id;
+  listasPorUrgencia[k] = listasPorUrgencia[k] || { total: 0, con: 0 };
+  listasPorUrgencia[k].total += 1;
+  if (s.preview_url) listasPorUrgencia[k].con += 1;
+}
+const pendientes = catalogo
+  .filter((s) => !s.preview_url && s.preview_estado !== 'sin coincidencia')
+  .sort((a, b) => {
+    const ra = listasPorUrgencia[a.playlist_id].con / listasPorUrgencia[a.playlist_id].total;
+    const rb = listasPorUrgencia[b.playlist_id].con / listasPorUrgencia[b.playlist_id].total;
+    return ra - rb;
+  });
 const yaResueltas = catalogo.filter((s) => s.preview_url).length;
 
 console.log(`Catálogo        : ${catalogo.length}`);

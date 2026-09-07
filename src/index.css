@@ -143,6 +143,32 @@ html.fs-xl {
     padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
   }
 
+  /* ── Pantalla de televisión ──────────────────────────────────────────
+     Reglas propias y distintas al resto de la app, a propósito:
+     - Sin desenfoque de fondo en ninguna parte: es lo que peor llevan las
+       GPU de las teles, y la app lo usa en 48 sitios.
+     - Nada de blanco puro sobre negro puro: en un panel grande hace halo.
+     - Todo en vmin para que escale igual en 1080p que en 4K.
+  ─────────────────────────────────────────────────────────────────────── */
+  .tv-root {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    background: #0b0f17;
+    color: #eef3ff;
+    font-size: 2.4vmin;
+    overflow: hidden;
+  }
+  .text-tv-ink { color: #eef3ff; }
+  .text-tv-dim { color: #93a0b8; }
+  /* Único movimiento: el año al revelarse. Una vez, sin bucle. */
+  .tv-pop { animation: tv-pop 420ms cubic-bezier(.2,.9,.3,1.2) both; }
+  @keyframes tv-pop {
+    from { transform: scale(.72); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+  }
+
   /* Reserva espacio para una barra de acción fija al fondo (p. ej. "PARAR
      MÚSICA" en GameScreen). Con la letra base ahora más grande (18px en
      vez de 16px) esa barra ocupa más alto por defecto, no solo con

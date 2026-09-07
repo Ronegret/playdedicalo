@@ -10,7 +10,7 @@ const HOW_TO_STEPS = [
   {
     icon: 'meeting_room',
     title: '1. Crea la sala',
-    text: 'El anfitrión elige la lista y enseña el PIN o el QR. Nadie necesita cuenta de música.'
+    text: 'El anfitrión elige la lista y enseña el PIN o el QR.'
   },
   {
     icon: 'groups',
@@ -41,7 +41,7 @@ const HOW_TO_STEPS = [
 
 const PLAYER_RULES = [
   ['Anfitrión', 'Crea la sala, elige la música, marca el ritmo y también juega.'],
-  ['Invitados', 'Solo necesitan el PIN o el QR. Nada que instalar, ninguna cuenta.'],
+  ['Invitados', 'Solo necesitan el PIN o el QR. Nada que instalar.'],
   ['Todos', 'Escuchan, responden, suben en el ranking y pueden recibir sabotajes.']
 ];
 

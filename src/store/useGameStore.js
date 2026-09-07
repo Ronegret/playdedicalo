@@ -1142,6 +1142,25 @@ export const useGameStore = create((setStore, getStore) => ({
 
   getRanking: () => sortPlayers(getStore().players),
 
+  // La televisión mira la sala sin ser jugador: no crea entrada en
+  // `players`, no marca presencia y no puede tocar nada. Solo lee. Usa la
+  // misma suscripción que anfitrión e invitado, con el rol 'tv' para que las
+  // ramas de "te han echado" o "sala cerrada" no salten en una pantalla que
+  // no pertenece a nadie.
+  tvObserveRoom: async (pin) => {
+    const limpio = String(pin || '').replace(/\D/g, '').slice(0, 4);
+    if (limpio.length !== 4) return;
+    await ensureAuthenticated();
+    setStore({ role: 'tv', pin: limpio, roomError: null });
+    getStore()._subscribeToRoom(limpio);
+  },
+
+  tvStopObserving: () => {
+    const sub = getStore().roomSubscription;
+    if (typeof sub === 'function') sub();
+    setStore({ role: null, pin: null, roomSubscription: null, players: [], phase: 'lobby' });
+  },
+
   _subscribeToRoom: (pin) => {
     const existingSubscription = getStore().roomSubscription;
     if (typeof existingSubscription === 'function') existingSubscription();

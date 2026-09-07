@@ -39,6 +39,9 @@ const GuestJoinScreen = lazyWithReload(() => import('./pages/GuestJoinScreen'));
 const LobbyScreen = lazyWithReload(() => import('./pages/LobbyScreen'));
 const GameScreen = lazyWithReload(() => import('./pages/GameScreen'));
 const ResultScreen = lazyWithReload(() => import('./pages/ResultScreen'));
+// La pantalla de televisión va en su propio trozo: quien juega desde el móvil
+// no descarga nada de ella, y la tele no descarga el juego.
+const TvScreen = lazyWithReload(() => import('./pages/TvScreen'));
 
 function PageLoader() {
   return (
@@ -171,6 +174,7 @@ function App() {
               <Route path="/guest/join" element={<GuestJoinScreen />} />
               <Route path="/lobby" element={<LobbyScreen />} />
               <Route path="/game" element={<GameScreen />} />
+              <Route path="/tv" element={<TvScreen />} />
               <Route path="/game/result" element={<ResultScreen />} />
             </Routes>
           </AnimatePresence>

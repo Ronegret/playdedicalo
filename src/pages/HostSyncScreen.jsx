@@ -276,9 +276,8 @@ export default function HostSyncScreen() {
         <StepProgress steps={HOST_STEPS} current={step} onGoTo={setStep} />
 
         <AnimatePresence mode="wait">
-        {/* PASO 1 — Entrar con la cuenta. Antes aquí también había que
-            conectar Spotify Premium; ya no hace falta ninguna cuenta de
-            música porque la pone el propio juego. */}
+        {/* PASO 1 — Entrar con la cuenta. Es lo único que se pide: la
+            música la pone el propio juego. */}
         {step === 0 && (
         <StepPanel stepKey="connect">
         <div className="flex w-full flex-col items-center gap-4">
@@ -293,7 +292,7 @@ export default function HostSyncScreen() {
               Tú mandas la música y también juegas
             </h2>
             <p className="text-on-surface-variant text-sm mt-2 leading-relaxed">
-              Entra con tu cuenta para guardar tu perfil. La música la pone el juego.
+              Entra con tu cuenta para guardar tu perfil y tus partidas.
             </p>
           </div>
 
@@ -319,15 +318,6 @@ export default function HostSyncScreen() {
               </p>
             )}
 
-            <div className="rounded-2xl border border-neon-green/25 bg-neon-green/8 p-4 text-center">
-              <div className="mb-2 flex items-center justify-center gap-2">
-                <span className="material-symbols-outlined text-neon-green text-lg">music_note</span>
-                <p className="font-label-caps text-neon-green text-[0.7rem] tracking-[0.2em]">MÚSICA INCLUIDA</p>
-              </div>
-              <p className="text-sm leading-relaxed text-on-surface-variant">
-                No hace falta Spotify ni ninguna otra cuenta de música. Ni tú ni tus invitados.
-              </p>
-            </div>
           </div>
         </div>
         </StepPanel>

@@ -1,0 +1,98 @@
+# Compila el APK de la aplicación de televisión.
+#
+# Se compila AQUÍ y no en el portátil porque hacerlo en local exige instalar
+# el JDK y el SDK de Android: unos 3 GB. Aquí ya viene todo puesto.
+#
+# El APK acaba publicado como archivo de una "release" de GitHub, que da una
+# dirección fija y permanente. Eso es justo lo que necesita Downloader en la
+# tele: se escribe la dirección con el mando una vez y la app se instala.
+
+name: APK de televisión
+
+on:
+  # A mano desde la pestaña Actions, que es como se usará casi siempre.
+  workflow_dispatch:
+    inputs:
+      publicar:
+        description: 'Publicar una release con el APK (si no, solo queda como archivo del build)'
+        type: boolean
+        default: true
+      version:
+        description: 'Nombre de la versión (por ejemplo v0.1.0)'
+        type: string
+        default: 'v0.1.0'
+  # Y automáticamente si se toca la app de televisión.
+  push:
+    paths:
+      - 'tv-android/**'
+      - '.github/workflows/apk-tv.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  compilar:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Preparar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Preparar el SDK de Android
+        uses: android-actions/setup-android@v3
+
+      - name: Compilar el APK
+        working-directory: tv-android
+        run: |
+          # Sin wrapper: se usa el Gradle que trae la imagen, así no hay que
+          # guardar un binario .jar dentro del repositorio.
+          gradle assembleRelease --no-daemon --stacktrace
+
+      - name: Renombrar con la versión
+        id: apk
+        working-directory: tv-android
+        run: |
+          ORIGEN=$(find . -name '*-release*.apk' | head -1)
+          if [ -z "$ORIGEN" ]; then
+            echo "No se generó ningún APK"; exit 1
+          fi
+          DESTINO="dedicalo-tv-${{ inputs.version || 'dev' }}.apk"
+          cp "$ORIGEN" "../$DESTINO"
+          echo "ruta=$DESTINO" >> "$GITHUB_OUTPUT"
+          ls -la "../$DESTINO"
+
+      - name: Guardar el APK como archivo del build
+        uses: actions/upload-artifact@v4
+        with:
+          name: dedicalo-tv-apk
+          path: ${{ steps.apk.outputs.ruta }}
+          if-no-files-found: error
+
+      # La release es lo que da la dirección fija para Downloader.
+      - name: Publicar la release
+        if: ${{ inputs.publicar }}
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: tv-${{ inputs.version }}
+          name: Dedícalo Play TV ${{ inputs.version }}
+          files: ${{ steps.apk.outputs.ruta }}
+          body: |
+            Aplicación de televisión de Dedícalo Play.
+
+            **Cómo instalarla en la tele con Downloader:**
+
+            1. Abre **Downloader** en el televisor.
+            2. Escribe la dirección corta que aparece más abajo.
+            3. Acepta instalar desde orígenes desconocidos cuando lo pida.
+
+            La app abre la pantalla de televisión del juego. Los móviles siguen
+            siendo el mando: se entra con el PIN o el QR que se ven en pantalla.
+
+            Se actualiza sola: los cambios de la web llegan a la tele sin
+            reinstalar nada. Solo hace falta un APK nuevo si cambia la propia
+            carcasa de Android.

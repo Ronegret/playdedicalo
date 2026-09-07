@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Fondo del mismo azul muy oscuro que la pantalla de tele del juego:
+         así no hay un destello blanco mientras carga la web. -->
+    <style name="Theme.DedicaloTv" parent="@android:style/Theme.DeviceDefault.NoActionBar.Fullscreen">
+        <item name="android:windowBackground">@color/tv_background</item>
+        <item name="android:colorBackground">@color/tv_background</item>
+    </style>
+</resources>
