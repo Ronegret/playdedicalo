@@ -4,16 +4,16 @@ MANIFIESTO DE EVIDENCIA — DEDICALO PLAY
 Proyecto      : Dedicalo Play
 Autor         : Rodrigo Negrete Aros
 Version       : v0.4.0
-Generado      : 2026-09-07T15:21:58.613Z  (UTC)
-Local         : Mon Sep 07 2026 17:21:58 GMT+0200 (hora de verano de Europa central)
+Generado      : 2026-09-07T21:39:39.256Z  (UTC)
+Local         : Mon Sep 07 2026 23:39:39 GMT+0200 (hora de verano de Europa central)
 
 ESTADO DEL REPOSITORIO
 ----------------------------------------------------------------
-Commit        : 555fcb2350d54b1f1b3b9da6201791ebc5e39808
+Commit        : be68f80c7f92067745ed22ac10697627930e3bfc
 Rama          : main
-Fecha commit  : 2026-09-07T17:21:58+02:00
+Fecha commit  : 2026-09-07T23:39:38+02:00
 Autor commit  : Rodrigo Negrete Aros <rodrigo.negrete.aros@gmail.com>
-Total commits : 164
+Total commits : 166
 Primer commit : 2026-06-13T22:52:54+02:00
 Remoto        : https://github.com/Ronegret/playdedicalo.git
 Sin cambios   : SI (arbol limpio)
@@ -21,11 +21,11 @@ Sin cambios   : SI (arbol limpio)
 CONTENIDO
 ----------------------------------------------------------------
 Archivos      : 342
-Tamano total  : 19.57 MB
+Tamano total  : 19.59 MB
 
 HASH GLOBAL DEL PROYECTO (SHA-256)
 ----------------------------------------------------------------
-cfa71cc7c3969d882ccf69346a8644aa44383fada706298b009b51aa647a087d
+55516a327fa6ddd75d97f3b8c935870d3b0c5f27915285eea92ed2883d0782b3
 
   Este hash identifica de forma unica el estado completo del
   proyecto en la fecha indicada. Cualquier modificacion de
@@ -73,7 +73,7 @@ de6e83a84bbe77e1188b27fd428adeb85180b6252bbaf5edc435137fea77eac0  docs/evidencia
 b949ca0b6f9d6e2da4497348707284274c47b37ecc6850e8b98196ab3b87d7e3  docs/evidencias/import-chileno-100-2026-09-04.json
 f8cd97cb963870abd8e165683109436671be473ac8f0987d96668f22d06349a3  docs/evidencias/import-chileno-100-2026-09-07.json
 accb0a6a41232eb7d58e0a85cbe15997be35b806a426a22a7bcfc265c5106082  docs/evidencias/lista.txt
-e2ef8e9c01bdb3bf5dd3b033de7c050fe2eab8304c5b6f46a36e75169f7623d6  docs/evidencias/manifiesto-v0.4.0-2026-09-07.txt
+8d666b6c86a15589155841b08a8c3e42515f5be40ea20e53ee826fd544a99738  docs/evidencias/manifiesto-v0.4.0-2026-09-07.txt
 f55ea5caa0ea383e402c2b56de251766e2b9f19faf73293652e00d28793b3e89  docs/evidencias/README.md
 922743ceefbbad15d7a77228c5d02773910b3e77156d2fcf37f5d60fedaed355  docs/evidencias/sospechosas-chileno-2026-09-04-musicbrainz.json
 33b0d3ee5e13fcda4b2a85e5ba00ad1d3a3d89c3be38652f8a2967791e6dbb1c  docs/evidencias/sospechosas-chileno-2026-09-04.json
@@ -83,7 +83,7 @@ c9b84a9d5361ab81ba6d6061310a8a3fded253fc63c7af9e1852c22b2ef5f92c  docs/evidencia
 47dcffe085cef8b1ba89037c3bcce2eac95a0aa3c9b80b15f0592ff905ea1f6e  docs/README.md
 0197d9a843aaae267303c4d1ab1a43afad1afacc7646cdf6cf94a5af6b815fb8  eslint.config.js
 975bc84878136f9b9d99de8e014174a25d11e91c6de403974811eff1675ee6e5  firebase.json
-f18e6d55b8cfe2ca5aac954a08bd590bc30be5a8e63ad639e5e4938d185e791b  index.html
+9a73ed6a45c63a895701a628fbc74a6f638ab89daa9c168bf9725068139a6621  index.html
 99e06c59ebefbce9e2bd806366ac2fa44785b81c8502288bbb2d7f42e6d9eefa  package-lock.json
 cabc35bce95a95b279abc3723fad9bb25490d6e2f1ce5d57b93e7831586762de  package.json
 68caa6dc0b5e900f9e2927630318ae66e78454f0294cf8d43942ec372d0f0614  postcss.config.js
@@ -307,7 +307,7 @@ ac986a95d2c62cedcdd7fdecd155c0335da77cc2f4d1cc8bb7833cba91576391  scripts/anos-m
 7a0440cb9cf9e0a9bcc7ed86c1be821703a1484021c32e223ee94d8cc33c246d  scripts/auditar-anos.mjs
 f6a88817228580962f219bcb0a40662297af1e59e21d163ff6f285d3c74e8038  scripts/caratulas-apple.mjs
 048f49ab3ad3f34b60d84f39b3fa4df95a23067aba04177caae738464b8157ab  scripts/generar-evidencia.mjs
-73bdd62006d1afb7fa928e1295998dcb659a28b4804fdc5277ae0c3a404f1292  scripts/iconos.mjs
+826e41a2ac171a30f71de9a5df16dbcad92e70473e36b456902d1fc274de2a43  scripts/iconos.mjs
 1c742d4fee96ebfba6e81322bcec8f9cc5f2ecaeb420ca506dd7901c41561e44  scripts/importar-playlist.mjs
 60d51d1146ae70a1fd0e0e7ec869038ef4fb7617b1aba9eefbac14168132e9ea  scripts/probar-cobertura-previews.mjs
 318846850e9d92e358545be73496010e177c36dee7af1c3ea66dd3e509f06c85  scripts/process-avatars.mjs
@@ -319,7 +319,7 @@ a1b6b591e8c5a0a111a35d00553979dd0ee2d4608d0ba656808f7d8be96142fb  src/App.jsx
 5be21acd42eb7b896e517f4e0f0f11eb5c5d9e54fbbcebe9453f033008fcca6f  src/assets/vite.svg
 a00f1944b782f5d0557b5c8337917a10f1d1ce5e437e449c512c5106092a4e7b  src/components/AlertDialog.jsx
 417e91e9667562b677711987cac92bef45dce00c9cc1a5736470609028995239  src/components/AvatarPicker.jsx
-1193a6bf1d8f140887a35176ff57c69956ff4db7da714578bcd47b5e61c718bf  src/components/ConectarTv.jsx
+0b480ec945cc364794905d85649ac76983b517e4e62892dd9989805d64348089  src/components/ConectarTv.jsx
 bf92e319ba2d73cf418193648f3d62eecf303d8d752216b0aba34f93ff203d65  src/components/ErrorBoundary.jsx
 1369f7b50f99b8497f585491fb26b4b91fde54cbffc6dcfd39c1e80a2b1b073f  src/components/FontSizeControl.jsx
 df432836c625ec6fdfb8641e654b4a9e1fbfefad9adbf0eb779d9512c0eee26f  src/components/HeaderHUD.jsx
@@ -334,7 +334,7 @@ a4cf56c1d15da519d034499175990a5a7f4415bf3356cca7aaa046d204739780  src/components
 e9df488bef823cec859b824bd15ddedd3e7e69d6d70e8efdf505d9c149a7e145  src/components/SabotageSettings.jsx
 acb88fbb853ac32b14cb0c7c6f90df3ef6c1472a29c63f7e5b60a6a311b1f0a9  src/components/ShaderBackground.jsx
 5a62b6ebc299be774c70026ce0c2b8440f6c54bebab175234ae36a2347477530  src/components/SupportButton.jsx
-eb8a465a75cf301273b0e23089ec3f3a9ae18e2eb832a74f751ee2eee197c821  src/components/tv/VinilloJugador.jsx
+c760f64869daee615a481b6124f1d30b95717cd8bd03d18ed2e42b535999c96b  src/components/tv/FichaJugador.jsx
 084d0b7fe1432e24aeb9529655a2d71398d509ab3c60010fb370cc633a607895  src/components/VinylVisualizer.jsx
 7bf0ffcfb26e467df4c48eca2ac08ed90266b538d2592d1f47305b299971dfbe  src/components/WizardSteps.jsx
 3699958076bcdeb8f7672a3cef3a0f7a3c164d9253e8318a6024043a8397161d  src/config/support.js
@@ -345,21 +345,21 @@ eb8a465a75cf301273b0e23089ec3f3a9ae18e2eb832a74f751ee2eee197c821  src/components
 d2a0d7eaefaf5bfeb7b0b09b8afe9822214f6a2ad76743839e7f240626796586  src/hooks/useOrientation.js
 710f24f33cbd268765b38eef0000936f035740a333beb22b8adfa3c2e72ad584  src/index.css
 ed96ed0781b8b93d110777bf5e3c4d345158b0c3895f06ada610f9f9952a2ed1  src/main.jsx
-74b7d6b0afcaa2d075456b64ba74d0e204f425e3d33ff8eb6fcc98fbdccfb7e0  src/pages/GameScreen.jsx
+cface8fd308768f75ca8f6ba8a26bd262720e337b3b94470c33031d74921e71a  src/pages/GameScreen.jsx
 9b076ba1f735fd5fe459b6c9a7e996cbe7845b85d27d12eb47d43efe7a8d1ee0  src/pages/GuestJoinScreen.jsx
-a624ac13ca1102baeda20dafd4ba7fca419726217ca19555f2f749663266aa33  src/pages/HostSyncScreen.jsx
+1df4f09519cc04d587f7a9974ee18b6403f09c3fc227683ab92bb292049cec6d  src/pages/HostSyncScreen.jsx
 18ea9f36ea8625f3ace97f80c876991749f9eb487963720b10e444f56705dab8  src/pages/HowToPlayScreen.jsx
 8f06696762062c7e6043f215df81ef6e165d5c296feaa937f5303d2d28fd067e  src/pages/LobbyScreen.jsx
 cb23cca53babd2d63c797dd5a101968f462b53f8efce05206f1c1bbeffebffce  src/pages/ResultScreen.jsx
 d0f398680e852dcf25e128ae2cc411b8c9127f0182c43cf5e56afeddc8f1ac96  src/pages/RoleSelectionScreen.jsx
 f8b321af04ed68b82a127fc0ab3f3ae70b8cb153c3b2d86896c3d9980cc8b868  src/pages/TvLinkScreen.jsx
-8e403e79fea6d0f5cdb3ffc6a78d4a21ebc353d084eacf6e0d1806bb64c1383d  src/pages/TvScreen.jsx
+5df1e6cdd1e79d4322a6172ee5dfaf26923efa8b4316d8a9ab11ca9d15ad0ea6  src/pages/TvScreen.jsx
 bb44363668eb0cc19affff821a058a531e7bf91626c79d7999aec709ffa12c1b  src/pages/WelcomeScreen.jsx
-66ba9d4e030cb50e68ced2e6c0d715a08ca0a15fa11000801b8f85cc44e8c34b  src/services/escanerQr.js
-e509a210613f10bf420781f16958646bcfc16c3d99776186bb8e5c90caded3e3  src/services/musica.js
+70c361f3c93ed3992c8378bd88e24bff58a4f0962030c46f5e4be48fab231a7c  src/services/escanerQr.js
+0842c8ea3ed11d813038c84f568627cfc6551aad67a6800453006c3aa5eefa7d  src/services/musica.js
 046a4b778fd7c31efe95172f3464ea352007aebc03a2802c7905cbd559c18cf9  src/services/preguntas.js
 4b3ccbffb7ad9f21c69f1f41a3bb35ee22b8e26c571220df237f6c7699482c80  src/services/rendimiento.js
-a1166fdd4ab8594f0c26ef6328262887539d5f0e67f307f2960d2127e97a9de3  src/store/useGameStore.js
+3e824530b78eea3e446fdba3a29ac5632bb348fe2d0e264a7fe97f6433d60a61  src/store/useGameStore.js
 808087f79275a17659c4c7cfbd06218cf1647fa088aa6e29e81f6ab8cdee0c32  tailwind.config.js
 886dcc0fee3c4bdd489cef11f8d2ec12b2549cff3ed8c70dc22156ce712462ba  tools/capture-spotify-playlist-rows.mjs
 d64993143ff20777bff2a9209c9f4072b64793c7854ef85de3ca52803b056a08  tools/extract-spotify-catalog.mjs
@@ -382,4 +382,4 @@ ef413740f467520dd6fe255b02d24127e748085499d76d1463875931f853c5a3  tv-android/set
 4d36db3522a7b2dd10e0936e1004373c7ee65f10f7cd7920cd76410459c15a45  vite.config.js
 
 ================================================================
-Fin del manifiesto — v0.4.0 — 2026-09-07T15:21:58.613Z
+Fin del manifiesto — v0.4.0 — 2026-09-07T21:39:39.256Z
