@@ -42,6 +42,8 @@ const ResultScreen = lazyWithReload(() => import('./pages/ResultScreen'));
 // La pantalla de televisión va en su propio trozo: quien juega desde el móvil
 // no descarga nada de ella, y la tele no descarga el juego.
 const TvScreen = lazyWithReload(() => import('./pages/TvScreen'));
+// Lo que abre el anfitrión al escanear el QR del televisor.
+const TvLinkScreen = lazyWithReload(() => import('./pages/TvLinkScreen'));
 
 function PageLoader() {
   return (
@@ -175,6 +177,7 @@ function App() {
               <Route path="/lobby" element={<LobbyScreen />} />
               <Route path="/game" element={<GameScreen />} />
               <Route path="/tv" element={<TvScreen />} />
+              <Route path="/tv-link" element={<TvLinkScreen />} />
               <Route path="/game/result" element={<ResultScreen />} />
             </Routes>
           </AnimatePresence>

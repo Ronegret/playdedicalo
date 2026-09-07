@@ -1174,6 +1174,66 @@ export const useGameStore = create((setStore, getStore) => ({
    * tele o se va el wifi, Firebase borra la marca solo y el móvil del
    * anfitrión recupera la música sin que nadie toque nada.
    */
+  /**
+   * ENLAZAR LA TELE ESCANEANDO EL QR
+   *
+   * Teclear un PIN con el mando de un televisor es lento y se hace delante
+   * de todo el mundo. Así que se le da la vuelta: la tele enseña un código
+   * en un QR y es el ANFITRIÓN quien lo escanea con su móvil, que es el
+   * aparato que sí tiene cámara y teclado cómodo.
+   *
+   * La tele publica un buzón vacío y se queda escuchando. El móvil, al
+   * escanear, deja ahí el PIN de su sala. La tele lo recibe y entra sola.
+   *
+   * No guarda nada sensible: solo un PIN de cuatro cifras que además se
+   * está enseñando en la propia pantalla a toda la sala.
+   */
+  tvWaitForLink: (codigo, alRecibirPin) => {
+    const buzon = ref(database, `tvLinks/${codigo}`);
+    // Si la tele se apaga, el buzón se borra solo y no deja basura.
+    onDisconnect(buzon).remove().catch(() => {});
+    set(buzon, { esperando: true, at: serverTimestamp() }).catch((error) => {
+      console.error('La tele no pudo publicar su código:', error);
+    });
+
+    const cancelar = onValue(buzon, (snap) => {
+      const datos = snap.val();
+      const pinRecibido = String(datos?.pin || '').replace(/\D/g, '');
+      if (pinRecibido.length === 4) alRecibirPin(pinRecibido);
+    });
+
+    return () => {
+      cancelar();
+      remove(buzon).catch(() => {});
+    };
+  },
+
+  /**
+   * El anfitrión ha escaneado el QR de la tele: le pasa el PIN de su sala.
+   * Devuelve un mensaje de por qué no se pudo, para poder decírselo en vez
+   * de dejar la pantalla en blanco.
+   */
+  linkTvToRoom: async (codigo) => {
+    const limpio = String(codigo || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6);
+    if (limpio.length !== 6) return { ok: false, message: 'Ese código de tele no es válido.' };
+
+    const { pin } = getStore();
+    if (!pin) return { ok: false, message: 'Primero crea o entra en una sala, y vuelve a escanear.' };
+
+    try {
+      await ensureAuthenticated();
+      const existe = await readData(`tvLinks/${limpio}`);
+      if (!existe) {
+        return { ok: false, message: 'Esa tele ya no está esperando. Vuelve a abrir la app en el televisor.' };
+      }
+      await patchData(`tvLinks/${limpio}`, { pin, at: serverTimestamp() });
+      return { ok: true };
+    } catch (error) {
+      console.error('No se pudo enlazar la tele:', error);
+      return { ok: false, message: 'No pudimos enlazar la tele. Inténtalo otra vez.' };
+    }
+  },
+
   tvClaimAudio: async (tvId) => {
     const { pin } = getStore();
     if (!pin) return;
