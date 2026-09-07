@@ -4,28 +4,28 @@ MANIFIESTO DE EVIDENCIA — DEDICALO PLAY
 Proyecto      : Dedicalo Play
 Autor         : Rodrigo Negrete Aros
 Version       : v0.4.0
-Generado      : 2026-09-07T14:51:08.182Z  (UTC)
-Local         : Mon Sep 07 2026 16:51:08 GMT+0200 (hora de verano de Europa central)
+Generado      : 2026-09-07T14:54:43.128Z  (UTC)
+Local         : Mon Sep 07 2026 16:54:43 GMT+0200 (hora de verano de Europa central)
 
 ESTADO DEL REPOSITORIO
 ----------------------------------------------------------------
-Commit        : ae540c42ce76e070bda29162bf5d49f86d98f8e7
+Commit        : 4b6449e813869e15be0912c7e9ca1ef6d29fd115
 Rama          : main
-Fecha commit  : 2026-09-07T16:51:03+02:00
+Fecha commit  : 2026-09-07T16:54:42+02:00
 Autor commit  : Rodrigo Negrete Aros <rodrigo.negrete.aros@gmail.com>
-Total commits : 160
+Total commits : 162
 Primer commit : 2026-06-13T22:52:54+02:00
 Remoto        : https://github.com/Ronegret/playdedicalo.git
 Sin cambios   : SI (arbol limpio)
 
 CONTENIDO
 ----------------------------------------------------------------
-Archivos      : 340
-Tamano total  : 19.48 MB
+Archivos      : 341
+Tamano total  : 19.56 MB
 
 HASH GLOBAL DEL PROYECTO (SHA-256)
 ----------------------------------------------------------------
-7c6eca2344e4f9c495d13cdce1dc8376a91e6377d464c7e26f5c8107afc2a99d
+82e180a7b9ac4a3bbc8def25038367948e177a6d57ca14e6b5b022132c9fd282
 
   Este hash identifica de forma unica el estado completo del
   proyecto en la fecha indicada. Cualquier modificacion de
@@ -73,7 +73,7 @@ de6e83a84bbe77e1188b27fd428adeb85180b6252bbaf5edc435137fea77eac0  docs/evidencia
 b949ca0b6f9d6e2da4497348707284274c47b37ecc6850e8b98196ab3b87d7e3  docs/evidencias/import-chileno-100-2026-09-04.json
 f8cd97cb963870abd8e165683109436671be473ac8f0987d96668f22d06349a3  docs/evidencias/import-chileno-100-2026-09-07.json
 accb0a6a41232eb7d58e0a85cbe15997be35b806a426a22a7bcfc265c5106082  docs/evidencias/lista.txt
-fc5c68dc813f4e50fe93d710875454dfb5e7afaee5d34df6e1912f1292aa5ae7  docs/evidencias/manifiesto-v0.4.0-2026-09-07.txt
+60111d73e077ea87a4770378add940f2cfb76f3a4826824cc9852ae91a4ae8c0  docs/evidencias/manifiesto-v0.4.0-2026-09-07.txt
 f55ea5caa0ea383e402c2b56de251766e2b9f19faf73293652e00d28793b3e89  docs/evidencias/README.md
 922743ceefbbad15d7a77228c5d02773910b3e77156d2fcf37f5d60fedaed355  docs/evidencias/sospechosas-chileno-2026-09-04-musicbrainz.json
 33b0d3ee5e13fcda4b2a85e5ba00ad1d3a3d89c3be38652f8a2967791e6dbb1c  docs/evidencias/sospechosas-chileno-2026-09-04.json
@@ -85,9 +85,9 @@ c9b84a9d5361ab81ba6d6061310a8a3fded253fc63c7af9e1852c22b2ef5f92c  docs/evidencia
 975bc84878136f9b9d99de8e014174a25d11e91c6de403974811eff1675ee6e5  firebase.json
 f18e6d55b8cfe2ca5aac954a08bd590bc30be5a8e63ad639e5e4938d185e791b  index.html
 99e06c59ebefbce9e2bd806366ac2fa44785b81c8502288bbb2d7f42e6d9eefa  package-lock.json
-090e2fc26fc61107ec8f9b2e8eeae07e975b65ecddb5b1d0669ce29749898b42  package.json
+cabc35bce95a95b279abc3723fad9bb25490d6e2f1ce5d57b93e7831586762de  package.json
 68caa6dc0b5e900f9e2927630318ae66e78454f0294cf8d43942ec372d0f0614  postcss.config.js
-53f050c7751e41081b604eeddea3452dcee94240b1c37ffc53e56cc64b8d3c3b  public/data/dedicalo-song-catalog.full.clean.json
+36dae710073a6d51c659aaa19795b54b0f345720175a8669c29f5ccc20115520  public/data/dedicalo-song-catalog.full.clean.json
 1737381a5bf0cd57cfbfb55f2df55daee623446e2d0fac047dde5e59b5d04988  public/data/dedicalo-song-catalog.playlists.json
 e542b068a7270f5326be0cc927feef55b4eb28fc652b1e88faa7a5186367f574  public/dedi.mp3
 61bc9a161de58248288e6905425d7180f0624c2865007b97d763fdac12043a66  public/favicon.svg
@@ -305,6 +305,7 @@ fef77b3895d0922b9c0a026f5d3be748d4fff0a68d4e4bf68c3719b569578592  public/images/
 ac986a95d2c62cedcdd7fdecd155c0335da77cc2f4d1cc8bb7833cba91576391  scripts/anos-musicbrainz.mjs
 38cab279d529610ddaf30d1d2b1f6d4953764735b8cd7e2b67fd535c1ea8be07  scripts/artistas-fallecidos.json
 7a0440cb9cf9e0a9bcc7ed86c1be821703a1484021c32e223ee94d8cc33c246d  scripts/auditar-anos.mjs
+f6a88817228580962f219bcb0a40662297af1e59e21d163ff6f285d3c74e8038  scripts/caratulas-apple.mjs
 048f49ab3ad3f34b60d84f39b3fa4df95a23067aba04177caae738464b8157ab  scripts/generar-evidencia.mjs
 73bdd62006d1afb7fa928e1295998dcb659a28b4804fdc5277ae0c3a404f1292  scripts/iconos.mjs
 1c742d4fee96ebfba6e81322bcec8f9cc5f2ecaeb420ca506dd7901c41561e44  scripts/importar-playlist.mjs
@@ -380,4 +381,4 @@ ef413740f467520dd6fe255b02d24127e748085499d76d1463875931f853c5a3  tv-android/set
 4d36db3522a7b2dd10e0936e1004373c7ee65f10f7cd7920cd76410459c15a45  vite.config.js
 
 ================================================================
-Fin del manifiesto — v0.4.0 — 2026-09-07T14:51:08.182Z
+Fin del manifiesto — v0.4.0 — 2026-09-07T14:54:43.128Z
