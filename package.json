@@ -17,7 +17,8 @@
     "importar-playlist": "node scripts/importar-playlist.mjs",
     "anos-canciones": "node scripts/anos-canciones.mjs",
     "anos-musicbrainz": "node scripts/anos-musicbrainz.mjs",
-    "resolver-previews": "node scripts/resolver-previews.mjs"
+    "resolver-previews": "node scripts/resolver-previews.mjs",
+    "caratulas": "node scripts/caratulas-apple.mjs"
   },
   "dependencies": {
     "firebase": "^12.14.0",
