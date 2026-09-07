@@ -1129,25 +1129,7 @@ export const useGameStore = create((setStore, getStore) => ({
     }
   },
 
-  togglePlay: () => {
-    const { pin, role, isAudioPlaying } = getStore();
-    const playing = !isAudioPlaying;
-    setStore({ isAudioPlaying: playing });
 
-    if (role === 'host' && pin) {
-      patchData(`rooms/${pin}/audio`, { isPlaying: playing }).catch((error) => console.error('Error al cambiar audio:', error));
-    }
-  },
-
-  toggleMute: () => {
-    const { pin, role, isAudioMuted } = getStore();
-    const muted = !isAudioMuted;
-    setStore({ isAudioMuted: muted });
-
-    if (role === 'host' && pin) {
-      patchData(`rooms/${pin}/audio`, { isMuted: muted }).catch((error) => console.error('Error al cambiar mute:', error));
-    }
-  },
 
   setAudioPlaying: (playing) => {
     const { pin, role } = getStore();

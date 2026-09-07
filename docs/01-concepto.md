@@ -14,8 +14,8 @@
 Dedícalo Play es un **juego musical de fiesta para grupos presenciales**. Se
 juega con móviles, en el mismo sitio, alrededor de una música compartida.
 
-Una persona hace de **anfitrión**: pone la música desde su cuenta y controla
-el ritmo de la partida. El resto **se une con un PIN o un QR** desde su propio
+Una persona hace de **anfitrión**: pone la música y controla el ritmo de la
+partida. El resto **se une con un PIN o un QR** desde su propio
 móvil, sin instalar nada.
 
 Suena una canción. El anfitrión corta la música. Cada jugador tiene que
@@ -30,9 +30,8 @@ Los juegos de fiesta musicales existentes tienen tres fricciones:
 2. **Cada jugador necesita instalar una app**, lo que rompe el momento.
 3. **Todos necesitan cuenta** en algún servicio.
 
-Dedícalo Play es una **web**: se abre en el navegador, se entra con un PIN, y
-solo el anfitrión necesita una cuenta de música. Cero instalación para los
-invitados.
+Dedícalo Play es una **web**: se abre en el navegador y se entra con un PIN.
+**Nadie necesita cuenta de música**, tampoco el anfitrión. Cero instalación.
 
 ## 3. Para quién es
 
@@ -51,7 +50,7 @@ invitados.
 |---|---|---|---|
 | Instalación por jugador | — | Sí | **No** |
 | Comprar material | Sí | No | **No** |
-| Cuenta por jugador | — | Habitual | **Solo el anfitrión** |
+| Cuenta por jugador | — | Habitual | **Ninguna** |
 | Ruta personal por jugador | No | No | **Sí** |
 | Sabotaje entre jugadores | No | Raro | **Sí, opcional** |
 
@@ -81,14 +80,15 @@ Gratuito para los invitados, **de pago para el anfitrión** en el futuro.
 Actualmente existe un flujo de **donación voluntaria** (Bizum) y de solicitud
 de playlist propia a cambio de donación.
 
-> **Riesgo abierto y sin resolver.** El modelo de cobro **no es compatible con
-> la base musical actual**. Ver [ADR-0002](decisiones/0002-dependencia-de-spotify.md).
-> Esta es la decisión más importante pendiente del proyecto y condiciona
-> cualquier plan comercial.
+> **Resuelto el 7 de septiembre de 2026.** Se salió de Spotify: la música son
+> fragmentos de 30 segundos y nadie necesita cuenta. Eso desbloquea el plan de
+> cobro, que antes era incompatible con la base musical.
+> Ver [ADR-0002](decisiones/0002-dependencia-de-spotify.md).
+> Queda pendiente la consulta legal antes de facturar.
 
 ## 7. Estado actual
 
 - Jugable de extremo a extremo y desplegado en producción.
 - Probado en partidas reales con grupos de ~20 personas.
-- Catálogo propio de **2.932 canciones** con años auditados.
-- Pendiente: resolver la base musical antes de comercializar.
+- Catálogo propio de **2.181 canciones** con años auditados y audio propio.
+- Base musical resuelta: sin Spotify, sin cuentas, sin techo de usuarios.

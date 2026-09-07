@@ -8,7 +8,7 @@ import RotatePrompt from '../components/RotatePrompt';
 import { useOrientation } from '../hooks/useOrientation';
 import JoinRequestBanner from '../components/JoinRequestBanner';
 import { crearPreguntaDeCancion } from '../services/preguntas';
-import { desbloquearAudio, getCancionOculta, pararMusica, sonarCancionAleatoria } from '../services/musica';
+import { alTerminarFragmento, desbloquearAudio, getCancionOculta, pararMusica, segundosRestantes, sonarCancionAleatoria } from '../services/musica';
 
 const EQUALIZER_BARS = [0.35, 0.58, 0.42, 0.71, 0.49, 0.64, 0.39];
 
@@ -763,6 +763,7 @@ export default function GameScreen() {
   const [answeredQuestionKey, setAnsweredQuestionKey] = useState(null);
   const [countdownValue, setCountdownValue] = useState(3);
   const [softSecondsLeft, setSoftSecondsLeft] = useState(null);
+  const [segundosAudio, setSegundosAudio] = useState(null);
   const { layout } = useOrientation();
   const [mensajeAudio, setMensajeAudio] = useState('');
   const [audioListo, setAudioListo] = useState(false);
@@ -915,7 +916,7 @@ export default function GameScreen() {
     normalizeSpotifyPlaylistUrl(playlist.url) === normalizeSpotifyPlaylistUrl(spotifyPlaylistUrl)
   ));
   const ownPlayer = players.find((player) => player.id === guestId);
-  const ownTimelineYears = getCombinedTimelineYears(ownPlayer);
+  const ownTimelineYears = useMemo(() => getCombinedTimelineYears(ownPlayer), [ownPlayer]);
   const incomingAttack = ownPlayer?.activeAttack?.round === round ? ownPlayer.activeAttack : null;
   const isBlockedThisRound = incomingAttack?.type === 'block_vote';
   const attackKey = incomingAttack ? `${round}-${incomingAttack.from || 'rival'}` : '';
@@ -1000,7 +1001,7 @@ export default function GameScreen() {
     if (navigator.vibrate) navigator.vibrate(isCorrect ? [30] : [100, 30, 100]);
   };
 
-  const handleHostBlackout = async () => {
+  const handleHostBlackout = useCallback(async () => {
     if (isBlackoutPending) return;
     setIsBlackoutPending(true);
     try {
@@ -1015,7 +1016,32 @@ export default function GameScreen() {
       console.error('Error al activar blackout:', error);
       setIsBlackoutPending(false);
     }
-  };
+  }, [isBlackoutPending, gameMode, round, ownTimelineYears, setAudioPlaying, hostTriggerBlackout]);
+
+  // El fragmento dura 30 segundos y se acaba solo. Con Spotify la canción
+  // sonaba entera y el anfitrión cortaba cuando quería; ahora, si nadie corta
+  // a tiempo, la música se para y la sala se queda esperando una pregunta que
+  // no llega. Al terminar el fragmento se corta solo.
+  useEffect(() => {
+    if (role !== 'host' || phase !== 'listen') return undefined;
+    return alTerminarFragmento(() => {
+      handleHostBlackout();
+    });
+  }, [role, phase, handleHostBlackout]);
+
+  // Cuenta atrás visible del fragmento: que se vea cuánto queda en vez de
+  // que la música desaparezca de golpe.
+  useEffect(() => {
+    if (phase !== 'listen') {
+      const limpiar = window.setTimeout(() => setSegundosAudio(null), 0);
+      return () => window.clearTimeout(limpiar);
+    }
+    const tick = window.setInterval(() => {
+      const quedan = segundosRestantes();
+      setSegundosAudio(quedan > 0 ? Math.ceil(quedan) : null);
+    }, 500);
+    return () => window.clearInterval(tick);
+  }, [phase, round]);
 
   // Reset blackout lock when phase changes (new round)
   useEffect(() => {
@@ -1147,7 +1173,9 @@ export default function GameScreen() {
                     {role === 'host' ? 'SONANDO' : 'ESCUCHA'}
                   </span>
                   <p className="mt-2 font-label-caps text-xs text-white/60 tracking-widest">
-                    {role === 'host' ? 'PARA CUANDO QUIERAS' : 'EL ANFITRIÓN DECIDE'}
+                    {segundosAudio !== null
+                      ? `${segundosAudio}s`
+                      : role === 'host' ? 'PARA CUANDO QUIERAS' : 'EL ANFITRIÓN DECIDE'}
                   </p>
                 </div>
               </div>

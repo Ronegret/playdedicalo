@@ -17,8 +17,9 @@ import { StepActionBar, StepPanel, StepProgress } from '../components/WizardStep
 // los requisitos (cuentas), después la música, después la duración. El PIN
 // aparece en el lobby, donde además se puede seguir cambiando playlist y
 // duración antes de arrancar.
-const HOST_STEPS = ['Conectar cuentas', 'Elige la música', 'Duración'];
+const HOST_STEPS = ['Tu cuenta', 'Elige la música', 'Duración'];
 // Ya no se importa nada del SDK de Spotify: la música la pone el juego.
+import { coberturaDeLista } from '../services/musica';
 
 // La mini "carátula" solo tiene que comunicar la vibra con color + ícono —
 // el nombre y el formato de la playlist ya se leen justo al lado (pill +
@@ -81,9 +82,21 @@ export default function HostSyncScreen() {
   const createStartedRef = useRef(false);
 
   const selectedPlaylistData = DEDICALO_PLAYLISTS.find((p) => p.id === selectedPlaylist) || DEDICALO_PLAYLISTS[0];
+
+  // Solo se puede jugar con las canciones que tienen fragmento de audio. Si
+  // una lista se queda corta hay que decirlo AQUÍ, no cuando ya hay diez
+  // personas en la sala esperando a que suene algo.
+  const [cobertura, setCobertura] = useState(null);
+  useEffect(() => {
+    let vivo = true;
+    coberturaDeLista(selectedPlaylistData.url)
+      .then((c) => { if (vivo) setCobertura(c); })
+      .catch(() => { if (vivo) setCobertura(null); });
+    return () => { vivo = false; };
+  }, [selectedPlaylistData.url]);
   const selectedMeta = PLAYLIST_META[selectedPlaylist] || { icon: 'music_note', color: '#ff7a1a' };
   // Ya no se exige cuenta de música: la pone el juego.
-  const canCreateRoom = Boolean(googleUser && selectedPlaylistData);
+  const canCreateRoom = Boolean(googleUser && selectedPlaylistData && (cobertura === null || cobertura.jugables > 0));
   const targetOptions = [6, 8, 12, 15, 20];
 
   // Todo el mundo (host incluido) recibe una sesión anónima automática solo
@@ -209,7 +222,9 @@ export default function HostSyncScreen() {
         title: 'Faltan datos',
         message: !googleUser
           ? 'Vuelve al primer paso y entra con Google.'
-          : 'Elige una playlist antes de crear la sala.'
+          : cobertura && cobertura.jugables === 0
+            ? 'Esa lista todavía no tiene canciones listas para sonar. Elige otra.'
+            : 'Elige una playlist antes de crear la sala.'
       });
       return;
     }
@@ -425,6 +440,13 @@ export default function HostSyncScreen() {
                 </span>
                 {selectedPlaylistData.name}
               </div>
+              {cobertura && (
+                <p className={`mt-2 text-sm ${cobertura.jugables === 0 ? 'text-error font-bold' : 'text-on-surface-variant'}`}>
+                  {cobertura.jugables === 0
+                    ? 'Esta lista aún no tiene canciones listas para sonar.'
+                    : `${cobertura.jugables} canciones listas para sonar`}
+                </p>
+              )}
             </div>
 
             <div className="space-y-3 sm:grid sm:grid-cols-2 sm:gap-3 sm:space-y-0 xl:grid-cols-4">

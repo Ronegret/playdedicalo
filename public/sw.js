@@ -3,7 +3,7 @@
 // dispare install/activate (con muchas actualizaciones seguidas en camino,
 // que esto quede desactualizado es justo lo que hace que alguien vea la
 // app vieja aunque ya se haya desplegado la nueva).
-const CACHE = 'dedicalo-v5';
+const CACHE = 'dedicalo-v6';
 const PRECACHE = ['/index.html', '/manifest.json', '/images/icon-app.png', '/images/logo-main.png', '/dedi.mp3'];
 
 self.addEventListener('install', (e) => {
@@ -41,13 +41,32 @@ self.addEventListener('fetch', (e) => {
     return;
   }
 
+  // El catálogo de canciones va SIEMPRE a la red primero. Cambia cada vez
+  // que se corrige un año o se resuelve el audio de una canción, y servirlo
+  // de caché dejaba a quien vuelve con una copia vieja: con el catálogo
+  // anterior a los fragmentos, el juego se queda literalmente sin música.
+  // La copia guardada solo se usa si de verdad no hay conexión.
+  if (url.pathname.startsWith('/data/')) {
+    e.respondWith(
+      fetch(request)
+        .then((res) => {
+          if (res.ok) caches.open(CACHE).then((c) => c.put(request, res.clone()));
+          return res;
+        })
+        .catch(() => caches.match(request))
+    );
+    return;
+  }
+
+  // El resto (imágenes, iconos, música de la portada) no cambia nunca:
+  // de caché primero, que es más rápido.
   e.respondWith(
     caches.match(request).then((cached) => {
       if (cached) return cached;
       return fetch(request).then((res) => {
         if (res.ok) {
           const p = url.pathname;
-          if (p.startsWith('/images/') || p.startsWith('/data/') || p === '/manifest.json' || p === '/dedi.mp3') {
+          if (p.startsWith('/images/') || p === '/manifest.json' || p === '/dedi.mp3') {
             caches.open(CACHE).then((c) => c.put(request, res.clone()));
           }
         }

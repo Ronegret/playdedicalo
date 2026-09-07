@@ -247,7 +247,7 @@ export default function LobbyScreen() {
                 setPinCopied(true);
                 setTimeout(() => setPinCopied(false), 2000);
               }}
-              className="h-10 rounded-xl border border-white/10 bg-white/5 text-on-surface-variant font-label-caps text-xs flex items-center justify-center gap-2 active:scale-95 transition-all hover:bg-white/10"
+              className="min-h-touch rounded-xl border border-white/10 bg-white/5 text-on-surface-variant font-label-caps text-xs flex items-center justify-center gap-2 active:scale-95 transition-all hover:bg-white/10"
             >
               <span className="material-symbols-outlined text-sm">{pinCopied ? 'check' : 'content_copy'}</span>
               {pinCopied ? 'COPIADO' : 'COPIAR PIN'}
@@ -268,7 +268,7 @@ export default function LobbyScreen() {
                   setTimeout(() => setLinkShared(false), 2000);
                 }
               }}
-              className="h-10 rounded-xl border border-neon-green/25 bg-neon-green/8 text-neon-green font-label-caps text-xs flex items-center justify-center gap-2 active:scale-95 transition-all hover:bg-neon-green/15"
+              className="min-h-touch rounded-xl border border-neon-green/25 bg-neon-green/8 text-neon-green font-label-caps text-xs flex items-center justify-center gap-2 active:scale-95 transition-all hover:bg-neon-green/15"
             >
               <span className="material-symbols-outlined text-sm">{linkShared ? 'check' : 'share'}</span>
               {linkShared ? 'COPIADO' : 'COMPARTIR'}

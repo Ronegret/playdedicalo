@@ -22,10 +22,17 @@ export function StepProgress({ steps, current, onGoTo }) {
               onClick={canGo ? () => onGoTo(index) : undefined}
               aria-label={canGo ? `Volver al paso ${index + 1}: ${step}` : `Paso ${index + 1}: ${step}`}
               aria-current={isCurrent ? 'step' : undefined}
-              className={`h-2 flex-1 rounded-full transition-colors ${
-                isDone ? 'bg-neon-green' : isCurrent ? 'bg-neon-green/60' : 'bg-white/12'
-              } ${canGo ? 'cursor-pointer' : 'cursor-default'}`}
-            />
+              // La barra se ve fina (8 px) pero se puede pulsar para volver a
+              // un paso, así que la zona táctil se agranda con padding
+              // transparente: el aspecto no cambia y el dedo sí acierta.
+              className={`group flex flex-1 items-center min-h-touch -my-[22px] ${canGo ? 'cursor-pointer' : 'cursor-default'}`}
+            >
+              <span
+                className={`block h-2 w-full rounded-full transition-colors ${
+                  isDone ? 'bg-neon-green' : isCurrent ? 'bg-neon-green/60' : 'bg-white/12'
+                }`}
+              />
+            </button>
           );
         })}
       </div>
