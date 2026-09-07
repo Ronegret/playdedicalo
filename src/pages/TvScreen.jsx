@@ -22,7 +22,10 @@ import { desbloquearAudio, pararMusica, sonarCancionAleatoria } from '../service
  *  - Nada de blanco puro sobre negro puro: en un panel grande hace halo.
  */
 
-const SAFE = '4.5vmin';
+// Margen de seguridad. Muchos televisores recortan físicamente los bordes
+// (overscan) hasta un 5 % por lado, y el navegador no se entera: cree que
+// dibuja en toda la pantalla. Por eso el margen es generoso.
+const SAFE = '6vmin';
 
 // Código que enseña la tele para que lo escanee el anfitrión. Sin vocales ni
 // caracteres que se confundan de lejos (0/O, 1/I): esto se lee a tres metros.
@@ -294,17 +297,25 @@ export default function TvScreen() {
   const conectados = useMemo(() => (players || []).filter((p) => p.status !== 'kicked'), [players]);
   const anfitrion = useMemo(() => (players || []).find((p) => p.isHost), [players]);
 
-  // Bienvenida al enlazar: confirma en la propia tele que ha funcionado y de
-  // quién es la sala. Se quita sola porque lo que importa es el PIN.
+  // Bienvenida al enlazar. Va como franja SUPERPUESTA, no en lugar del QR:
+  // si por lo que sea se quedara pegada, el QR se sigue viendo. El QR es lo
+  // único que no puede faltar.
+  //
+  // La dependencia es un booleano y no el objeto del anfitrión: ese objeto se
+  // crea de nuevo cada vez que cambia la lista de jugadores (y cambia sola,
+  // por la presencia), lo que reejecutaba el efecto y cancelaba el
+  // temporizador que retira el saludo. Resultado: el saludo no se iba nunca y
+  // tapaba el QR para siempre. Fue exactamente el fallo.
+  const hayAnfitrion = Boolean(anfitrion);
   const [bienvenida, setBienvenida] = useState(false);
   const yaSaludoRef = useRef(false);
   useEffect(() => {
-    if (yaSaludoRef.current || pinElegido.length !== 4 || !anfitrion) return undefined;
+    if (yaSaludoRef.current || pinElegido.length !== 4 || !hayAnfitrion) return undefined;
     yaSaludoRef.current = true;
     const mostrar = window.setTimeout(() => setBienvenida(true), 0);
-    const quitar = window.setTimeout(() => setBienvenida(false), 4500);
+    const quitar = window.setTimeout(() => setBienvenida(false), 5000);
     return () => { window.clearTimeout(mostrar); window.clearTimeout(quitar); };
-  }, [pinElegido, anfitrion]);
+  }, [pinElegido, hayAnfitrion]);
   const respondieron = Object.keys(roundAnswers).length;
   const hayReveal = Object.keys(revealResults).length > 0;
 
@@ -400,10 +411,31 @@ export default function TvScreen() {
   // ── Partida ───────────────────────────────────────────────────────────────
   return (
     <div className="tv-root" style={{ padding: SAFE }}>
+      {/* Franja de bienvenida: encima de todo, sin quitarle el sitio a nada.
+          Si alguna vez se quedara pegada, el QR se seguiría viendo debajo. */}
+      {bienvenida && anfitrion && (
+        <div
+          className="tv-pop absolute left-1/2 z-10 flex -translate-x-1/2 items-center gap-[1.5vmin] rounded-full px-[3vmin] py-[1.2vmin]"
+          style={{
+            top: SAFE,
+            background: 'rgba(57,255,20,.14)',
+            border: '0.25vmin solid rgba(57,255,20,.5)'
+          }}
+        >
+          <span className="material-symbols-outlined text-neon-green" style={{ fontSize: '3vmin' }}>tv</span>
+          <p style={{ fontSize: '2.6vmin' }} className="font-black text-tv-ink">
+            Bienvenido, <span style={{ color: '#39ff14' }}>{anfitrion.name}</span>
+          </p>
+        </div>
+      )}
+
       <div className="flex h-full gap-[3vmin]">
 
-        {/* Columna fija: entrar a la sala. Siempre visible, porque se puede
-            entrar en cualquier momento y quien llega tarde necesita el PIN. */}
+        {/* Columna de entrada. Se esconde en la sala de espera porque allí el
+            centro ya enseña el PIN y el QR en grande: repetirlo dos veces en
+            la misma pantalla solo quita sitio. En cuanto empieza la partida
+            reaparece, que es cuando hace falta para quien llega tarde. */}
+        {phase !== 'lobby' && (
         <aside
           className="flex shrink-0 flex-col items-center rounded-[1.8vmin] px-[2vmin] py-[2.4vmin]"
           style={{ width: '25vmin', background: 'rgba(255,255,255,.04)', border: '0.22vmin solid rgba(255,255,255,.10)' }}
@@ -432,6 +464,7 @@ export default function TvScreen() {
             </p>
           )}
         </aside>
+        )}
 
         <div className="flex min-w-0 flex-1 flex-col">
           <header className="flex items-baseline justify-between">
@@ -444,21 +477,7 @@ export default function TvScreen() {
           </header>
 
           <main className="flex flex-1 flex-col items-center justify-center">
-            {/* Bienvenida: confirma en la tele que el enlace funcionó y de
-                quién es la sala. Dura unos segundos y se va. */}
-            {bienvenida && anfitrion ? (
-              <div className="text-center tv-pop">
-                <p style={{ fontSize: '2.4vmin', letterSpacing: '0.3em' }} className="text-tv-dim">
-                  TELE CONECTADA
-                </p>
-                <p style={{ fontSize: '5.5vmin' }} className="mt-[1vmin] font-black text-tv-ink">
-                  Bienvenido, <span style={{ color: '#39ff14' }}>{anfitrion.name}</span>
-                </p>
-                <p style={{ fontSize: '2.4vmin' }} className="mt-[1vmin] text-tv-dim">
-                  Ya podéis uniros con el código de la izquierda
-                </p>
-              </div>
-            ) : phase === 'lobby' && !hayReveal && (
+            {phase === 'lobby' && !hayReveal && (
               /* Sala de espera: el QR manda, porque es el momento en que todo
                  el mundo tiene que entrar. Grande y en el centro. */
               <div className="flex items-center gap-[5vmin]">

@@ -58,11 +58,18 @@ class MainActivity : ComponentActivity() {
             // por no haber "gesto del usuario" y la sala se queda en silencio.
             mediaPlaybackRequiresUserGesture = false
             cacheMode = WebSettings.LOAD_DEFAULT
-            useWideViewPort = true
-            loadWithOverviewMode = true
+            // useWideViewPort y loadWithOverviewMode van DESACTIVADOS a
+            // propósito. Juntos hacen que el WebView monte la página en un
+            // lienzo más ancho y luego la encoja para que quepa; en una tele
+            // eso deja la pantalla recortada por los lados y con el contenido
+            // más pequeño de lo debido. Aquí se quiere 1:1 con el televisor.
+            useWideViewPort = false
+            loadWithOverviewMode = false
             // La pantalla ya está pensada para verse a tres metros: que la
             // tele no reescale nada por su cuenta.
             textZoom = 100
+            builtInZoomControls = false
+            displayZoomControls = false
         }
 
         // Que los enlaces se abran aquí dentro y no lancen un navegador que en
