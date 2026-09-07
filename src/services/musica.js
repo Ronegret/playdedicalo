@@ -40,19 +40,39 @@ function obtenerAudio() {
   return audio;
 }
 
+// Fragmento de silencio en WAV. Hace falta una fuente DE VERDAD para
+// desbloquear: llamar a play() sobre un audio sin `src` no desbloquea nada y
+// además la promesa se queda colgada para siempre en algunos navegadores.
+// Eso es exactamente lo que impedía empezar la partida — el lobby esperaba a
+// que resolviera y nunca lo hacía.
+const SILENCIO = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
+
 /**
  * Desbloquea el audio del navegador. Hay que llamarlo desde un toque real
- * del usuario (un botón), porque si no el navegador no deja sonar nada y el
- * juego falla en silencio.
+ * del usuario (un botón): si no, el navegador no deja sonar nada después y el
+ * juego se queda mudo sin decir por qué.
+ *
+ * Nunca tarda más de lo previsto ni lanza: si algo va mal devuelve false y el
+ * juego sigue. Que el audio no se desbloquee no puede impedir jugar.
  */
 export async function desbloquearAudio() {
   const a = obtenerAudio();
   try {
+    const previo = a.src;
     a.muted = true;
-    await a.play().catch(() => {});
+    a.src = SILENCIO;
+
+    // Vallado de seguridad: pase lo que pase, esto termina.
+    await Promise.race([
+      a.play().catch(() => {}),
+      new Promise((r) => setTimeout(r, 1200))
+    ]);
+
     a.pause();
-    a.currentTime = 0;
+    try { a.currentTime = 0; } catch { /* algunos navegadores se quejan */ }
     a.muted = false;
+    // Se devuelve la canción anterior si la había, para no cortar nada.
+    if (previo && previo !== SILENCIO) a.src = previo;
     return true;
   } catch {
     return false;

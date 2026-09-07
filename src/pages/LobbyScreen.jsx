@@ -61,7 +61,8 @@ export default function LobbyScreen() {
     sabotageEnabled,
     sabotageTypes,
     spotifyPlaylistUrl,
-    hostSetSpotifyPlaylistUrl
+    hostSetSpotifyPlaylistUrl,
+    audioEnTv
   } = useGameStore();
   const [showQR, setShowQR] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
@@ -121,7 +122,10 @@ export default function LobbyScreen() {
   const handleHostStartGame = async () => {
     setStartError('');
     try {
-      await desbloquearAudio();
+      // El desbloqueo del audio NO puede impedir que empiece la partida.
+      // Antes se esperaba a que terminara y, sobre un audio sin fuente, esa
+      // promesa no resolvía nunca: el botón de empezar no hacía nada.
+      desbloquearAudio().catch(() => {});
       await hostStartGame();
     } catch (error) {
       console.error(error);
@@ -275,6 +279,28 @@ export default function LobbyScreen() {
             </button>
           </div>
         </div>
+
+        {role === 'host' && (
+          <div className={`rounded-2xl border p-4 text-left ${
+            audioEnTv ? 'border-neon-green/40 bg-neon-green/8' : 'border-white/10 bg-white/5'
+          }`}>
+            <div className="flex items-center gap-3">
+              <span className={`material-symbols-outlined text-2xl ${audioEnTv ? 'text-neon-green' : 'text-on-surface-variant'}`}>
+                tv
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="font-bold text-white">
+                  {audioEnTv ? 'Tele conectada' : 'Jugar en la tele'}
+                </p>
+                <p className="mt-0.5 text-sm leading-snug text-on-surface-variant">
+                  {audioEnTv
+                    ? 'La partida y la música se ven y suenan en la pantalla grande.'
+                    : 'Abre Dedícalo en la tele y escanea con este móvil el código que aparezca.'}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {role === 'host' && (
           <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-4 text-left">

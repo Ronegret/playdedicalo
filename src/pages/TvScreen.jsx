@@ -262,13 +262,20 @@ export default function TvScreen() {
     };
   }, []);
 
-  // La tele reclama la música solo si CONSIGUIÓ desbloquear el audio.
+  // La tele reclama la música solo si CONSIGUIÓ desbloquear el audio, y la
+  // refresca cada 15 s. Sin ese latido la marca caduca a los 45 s y el móvil
+  // del anfitrión recupera la música — que es justo lo que debe pasar si la
+  // tele se apaga de golpe y no llega a avisar.
   useEffect(() => {
-    if (pinElegido.length !== 4 || !puedeSonar) return undefined;
+    if (pinElegido.length !== 4 || !puedeSonar || !pin) return undefined;
     const idTele = `tv-${Math.random().toString(36).slice(2, 10)}`;
     reclamarAudio(idTele);
-    return () => { soltarAudio(); };
-  }, [pinElegido, puedeSonar, reclamarAudio, soltarAudio]);
+    const latido = window.setInterval(() => reclamarAudio(idTele), 15000);
+    return () => {
+      window.clearInterval(latido);
+      soltarAudio();
+    };
+  }, [pinElegido, puedeSonar, pin, reclamarAudio, soltarAudio]);
 
   useEffect(() => {
     if (!audioEnTv || phase !== 'listen' || !listaUrl) return;
@@ -285,6 +292,19 @@ export default function TvScreen() {
   useEffect(() => () => pararMusica(), []);
 
   const conectados = useMemo(() => (players || []).filter((p) => p.status !== 'kicked'), [players]);
+  const anfitrion = useMemo(() => (players || []).find((p) => p.isHost), [players]);
+
+  // Bienvenida al enlazar: confirma en la propia tele que ha funcionado y de
+  // quién es la sala. Se quita sola porque lo que importa es el PIN.
+  const [bienvenida, setBienvenida] = useState(false);
+  const yaSaludoRef = useRef(false);
+  useEffect(() => {
+    if (yaSaludoRef.current || pinElegido.length !== 4 || !anfitrion) return undefined;
+    yaSaludoRef.current = true;
+    const mostrar = window.setTimeout(() => setBienvenida(true), 0);
+    const quitar = window.setTimeout(() => setBienvenida(false), 4500);
+    return () => { window.clearTimeout(mostrar); window.clearTimeout(quitar); };
+  }, [pinElegido, anfitrion]);
   const respondieron = Object.keys(roundAnswers).length;
   const hayReveal = Object.keys(revealResults).length > 0;
 
@@ -317,9 +337,11 @@ export default function TvScreen() {
     return (
       <div className="tv-root" style={{ padding: SAFE }}>
         <div className="flex h-full flex-col items-center justify-center">
-          <h1 style={{ fontSize: '6vmin' }} className="font-black tracking-tight text-tv-ink">
-            DEDÍCALO <span style={{ color: '#39ff14' }}>PLAY</span>
-          </h1>
+          <img
+            src="/images/logo-main.png"
+            alt="Dedícalo Play"
+            style={{ height: '13vmin', width: 'auto' }}
+          />
 
           {verTeclado ? (
             <>
@@ -413,9 +435,7 @@ export default function TvScreen() {
 
         <div className="flex min-w-0 flex-1 flex-col">
           <header className="flex items-baseline justify-between">
-            <p style={{ fontSize: '2.6vmin' }} className="font-black tracking-tight text-tv-ink">
-              DEDÍCALO <span style={{ color: '#39ff14' }}>PLAY</span>
-            </p>
+            <img src="/images/logo-main.png" alt="Dedícalo Play" style={{ height: '5.5vmin', width: 'auto' }} />
             {phase !== 'lobby' && phase !== 'final' && (
               <p style={{ fontSize: '2.2vmin', letterSpacing: '0.2em' }} className="text-tv-dim">
                 RONDA {round}
@@ -424,14 +444,45 @@ export default function TvScreen() {
           </header>
 
           <main className="flex flex-1 flex-col items-center justify-center">
-            {phase === 'lobby' && !hayReveal && (
-              <div className="text-center">
-                <p style={{ fontSize: '4vmin' }} className="font-black text-tv-ink">
-                  {conectados.length === 0 ? 'Esperando jugadores' : 'Listos para empezar'}
+            {/* Bienvenida: confirma en la tele que el enlace funcionó y de
+                quién es la sala. Dura unos segundos y se va. */}
+            {bienvenida && anfitrion ? (
+              <div className="text-center tv-pop">
+                <p style={{ fontSize: '2.4vmin', letterSpacing: '0.3em' }} className="text-tv-dim">
+                  TELE CONECTADA
                 </p>
-                <p style={{ fontSize: '2.2vmin' }} className="mt-[1vmin] text-tv-dim">
-                  El anfitrión arranca desde su móvil
+                <p style={{ fontSize: '5.5vmin' }} className="mt-[1vmin] font-black text-tv-ink">
+                  Bienvenido, <span style={{ color: '#39ff14' }}>{anfitrion.name}</span>
                 </p>
+                <p style={{ fontSize: '2.4vmin' }} className="mt-[1vmin] text-tv-dim">
+                  Ya podéis uniros con el código de la izquierda
+                </p>
+              </div>
+            ) : phase === 'lobby' && !hayReveal && (
+              /* Sala de espera: el QR manda, porque es el momento en que todo
+                 el mundo tiene que entrar. Grande y en el centro. */
+              <div className="flex items-center gap-[5vmin]">
+                <div className="rounded-[1.6vmin] bg-white p-[1.4vmin]">
+                  <img src={urlQr(enlaceJugar, 420)} alt="Código QR para entrar"
+                    style={{ width: '30vmin', height: '30vmin', display: 'block' }} />
+                </div>
+                <div className="text-left">
+                  <p style={{ fontSize: '2.4vmin', letterSpacing: '0.26em' }} className="text-tv-dim">
+                    ESCANEA PARA JUGAR
+                  </p>
+                  <p style={{ fontSize: '11vmin', lineHeight: 1.05, color: '#39ff14', letterSpacing: '0.06em' }}
+                    className="font-black tabular-nums">
+                    {pin || pinElegido}
+                  </p>
+                  <p style={{ fontSize: '2.4vmin' }} className="text-tv-dim">
+                    o entra en play.dedicalo.es
+                  </p>
+                  <p style={{ fontSize: '3vmin' }} className="mt-[2vmin] font-black text-tv-ink">
+                    {conectados.length === 0
+                      ? 'Esperando jugadores...'
+                      : `${conectados.length} ${conectados.length === 1 ? 'jugador dentro' : 'jugadores dentro'}`}
+                  </p>
+                </div>
               </div>
             )}
 

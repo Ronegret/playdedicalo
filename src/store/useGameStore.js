@@ -1240,7 +1240,7 @@ export const useGameStore = create((setStore, getStore) => ({
     const marca = ref(database, `rooms/${pin}/audio/tv`);
     try {
       await onDisconnect(marca).remove();
-      await set(marca, { id: tvId, listo: true, at: serverTimestamp() });
+      await set(marca, { id: tvId, listo: true, at: Date.now() });
     } catch (error) {
       console.error('La tele no pudo reclamar el audio:', error);
     }
@@ -1343,7 +1343,14 @@ export const useGameStore = create((setStore, getStore) => ({
         // La tele solo cuenta si dijo que PUEDE sonar, no solo que está
         // conectada: un navegador de tele puede bloquear la reproducción, y
         // en ese caso el móvil ni se entera y sigue sonando él.
-        const teleLista = Boolean(data.audio.tv && data.audio.tv.listo);
+        // Una reclamación de tele CADUCA. Si la tele se apagó de golpe y el
+        // onDisconnect no llegó a ejecutarse, la marca se quedaría puesta
+        // para siempre y el móvil del anfitrión no volvería a sonar nunca.
+        // La tele la refresca mientras está viva; pasados 45 s se ignora.
+        const marcaTv = data.audio.tv;
+        const frescura = Number(marcaTv?.at || 0);
+        const vigente = frescura > 0 && (Date.now() - frescura) < 45000;
+        const teleLista = Boolean(marcaTv?.listo && vigente);
         setStore({
           isAudioPlaying: Boolean(data.audio.isPlaying),
           isAudioMuted: Boolean(data.audio.isMuted),
