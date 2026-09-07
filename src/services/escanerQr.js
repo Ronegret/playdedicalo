@@ -15,8 +15,12 @@
  *    análisis.
  */
 
-const LADO_MAXIMO = 480;
-const MS_ENTRE_ANALISIS = 100;
+// 640 y no 480: un QR en una tele, visto desde el sofá, ocupa una parte
+// pequeña del encuadre, y a 480 se perdía el detalle justo cuando más falta
+// hacía. Sigue siendo ocho veces menos trabajo que analizar a resolución
+// completa, que era lo que hacía tiritar la vista previa.
+const LADO_MAXIMO = 640;
+const MS_ENTRE_ANALISIS = 120;
 
 /**
  * Arranca la cámara y busca códigos QR.
@@ -63,7 +67,12 @@ export function escanearQr(video, alLeer, alFallar) {
           // Pedir una resolución modesta ya alivia al móvil antes incluso de
           // reducirla nosotros.
           width: { ideal: 1280 },
-          height: { ideal: 720 }
+          height: { ideal: 720 },
+          // Enfoque continuo: sin esto el móvil enfoca una vez al abrir y un
+          // código a tres metros se queda borroso para siempre. Va como
+          // "advanced" porque no todos los navegadores lo admiten y así no
+          // tumba la petición entera si no lo soportan.
+          advanced: [{ focusMode: 'continuous' }]
         },
         audio: false
       });
@@ -78,6 +87,7 @@ export function escanearQr(video, alLeer, alFallar) {
       try { await video.play(); } catch { /* algunos navegadores lo reanudan solos */ }
     }
 
+    let vuelta = 0;
     const lienzo = document.createElement('canvas');
     const ctx = lienzo.getContext('2d', { willReadFrequently: true });
 
@@ -100,7 +110,14 @@ export function escanearQr(video, alLeer, alFallar) {
         }
         ctx.drawImage(video, 0, 0, w, h);
         try {
-          const leido = jsQR(ctx.getImageData(0, 0, w, h).data, w, h, { inversionAttempts: 'dontInvert' });
+          const datos = ctx.getImageData(0, 0, w, h).data;
+          // Se alterna el modo de inversión entre fotogramas: así se cubren
+          // también los códigos claros sobre fondo oscuro sin pagar el doble
+          // de trabajo en cada pasada.
+          vuelta += 1;
+          const leido = jsQR(datos, w, h, {
+            inversionAttempts: vuelta % 2 ? 'dontInvert' : 'onlyInvert'
+          });
           if (leido?.data && alLeer(leido.data)) { parar(); return; }
         } catch { /* fotograma inservible: se sigue con el siguiente */ }
       }

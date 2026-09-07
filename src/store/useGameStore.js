@@ -1256,6 +1256,9 @@ export const useGameStore = create((setStore, getStore) => ({
         name: cancion.name,
         artist: cancion.artist,
         releaseYear: cancion.releaseYear ?? null,
+        // La carátula es lo que convierte el reveal en un momento: se ve el
+        // disco, no solo un año suelto.
+        coverUrl: cancion.coverUrl || null,
         uri: cancion.uri || null
       }
     }).catch((error) => console.error('No se pudo publicar la canción:', error));

@@ -155,7 +155,14 @@ html.fs-xl {
     inset: 0;
     display: flex;
     flex-direction: column;
-    background: #0b0f17;
+    /* Fondo con algo de sala de fiestas en vez de negro plano: dos focos de
+       color muy suaves sobre el azul oscuro. Son degradados ESTÁTICOS —no se
+       animan— para que no cuesten nada: se pintan una vez y ya. */
+    background:
+      radial-gradient(ellipse 60% 50% at 12% 8%, rgba(168,85,247,.16), transparent 70%),
+      radial-gradient(ellipse 55% 45% at 92% 92%, rgba(57,255,20,.10), transparent 70%),
+      radial-gradient(ellipse 70% 60% at 50% 120%, rgba(255,122,26,.09), transparent 70%),
+      #0b0f17;
     color: #eef3ff;
     font-size: 2.4vmin;
     /* `hidden` recortaría en silencio si algo no cupiera, y en una tele nadie
@@ -230,8 +237,24 @@ html.fs-xl {
     to   { transform: translateY(0); opacity: 1; }
   }
 
+  /* Podio: cada puesto sube desde abajo, y el ganador el último para que la
+     mirada acabe en él. */
+  .tv-sube { animation: tv-sube 620ms cubic-bezier(.2,.9,.3,1.05) both; }
+  @keyframes tv-sube {
+    from { transform: translateY(8vmin) scale(.85); opacity: 0; }
+    to   { transform: translateY(0) scale(1); opacity: 1; }
+  }
+
+  /* Brillo del ganador. Solo uno en pantalla, así que sale barato. */
+  .tv-campeon { animation: tv-campeon 2.4s ease-in-out infinite; }
+  @keyframes tv-campeon {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.035); }
+  }
+
   @media (prefers-reduced-motion: reduce) {
-    .tv-vinilo, .tv-onda, .tv-barra, .tv-latido, .tv-entra, .tv-pop {
+    .tv-vinilo, .tv-onda, .tv-barra, .tv-latido, .tv-entra, .tv-pop,
+    .tv-sube, .tv-campeon {
       animation: none !important;
     }
   }

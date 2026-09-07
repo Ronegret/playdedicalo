@@ -107,6 +107,8 @@ function cancionDesdeFila(fila) {
     artist: fila.artist_main || 'Artista sorpresa',
     releaseYear: Number(fila.release_year) || null,
     previewUrl: fila.preview_url || null,
+    coverUrl: fila.cover_url || null,
+    // Mismo dato con el nombre que espera la pantalla de resultado del móvil.
     albumImage: fila.cover_url || null
   };
 }

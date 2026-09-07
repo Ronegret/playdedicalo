@@ -116,6 +116,8 @@ function Teclado({ onConfirmar }) {
   );
 }
 
+const COLOR_PODIO = ['#ffbf4d', '#dbe4f0', '#ff9a4d'];
+
 export default function TvScreen() {
   const [params] = useSearchParams();
   const [pinElegido, setPinElegido] = useState(() => (params.get('pin') || '').replace(/\D/g, '').slice(0, 4));
@@ -276,6 +278,21 @@ export default function TvScreen() {
     [conectados]
   );
 
+  // Orden visual del podio: segundo a la izquierda, campeón en medio, tercero
+  // a la derecha. Suben de menor a mayor para que el último en aparecer sea
+  // quien gana.
+  const podio = useMemo(() => {
+    const tres = clasificacion.slice(0, 3);
+    if (!tres.length) return [];
+    const orden = [1, 0, 2];
+    const altos = ['9vmin', '6.5vmin', '4.5vmin'];
+    const retrasos = [700, 300, 0];
+    return orden
+      .filter((i) => tres[i])
+      .map((i) => ({ jugador: tres[i], puesto: i, alto: altos[i], retraso: retrasos[i] }));
+  }, [clasificacion]);
+
+
   // Sabotajes de esta ronda: quién se lo hizo a quién.
   const sabotajes = useMemo(() => conectados
     .filter((p) => p.activeAttack?.round === round && p.activeAttack?.from)
@@ -363,8 +380,8 @@ export default function TvScreen() {
               </p>
 
               <div className="mt-[3vmin] rounded-[2vmin] bg-white p-[1.6vmin]">
-                <img src={urlQr(enlaceTv, 420)} alt="Código para conectar la tele"
-                  style={{ width: '34vmin', height: '34vmin', display: 'block' }} />
+                <img src={urlQr(enlaceTv, 600)} alt="Código para conectar la tele"
+                  style={{ width: '46vmin', height: '46vmin', display: 'block' }} />
               </div>
 
               <p style={{ fontSize: '2vmin', letterSpacing: '0.3em' }} className="mt-[2.5vmin] text-tv-dim">
@@ -471,8 +488,8 @@ export default function TvScreen() {
                  el mundo tiene que entrar. Grande y en el centro. */
               <div className="flex items-center gap-[5vmin]">
                 <div className="rounded-[1.6vmin] bg-white p-[1.4vmin]">
-                  <img src={urlQr(enlaceJugar, 420)} alt="Código QR para entrar"
-                    style={{ width: '30vmin', height: '30vmin', display: 'block' }} />
+                  <img src={urlQr(enlaceJugar, 560)} alt="Código QR para entrar"
+                    style={{ width: '38vmin', height: '38vmin', display: 'block' }} />
                 </div>
                 <div className="text-left">
                   <p style={{ fontSize: '1.9vmin', letterSpacing: '0.24em' }} className="text-neon-green">
@@ -580,34 +597,113 @@ export default function TvScreen() {
             )}
 
             {hayReveal && currentTrack && (
-              <div className="w-full text-center">
-                <p style={{ fontSize: '2.2vmin', letterSpacing: '0.3em' }} className="text-tv-dim">
-                  LA CANCIÓN ERA
-                </p>
-                <p style={{ fontSize: '4vmin' }} className="mt-[0.6vmin] w-full truncate font-black text-tv-ink">
-                  {currentTrack.name || currentTrack.title}
-                </p>
-                <p style={{ fontSize: '2.6vmin' }} className="w-full truncate text-tv-dim">
-                  {currentTrack.artist || currentTrack.artists}
-                </p>
-                <p style={{ fontSize: '14vmin', lineHeight: 1, color: '#ffbf4d' }}
-                  className="mt-[1vmin] font-black tabular-nums tv-pop">
-                  {currentQuestion?.songYear ?? currentTrack.releaseYear}
-                </p>
-                {ganadorRapido && (
-                  <p style={{ fontSize: '2.2vmin' }} className="mt-[0.5vmin] font-bold text-chaos-gold">
-                    ⚡ {ganadorRapido} respondió primero
+              <div className="flex items-center gap-[4vmin]">
+                {/* La carátula sobre el disco: convierte el reveal en un
+                    momento, en vez de un año suelto sobre negro. */}
+                <div className="relative shrink-0" style={{ width: '24vmin', height: '24vmin' }}>
+                  <img src="/images/vinilo.png" alt="" className="tv-vinilo"
+                    style={{ width: '100%', height: '100%', borderRadius: '50%', display: 'block' }} />
+                  <div
+                    className="tv-pop absolute overflow-hidden"
+                    style={{ inset: '13%', borderRadius: '1.2vmin', boxShadow: '0 1vmin 3vmin rgba(0,0,0,.6)' }}
+                  >
+                    {/* El respaldo va DEBAJO, siempre pintado: así una carátula
+                        que no cargue (una de cada cinco no la tiene) deja un
+                        disco decente en vez del icono de imagen rota. */}
+                    <div className="absolute inset-0 flex items-center justify-center"
+                      style={{ background: 'linear-gradient(135deg,#1b2230,#0e131c)' }}>
+                      <span className="material-symbols-outlined text-neon-green" style={{ fontSize: '6vmin' }}>
+                        music_note
+                      </span>
+                    </div>
+                    {(currentTrack.coverUrl || currentTrack.albumImage) && (
+                      <img
+                        src={currentTrack.coverUrl || currentTrack.albumImage}
+                        alt=""
+                        className="relative h-full w-full object-cover"
+                        onError={(e) => { e.currentTarget.style.visibility = 'hidden'; }}
+                      />
+                    )}
+                  </div>
+                </div>
+
+                <div className="min-w-0 text-left">
+                  <p style={{ fontSize: '2vmin', letterSpacing: '0.3em' }} className="text-tv-dim">
+                    LA CANCIÓN ERA
                   </p>
-                )}
+                  <p style={{ fontSize: '3.8vmin' }} className="mt-[0.4vmin] truncate font-black text-tv-ink">
+                    {currentTrack.name || currentTrack.title}
+                  </p>
+                  <p style={{ fontSize: '2.4vmin' }} className="truncate text-tv-dim">
+                    {currentTrack.artist || currentTrack.artists}
+                  </p>
+                  <p style={{ fontSize: '13vmin', lineHeight: 1, color: '#ffbf4d' }}
+                    className="mt-[0.5vmin] font-black tabular-nums tv-pop">
+                    {currentQuestion?.songYear ?? currentTrack.releaseYear}
+                  </p>
+                  {ganadorRapido && (
+                    <p style={{ fontSize: '2.1vmin' }} className="font-bold text-chaos-gold">
+                      ⚡ {ganadorRapido} respondió primero
+                    </p>
+                  )}
+                </div>
               </div>
             )}
 
             {phase === 'final' && (
-              <div className="w-full text-center">
-                <p style={{ fontSize: '5vmin', color: '#ffbf4d' }} className="font-black">FIN DE LA PARTIDA</p>
-                <p style={{ fontSize: '3vmin' }} className="mt-[1vmin] font-black text-tv-ink">
-                  Gana {clasificacion[0]?.name || '—'}
+              <div className="flex w-full flex-col items-center">
+                <p style={{ fontSize: '4.4vmin', color: '#ffbf4d', letterSpacing: '0.1em' }} className="font-black">
+                  FIN DE LA PARTIDA
                 </p>
+
+                {/* Podio de verdad: los tres suben a su cajón, primero el
+                    tercero y el campeón el último, que es el momento que la
+                    sala está esperando. */}
+                <div className="mt-[2vmin] flex items-end justify-center gap-[3vmin]">
+                  {podio.map((p) => (
+                    <div
+                      key={p.jugador.id}
+                      className="tv-sube flex flex-col items-center"
+                      style={{ animationDelay: `${p.retraso}ms` }}
+                    >
+                      <div className={p.puesto === 0 ? 'tv-campeon' : undefined}>
+                        <VinilloJugador
+                          jugador={p.jugador}
+                          tam={p.puesto === 0 ? '20vmin' : '15vmin'}
+                          puesto={p.puesto}
+                          meta={targetYears}
+                          girando={p.puesto === 0}
+                        />
+                      </div>
+                      <div
+                        className="mt-[1vmin] flex w-full items-start justify-center rounded-t-[1vmin]"
+                        style={{
+                          height: p.alto,
+                          minWidth: p.puesto === 0 ? '20vmin' : '15vmin',
+                          background: `linear-gradient(180deg, ${COLOR_PODIO[p.puesto]}, ${COLOR_PODIO[p.puesto]}22)`
+                        }}
+                      >
+                        <span
+                          className="font-black tabular-nums"
+                          style={{ fontSize: '3.4vmin', color: '#0b0f17', marginTop: '0.6vmin' }}
+                        >
+                          {p.puesto + 1}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {clasificacion.length > 3 && (
+                  <div className="mt-[2vmin] flex flex-wrap justify-center gap-x-[3vmin] gap-y-[0.8vmin]">
+                    {clasificacion.slice(3).map((j, i) => (
+                      <p key={j.id} style={{ fontSize: '2vmin' }} className="text-tv-dim">
+                        <span className="font-black">{i + 4}.</span> {j.name}{' '}
+                        <span style={{ color: '#39ff14' }}>{getTimelineProgress(j)}</span>/{targetYears}
+                      </p>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
           </main>
@@ -630,7 +726,7 @@ export default function TvScreen() {
 
           {/* LOS JUGADORES: cada uno un vinilo con su puesto en la carrera,
               ordenados por canciones. Es lo que la sala mira entre rondas. */}
-          {conectados.length > 0 && (
+          {conectados.length > 0 && phase !== 'final' && (
             <footer
               className="grid shrink-0 justify-center gap-x-[2vmin] gap-y-[1.5vmin] pt-[1.5vmin]"
               style={{
@@ -639,7 +735,8 @@ export default function TvScreen() {
                 maxHeight: '42vmin'
               }}
             >
-              {clasificacion.map((jugador, i) => (
+              {clasificacion.map((jugador, i) => {
+                return (
                 <VinilloJugador
                   key={jugador.id}
                   jugador={jugador}
@@ -655,8 +752,9 @@ export default function TvScreen() {
                       ? 'bloqueado'
                       : roundAnswers[jugador.id] ? 'respondio' : 'espera'
                   }
-                />
-              ))}
+                  />
+                );
+              })}
             </footer>
           )}
         </div>
