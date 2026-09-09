@@ -6,6 +6,7 @@ import { DEDICALO_PLAYLISTS, MAX_TIMELINE_GOAL_YEARS, MIN_TIMELINE_GOAL_YEARS, P
 import { isImageAvatar } from '../data/characterAvatars';
 import { desbloquearAudio } from '../services/musica';
 import ConectarTv from '../components/ConectarTv';
+import CodigoQr from '../components/CodigoQr';
 import ProfileMenu from '../components/ProfileMenu';
 import HeaderLogo from '../components/HeaderLogo';
 import SabotageSettings from '../components/SabotageSettings';
@@ -503,7 +504,7 @@ export default function LobbyScreen() {
             >
               <h3 className="font-headline-lg text-2xl text-white">Escanea para unirte</h3>
               <div className="p-4 bg-white rounded-2xl">
-                <img src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`${window.location.origin}/guest/join?pin=${pin}`)}`} alt="QR Code" className="w-48 h-48" />
+                <CodigoQr valor={`${window.location.origin}/guest/join?pin=${pin}`} tam="12rem" alt="Código QR para unirse a la sala" />
               </div>
               <p className="font-stats-xl text-4xl text-primary tracking-widest">{pin}</p>
               <button onClick={() => setShowQR(false)} className="px-6 py-2 bg-white/10 rounded-full font-label-caps text-xs hover:bg-white/20 transition-colors">CERRAR</button>

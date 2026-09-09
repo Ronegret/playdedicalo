@@ -33,6 +33,7 @@ function lazyWithReload(importer) {
 
 const WelcomeScreen = lazyWithReload(() => import('./pages/WelcomeScreen'));
 const HowToPlayScreen = lazyWithReload(() => import('./pages/HowToPlayScreen'));
+const LegalScreen = lazyWithReload(() => import('./pages/LegalScreen'));
 const RoleSelectionScreen = lazyWithReload(() => import('./pages/RoleSelectionScreen'));
 const HostSyncScreen = lazyWithReload(() => import('./pages/HostSyncScreen'));
 const GuestJoinScreen = lazyWithReload(() => import('./pages/GuestJoinScreen'));
@@ -171,6 +172,11 @@ function App() {
             <Routes location={location} key={location.pathname}>
               <Route path="/" element={<WelcomeScreen />} />
               <Route path="/how-to-play" element={<HowToPlayScreen />} />
+              {/* Con dirección propia cada documento: Google Play pide un
+                  enlace directo a la política de privacidad, y una consulta
+                  se responde con un enlace concreto. */}
+              <Route path="/legal" element={<LegalScreen />} />
+              <Route path="/legal/:documento" element={<LegalScreen />} />
               <Route path="/role-selection" element={<RoleSelectionScreen />} />
               <Route path="/host/sync" element={<HostSyncScreen />} />
               <Route path="/guest/join" element={<GuestJoinScreen />} />

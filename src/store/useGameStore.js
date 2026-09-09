@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { ref, onValue, onDisconnect, get, set, update, remove, serverTimestamp } from 'firebase/database';
-import { database, ensureAuthenticated } from '../firebase';
+import { auth, database, ensureAuthenticated } from '../firebase';
 
 // Cuánto tiempo se muestra a un jugador como "Reconectando" antes de darlo
 // por perdido en la UI. No lo saca de la sala — solo cambia el indicador de
@@ -416,7 +416,10 @@ export const useGameStore = create((setStore, getStore) => ({
     const hostPlayer = {
       id: hostId,
       authUid: hostUser?.uid || null,
-      email: hostUser?.email || null,
+      // Sin correo. La sala la lee cualquiera que acierte el PIN —cuatro
+      // dígitos son diez mil combinaciones, se prueban en segundos— y el
+      // correo no lo necesita nadie para jugar: basta el nombre y el avatar.
+      // Los datos de la cuenta viven en `users/{uid}`, que solo lee su dueño.
       name: profile?.name || hostUser?.displayName || 'Anfitrión',
       avatar: profile?.avatar || hostUser?.photoURL || 'DJ',
       points: 10,
@@ -780,10 +783,17 @@ export const useGameStore = create((setStore, getStore) => ({
     const { pin, roomSubscription } = getStore();
     if (typeof roomSubscription === 'function') roomSubscription();
     if (pin) {
-      Promise.all([
-        patchData(`rooms/${pin}`, { phase: 'final', currentQuestion: null, currentTrack: null }),
-        patchData(`rooms/${pin}/audio`, { isPlaying: false })
-      ]).catch((error) => console.error('Error al cerrar la sala:', error));
+      // Se avisa primero de que la partida ha terminado —para que los móviles
+      // y la tele lo enseñen en condiciones— y se borra la sala unos segundos
+      // después. Antes solo se marcaba como terminada y ahí se quedaba para
+      // siempre, con los nombres de quienes jugaron: datos personales
+      // guardados sin ningún fin.
+      const salaId = pin;
+      patchData(`rooms/${salaId}`, { phase: 'final', currentQuestion: null, currentTrack: null })
+        .then(() => patchData(`rooms/${salaId}/audio`, { isPlaying: false }))
+        .then(() => new Promise((listo) => setTimeout(listo, 8000)))
+        .then(() => deleteData(`rooms/${salaId}`))
+        .catch((error) => console.error('Error al cerrar la sala:', error));
     }
     clearPersistedSession();
     setStore({
@@ -925,7 +935,7 @@ export const useGameStore = create((setStore, getStore) => ({
         persistSession('guest', cleanPin, guestId);
         await writeData(`rooms/${cleanPin}/joinRequests/${guestId}`, {
           id: guestId,
-          authUid: authUser?.uid || null,
+          authUid: authUser?.uid || auth.currentUser?.uid || null,
           email: authUser?.email || null,
           name: nextName,
           avatar: nextAvatar,
@@ -956,8 +966,11 @@ export const useGameStore = create((setStore, getStore) => ({
       const nextAvatar = cleanProfileAvatar(existingPlayer?.avatar || registeredProfile?.avatar || guestAvatar, 'DJ');
       const newPlayer = {
         id: guestId,
-        authUid: authUser?.uid || existingPlayer?.authUid || null,
-        email: authUser?.email || existingPlayer?.email || null,
+        // Se guarda SIEMPRE el identificador de la sesión, también en las
+        // anónimas: es lo que permite que las reglas de la base comprueben
+        // que quien modifica a un jugador es ese jugador y no un extraño que
+        // ha acertado el PIN.
+        authUid: authUser?.uid || auth.currentUser?.uid || existingPlayer?.authUid || null,
         name: nextName,
         avatar: nextAvatar,
         points: existingPlayer ? existingPlayer.points : 10,
@@ -1570,6 +1583,7 @@ export const useGameStore = create((setStore, getStore) => ({
       const newPlayer = {
         id: requestId,
         authUid: request.authUid || existingPlayer?.authUid || null,
+        // (sin correo: ver el comentario de hostCreateRoom)
         email: request.email || existingPlayer?.email || null,
         name: nextName,
         avatar: nextAvatar,

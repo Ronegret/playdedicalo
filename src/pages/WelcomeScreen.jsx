@@ -215,6 +215,25 @@ export default function WelcomeScreen() {
               </button>
             )}
           </motion.div>
+
+          {/* Pie legal. Va en la portada porque es la única pantalla por la
+              que pasa todo el mundo, y porque una política de privacidad que
+              no se encuentra desde ningún sitio no cumple nada. */}
+          <nav className="mt-8 flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
+            {[['/legal/privacidad', 'Privacidad'],
+              ['/legal/cookies', 'Cookies'],
+              ['/legal/terminos', 'Condiciones'],
+              ['/legal/aviso-legal', 'Aviso legal']].map(([ruta, texto]) => (
+              <button
+                key={ruta}
+                type="button"
+                onClick={() => navigate(ruta)}
+                className="py-2 text-[0.7rem] uppercase tracking-[0.14em] text-white/35 underline-offset-4 transition-colors hover:text-white/70 hover:underline"
+              >
+                {texto}
+              </button>
+            ))}
+          </nav>
         </div>
 
       </div>

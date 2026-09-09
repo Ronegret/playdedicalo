@@ -37,3 +37,8 @@ assets-source/
 
 .vercel
 .resolver-previews.lock
+
+# Compilación de la app de televisión (Gradle)
+tv-android/.gradle/
+tv-android/build/
+tv-android/app/build/

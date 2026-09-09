@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getTimelineProgress, useGameStore } from '../store/useGameStore';
 import FichaJugador from '../components/tv/FichaJugador';
+import CodigoQr from '../components/CodigoQr';
 import { desbloquearAudio, duracionFragmento, pararMusica, sonarCancionAleatoria } from '../services/musica';
 import { vigilarFluidez } from '../services/rendimiento';
 
@@ -35,10 +36,6 @@ function nuevoCodigo() {
   let c = '';
   for (let i = 0; i < 6; i += 1) c += ALFABETO[Math.floor(Math.random() * ALFABETO.length)];
   return c;
-}
-
-function urlQr(datos, tam = 340) {
-  return `https://api.qrserver.com/v1/create-qr-code/?size=${tam}x${tam}&margin=0&data=${encodeURIComponent(datos)}`;
 }
 
 // ── Teclado de reserva ──────────────────────────────────────────────────────
@@ -637,11 +634,7 @@ export default function TvScreen() {
 
                   <div className="mt-[3.5vmin] flex items-center gap-[3vmin]">
                     <div className="rounded-[1.4vmin] bg-white p-[1vmin]">
-                      <img
-                        src={urlQr(enlaceTv, 420)}
-                        alt="Código QR para conectar la tele"
-                        style={{ width: '20vmin', height: '20vmin', display: 'block' }}
-                      />
+                      <CodigoQr valor={enlaceTv} tam="20vmin" alt="Código QR para conectar la tele" />
                     </div>
                     <p style={{ fontSize: '2.1vmin' }} className="max-w-[34vmin] text-left leading-relaxed text-tv-dim">
                       O escanea esto con el móvil, si lo prefieres.
@@ -781,8 +774,7 @@ export default function TvScreen() {
           {enlaceJugar && (
             <div className="mt-[1.5vmin] rounded-[1.2vmin] bg-white p-[0.8vmin]"
               style={{ boxShadow: '0 0 3vmin rgba(57,255,20,.22)' }}>
-              <img src={urlQr(enlaceJugar, 260)} alt="Código QR para entrar"
-                style={{ width: '16vmin', height: '16vmin', display: 'block' }} />
+              <CodigoQr valor={enlaceJugar} tam="16vmin" alt="Código QR para entrar" />
             </div>
           )}
           <p style={{ fontSize: '1.6vmin' }} className="tv-etiqueta mt-[1.4vmin] text-center text-tv-dim">
@@ -824,8 +816,7 @@ export default function TvScreen() {
                  el mundo tiene que entrar. Grande y en el centro. */
               <div className="flex items-center gap-[5vmin]">
                 <div className="rounded-[1.6vmin] bg-white p-[1.4vmin]">
-                  <img src={urlQr(enlaceJugar, 560)} alt="Código QR para entrar"
-                    style={{ width: '38vmin', height: '38vmin', display: 'block' }} />
+                  <CodigoQr valor={enlaceJugar} tam="38vmin" alt="Código QR para entrar" />
                 </div>
                 <div className="text-left">
                   {/* Sin repetir "tele conectada": ya lo dice la franja de

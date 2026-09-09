@@ -2,12 +2,21 @@
   "rules": {
     ".read": false,
     ".write": false,
+
+    "users": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+
     "rooms": {
       "$pin": {
         ".read": "auth != null && $pin.matches(/^[0-9]{4}$/)",
         ".write": "auth != null && $pin.matches(/^[0-9]{4}$/)"
       }
     },
+
     "tvLinks": {
       "$codigo": {
         ".read": "auth != null && $codigo.matches(/^[A-Z0-9]{6}$/)",
