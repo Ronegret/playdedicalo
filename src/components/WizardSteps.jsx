@@ -7,7 +7,9 @@ import { motion } from 'framer-motion';
 export function StepProgress({ steps, current, onGoTo }) {
   return (
     <div className="w-full">
-      <div className="flex items-center gap-1.5">
+      {/* pt-[34px] compensa el -mt-[34px] de los botones: sin esto el bloque
+          se comería el espacio de lo que tenga encima. */}
+      <div className="flex items-center gap-1.5 pt-[34px]">
         {steps.map((step, index) => {
           const isDone = index < current;
           const isCurrent = index === current;
@@ -23,9 +25,16 @@ export function StepProgress({ steps, current, onGoTo }) {
               aria-label={canGo ? `Volver al paso ${index + 1}: ${step}` : `Paso ${index + 1}: ${step}`}
               aria-current={isCurrent ? 'step' : undefined}
               // La barra se ve fina (8 px) pero se puede pulsar para volver a
-              // un paso, así que la zona táctil se agranda con padding
-              // transparente: el aspecto no cambia y el dedo sí acierta.
-              className={`group flex flex-1 items-center min-h-touch -my-[22px] ${canGo ? 'cursor-pointer' : 'cursor-default'}`}
+              // un paso, así que la zona táctil se agranda: el aspecto no
+              // cambia y el dedo sí acierta.
+              //
+              // El reparto es ASIMÉTRICO a propósito. Antes era `-my-[22px]`,
+              // simétrico, y esos 22 px de abajo caían ENCIMA de "PASO 1 DE 3":
+              // no era solo un solape visual, es que tocar la etiqueta pulsaba
+              // la barra y te mandaba a otro paso. Arriba hay hueco libre, así
+              // que la zona táctil crece hacia arriba (-34) y apenas hacia
+              // abajo (-10), donde vive el texto.
+              className={`group flex flex-1 items-center min-h-touch -mt-[34px] -mb-[10px] ${canGo ? 'cursor-pointer' : 'cursor-default'}`}
             >
               <span
                 className={`block h-2 w-full rounded-full transition-colors ${
@@ -36,7 +45,7 @@ export function StepProgress({ steps, current, onGoTo }) {
           );
         })}
       </div>
-      <div className="mt-2 flex items-baseline justify-between gap-3">
+      <div className="relative z-10 mt-4 flex items-baseline justify-between gap-3">
         <p className="font-label-caps text-xs tracking-[0.18em] text-neon-green">
           PASO {current + 1} DE {steps.length}
         </p>

@@ -23,7 +23,8 @@
     "iconos-app": "node scripts/iconos-app.mjs",
     "optimizar-imagenes": "node scripts/optimizar-imagenes.mjs",
     "partir-catalogo": "node scripts/partir-catalogo.mjs",
-    "fuentes": "node scripts/fuentes.mjs"
+    "fuentes": "node scripts/fuentes.mjs",
+    "revisar-layout": "node scripts/revisar-layout.mjs"
   },
   "dependencies": {
     "firebase": "^12.14.0",

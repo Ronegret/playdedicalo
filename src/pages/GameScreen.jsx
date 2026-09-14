@@ -10,6 +10,7 @@ import JoinRequestBanner from '../components/JoinRequestBanner';
 import { crearPreguntaDeCancion } from '../services/preguntas';
 import { alTerminarFragmento, duracionFragmento, desbloquearAudio, getCancionOculta, pararMusica, segundosRestantes, sonarCancionAleatoria } from '../services/musica';
 import { sfx, agacharMusica, recuperarMusica } from '../services/audio';
+import { useBarraInferior } from '../hooks/useBarraInferior';
 import { vibrar } from '../services/haptics';
 
 const EQUALIZER_BARS = [0.35, 0.58, 0.42, 0.71, 0.49, 0.64, 0.39];
@@ -785,6 +786,10 @@ export default function GameScreen() {
     sabotageEnabled,
     sabotageTypes
   } = useGameStore();
+  // La barra de abajo flota sobre el contenido. Este ref mide su alto REAL y
+  // reserva ese hueco exacto, en vez de un número a mano que se queda corto en
+  // cuanto crece el texto o el tamaño de letra.
+  const barraRef = useBarraInferior();
   const [answeredQuestionKey, setAnsweredQuestionKey] = useState(null);
   const [countdownValue, setCountdownValue] = useState(3);
   const [softSecondsLeft, setSoftSecondsLeft] = useState(null);
@@ -1348,7 +1353,32 @@ export default function GameScreen() {
             )}
 
             {role === 'host' && (
-              <div className="fixed inset-x-4 bottom-[calc(1rem+env(safe-area-inset-bottom,0px))] z-40 mx-auto grid max-w-sm gap-2 md:relative md:inset-auto md:z-auto md:mb-8 md:mt-2 md:w-full md:max-w-xs">
+              <div
+                ref={barraRef}
+                className="fixed inset-x-4 bottom-[calc(1rem+env(safe-area-inset-bottom,0px))] z-40 mx-auto grid max-w-sm gap-2 md:relative md:inset-auto md:z-auto md:mb-8 md:mt-2 md:w-full md:max-w-xs"
+              >
+                {/* VELO DETRÁS DE LA BARRA.
+                    El botón tiene fondo propio, pero la frase de ayuda no: se
+                    leía ENCIMA del contenido que pasa por debajo al desplazar
+                    ("TUS AÑOS · META" cruzándola por la mitad). Reservar hueco
+                    resuelve el final del recorrido; esto resuelve el trayecto.
+                    Es un degradado que desvanece lo que pasa por debajo, el
+                    gesto estándar de cualquier barra flotante.
+                    `-z-10` y sin eventos: no puede robarle el toque al botón. */}
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -inset-x-6 -bottom-10 -top-14 -z-10 md:hidden"
+                  style={{
+                    // Parada explícita, no `to-transparent` a secas: con el
+                    // degradado por defecto la parte de ARRIBA queda
+                    // transparente, y arriba es justo donde vive la frase de
+                    // ayuda — así que seguía leyéndose el contenido a través
+                    // de ella. Aquí el velo ya está opaco del todo antes de
+                    // llegar al texto, y solo se desvanece por encima.
+                    background:
+                      'linear-gradient(to top, rgb(5 8 22) 0%, rgb(5 8 22) 62%, rgba(5,8,22,0.85) 80%, rgba(5,8,22,0) 100%)'
+                  }}
+                />
                 <p className="text-center text-sm text-on-surface-variant">Para cuando lo veas claro 👇</p>
                 <motion.button
                   whileHover={{ y: -2 }}

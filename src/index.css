@@ -187,7 +187,7 @@ html.fs-xl {
   }
 
   html.play-landscape .safe-bottom-action {
-    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(var(--alto-barra, 5.5rem) + env(safe-area-inset-bottom, 0px));
   }
 
   /* ── Pantalla de televisión ──────────────────────────────────────────
@@ -466,8 +466,14 @@ html.fs-xl {
      fs-large/fs-xl — 8.5rem da margen de sobra para que nunca quede
      encima de los botones de arriba (SABOTEAR/CANJEAR), incluso si el
      texto pasa a dos líneas. */
+  /* El hueco que se reserva para la barra fija de abajo.
+     `--alto-barra` lo publica useBarraInferior midiendo la barra DE VERDAD
+     con un ResizeObserver. El 8.5rem se queda solo como respaldo para el
+     instante antes de la primera medida y para pantallas que aún no usan el
+     hook. Antes ese 8.5rem era el único valor, y al subir el tamaño de letra
+     la barra crecía por encima y tapaba hasta 72 px de contenido. */
   .safe-bottom-action {
-    padding-bottom: calc(8.5rem + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(var(--alto-barra, 8.5rem) + env(safe-area-inset-bottom, 0px));
   }
 
   /* ── Tipografia de titular, a prueba de desbordes ──────────────────────
