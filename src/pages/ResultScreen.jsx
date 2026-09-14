@@ -782,7 +782,7 @@ export default function ResultScreen() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.42 }}
-          className="mt-3 flex flex-col gap-2"
+          className="accion-ronda mt-3 flex flex-col gap-2"
         >
           {role === 'host' ? (
             <button

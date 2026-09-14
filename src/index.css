@@ -283,6 +283,14 @@ html.fs-xl {
      el botón a la derecha. El `max-w-lg` (512 px) también se suelta, porque
      está pensado para un móvil de pie.
   ─────────────────────────────────────────────────────────────────────── */
+  /* El titular de resultado se dimensiona con vw, pero al partir en dos
+     columnas ya no dispone del ancho entero de la pantalla, sino de la mitad
+     larga: con `11.5vw` volvía a salirse de su caja. Aquí se recorta a la
+     proporción que de verdad ocupa. */
+  html.play-landscape .ronda-resultado [class*="font-headline-lg"] {
+    font-size: min(3.25rem, 6vw, 15vh) !important;
+  }
+
   html.play-landscape .ronda-resultado {
     max-width: none;
     flex-direction: row;
@@ -305,6 +313,66 @@ html.fs-xl {
     flex: 1 1 18rem;
     min-width: 0;
     max-width: 30rem;
+  }
+
+  /* ── La accion principal, de lado en el borde derecho ─────────────────
+     Girado quedan unos 390 px de alto, y no hay forma de que quepan a la vez
+     la tarjeta de resultado, la cancion, la clasificacion de todos y un boton
+     ancho. Algo tiene que salir de la pila.
+
+     Asi que el boton deja de ser una franja horizontal y pasa a ser una
+     columna pegada al borde derecho, con el texto escrito de lado. Tres cosas
+     a la vez:
+
+       · No compite por el alto: usa el ancho, que es lo que sobra al girar.
+       · Esta SIEMPRE visible, sin desplazar. Es la accion que hace avanzar la
+         partida; esconderla detras de un scroll es el peor sitio posible.
+       · Cae bajo el pulgar derecho, que es donde esta la mano cuando sujetas
+         el movil en horizontal.
+
+     `vertical-rl` + `rotate(180deg)` hace que el texto se lea de ABAJO ARRIBA,
+     que es la convencion en las barras verticales — al reves obliga a torcer
+     el cuello al otro lado.
+
+     El texto sigue siendo texto: un lector de pantalla lo lee igual, y se
+     puede traducir. No es una imagen ni son letras sueltas.
+  ─────────────────────────────────────────────────────────────────────── */
+  html.play-landscape .ronda-resultado {
+    /* Se reserva el carril del boton para que nada quede debajo. */
+    padding-right: 4.75rem;
+  }
+
+  html.play-landscape .accion-ronda {
+    position: fixed;
+    right: max(0.75rem, env(safe-area-inset-right));
+    /* Anclado ARRIBA y ABAJO en vez de centrado con translate: centrado, el
+       botón subía hasta el borde y quedaba por debajo del avatar del perfil,
+       que vive en la esquina. Dejando libre la franja de la cabecera, el
+       carril es exactamente el espacio que de verdad hay. */
+    top: calc(4.75rem + env(safe-area-inset-top, 0px));
+    bottom: max(0.75rem, env(safe-area-inset-bottom));
+    z-index: 60;
+    margin-top: 0;
+    width: auto;
+    justify-content: center;
+  }
+
+  html.play-landscape .accion-ronda > button,
+  html.play-landscape .accion-ronda > div {
+    writing-mode: vertical-rl;
+    rotate: 180deg;
+    width: 3.25rem;          /* mas de los 44 px minimos para el dedo */
+    height: auto;
+    min-height: 8rem;
+    /* Que quepan los dos botones (seguir y compartir) dentro del carril sin
+       empujarse el uno al otro. */
+    max-height: 100%;
+    flex: 0 1 auto;
+    padding-block: 1.25rem;  /* en vertical, el "alto" del texto */
+    letter-spacing: 0.14em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   /* Los titulares de las tarjetas, una talla menos: siguen leyéndose de
