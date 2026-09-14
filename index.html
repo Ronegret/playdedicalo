@@ -8,7 +8,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/images/app/apple-touch-icon.png" />
     <link rel="manifest" href="/manifest.json" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#071025" />
+    <meta name="theme-color" content="#050816" />
     <meta name="color-scheme" content="dark" />
     <meta name="format-detection" content="telephone=no" />
     <meta name="mobile-web-app-capable" content="yes" />
@@ -71,7 +71,10 @@
          fuente se sirve desde /fonts, sin conexión a terceros. -->
     <meta name="dedicalo-iconos" content="add,add_box,album,arrow_back,arrow_forward,auto_awesome,autorenew,block,bolt,bomb,cancel,celebration,check,check_circle,close,content_copy,download,edit,electric_bolt,emoji_events,equalizer,error,expand_more,format_size,graphic_eq,groups,headphones,help,host,info,ios_share,keyboard,library_music,local_fire_department,login,logout,meeting_room,mood,move_down,music_note,pause,payments,person,pets,play_arrow,playlist_add,progress_activity,public,qr_code_scanner,radio_button_unchecked,refresh,remove,replay,restaurant,screen_rotation,share,smartphone,sports_esports,sports_soccer,stadium,star,stay_current_landscape,stay_current_portrait,timeline,touch_app,tv,volume_up,warning,wb_sunny,wifi_off,zoom_in" />
   </head>
-  <body class="bg-surface text-on-surface min-h-screen">
+  <!-- bg-background, NO bg-surface: son dos grises distintos (#050816 vs
+       #07101f) y la diferencia se veía como una franja de otro tono en los
+       bordes y al rebotar el scroll. -->
+  <body class="bg-background text-on-surface min-h-screen">
     <!-- ── Arranque ──────────────────────────────────────────────────────
          Esto se pinta ANTES de que exista React, antes de descargar el
          JavaScript y antes de que carguen las tipografías: es HTML y CSS en
@@ -93,7 +96,7 @@
         align-items: center;
         justify-content: center;
         gap: 22px;
-        background: #071025;
+        background: #050816;
         transition: opacity 380ms ease, visibility 380ms;
       }
       #arranque.fuera { opacity: 0; visibility: hidden; pointer-events: none; }

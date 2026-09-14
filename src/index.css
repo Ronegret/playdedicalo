@@ -61,7 +61,37 @@ html.fs-xl {
   body {
     @apply bg-background text-on-background font-body-md;
     background-color: #050816;
+    /* `pan-y` evita que un arrastre horizontal mueva la página entera (en
+       algunos navegadores eso dispara el "volver atrás"). Pero tiene un efecto
+       colateral grave: el navegador deja de atender CUALQUIER gesto horizontal
+       que empiece aquí, y eso incluye los carruseles de dentro. Ver la regla
+       de `.desliza-x` más abajo. */
     touch-action: pan-y;
+  }
+
+  /* ── Carruseles horizontales ──────────────────────────────────────────
+     Había CINCO contenedores con desplazamiento horizontal —las pestañas de
+     avatares, las categorías, los pasos del manual y, sobre todo, LA RUTA DE
+     AÑOS, que es la interacción principal del juego— y ninguno declaraba su
+     `touch-action`.
+
+     Como el `body` dice `pan-y`, el navegador se negaba a mover nada en
+     horizontal: el dedo arrastraba y la lista no se movía. De ahí la sensación
+     de que "el deslizable solo funciona a veces": respondía cuando el gesto
+     salía lo bastante recto como para que el navegador lo reinterpretara, y no
+     respondía en cuanto tenía algo de diagonal.
+
+     `pan-x pan-y` devuelve los dos ejes DENTRO del carril: el dedo lo mueve en
+     horizontal, y un gesto vertical sigue desplazando la página como siempre.
+  ─────────────────────────────────────────────────────────────────────── */
+  .desliza-x,
+  [class*='overflow-x-auto'],
+  [class*='overflow-x-scroll'] {
+    touch-action: pan-x pan-y;
+    /* Inercia en iOS: sin esto el carrusel se para en seco al soltar y se
+       siente rígido al lado de cualquier app nativa. */
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
   }
 
   /* ── Tacto de aplicación, no de página web ────────────────────────────
@@ -390,7 +420,7 @@ html.fs-xl {
   }
 
   html.play-landscape .safe-bottom-action {
-    padding-bottom: calc(var(--alto-barra, 5.5rem) + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(var(--alto-barra, 0px) + env(safe-area-inset-bottom, 0px));
   }
 
   /* ── Pantalla de televisión ──────────────────────────────────────────
@@ -676,7 +706,7 @@ html.fs-xl {
      hook. Antes ese 8.5rem era el único valor, y al subir el tamaño de letra
      la barra crecía por encima y tapaba hasta 72 px de contenido. */
   .safe-bottom-action {
-    padding-bottom: calc(var(--alto-barra, 8.5rem) + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(var(--alto-barra, 0px) + env(safe-area-inset-bottom, 0px));
   }
 
   /* ── Tipografia de titular, a prueba de desbordes ──────────────────────

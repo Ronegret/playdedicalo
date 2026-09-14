@@ -43,7 +43,10 @@ const SPLASH = join(RAIZ, 'public/images/splash');
 // Fondo de marca. Sólido a propósito: tanto la máscara de Android como el
 // icono de iOS necesitan opacidad completa, y un degradado se vería en franjas
 // al reescalar a 60×60 en la pantalla de inicio.
-const FONDO = { r: 7, g: 16, b: 37, alpha: 1 };
+// Mismo gris que el `background` de tailwind.config.js y que el theme-color.
+// Si no coinciden, se ve un salto de color entre la pantalla de arranque y la
+// app — una franja de otro tono justo al abrir.
+const FONDO = { r: 5, g: 8, b: 22, alpha: 1 };
 
 if (!existsSync(ORIGEN)) {
   console.error(`No encuentro ${ORIGEN}`);

@@ -70,7 +70,7 @@ export function StepActionBar({
 }) {
   return (
     <div
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-background/95 px-4 pt-3 app-blur-permitido"
+      className="barra-inferior fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-background/95 px-4 pt-3 app-blur-permitido"
       style={{ paddingBottom: 'calc(0.75rem + env(safe-area-inset-bottom, 0px))' }}
     >
       <div className="mx-auto w-full max-w-lg">

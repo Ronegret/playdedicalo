@@ -9,6 +9,7 @@ import OfflineBanner from './components/OfflineBanner';
 import { stopBgMusic } from './hooks/useBgMusic';
 import { useLandscapeBodyClass } from './hooks/useOrientation';
 import { useModoLigero } from './hooks/useModoLigero';
+import { useBarraInferior } from './hooks/useBarraInferior';
 import { despertarAudio } from './services/audio';
 
 // After a new deploy, a tab left open from before still points at the old,
@@ -101,7 +102,7 @@ function precargarVecinas(ruta) {
  */
 function PageLoader() {
   return (
-    <div className="fixed inset-0 z-[999] flex flex-col items-center justify-center gap-[22px] bg-[#071025] px-6">
+    <div className="fixed inset-0 z-[999] flex flex-col items-center justify-center gap-[22px] bg-[#050816] px-6">
       <img src="/images/app/icon-512.png" alt="" width={124} height={124} className="h-[124px] w-[124px] object-contain" />
       <div className="h-[3px] w-32 overflow-hidden rounded-[3px] bg-white/10">
         <i className="block h-full w-2/5 rounded-[3px] bg-gradient-to-r from-vinyl-orange to-electric-purple [animation:arranque-vaiven_1.1s_ease-in-out_infinite]" />
@@ -116,6 +117,9 @@ function App() {
   useLandscapeBodyClass();
   // Mide los fotogramas reales en este móvil y baja la calidad si no llega.
   useModoLigero();
+  // Reserva el hueco exacto de la barra fija de abajo — y ninguno cuando no
+  // hay barra, que es lo que dejaba una franja vacía al final de la pantalla.
+  useBarraInferior();
   const location = useLocation();
   const navigate = useNavigate();
   const [sessionChecked, setSessionChecked] = useState(false);
