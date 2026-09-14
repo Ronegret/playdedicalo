@@ -449,9 +449,10 @@ export default function ResultScreen() {
               </div>
             )}
 
-            <div className="mt-6 flex flex-col gap-2">
+            <div className="accion-ronda barra-inferior mt-6 flex flex-col gap-2">
               {role === 'host' && (
                 <button
+                  data-accion="principal"
                   onClick={handlePlayAgain}
                   disabled={isRestarting}
                   className="w-full h-12 rounded-xl bg-neon-green text-black font-label-caps text-sm uppercase font-bold active:scale-95 transition-all disabled:opacity-60 flex items-center justify-center gap-2"
@@ -782,10 +783,11 @@ export default function ResultScreen() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.42 }}
-          className="accion-ronda mt-3 flex flex-col gap-2"
+          className="accion-ronda barra-inferior mt-3 flex flex-col gap-2"
         >
           {role === 'host' ? (
             <button
+              data-accion="principal"
               onClick={hostNextRound}
               className="w-full h-14 rounded-2xl bg-neon-green text-black font-label-caps text-sm font-bold active:scale-95 transition-transform shadow-[0_8px_0_rgba(16,85,0,0.95),0_0_28px_rgba(57,255,20,0.3)]"
             >

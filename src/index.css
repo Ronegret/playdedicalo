@@ -303,6 +303,38 @@ html.fs-xl {
     max-width: 34rem;
   }
 
+  /* ── El lobby en una pantalla MUY baja ────────────────────────────────
+     Un iPhone SE girado deja 320 px de alto. Ahi el lobby —PIN, television,
+     modo, lista, sabotajes y jugadores— sumaba 2.861 px: casi nueve pantallas
+     de desplazamiento para una sala de espera.
+
+     A partir de cierto ancho las tarjetas fluyen en DOS columnas. No cambia
+     nada del orden ni del contenido: es el mismo texto repartido, y `columns`
+     lo hace solo sin tocar el HTML. `break-inside: avoid` impide que una
+     tarjeta se parta por la mitad entre columnas, que es lo unico feo que
+     tiene esta tecnica.
+  ─────────────────────────────────────────────────────────────────────── */
+  @media (orientation: landscape) and (max-height: 460px) {
+    html.play-landscape .sala-lobby > .sala-cuerpo {
+      max-width: none;
+      columns: 2;
+      column-gap: 0.85rem;
+      display: block;
+    }
+
+    html.play-landscape .sala-lobby > .sala-cuerpo > * {
+      break-inside: avoid;
+      -webkit-column-break-inside: avoid;
+      margin-bottom: 0.85rem;
+    }
+
+    /* El disco ya no cabe con dignidad en 320 px de alto, y no es informacion:
+       es decoracion. El PIN y los jugadores si lo son. */
+    html.play-landscape .sala-lobby > .sala-disco {
+      display: none;
+    }
+  }
+
   /* ── El resultado de la ronda, en apaisado ────────────────────────────
      Medido girado: solo cabían el titular ("CORRECTO") y poco más. Los
      puntos, la canción, la clasificación y el botón de seguir quedaban todos
@@ -343,6 +375,86 @@ html.fs-xl {
     flex: 1 1 18rem;
     min-width: 0;
     max-width: 30rem;
+  }
+
+  /* ── TODA barra inferior pasa al carril vertical al girar ─────────────
+     Un movil girado mide 844x390: activa el breakpoint `md` (768) aunque solo
+     tenga 390 px de ALTO. La barra de "PARAR MUSICA" llevaba `md:relative`
+     —pensado para un escritorio, donde sobra alto— y al girar el telefono
+     volvia al flujo y acababa en el pixel 580 de una pantalla de 390. Fuera.
+
+     Asi que en apaisado la regla es una y la misma para todas: la accion
+     principal deja la franja horizontal y pasa al carril del borde derecho,
+     con el texto de lado. Siempre visible, bajo el pulgar, y sin robarle alto
+     a lo que hay que mirar.
+  ─────────────────────────────────────────────────────────────────────── */
+  html.play-landscape .barra-inferior {
+    position: fixed !important;   /* gana a cualquier `md:relative` */
+    inset: auto max(0.75rem, env(safe-area-inset-right)) auto auto !important;
+    top: calc(4.75rem + env(safe-area-inset-top, 0px)) !important;
+    bottom: max(0.75rem, env(safe-area-inset-bottom)) !important;
+    z-index: 60;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.5rem;
+    width: auto !important;
+    max-width: 4rem;
+    padding: 0 !important;
+    background: none !important;
+    border: 0 !important;
+    backdrop-filter: none !important;
+  }
+
+  /* Los botones de dentro, escritos de lado. */
+  html.play-landscape .barra-inferior button,
+  html.play-landscape .barra-inferior > div > button {
+    writing-mode: vertical-rl;
+    rotate: 180deg;
+    width: 3.25rem;          /* por encima de los 44 px minimos para el dedo */
+    height: auto;
+    min-height: 7rem;
+    max-height: 100%;
+    padding-block: 1.1rem;
+    padding-inline: 0;
+    letter-spacing: 0.12em;
+    flex: 0 1 auto;
+  }
+
+  /* La rejilla interna del asistente (ATRAS / SIGUIENTE) se apila. */
+  html.play-landscape .barra-inferior > div {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    max-height: 100%;
+    width: auto !important;
+  }
+
+  /* Las frases de ayuda de la barra no caben de lado y no aportan nada
+     girado: el boton ya dice lo que hace. */
+  html.play-landscape .barra-inferior p {
+    display: none;
+  }
+
+  /* Y el contenido deja libre ese carril para que nada quede debajo. */
+  html.play-landscape .app-screen {
+    padding-right: max(4.75rem, env(safe-area-inset-right));
+  }
+
+  /* La accion del resultado, anclada abajo tambien DE PIE.
+     Medido: con la clasificacion de todos los jugadores, "SIGUIENTE RONDA"
+     caia siempre por debajo del borde. Es el boton que continua la partida;
+     obligar al anfitrion a desplazarse con la mesa esperando es el peor sitio
+     donde ponerlo. El hueco lo reserva solo useBarraInferior. */
+  .accion-ronda.barra-inferior {
+    position: fixed;
+    inset-inline: 1rem;
+    bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+    z-index: 55;
+    margin-top: 0;
+    margin-inline: auto;
+    max-width: 32rem;
   }
 
   /* ── La accion principal, de lado en el borde derecho ─────────────────

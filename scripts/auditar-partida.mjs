@@ -65,15 +65,27 @@ function medirReparto() {
   const cont = document.querySelector('.app-screen') || document.body;
   const alto = cont.scrollHeight;
 
-  // Lo que hay que TOCAR en esta fase. Se busca el control más grande que no
-  // sea de la cabecera: en la práctica es siempre la acción principal.
+  // Lo que hay que TOCAR en esta fase.
+  //
+  // Antes se cogía "el control más grande que no esté en la cabecera", y
+  // acertaba a medias: en la ronda señalaba la tarjeta del marcador en vez del
+  // botón de parar la música, y los avisos que salían no eran ciertos. Un
+  // auditor que miente es peor que no tenerlo.
+  //
+  // Ahora la acción principal se declara en el código con
+  // `data-accion="principal"`. Si una pantalla no la declara, se cae al
+  // criterio de antes, pero avisando de que es una suposición.
+  const marcada = [...document.querySelectorAll('[data-accion="principal"]')].find(visible);
+
   const controles = [...document.querySelectorAll('button, [role="button"], input')]
     .filter((el) => visible(el) && !el.closest('header'))
     .map((el) => ({ el, c: el.getBoundingClientRect() }))
     .filter((x) => x.c.width * x.c.height > 2000)
     .sort((a, b) => (b.c.width * b.c.height) - (a.c.width * a.c.height));
 
-  const principal = controles[0];
+  const principal = marcada
+    ? { el: marcada, c: marcada.getBoundingClientRect(), declarada: true }
+    : controles[0];
   const fueraDePantalla = controles.filter((x) => x.c.top > vh - 8).length;
 
   // Hueco vertical más grande entre bloques hermanos visibles: delata el
@@ -95,6 +107,7 @@ function medirReparto() {
     principal: principal ? {
       txt: (principal.el.textContent || principal.el.getAttribute('aria-label') || '').trim().slice(0, 28),
       top: Math.round(principal.c.top),
+      declarada: Boolean(principal.declarada),
       visible: principal.c.top < vh - 8 && principal.c.bottom > 0
     } : null,
     controlesFuera: fueraDePantalla,
@@ -169,11 +182,19 @@ for (const fase of FASES) {
     const r = await anfitrion.evaluate(medirReparto);
 
     const acc = r.principal
-      ? `${r.principal.visible ? 'ok ' : 'FUERA'} "${r.principal.txt}"`.slice(0, 23)
+      ? `${r.principal.visible ? 'ok ' : 'FUERA'} "${r.principal.txt}"${r.principal.declarada ? '' : ' (?)'}`.slice(0, 23)
       : '(ninguna)';
     const aviso = [];
     if (r.principal && !r.principal.visible) aviso.push('la acción principal no se ve');
-    if (r.desborde > r.pantalla) aviso.push(`sobresale ${Math.round(r.desborde / r.pantalla * 100)}% de una pantalla`);
+    // Que una pantalla se desplace NO es un fallo: el lobby es una pantalla de
+    // ajustes larga por naturaleza (PIN, tele, modo, lista, sabotajes,
+    // jugadores) y obligarla a caber seria peor. Lo que importa es que la
+    // accion principal este siempre a un toque; si lo esta, el desplazamiento
+    // es normal. Solo se avisa cuando ademas es desproporcionado.
+    const accionAnclada = r.principal && r.principal.visible;
+    if (r.desborde > r.pantalla * (accionAnclada ? 4 : 1)) {
+      aviso.push(`sobresale ${Math.round(r.desborde / r.pantalla * 100)}% de una pantalla`);
+    }
     if (r.huecoMax > r.pantalla * 0.25) aviso.push(`hueco vacío de ${r.huecoMax}px`);
     if (v.w > v.h && r.anchoUsado < 70) aviso.push(`solo usa el ${r.anchoUsado}% del ancho`);
     problemas += aviso.length;

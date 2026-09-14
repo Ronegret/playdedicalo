@@ -1380,6 +1380,7 @@ export default function GameScreen() {
                 />
                 <p className="text-center text-sm text-on-surface-variant">Para cuando lo veas claro 👇</p>
                 <motion.button
+                  data-accion="principal"
                   whileHover={{ y: -2 }}
                   whileTap={{ scale: (isBlackoutPending || !puedeCortar) ? 1 : 0.94, y: 4 }}
                   onClick={handleHostBlackout}

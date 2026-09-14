@@ -412,18 +412,35 @@ export default function LobbyScreen() {
                 Comparte el PIN para que se unan jugadores. Puedes empezar cuando estés listo.
               </p>
             )}
-            <button
-              onClick={handleHostStartGame}
-              className="mt-3 w-full h-12 bg-neon-green text-black font-label-caps text-label-caps rounded-xl transition-all flex items-center justify-center gap-2 font-bold active:scale-95"
-            >
-              <span className="material-symbols-outlined">play_arrow</span>
-              INICIAR RONDA
-            </button>
             {startError && (
               <p className="mt-3 rounded-xl border border-intense-red/40 bg-intense-red/10 px-3 py-2 text-xs text-intense-red">
                 {startError}
               </p>
             )}
+          </div>
+        )}
+
+        {/* ── INICIAR RONDA, anclado abajo ───────────────────────────────
+            Estaba al final del flujo, y el lobby mide unos 2.000 px: PIN,
+            televisión, modo, lista, sabotajes y jugadores. Es decir, la única
+            acción que hace empezar la partida quedaba a dos pantallas de
+            scroll — con toda la mesa esperando.
+
+            Anclada abajo está siempre a un toque, y el hueco lo reserva solo
+            `useBarraInferior` gracias a la clase `barra-inferior`. Al girar,
+            pasa al carril vertical del borde derecho.
+        ─────────────────────────────────────────────────────────────────── */}
+        {role === 'host' && (
+          <div className="barra-inferior accion-lobby fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-background/97 px-4 pt-3"
+               style={{ paddingBottom: 'calc(0.75rem + env(safe-area-inset-bottom, 0px))' }}>
+            <button
+              data-accion="principal"
+              onClick={handleHostStartGame}
+              className="app-pulsable mx-auto flex h-12 w-full max-w-lg items-center justify-center gap-2 rounded-xl bg-neon-green font-label-caps text-label-caps font-bold text-black"
+            >
+              <span className="material-symbols-outlined">play_arrow</span>
+              INICIAR RONDA
+            </button>
           </div>
         )}
 
