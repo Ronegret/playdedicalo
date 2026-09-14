@@ -25,7 +25,7 @@ function TimelineYears({ years = [], wildcards = 0, goalYears = 12 }) {
       {years.slice(0, goalYears).map((year, index) => (
         <span
           key={`${year}-${index}`}
-          className="w-9 h-9 rounded-full border-2 border-neon-green/60 bg-black/30 flex items-center justify-center text-[0.647rem] font-black text-neon-green shadow-[0_0_10px_rgba(57,255,20,0.25)]"
+          className="w-9 h-9 rounded-full border-2 border-neon-green/60 bg-black/30 flex items-center justify-center text-[0.65rem] font-black text-neon-green shadow-[0_0_10px_rgba(57,255,20,0.25)]"
           title={String(year)}
         >
           {String(year).slice(2)}
@@ -167,7 +167,7 @@ export default function LobbyScreen() {
               <span className="material-symbols-outlined text-vinyl-orange text-2xl shrink-0">wifi_off</span>
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-black text-white">{disconnectToast} se desconectó</p>
-                <p className="text-[0.588rem] text-vinyl-orange/80">Tiene 30 segundos para volver antes de quedar fuera.</p>
+                <p className="text-[0.706rem] text-vinyl-orange/80">Tiene 30 segundos para volver antes de quedar fuera.</p>
               </div>
             </div>
           </motion.div>
@@ -242,7 +242,7 @@ export default function LobbyScreen() {
               aria-label="Mostrar QR de la sala"
             >
               <span className="material-symbols-outlined text-xl leading-none">qr_code_scanner</span>
-              <span className="app-etiqueta text-[0.55rem] leading-none">Ver QR</span>
+              <span className="app-etiqueta text-[0.65rem] leading-none">Ver QR</span>
             </button>
           </div>
 
@@ -335,7 +335,7 @@ export default function LobbyScreen() {
           <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-left">
             <p className="font-label-caps text-neon-green text-xs mb-3">{gameLocked ? 'PARTIDA EN CURSO' : 'MODO DE JUEGO'}</p>
             <div className="rounded-2xl border border-vinyl-orange/30 bg-[linear-gradient(135deg,rgba(255,122,26,0.14),rgba(168,85,247,0.12))] p-4 text-left">
-              <p className="font-label-caps text-[0.588rem] text-vinyl-orange tracking-[0.2em]">AÑOS LOCOS</p>
+              <p className="font-label-caps text-[0.706rem] text-vinyl-orange tracking-[0.2em]">AÑOS LOCOS</p>
               <h3 className="mt-1 text-lg font-black text-white">{targetYears} canciones para ganar</h3>
               <p className="mt-1 text-sm text-on-surface-variant">
                 Una sola mecánica: escucha, coloca el año y completa tu ruta antes que los demás.
@@ -365,7 +365,7 @@ export default function LobbyScreen() {
 
             {!gameLocked && (
               <div className="mt-4">
-                <p className="mb-2 font-label-caps text-[0.588rem] text-vinyl-orange tracking-[0.2em]">ESTILO DE PLAYLIST</p>
+                <p className="mb-2 font-label-caps text-[0.706rem] text-vinyl-orange tracking-[0.2em]">ESTILO DE PLAYLIST</p>
                 <div className="no-scrollbar -mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
                   {DEDICALO_PLAYLISTS.map((playlist) => {
                     const meta = PLAYLIST_META[playlist.id] || { icon: 'music_note', color: '#ff7a1a' };
@@ -384,7 +384,7 @@ export default function LobbyScreen() {
                           {meta.icon}
                         </span>
                         <span
-                          className="whitespace-nowrap font-label-caps text-[0.647rem] font-bold"
+                          className="whitespace-nowrap font-label-caps text-[0.65rem] font-bold"
                           style={{ color: isSelected ? '#ffffff' : 'rgba(255,255,255,0.68)' }}
                         >
                           {playlist.name}
@@ -472,7 +472,7 @@ export default function LobbyScreen() {
                   )}
                   <div className="min-w-0">
                     <span className="block truncate font-label-caps text-xl font-black uppercase tracking-wide text-white">{player.name}</span>
-                    <span className={`mt-0.5 block font-label-caps text-[0.588rem] ${
+                    <span className={`mt-0.5 block font-label-caps text-[0.706rem] ${
                       presence.status === 'online'
                         ? 'text-neon-green'
                         : presence.status === 'reconnecting'
@@ -491,7 +491,7 @@ export default function LobbyScreen() {
                   <p className="font-black text-neon-green drop-shadow-[0_0_8px_rgba(57,255,20,0.4)] leading-none">
                     {getTimelineProgress(player)}<span className="text-xs text-on-surface-variant">/{targetYears}</span>
                   </p>
-                  <p className="mt-1 text-[0.588rem] text-on-surface-variant leading-none">{player.points} pts</p>
+                  <p className="mt-1 text-[0.706rem] text-on-surface-variant leading-none">{player.points} pts</p>
                 </div>
               </div>
               <TimelineYears years={getCombinedTimelineYears(player)} wildcards={Number(player.wildcards || 0)} goalYears={targetYears} />

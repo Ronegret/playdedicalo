@@ -110,7 +110,7 @@ export default function WelcomeScreen() {
               >
                 <div className="flex flex-col items-center gap-1">
                   <span className="material-symbols-outlined text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]" style={{ fontSize: '3rem' }}>play_arrow</span>
-                  <span className="font-label-caps text-[0.529rem] tracking-[0.18em] text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">TOCA PARA SONAR</span>
+                  <span className="font-label-caps text-[0.65rem] tracking-[0.18em] text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">TOCA PARA SONAR</span>
                 </div>
               </div>
             )}
@@ -146,7 +146,7 @@ export default function WelcomeScreen() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-[0.588rem] font-bold uppercase tracking-[0.3em] text-vinyl-orange"
+            className="text-[0.706rem] font-bold uppercase tracking-[0.3em] text-vinyl-orange"
           >
             Party Game Musical
           </motion.p>
@@ -180,7 +180,7 @@ export default function WelcomeScreen() {
             ].map(([val, label]) => (
               <div key={label}>
                 <p className="font-stats-xl text-2xl text-vinyl-orange font-black leading-none">{val}</p>
-                <p className="font-label-caps text-[0.588rem] text-on-surface-variant mt-1">{label}</p>
+                <p className="font-label-caps text-[0.706rem] text-on-surface-variant mt-1">{label}</p>
               </div>
             ))}
           </motion.div>

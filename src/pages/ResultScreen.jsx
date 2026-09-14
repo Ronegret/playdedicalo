@@ -57,7 +57,7 @@ function TimelineYears({ years = [], wildcards = 0, goalYears = 12 }) {
       {years.slice(0, goalYears).map((year, index) => (
         <span
           key={`${year}-${index}`}
-          className="w-9 h-9 rounded-full border-2 border-neon-green/60 bg-black/30 flex items-center justify-center text-[0.647rem] font-black text-neon-green"
+          className="w-9 h-9 rounded-full border-2 border-neon-green/60 bg-black/30 flex items-center justify-center text-[0.65rem] font-black text-neon-green"
           title={year}
         >
           {String(year).slice(2)}
@@ -412,7 +412,7 @@ export default function ResultScreen() {
           <button
             type="button"
             onClick={handleFinish}
-            className="absolute top-safe left-4 z-[100] min-h-touch rounded-xl border border-white/12 bg-black/35 px-3 text-white/75 font-label-caps text-[0.647rem] tracking-[0.16em] flex items-center gap-1.5 active:scale-95 transition-all"
+            className="absolute top-safe left-4 z-[100] min-h-touch rounded-xl border border-white/12 bg-black/35 px-3 text-white/75 font-label-caps text-[0.65rem] tracking-[0.16em] flex items-center gap-1.5 active:scale-95 transition-all"
           >
             <span className="material-symbols-outlined text-base">arrow_back</span>
             {role === 'host' ? 'CERRAR' : 'SALIR'}
@@ -558,7 +558,7 @@ export default function ResultScreen() {
         <button
           type="button"
           onClick={() => setShowExitConfirm(true)}
-          className="absolute top-safe left-4 z-[100] min-h-touch rounded-xl border border-white/12 bg-black/35 px-3 text-white/75 font-label-caps text-[0.647rem] tracking-[0.16em] flex items-center gap-1.5 active:scale-95 transition-all"
+          className="absolute top-safe left-4 z-[100] min-h-touch rounded-xl border border-white/12 bg-black/35 px-3 text-white/75 font-label-caps text-[0.65rem] tracking-[0.16em] flex items-center gap-1.5 active:scale-95 transition-all"
         >
           <span className="material-symbols-outlined text-base">arrow_back</span>
           {role === 'host' ? 'CERRAR' : 'SALIR'}
@@ -637,7 +637,7 @@ export default function ResultScreen() {
             )}
           </motion.div>
 
-          <p className="relative mt-5 font-label-caps text-[0.647rem] tracking-[0.28em] text-white/55">RESULTADO</p>
+          <p className="relative mt-5 font-label-caps text-[0.65rem] tracking-[0.28em] text-white/55">RESULTADO</p>
           <motion.h1
             initial={{ letterSpacing: '0.04em', scale: 0.92 }}
             animate={{ letterSpacing: '0.02em', scale: 1 }}

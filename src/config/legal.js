@@ -17,9 +17,9 @@
 
 export const TITULAR = {
   // Nombre completo (autónomo) o denominación social (S.L.)
-  nombre: 'PENDIENTE — nombre completo o razón social',
-  nif: 'PENDIENTE — NIF / CIF',
-  domicilio: 'PENDIENTE — domicilio a efectos de notificaciones',
+  nombre: 'RODRIGO NEGRETE AROS',
+  nif: 'Y8365445Z',
+  domicilio: 'CARRER DE MERIDA 1, 08030, BARCELONA, ESPAÑA',
   // Solo para sociedades: tomo, folio, hoja del Registro Mercantil
   registro: null,
   correo: 'rodrigo.negrete.aros@gmail.com',

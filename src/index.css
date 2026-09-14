@@ -180,6 +180,72 @@ html.fs-xl {
     display: none;
   }
 
+  /* ── La ronda, en apaisado: DOS COLUMNAS ──────────────────────────────
+     Girar el móvil tiene que enseñar MÁS juego, no menos. Y pasaba lo
+     contrario: en apaisado el alto se queda en unos 390 px, el disco de
+     "SONANDO" se comía 220 de esos, y "TU RUTA DE AÑOS" —donde se juega de
+     verdad— empezaba en el píxel 434. Es decir, fuera de la pantalla: había
+     que desplazarse para jugar, justo en la orientación que existe para que
+     la ruta se vea mejor.
+
+     En apaisado sobra ANCHO, que es lo que no hay en vertical. Así que el
+     disco pasa a la columna izquierda ocupando todo el alto, y todo lo demás
+     —la ruta, los avisos, los botones— a la derecha. Nada se mueve de sitio
+     en el HTML: es el mismo orden, colocado en rejilla.
+  ─────────────────────────────────────────────────────────────────────── */
+  html.play-landscape .fase-escucha {
+    /* NO es una rejilla. Se probó con `grid` y el disco, al abarcar todas las
+       filas, estiraba esas filas a su propio alto: la columna derecha salía
+       con huecos enormes entre bloques.
+
+       Se saca el disco del flujo y se deja flotando a la izquierda, y el
+       resto sigue siendo la misma columna de siempre — solo que estrechada
+       por la izquierda para dejarle sitio. Cero cambios en el HTML: el mismo
+       orden, el mismo marcado, y en vertical todo sigue exactamente igual. */
+    position: relative;
+    padding-left: 38%;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 0.45rem;
+    text-align: left;
+  }
+
+  html.play-landscape .fase-escucha > .landscape-tight {
+    /* `absolute`, no `sticky`: sticky se queda EN el flujo, ocupa su fila
+       completa en la columna y empuja la ruta fuera de la pantalla — que es
+       justo lo que se venía a arreglar. Absolute lo saca del flujo, y el
+       `padding-left` del contenedor es quien le reserva el sitio. */
+    position: absolute;
+    left: 0;
+    /* `top: 50%` centraba el disco respecto al CONTENIDO (unos 700 px), no
+       respecto a la pantalla (390): acababa por debajo del borde inferior,
+       cortado. Anclado arriba y en `sticky`, además, el disco sigue a la
+       vista mientras se desplaza la ruta — que es justo lo que hace falta:
+       saber cuánto queda de canción sin perder de vista dónde colocas. */
+    top: 0.5rem;
+    transform: scale(0.74);
+    transform-origin: top center;
+    margin: 0;
+  }
+
+  /* La columna derecha recupera el ancho completo de su hueco. */
+  html.play-landscape .fase-escucha > *:not(.landscape-tight) {
+    width: 100%;
+  }
+
+  /* Texto que solo acompaña: en apaisado estorba más de lo que aporta. */
+  html.play-landscape .landscape-oculto {
+    display: none;
+  }
+
+  /* Los titulares de las tarjetas, una talla menos: siguen leyéndose de
+     sobra y devuelven un renglón entero. */
+  html.play-landscape .fase-escucha h2,
+  html.play-landscape .fase-escucha h3 {
+    font-size: 1rem;
+    line-height: 1.2;
+  }
+
   html.play-landscape .landscape-tight {
     transform: scale(0.72);
     transform-origin: center top;

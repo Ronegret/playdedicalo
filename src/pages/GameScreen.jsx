@@ -31,14 +31,14 @@ function VoteStatusStrip({ players, roundAnswers, isPlayerBlockedThisRound, answ
   return (
     <div className={`w-full max-w-sm rounded-xl border px-3 py-2 transition-colors ${corriendo ? 'border-chaos-gold/60 bg-chaos-gold/10' : 'border-white/10 bg-black/25'}`}>
       <div className="flex items-center justify-between gap-2">
-        <p className="font-label-caps text-[0.588rem] tracking-[0.16em] text-on-surface-variant">
+        <p className="font-label-caps text-[0.706rem] tracking-[0.16em] text-on-surface-variant">
           {corriendo ? 'ÚLTIMOS SEGUNDOS' : 'RESPONDIERON'}
         </p>
         <div className="flex items-center gap-2">
           {corriendo && (
             <span className="font-label-caps text-sm font-black tabular-nums text-chaos-gold">{secondsLeft}s</span>
           )}
-          <p className="font-label-caps text-[0.588rem] font-black text-neon-green">{answerCount}/{expectedVotes}</p>
+          <p className="font-label-caps text-[0.706rem] font-black text-neon-green">{answerCount}/{expectedVotes}</p>
         </div>
       </div>
       <div className="mt-1.5 flex items-center gap-2 overflow-x-auto no-scrollbar pb-0.5">
@@ -103,11 +103,11 @@ function RankingPeek({ players, guestId, targetYears = 12 }) {
             <span className={`w-10 h-10 rounded-xl text-base font-black flex items-center justify-center ${myRank === 1 ? 'bg-neon-green text-black shadow-[0_0_16px_rgba(57,255,20,0.4)]' : myRank === 2 ? 'bg-white/20 text-white' : 'bg-white/10 text-on-surface-variant'}`}>
               {myRank || '?'}
             </span>
-            <span className="mt-0.5 font-label-caps text-[0.529rem] tracking-[0.12em] text-on-surface-variant">POS</span>
+            <span className="mt-0.5 font-label-caps text-[0.65rem] tracking-[0.12em] text-on-surface-variant">POS</span>
           </div>
           {/* Years progress */}
           <div className="min-w-0">
-            <p className="font-label-caps text-[0.588rem] tracking-[0.18em] text-neon-green">TUS AÑOS · META</p>
+            <p className="font-label-caps text-[0.706rem] tracking-[0.18em] text-neon-green">TUS AÑOS · META</p>
             <div className="mt-0.5 flex items-baseline gap-1">
               <span className="font-stats-xl text-2xl font-black text-white leading-none">{myYears}</span>
               <span className="text-sm text-on-surface-variant font-bold">/{targetYears}</span>
@@ -163,7 +163,7 @@ function RankingPeek({ players, guestId, targetYears = 12 }) {
                     <span className="font-label-caps text-lg font-black uppercase tracking-wide text-white truncate flex-1">{player.name}{isMe ? ' (tú)' : ''}</span>
                     <div className="text-right shrink-0">
                       <p className="text-base font-black text-neon-green leading-none">{progress}/{targetYears}</p>
-                      <p className="mt-0.5 text-[0.588rem] font-bold text-on-surface-variant leading-none">
+                      <p className="mt-0.5 text-[0.706rem] font-bold text-on-surface-variant leading-none">
                         {missing === 0 ? '¡Meta!' : player === leader ? 'Lidera' : `Faltan ${missing}`}
                       </p>
                     </div>
@@ -741,7 +741,12 @@ function TimelinePlacementQuestion({
             botón de confirmar — sobran cuando se toca directamente. */}
         <p className="mt-3 text-center text-base font-black leading-tight text-white">{etiqueta}</p>
 
-        <p className="mt-2 text-center text-sm leading-relaxed text-on-surface-variant">
+        {/* En apaisado esta frase se oculta (landscape-oculto): explica algo
+            que la propia pantalla ya enseña —los huecos punteados se ven— y
+            en horizontal cada renglón cuenta, porque el alto se queda en unos
+            390 px. En vertical sobra sitio y ayuda a quien juega por primera
+            vez, así que ahí se queda. */}
+        <p className="landscape-oculto mt-2 text-center text-sm leading-relaxed text-on-surface-variant">
           {preview
             ? 'Podrás colocarlo cuando pare la música.'
             : 'Toca el hueco donde crees que va'}
@@ -1219,7 +1224,7 @@ export default function GameScreen() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className={`app-shell flex flex-col items-center gap-3 px-1 text-center sm:gap-4 ${role === 'host' ? 'safe-bottom-action' : ''}`}
+            className={`app-shell fase-escucha flex flex-col items-center gap-3 px-1 text-center sm:gap-4 ${role === 'host' ? 'safe-bottom-action' : ''}`}
           >
             {/* Vinyl listen circle */}
             <div className="landscape-tight relative w-60 h-60 sm:w-72 sm:h-72 flex items-center justify-center">
@@ -1429,13 +1434,13 @@ export default function GameScreen() {
                 transition={{ delay: 0.3 }}
                 className="mt-3 inline-flex items-center gap-3 rounded-full border border-white/10 bg-black/30 px-4 py-1.5"
               >
-                <span className="font-label-caps text-[0.647rem] text-neon-green">+5 ACIERTO</span>
+                <span className="font-label-caps text-[0.65rem] text-neon-green">+5 ACIERTO</span>
                 <span className="w-px h-3 bg-white/20" />
-                <span className="font-label-caps text-[0.647rem] text-intense-red">-3 FALLO</span>
+                <span className="font-label-caps text-[0.65rem] text-intense-red">-3 FALLO</span>
                 <span className="w-px h-3 bg-white/20" />
                 {/* La regla del bonus se ensena aqui, dentro del chip que ya
                     existia — no hace falta un cartel aparte. */}
-                <span className="flex items-center gap-0.5 font-label-caps text-[0.647rem] text-chaos-gold">
+                <span className="flex items-center gap-0.5 font-label-caps text-[0.65rem] text-chaos-gold">
                   <span className="material-symbols-outlined text-sm">bolt</span>+1 AL 1º
                 </span>
               </motion.div>

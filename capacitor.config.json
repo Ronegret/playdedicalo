@@ -2,8 +2,12 @@
   "appId": "es.dedicalo.play",
   "appName": "Dedícalo",
   "webDir": "dist",
-  "android": { "allowMixedContent": false },
-  "ios": { "contentInset": "always" },
+  "android": {
+    "allowMixedContent": false
+  },
+  "ios": {
+    "contentInset": "always"
+  },
   "plugins": {
     "SplashScreen": {
       "launchAutoHide": false,

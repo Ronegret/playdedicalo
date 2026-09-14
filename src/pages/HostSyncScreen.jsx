@@ -46,7 +46,7 @@ function PlaylistArtwork({ meta, isSelected }) {
         }}
       >
         <div className="flex items-center justify-between">
-          <span className="rounded-full bg-black/35 px-1.5 py-0.5 font-label-caps text-[0.471rem] tracking-[0.16em] text-white/90">
+          <span className="rounded-full bg-black/35 px-1.5 py-0.5 font-label-caps text-[0.65rem] tracking-[0.16em] text-white/90">
             DED
           </span>
           <span className="h-2 w-2 rounded-full bg-white/80" />
@@ -443,7 +443,7 @@ export default function HostSyncScreen() {
                 <p className="copy-readable mx-auto mt-2 max-w-md text-on-surface-variant">Define la vibra de la partida: una sola mecánica, muchas energías.</p>
               </div>
               <div
-                className="h-9 px-3 rounded-xl flex items-center gap-2 font-label-caps text-[0.647rem] text-white border shrink-0"
+                className="h-9 px-3 rounded-xl flex items-center gap-2 font-label-caps text-[0.65rem] text-white border shrink-0"
                 style={{
                   backgroundColor: `${selectedMeta.color}18`,
                   borderColor: `${selectedMeta.color}44`,
@@ -508,13 +508,13 @@ export default function HostSyncScreen() {
                       <div className="min-w-0 flex-1 sm:w-full">
                         <div className="mb-2 flex items-center gap-2">
                           <span
-                            className="inline-flex h-6 items-center rounded-full px-2 font-label-caps text-[0.529rem] tracking-[0.18em] text-black"
+                            className="inline-flex h-6 items-center rounded-full px-2 font-label-caps text-[0.65rem] tracking-[0.18em] text-black"
                             style={{ backgroundColor: meta.accent }}
                           >
                             {meta.format}
                           </span>
                           {isSelected && (
-                            <span className="inline-flex h-6 items-center rounded-full bg-white px-2 font-label-caps text-[0.529rem] tracking-[0.18em] text-black">
+                            <span className="inline-flex h-6 items-center rounded-full bg-white px-2 font-label-caps text-[0.65rem] tracking-[0.18em] text-black">
                               ACTIVA
                             </span>
                           )}
@@ -525,7 +525,7 @@ export default function HostSyncScreen() {
                         <p className="mt-1.5 text-xs font-semibold leading-snug text-on-surface-variant sm:min-h-[34px]">
                           {playlist.mood}
                         </p>
-                        <div className="mt-3 hidden items-center gap-2 text-[0.588rem] font-black uppercase tracking-[0.18em] text-white/55 sm:flex">
+                        <div className="mt-3 hidden items-center gap-2 text-[0.706rem] font-black uppercase tracking-[0.18em] text-white/55 sm:flex">
                           <span className="h-px flex-1" style={{ backgroundColor: `${meta.color}66` }} />
                           Portada Dedicalo
                         </div>
@@ -563,7 +563,7 @@ export default function HostSyncScreen() {
                 {selectedMeta.icon}
               </span>
               <div className="min-w-0">
-                <p className="font-label-caps text-[0.588rem] text-on-surface-variant tracking-widest">SELECCIONADO</p>
+                <p className="font-label-caps text-[0.706rem] text-on-surface-variant tracking-widest">SELECCIONADO</p>
                 <p className="mt-0.5 truncate text-sm font-black uppercase text-white">{selectedPlaylistData.name}</p>
                 <p className="text-xs text-on-surface-variant mt-0.5 truncate">{selectedPlaylistData.mood}</p>
               </div>

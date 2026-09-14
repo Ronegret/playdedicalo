@@ -42,3 +42,10 @@ assets-source/
 tv-android/.gradle/
 tv-android/build/
 tv-android/app/build/
+
+# Proyecto Android generado por Capacitor. Se regenera con
+# `npx cap add android` y pesa mucho (Gradle, wrappers, build/). Lo que SÍ se
+# versiona es lo que lo define: capacitor.config.json y los plugins de
+# package.json.
+android/
+ios/

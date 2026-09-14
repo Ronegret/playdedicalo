@@ -105,7 +105,7 @@ export default function FontSizeControl({ className = '' }) {
               role="group"
               aria-label="Elegir tamaño de letra"
             >
-            <p className="px-2 pb-1.5 pt-1 font-label-caps text-[0.647rem] tracking-[0.16em] text-on-surface-variant">
+            <p className="px-2 pb-1.5 pt-1 font-label-caps text-[0.65rem] tracking-[0.16em] text-on-surface-variant">
               TAMAÑO DE LETRA
             </p>
             <div className="flex flex-col gap-1">
