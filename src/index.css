@@ -437,9 +437,16 @@ html.fs-xl {
     display: none;
   }
 
-  /* Y el contenido deja libre ese carril para que nada quede debajo. */
+  /* Y el contenido deja libre ese carril para que nada quede debajo — pero
+     SOLO cuando hay barra. `--hay-barra` vale 1 o 0, asi que el calc() da el
+     carril entero o cero. Sin esto se reservaban 81 px vacios a la derecha en
+     la portada, el manual y la seleccion de rol, que no tienen barra: el mismo
+     fallo del hueco de abajo, en horizontal. */
   html.play-landscape .app-screen {
-    padding-right: max(4.75rem, env(safe-area-inset-right));
+    padding-right: max(
+      calc(var(--hay-barra, 0) * 4.75rem),
+      env(safe-area-inset-right)
+    );
   }
 
   /* La accion del resultado, anclada abajo tambien DE PIE.

@@ -53,8 +53,15 @@ export function useBarraInferior() {
       if (!barras.length) {
         // Sin barra, sin hueco. Este es el caso que dejaba la franja vacía.
         raiz.style.setProperty('--alto-barra', '0px');
+        raiz.style.setProperty('--hay-barra', '0');
         return;
       }
+      // Al girar, la barra pasa a ser un carril vertical en el borde derecho,
+      // y el contenido tiene que dejarle sitio. Pero SOLO si existe: reservar
+      // ese carril siempre dejaba 81 px vacíos a la derecha en la portada, el
+      // manual y la selección de rol, que no tienen barra ninguna. Es el mismo
+      // fallo del hueco de abajo, en horizontal.
+      raiz.style.setProperty('--hay-barra', '1');
 
       // Si hubiera varias (una entrando y otra saliendo durante una
       // transición), manda la más alta: reservar de menos deja contenido
@@ -105,6 +112,7 @@ export function useBarraInferior() {
       window.removeEventListener('resize', pedirMedida);
       window.removeEventListener('orientationchange', pedirMedida);
       raiz.style.removeProperty('--alto-barra');
+      raiz.style.removeProperty('--hay-barra');
     };
   }, []);
 }
