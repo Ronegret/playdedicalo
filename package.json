@@ -27,7 +27,8 @@
     "revisar-layout": "node scripts/revisar-layout.mjs",
     "adelgazar-apk": "node scripts/adelgazar-apk.mjs",
     "movil": "npm run build && npx cap sync android && npm run adelgazar-apk",
-    "apk": "npm run movil && cd android && gradlew.bat clean assembleDebug"
+    "apk": "npm run movil && cd android && gradlew.bat clean assembleDebug",
+    "auditar-partida": "node scripts/auditar-partida.mjs"
   },
   "dependencies": {
     "firebase": "^12.14.0",

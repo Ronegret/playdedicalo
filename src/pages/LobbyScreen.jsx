@@ -151,7 +151,7 @@ export default function LobbyScreen() {
   };
 
   return (
-    <motion.main className="app-screen safe-bottom-action relative z-10 mx-auto flex w-full max-w-lg flex-col items-center overflow-y-auto pt-safe-header">
+    <motion.main className="app-screen safe-bottom-action sala-lobby relative z-10 mx-auto flex w-full max-w-lg flex-col items-center overflow-y-auto pt-safe-header">
       <MusicNotesBubbles />
 
       <AnimatePresence>
@@ -184,7 +184,7 @@ export default function LobbyScreen() {
 
       {/* Host vinyl hero */}
       {role === 'host' && (
-        <div className="z-10 mb-2 flex w-full flex-col items-center gap-1">
+        <div className="sala-disco z-10 mb-2 flex w-full flex-col items-center gap-1">
           <div className="relative" style={{ width: 'min(150px, 38vw, 180px)', aspectRatio: '1' }}>
             {/* Rings */}
             {[0, 0.9].map((delay) => (
@@ -224,7 +224,7 @@ export default function LobbyScreen() {
         </div>
       )}
 
-      <section className="z-10 flex w-full flex-col gap-3 sm:gap-4">
+      <section className="sala-cuerpo z-10 flex w-full flex-col gap-3 sm:gap-4">
         <div className="rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-5">
           <div className="flex items-center justify-between gap-4">
             <div>

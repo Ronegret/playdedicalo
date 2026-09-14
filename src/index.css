@@ -238,6 +238,75 @@ html.fs-xl {
     display: none;
   }
 
+  /* ── El lobby, en apaisado ────────────────────────────────────────────
+     Medido girado: la pantalla deja unos 315 px bajo la cabecera, y el disco
+     con su ecualizador se comía 200. El PIN —lo único que hay que leer en voz
+     alta para que entre la gente— quedaba cortado por el borde inferior, y
+     los jugadores y el botón de empezar, mucho más abajo.
+
+     Mismo reparto que en la ronda: el disco a la izquierda, fijo, y la sala
+     entera a la derecha. Y se suelta el ancho máximo de 512 px, que está
+     pensado para un móvil de pie y en horizontal deja media pantalla sin usar
+     (medido: solo se aprovechaba el 64%).
+  ─────────────────────────────────────────────────────────────────────── */
+  html.play-landscape .sala-lobby {
+    max-width: none;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 1.25rem;
+  }
+
+  html.play-landscape .sala-lobby > .sala-disco {
+    flex: 0 0 auto;
+    width: auto;
+    /* Se queda a la vista mientras se desplaza la sala: el disco es la seña
+       de identidad y no cuesta nada dejarlo presente. */
+    position: sticky;
+    top: 0;
+    margin-bottom: 0;
+  }
+
+  html.play-landscape .sala-lobby > .sala-cuerpo {
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 34rem;
+  }
+
+  /* ── El resultado de la ronda, en apaisado ────────────────────────────
+     Medido girado: solo cabían el titular ("CORRECTO") y poco más. Los
+     puntos, la canción, la clasificación y el botón de seguir quedaban todos
+     por debajo del borde — y ese botón es lo único que hay que tocar para que
+     la partida continúe.
+
+     Se reparte: el resultado personal a la izquierda y la clasificación con
+     el botón a la derecha. El `max-w-lg` (512 px) también se suelta, porque
+     está pensado para un móvil de pie.
+  ─────────────────────────────────────────────────────────────────────── */
+  html.play-landscape .ronda-resultado {
+    max-width: none;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0 1.25rem;
+    padding-top: calc(3.75rem + env(safe-area-inset-top, 0px));
+  }
+
+  /* El resultado personal, a la izquierda y sin estirarse. */
+  html.play-landscape .ronda-resultado > :nth-child(3) {
+    flex: 1 1 18rem;
+    max-width: 26rem;
+    align-self: center;
+  }
+
+  /* Lo demás —canción, clasificación, botón— en la columna derecha. */
+  html.play-landscape .ronda-resultado > :nth-child(n + 4) {
+    flex: 1 1 18rem;
+    min-width: 0;
+    max-width: 30rem;
+  }
+
   /* Los titulares de las tarjetas, una talla menos: siguen leyéndose de
      sobra y devuelven un renglón entero. */
   html.play-landscape .fase-escucha h2,
@@ -543,6 +612,16 @@ html.fs-xl {
   }
 
   /* ── Tipografia de titular, a prueba de desbordes ──────────────────────
+     AÑADIDO: un tope por ALTO (vh) además del de ancho.
+
+     El patrón anterior solo miraba el ancho. Girando el móvil eso se vuelve
+     en contra: la pantalla pasa a 844 px de ancho por 390 de alto, así que
+     `13vw` son 110 px de letra para una pantalla que solo tiene 390 de alto.
+     El resultado medido: "CORRECTO" salía cortado por el borde derecho y no
+     cabía nada más en pantalla.
+
+     Con el tope en vh, el titular se ajusta a la dimensión que de verdad
+     escasea en cada orientación: el ancho de pie, el alto girado.
      El patron viejo era clamp(Xrem, Yvw, Zrem). Problema: el MINIMO estaba
      en rem, y rem crece con la escala de accesibilidad — asi que al elegir
      "letra muy grande" el minimo se disparaba por encima del ancho de
@@ -555,7 +634,7 @@ html.fs-xl {
      viewport; texto funcional (cuerpo, botones, etiquetas) -> en rem puro,
      que escala del todo. */
   .heading-impact {
-    font-size: min(4.75rem, max(1.9rem, 10vw));
+    font-size: min(4.75rem, max(1.9rem, 10vw), 16vh);
     line-height: 0.96;
     letter-spacing: -0.035em;
     /* `hyphens: auto` partía las palabras a mitad —"memo-ria"— y en un
@@ -566,7 +645,7 @@ html.fs-xl {
   }
 
   .heading-page {
-    font-size: min(3.6rem, max(1.6rem, 8vw));
+    font-size: min(3.6rem, max(1.6rem, 8vw), 13vh);
     line-height: 1.05;
     letter-spacing: -0.02em;
     overflow-wrap: anywhere;
@@ -574,7 +653,7 @@ html.fs-xl {
 
   /* Titular gigante de impacto (overlay de sabotaje, cuenta atras). */
   .text-display {
-    font-size: min(4rem, max(1.75rem, 13vw));
+    font-size: min(4rem, max(1.75rem, 13vw), 15vh);
     line-height: 0.92;
     letter-spacing: -0.02em;
     overflow-wrap: anywhere;
@@ -582,7 +661,7 @@ html.fs-xl {
 
   /* Numero enorme (cuenta atras de ronda). */
   .text-numeric-hero {
-    font-size: min(8rem, max(3rem, 26vw));
+    font-size: min(8rem, max(3rem, 26vw), 26vh);
     line-height: 1;
   }
 
