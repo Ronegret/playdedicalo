@@ -49,6 +49,7 @@ const PATRONES = {
 let activa = leerPreferencia();
 let puente = null;
 let puenteBuscado = false;
+let estilos = null;
 
 function leerPreferencia() {
   try { return localStorage.getItem(CLAVE) !== '0'; } catch { return true; }
@@ -60,14 +61,28 @@ function leerPreferencia() {
  * En web no habrá ninguno y se cae a navigator.vibrate, que funciona en
  * Android y no existe en iOS.
  */
+function esNativo() {
+  try { return Boolean(window.Capacitor?.isNativePlatform?.()); } catch { return false; }
+}
+
 function obtenerPuente() {
   if (puenteBuscado) return puente;
   puenteBuscado = true;
-  try {
-    const cap = window.Capacitor;
-    if (cap?.isNativePlatform?.() && cap.Plugins?.Haptics) puente = cap.Plugins.Haptics;
-  } catch { /* no hay puente */ }
-  return puente;
+  if (!esNativo()) return null;
+
+  // Importación DINÁMICA a propósito: en web el plugin no se descarga nunca.
+  // Meterlo con un `import` normal arriba lo metería en el bundle de todos
+  // los invitados, que entran por QR y a los que no les sirve de nada.
+  //
+  // Llega tarde (es asíncrona), así que las primerísimas vibraciones caen a
+  // navigator.vibrate. En Android funciona igual; en iPhone se pierden dos o
+  // tres toques del arranque, que es un precio ridículo comparado con cargar
+  // el plugin a todo el mundo.
+  import('@capacitor/haptics')
+    .then((m) => { puente = m.Haptics; estilos = m; })
+    .catch(() => { puente = null; });
+
+  return null;
 }
 
 /**
@@ -77,10 +92,14 @@ function obtenerPuente() {
  */
 function nativo(p, nombre) {
   const impactos = { toque: 'Light', seleccion: 'Light', tic: 'Light', fallo: 'Heavy', sabotaje: 'Heavy' };
-  const avisos = { confirmar: 'Success', error: 'Error', acierto: 'Success', revelar: 'Warning', victoria: 'Success' };
+  const avisos = { confirmar: 'SUCCESS', error: 'ERROR', acierto: 'SUCCESS', revelar: 'WARNING', victoria: 'SUCCESS' };
   try {
-    if (avisos[nombre]) p.notification({ type: avisos[nombre] });
-    else p.impact({ style: impactos[nombre] || 'Medium' });
+    if (avisos[nombre]) {
+      p.notification({ type: estilos?.NotificationType?.[avisos[nombre]] ?? avisos[nombre] });
+    } else {
+      const clave = impactos[nombre] || 'Medium';
+      p.impact({ style: estilos?.ImpactStyle?.[clave] ?? clave });
+    }
     return true;
   } catch { return false; }
 }
@@ -121,5 +140,6 @@ export function activarVibracion(valor) {
  * que no hace nada es peor que no tener interruptor.
  */
 export function hayVibracion() {
-  return Boolean(obtenerPuente()) || typeof navigator.vibrate === 'function';
+  // En nativo siempre hay, aunque el plugin aún no haya terminado de cargar.
+  return esNativo() || typeof navigator.vibrate === 'function';
 }
