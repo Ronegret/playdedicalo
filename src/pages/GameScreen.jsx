@@ -9,6 +9,8 @@ import { useOrientation } from '../hooks/useOrientation';
 import JoinRequestBanner from '../components/JoinRequestBanner';
 import { crearPreguntaDeCancion } from '../services/preguntas';
 import { alTerminarFragmento, duracionFragmento, desbloquearAudio, getCancionOculta, pararMusica, segundosRestantes, sonarCancionAleatoria } from '../services/musica';
+import { sfx, agacharMusica, recuperarMusica } from '../services/audio';
+import { vibrar } from '../services/haptics';
 
 const EQUALIZER_BARS = [0.35, 0.58, 0.42, 0.71, 0.49, 0.64, 0.39];
 
@@ -240,7 +242,9 @@ function MusicBombFuse({ onDetonate }) {
       const boom = window.setTimeout(onDetonate, 280);
       return () => window.clearTimeout(boom);
     }
-    if (navigator.vibrate) navigator.vibrate(35);
+    vibrar('tic');
+    // La mecha acelera: el tono sube segun se acerca la detonacion.
+    sfx.tic(Math.max(1, 3 - Math.floor(tick / 2)));
     const next = window.setTimeout(() => setTick((prev) => prev + 1), 430);
     return () => window.clearTimeout(next);
   }, [tick, detonating, onDetonate]);
@@ -293,7 +297,14 @@ function AttackWarningOverlay({ attack, onClose }) {
   const handleDetonate = useCallback(() => setDetonated(true), []);
 
   useEffect(() => {
-    if (detonated && navigator.vibrate) navigator.vibrate([60, 40, 60, 40, 140]);
+    if (!detonated) return undefined;
+    vibrar('sabotaje');
+    sfx.sabotaje();
+    // La musica se AGACHA, no se corta: el sabotaje tiene que oirse por
+    // encima sin que la cancion desaparezca y rompa el ambiente de la sala.
+    agacharMusica(0.2, 90);
+    const volver = window.setTimeout(() => recuperarMusica(420), 900);
+    return () => window.clearTimeout(volver);
   }, [detonated]);
 
   if (!attack) return null;
@@ -384,7 +395,7 @@ function AttackWarningOverlay({ attack, onClose }) {
             ))}
           </div>
 
-          <div className="mt-4 w-full rounded-2xl border border-white/25 bg-black/35 px-4 py-3 backdrop-blur-sm">
+          <div className="mt-4 w-full rounded-2xl border border-white/25 bg-black/35 px-4 py-3">
             <p className="text-base font-black leading-snug text-white">
               <span className="text-chaos-gold">{attack.from || 'Un rival'}</span> lanzó:{' '}
               <span className="text-white">{attackCopy.title}</span>
@@ -850,9 +861,18 @@ export default function GameScreen() {
     if (phase !== 'countdown') return undefined;
 
     const startedAt = Date.now();
+    // El tic SUBE de tono en cada numero (3, 2, 1). Es el truco mas viejo
+    // para crear tension sin decir nada, y el oido lo entiende solo.
+    let ultimoTic = null;
     const updateCountdown = () => {
       const elapsedMs = Math.max(0, Date.now() - startedAt);
-      setCountdownValue(Math.max(1, 3 - Math.floor(elapsedMs / 1000)));
+      const valor = Math.max(1, 3 - Math.floor(elapsedMs / 1000));
+      setCountdownValue(valor);
+      if (valor !== ultimoTic) {
+        ultimoTic = valor;
+        sfx.tic(valor);
+        vibrar('tic');
+      }
     };
     const resetTimeout = window.setTimeout(updateCountdown, 0);
     const interval = window.setInterval(updateCountdown, 120);
@@ -967,7 +987,8 @@ export default function GameScreen() {
     try {
       await redeemPointsForYear();
       setRedeemToast(true);
-      if (navigator.vibrate) navigator.vibrate([20, 40, 20]);
+      vibrar('confirmar');
+      sfx.confirmar();
       window.setTimeout(() => setRedeemToast(false), 3000);
     } catch (error) {
       setRedeemError(error.message || 'No se pudo canjear. Inténtalo de nuevo.');
@@ -1025,7 +1046,10 @@ export default function GameScreen() {
     guestAnswer(isCorrect);
     // Patron distinto para acierto y fallo: se juega en sitios con ruido
     // donde no se oye nada, asi que el movil confirma en la mano.
-    if (navigator.vibrate) navigator.vibrate(isCorrect ? [30] : [100, 30, 100]);
+    // (En iPhone la vibracion no existe; por eso el sonido va en paralelo y
+    // no como refuerzo opcional.)
+    vibrar(isCorrect ? 'acierto' : 'fallo');
+    if (isCorrect) sfx.acierto(); else sfx.fallo();
   };
 
   const handleHostBlackout = useCallback(async () => {
@@ -1138,7 +1162,7 @@ export default function GameScreen() {
             transition={{ type: 'spring', stiffness: 200, damping: 20 }}
             className="fixed top-20 inset-x-0 z-[290] flex justify-center px-5 pointer-events-none"
           >
-            <div className="rounded-2xl border border-vinyl-orange/50 bg-vinyl-orange/15 backdrop-blur-lg p-3 flex items-center gap-3 max-w-sm w-full">
+            <div className="rounded-2xl border border-vinyl-orange/50 bg-vinyl-orange/15 p-3 flex items-center gap-3 max-w-sm w-full">
               <span className="material-symbols-outlined text-vinyl-orange text-2xl shrink-0">wifi_off</span>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-black text-white">{disconnectToast} se desconectó</p>
@@ -1564,7 +1588,7 @@ export default function GameScreen() {
             transition={{ type: 'spring', stiffness: 200, damping: 20 }}
             className="fixed top-20 inset-x-0 z-[290] flex justify-center px-5 pointer-events-none"
           >
-            <div className="rounded-2xl border border-vinyl-orange/50 bg-vinyl-orange/15 backdrop-blur-lg px-4 py-3 flex items-center gap-2 max-w-sm w-full">
+            <div className="rounded-2xl border border-vinyl-orange/50 bg-vinyl-orange/15 px-4 py-3 flex items-center gap-2 max-w-sm w-full">
               <span className="material-symbols-outlined text-vinyl-orange text-xl shrink-0">bolt</span>
               <p className="text-sm font-black text-white">¡Sabotaje enviado a {attackSentTo}!</p>
             </div>
@@ -1581,7 +1605,7 @@ export default function GameScreen() {
             transition={{ type: 'spring', stiffness: 200, damping: 20 }}
             className="fixed top-20 inset-x-0 z-[290] flex justify-center px-5 pointer-events-none"
           >
-            <div className="rounded-2xl border border-chaos-gold/50 bg-chaos-gold/15 backdrop-blur-lg px-4 py-3 flex items-center gap-2 max-w-sm w-full">
+            <div className="rounded-2xl border border-chaos-gold/50 bg-chaos-gold/15 px-4 py-3 flex items-center gap-2 max-w-sm w-full">
               <span className="material-symbols-outlined text-chaos-gold text-xl shrink-0">star</span>
               <p className="text-sm font-black text-white">¡Canjeaste una canción para tu ruta!</p>
             </div>
@@ -1595,7 +1619,7 @@ export default function GameScreen() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center bg-black/80 backdrop-blur-sm px-4 pb-4 sm:pb-0"
+            className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center bg-black/92 px-4 pb-4 sm:pb-0"
             onClick={() => setShowAttackModal(false)}
           >
             <motion.div
@@ -1658,7 +1682,7 @@ export default function GameScreen() {
                         await attackOpponent(target.id, effectiveAttackType);
                         setShowAttackModal(false);
                         setAttackSentTo(target.name);
-                        if (navigator.vibrate) navigator.vibrate([20, 40, 20]);
+                        vibrar('confirmar'); sfx.confirmar();
                         window.setTimeout(() => setAttackSentTo(''), 3000);
                       } catch (error) {
                         setAttackError(error.message || 'No se pudo sabotear. Inténtalo de nuevo.');
@@ -1700,7 +1724,7 @@ export default function GameScreen() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center bg-black/80 backdrop-blur-sm px-4 pb-4 sm:pb-0"
+            className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center bg-black/92 px-4 pb-4 sm:pb-0"
             onClick={() => setShowExitConfirm(false)}
           >
             <motion.div

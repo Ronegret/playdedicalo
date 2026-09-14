@@ -6,25 +6,43 @@
   "start_url": "/?source=pwa",
   "scope": "/",
   "display": "standalone",
-  "display_override": ["standalone", "fullscreen"],
-  "background_color": "#0a0a0a",
+  "display_override": [
+    "standalone",
+    "fullscreen"
+  ],
+  "background_color": "#071025",
   "theme_color": "#071025",
   "orientation": "any",
-  "categories": ["games", "entertainment"],
+  "categories": [
+    "games",
+    "entertainment"
+  ],
   "lang": "es",
   "dir": "ltr",
   "icons": [
     {
-      "src": "/images/icon-app.png",
+      "src": "/images/app/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
-      "src": "/images/icon-app.png",
+      "src": "/images/app/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/images/app/icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/images/app/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ],
   "shortcuts": [
@@ -33,21 +51,39 @@
       "short_name": "Crear",
       "description": "Entrar como anfitrión",
       "url": "/host/sync",
-      "icons": [{ "src": "/images/icon-app.png", "sizes": "192x192", "type": "image/png" }]
+      "icons": [
+        {
+          "src": "/images/app/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
     },
     {
       "name": "Unirme a sala",
       "short_name": "Unirme",
       "description": "Entrar con PIN o QR",
       "url": "/guest/join",
-      "icons": [{ "src": "/images/icon-app.png", "sizes": "192x192", "type": "image/png" }]
+      "icons": [
+        {
+          "src": "/images/app/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
     },
     {
       "name": "Cómo se juega",
       "short_name": "Manual",
       "description": "Ver el manual del juego",
       "url": "/how-to-play",
-      "icons": [{ "src": "/images/icon-app.png", "sizes": "192x192", "type": "image/png" }]
+      "icons": [
+        {
+          "src": "/images/app/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
     }
   ]
 }

@@ -2,6 +2,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useGameStore } from '../store/useGameStore';
 import { escanearQr } from '../services/escanerQr';
+import { sfx } from '../services/audio';
+import { vibrar } from '../services/haptics';
 
 /**
  * CONECTAR LA TELE
@@ -58,7 +60,7 @@ export default function ConectarTv({ onCerrar, alConectar, antesDeCrearSala = fa
 
     if (r.ok) {
       setEstado('¡Tele conectada!');
-      if (navigator.vibrate) navigator.vibrate([20, 40, 20]);
+      vibrar('confirmar'); sfx.confirmar();
       avisar?.(limpio);
       setTimeout(() => cerrar(), 1100);
       return true;

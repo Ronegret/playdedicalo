@@ -73,7 +73,7 @@ function AlbumTrackHero({ paused, onToggle }) {
           >
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,122,26,0.10),transparent_45%)]" />
             <img
-              src="/images/logo-main.png"
+              src="/images/logo-main.webp"
               alt="Dedícalo"
               className="relative h-full w-full object-contain drop-shadow-[0_8px_12px_rgba(0,0,0,0.28)]"
               draggable={false}
@@ -148,7 +148,7 @@ function RoleCard({ type, title, text, action, icon, color, glow, onClick }) {
       whileHover={{ scale: 1.015, y: -4 }}
       whileTap={{ scale: 0.97 }}
       transition={{ type: 'spring', stiffness: 280, damping: 22 }}
-      className="group relative w-full overflow-hidden rounded-[1.4rem] border border-white/10 bg-surface-container/72 p-4 text-left shadow-[0_20px_54px_rgba(0,0,0,0.20)] backdrop-blur-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-vinyl-orange/70 sm:rounded-[2rem] sm:p-5"
+      className="group relative w-full overflow-hidden rounded-[1.4rem] border border-white/10 bg-surface-container/72 p-4 text-left shadow-[0_20px_54px_rgba(0,0,0,0.20)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-vinyl-orange/70 sm:rounded-[2rem] sm:p-5"
       style={{ boxShadow: `0 0 0 1px ${color}22, 0 24px 70px ${glow}` }}
     >
       <div
@@ -194,7 +194,7 @@ export default function RoleSelectionScreen() {
       exit={{ opacity: 0, y: -20 }}
       className="app-screen safe-bottom-action relative z-10 mx-auto flex w-full max-w-[460px] flex-col items-center overflow-y-auto pt-safe-header text-center"
     >
-      <header className="fixed left-0 right-0 top-0 z-50 flex h-16 items-center justify-between border-b border-white/8 bg-background/78 px-margin-mobile backdrop-blur-xl">
+      <header className="fixed left-0 right-0 top-0 z-50 flex h-16 items-center justify-between border-b border-white/8 bg-background/78 px-margin-mobile">
         <button
           onClick={() => navigate('/')}
           className="min-h-touch flex items-center gap-2 font-label-caps text-xs tracking-[0.18em] text-on-surface-variant transition-colors hover:text-white"

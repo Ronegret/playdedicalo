@@ -2,8 +2,10 @@
 <html lang="es" class="dark">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/images/icon-app.png" />
-    <link rel="apple-touch-icon" href="/images/icon-app.png" />
+    <link rel="icon" type="image/png" href="/images/app/icon-192.png" />
+    <!-- iOS ignora en buena parte los iconos del manifest: usa este, y lo
+         quiere a 180x180 y SIN transparencia (donde hay alfa, pinta negro). -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/app/apple-touch-icon.png" />
     <link rel="manifest" href="/manifest.json" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#071025" />
@@ -13,15 +15,120 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Dedícalo" />
+
+    <!-- ── Pantallas de arranque de iOS ───────────────────────────────
+         Sin esto, un iPhone abre la app instalada EN BLANCO hasta que
+         React arranca. iOS no escala: exige una imagen por tamaño exacto
+         de pantalla con su media query, y si no encuentra coincidencia
+         vuelve el blanco. Las genera scripts/iconos-app.mjs.
+    ────────────────────────────────────────────────────────────────── -->
+    <link rel="apple-touch-startup-image" href="/images/splash/iphone-15-14pro-portrait.png" media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+    <link rel="apple-touch-startup-image" href="/images/splash/iphone-15-14pro-landscape.png" media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)">
+    <link rel="apple-touch-startup-image" href="/images/splash/iphone-14plus-13promax-portrait.png" media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+    <link rel="apple-touch-startup-image" href="/images/splash/iphone-14plus-13promax-landscape.png" media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)">
+    <link rel="apple-touch-startup-image" href="/images/splash/iphone-14-13-12-portrait.png" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+    <link rel="apple-touch-startup-image" href="/images/splash/iphone-14-13-12-landscape.png" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)">
+    <link rel="apple-touch-startup-image" href="/images/splash/iphone-x-xs-11pro-portrait.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+    <link rel="apple-touch-startup-image" href="/images/splash/iphone-x-xs-11pro-landscape.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)">
+    <link rel="apple-touch-startup-image" href="/images/splash/iphone-xsmax-11promax-portrait.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+    <link rel="apple-touch-startup-image" href="/images/splash/iphone-xsmax-11promax-landscape.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)">
+    <link rel="apple-touch-startup-image" href="/images/splash/iphone-xr-11-portrait.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+    <link rel="apple-touch-startup-image" href="/images/splash/iphone-xr-11-landscape.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)">
+    <link rel="apple-touch-startup-image" href="/images/splash/iphone-8-se-portrait.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+    <link rel="apple-touch-startup-image" href="/images/splash/iphone-8-se-landscape.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)">
+    <link rel="apple-touch-startup-image" href="/images/splash/iphone-8plus-portrait.png" media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+    <link rel="apple-touch-startup-image" href="/images/splash/iphone-8plus-landscape.png" media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)">
+    <link rel="apple-touch-startup-image" href="/images/splash/iphone-16pro-portrait.png" media="(device-width: 402px) and (device-height: 874px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+    <link rel="apple-touch-startup-image" href="/images/splash/iphone-16pro-landscape.png" media="(device-width: 402px) and (device-height: 874px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)">
+    <link rel="apple-touch-startup-image" href="/images/splash/iphone-16promax-portrait.png" media="(device-width: 440px) and (device-height: 956px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+    <link rel="apple-touch-startup-image" href="/images/splash/iphone-16promax-landscape.png" media="(device-width: 440px) and (device-height: 956px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)">
+
     <meta name="description" content="Party game musical — adivina canciones, sabotea a tus amigos y gana." />
     <title>Dedícalo Play</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;0,800;0,900;1,800&family=Hanken+Grotesk:wght@400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Barlow+Condensed:wght@600;700;800;900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&icon_names=add,arrow_back,arrow_forward,auto_awesome,autorenew,block,bolt,bomb,cancel,celebration,check,check_circle,close,content_copy,download,edit,electric_bolt,emoji_events,equalizer,error,expand_more,format_size,graphic_eq,groups,headphones,help,host,info,keyboard,library_music,local_fire_department,login,logout,meeting_room,mood,move_down,music_note,pause,payments,person,pets,play_arrow,playlist_add,progress_activity,public,qr_code_scanner,radio_button_unchecked,refresh,remove,replay,restaurant,screen_rotation,share,smartphone,sports_esports,sports_soccer,stadium,star,stay_current_landscape,stay_current_portrait,touch_app,tv,volume_up,warning,wb_sunny,wifi_off,zoom_in&display=block" rel="stylesheet">
+
+    <!-- ── Tipografías, servidas desde aquí ───────────────────────────────
+         Antes se pedían al CDN de Google: DNS + TLS + un CSS + los archivos
+         que ese CSS nombra, dos viajes encadenados a un tercero antes de
+         poder pintar bien una palabra. Una app instalada no puede depender de
+         internet para dibujar su propia letra, y esta se abre en fiestas con
+         el wifi del bar.
+
+         `font-display: block` en vez de `swap`: desde el mismo origen la
+         espera es de milisegundos, así que compensa esperar y pintar ya con
+         la letra buena en vez de pintar con otra y cambiarla a la vista —
+         ese salto del texto es de las cosas que más delatan una web.
+
+         De paso, el navegador de quien juega deja de conectarse a Google: un
+         tercero menos que declarar en la política de privacidad.
+
+         Las genera scripts/fuentes.mjs.
+    ────────────────────────────────────────────────────────────────────── -->
+    <link rel="preload" href="/fonts/montserrat-normal-latin-a5ec5492.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/fonts/hanken-grotesk-normal-latin-38c3847f.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/fonts/fuentes.css">
+    <!-- Lista de iconos en uso. La mantiene scripts/iconos.mjs y la lee
+         scripts/fuentes.mjs para bajar el subconjunto. NO es un enlace: la
+         fuente se sirve desde /fonts, sin conexión a terceros. -->
+    <meta name="dedicalo-iconos" content="add,add_box,album,arrow_back,arrow_forward,auto_awesome,autorenew,block,bolt,bomb,cancel,celebration,check,check_circle,close,content_copy,download,edit,electric_bolt,emoji_events,equalizer,error,expand_more,format_size,graphic_eq,groups,headphones,help,host,info,ios_share,keyboard,library_music,local_fire_department,login,logout,meeting_room,mood,move_down,music_note,pause,payments,person,pets,play_arrow,playlist_add,progress_activity,public,qr_code_scanner,radio_button_unchecked,refresh,remove,replay,restaurant,screen_rotation,share,smartphone,sports_esports,sports_soccer,stadium,star,stay_current_landscape,stay_current_portrait,timeline,touch_app,tv,volume_up,warning,wb_sunny,wifi_off,zoom_in" />
   </head>
   <body class="bg-surface text-on-surface min-h-screen">
+    <!-- ── Arranque ──────────────────────────────────────────────────────
+         Esto se pinta ANTES de que exista React, antes de descargar el
+         JavaScript y antes de que carguen las tipografías: es HTML y CSS en
+         línea, así que el navegador lo dibuja en el primer fotograma.
+
+         Cubre el hueco que hasta ahora se veía en blanco (o, ya dentro, con
+         el cartel de "CARGANDO"). Una app instalada nunca enseña ese hueco.
+
+         Se quita solo desde main.jsx cuando React ya ha pintado, con un
+         fundido de 380 ms para que el cambio no sea un corte.
+    ─────────────────────────────────────────────────────────────────── -->
+    <style>
+      #arranque {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 22px;
+        background: #071025;
+        transition: opacity 380ms ease, visibility 380ms;
+      }
+      #arranque.fuera { opacity: 0; visibility: hidden; pointer-events: none; }
+      #arranque img { width: 124px; height: 124px; object-fit: contain; }
+      #arranque .barra {
+        width: 128px;
+        height: 3px;
+        border-radius: 3px;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.12);
+      }
+      /* Una barra que se mueve sola. No mide nada real —no hay nada que medir
+         todavía— pero dice "sigo vivo", que es lo único que hace falta
+         durante menos de un segundo. Es un solo transform: gratis. */
+      #arranque .barra i {
+        display: block;
+        width: 40%;
+        height: 100%;
+        border-radius: 3px;
+        background: linear-gradient(90deg, #ff7a1a, #a855f7);
+        animation: arranque-vaiven 1.1s ease-in-out infinite;
+      }
+      @keyframes arranque-vaiven {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(350%); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #arranque .barra i { animation: none; width: 100%; }
+      }
+    </style>
+    <div id="arranque">
+      <img src="/images/app/icon-512.png" alt="" width="124" height="124" />
+      <div class="barra"><i></i></div>
+    </div>
+
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

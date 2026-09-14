@@ -49,7 +49,7 @@ export default function LegalScreen() {
 
   return (
     <main className="app-screen app-shell relative z-10 overflow-y-auto pt-safe-header pb-16">
-      <header className="fixed left-0 top-0 z-50 flex h-16 w-full items-center justify-between border-b border-white/10 bg-glass-surface px-margin-mobile backdrop-blur-md">
+      <header className="fixed left-0 top-0 z-50 flex h-16 w-full items-center justify-between border-b border-white/10 bg-glass-surface px-margin-mobile">
         <button
           type="button"
           onClick={() => navigate(-1)}

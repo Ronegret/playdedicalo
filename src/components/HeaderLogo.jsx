@@ -11,7 +11,7 @@ export default function HeaderLogo({ className = '' }) {
       aria-hidden="false"
     >
       <img
-        src="/images/icon-app.png"
+        src="/images/icon-app.webp"
         alt="Dedícalo"
         className="h-full w-full object-contain"
         draggable={false}

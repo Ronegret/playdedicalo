@@ -30,7 +30,7 @@ export default function JoinRequestBanner() {
           transition={{ type: 'spring', stiffness: 200, damping: 20 }}
           className="fixed top-20 inset-x-0 z-[295] flex justify-center px-5"
         >
-          <div className="flex w-full max-w-sm items-center gap-3 rounded-2xl border border-neon-green/50 bg-[#0e1a10]/95 backdrop-blur-lg p-3 shadow-[0_0_40px_rgba(57,255,20,0.18)]">
+          <div className="flex w-full max-w-sm items-center gap-3 rounded-2xl border border-neon-green/50 bg-[#0e1a10]/95 p-3 shadow-[0_0_40px_rgba(57,255,20,0.18)]">
             {isImageAvatar(request.avatar) ? (
               <img src={request.avatar} alt={request.name} className="h-12 w-12 shrink-0 rounded-full border-2 border-neon-green/60 object-cover" />
             ) : (

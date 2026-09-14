@@ -3,8 +3,8 @@
 // dispare install/activate (con muchas actualizaciones seguidas en camino,
 // que esto quede desactualizado es justo lo que hace que alguien vea la
 // app vieja aunque ya se haya desplegado la nueva).
-const CACHE = 'dedicalo-v6';
-const PRECACHE = ['/index.html', '/manifest.json', '/images/icon-app.png', '/images/logo-main.png', '/dedi.mp3'];
+const CACHE = 'dedicalo-v7';
+const PRECACHE = ['/index.html', '/manifest.json', '/images/icon-app.webp', '/images/logo-main.webp', '/dedi.mp3'];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(

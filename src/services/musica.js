@@ -18,6 +18,14 @@
  * Los 30 segundos sobran: el juego corta la música y pregunta el año.
  */
 
+import {
+  iniciarAudio,
+  conectarMusica,
+  despertarAudio,
+  fundirMusica,
+  restaurarMusica
+} from './audio.js';
+
 const CATALOGO_URL = '/data/dedicalo-song-catalog.full.clean.json';
 const CLAVE_CANCION = 'dedicalo_cancion_oculta';
 const CLAVE_TOCADAS = 'dedicalo_tocadas_v2';
@@ -25,6 +33,9 @@ const CLAVE_TOCADAS = 'dedicalo_tocadas_v2';
 let promesaCatalogo = null;
 let audio = null;
 let listaActual = null;
+/** Sube en cada corte. Sirve para que un fundido viejo no apague una canción
+ *  nueva que haya empezado mientras el fundido aún estaba en marcha. */
+let corteEnCurso = 0;
 
 /** Audio único y reutilizado: crear uno por canción deja instancias colgando
  *  en iOS y acaba sin sonido tras unas cuantas rondas. */
@@ -35,7 +46,15 @@ function obtenerAudio() {
     // Los fragmentos de Apple vienen con permiso de origen abierto, pero
     // marcarlo explícitamente evita sorpresas si algún día se analiza la
     // onda para el visualizador.
+    //
+    // Además es OBLIGATORIO para poder meter este elemento en el bus de Web
+    // Audio: sin CORS declarado, el navegador enmudece la salida de un audio
+    // de otro origen en cuanto pasa por un grafo.
     audio.crossOrigin = 'anonymous';
+    // iOS no abre el reproductor nativo a pantalla completa con un elemento
+    // de audio, pero marcarlo cuesta nada y cierra la puerta a que una
+    // versión futura de WebKit decida hacerlo.
+    audio.setAttribute('playsinline', '');
   }
   return audio;
 }
@@ -57,6 +76,20 @@ const SILENCIO = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhY
  */
 export async function desbloquearAudio() {
   const a = obtenerAudio();
+
+  // Este es el único momento garantizado de "gesto real del usuario", así que
+  // es aquí donde se levanta la mesa de mezclas y se mete la música dentro.
+  //
+  // Meterla dentro es lo que hace que en iPhone la canción suene AUNQUE el
+  // interruptor lateral de silencio esté puesto: un <audio> suelto lo obedece,
+  // un <audio> dentro de Web Audio con la sesión declarada como 'playback' no.
+  // El anfitrión casi siempre lleva el móvil en silencio, así que sin esto la
+  // sala se quedaba muda sin explicación.
+  try {
+    iniciarAudio();
+    conectarMusica(a);
+  } catch { /* si no hay Web Audio, se sigue por la ruta simple de siempre */ }
+
   try {
     const previo = a.src;
     a.muted = true;
@@ -113,10 +146,54 @@ function cancionDesdeFila(fila) {
   };
 }
 
+/* ── Catálogo por lista ─────────────────────────────────────────────────────
+   El catálogo completo son 3,4 MB y lo descargaba ENTERO cada persona que
+   entraba a jugar. Para nada: una partida usa UNA lista de las siete, y de
+   los 34 campos por canción el juego lee ocho.
+
+   `scripts/partir-catalogo.mjs` deja un archivo por lista con lo justo. Una
+   partida pasa de 3.430 KB a unos 130. En una fiesta, con seis móviles
+   entrando a la vez por el wifi del bar, esa es la diferencia entre entrar y
+   quedarse en la pantalla de carga.
+
+   Si un archivo de lista no existiera —una lista nueva, un despliegue a
+   medias— se recurre al catálogo completo. Lento, pero se juega.
+────────────────────────────────────────────────────────────────────────── */
+
+const listasEnMemoria = new Map();
+
+async function cargarLista(id) {
+  if (!id) return null;
+  if (listasEnMemoria.has(id)) return listasEnMemoria.get(id);
+
+  const promesa = fetch(`/data/listas/${id}.json`)
+    .then((r) => {
+      if (!r.ok) throw new Error(String(r.status));
+      return r.json();
+    })
+    .catch(() => null);
+
+  listasEnMemoria.set(id, promesa);
+  const datos = await promesa;
+  // Un fallo no se cachea: si fue un corte de red, el siguiente intento debe
+  // poder volver a pedirlo en vez de quedarse con el "no" para siempre.
+  if (!datos) listasEnMemoria.delete(id);
+  return datos;
+}
+
+/** Igual que cancionDesdeFila pero para las filas ya recortadas. */
+function desdeListaPartida(fila) {
+  return cancionDesdeFila(fila);
+}
+
 /** Canciones jugables de una lista: solo las que tienen fragmento. Una sin
  *  fragmento no es que suene mal, es que no suena — así que ni se ofrece. */
 export async function cancionesDeLista(playlistUrl) {
   const id = idDeLista(playlistUrl);
+
+  const partida = await cargarLista(id);
+  if (partida?.canciones) return partida.canciones.map(desdeListaPartida);
+
   const catalogo = await cargarCatalogo();
   return catalogo
     .filter((fila) => fila.playlist_id === id && fila.preview_url)
@@ -126,6 +203,13 @@ export async function cancionesDeLista(playlistUrl) {
 /** Cobertura de una lista, para poder avisar antes de empezar la partida. */
 export async function coberturaDeLista(playlistUrl) {
   const id = idDeLista(playlistUrl);
+
+  const partida = await cargarLista(id);
+  if (partida?.canciones) {
+    const con = partida.canciones.length;
+    return { total: partida.total, jugables: con, porcentaje: partida.total ? con / partida.total : 0 };
+  }
+
   const catalogo = await cargarCatalogo();
   const dela = catalogo.filter((f) => f.playlist_id === id);
   const con = dela.filter((f) => f.preview_url).length;
@@ -173,6 +257,12 @@ export async function sonarCancionAleatoria(playlistUrl) {
   } catch { /* modo privado */ }
 
   const a = obtenerAudio();
+  // Cancela cualquier fundido a medias de la canción anterior: si no, la nueva
+  // arrancaría con el volumen ya bajado y parecería que no suena.
+  corteEnCurso += 1;
+  despertarAudio();
+  restaurarMusica();
+
   a.src = cancion.previewUrl;
   a.currentTime = 0;
   a.volume = 1;
@@ -180,10 +270,30 @@ export async function sonarCancionAleatoria(playlistUrl) {
   return cancion;
 }
 
+/**
+ * Corta la música.
+ *
+ * Con un fundido de 180 ms en vez de un pause() seco. Parar una onda a media
+ * altura produce un chasquido audible —el "clack" que se oía al cortar para
+ * preguntar el año— y ese chasquido es de las cosas que más delatan que algo
+ * está hecho con prisa. 180 ms se siguen percibiendo como instantáneos.
+ *
+ * Se mantiene sin `async` a propósito: todo el juego lo llama y lo olvida.
+ */
 export function pararMusica() {
   if (!audio) return;
-  audio.pause();
-  audio.currentTime = 0;
+  const mio = ++corteEnCurso;
+
+  const rematar = () => {
+    if (mio !== corteEnCurso) return; // empezó otra canción entretanto
+    audio.pause();
+    try { audio.currentTime = 0; } catch { /* algunos navegadores se quejan */ }
+    restaurarMusica();
+  };
+
+  const fundido = fundirMusica(180);
+  if (fundido && typeof fundido.then === 'function') fundido.then(rematar);
+  else rematar();
 }
 
 export function reanudarMusica() {

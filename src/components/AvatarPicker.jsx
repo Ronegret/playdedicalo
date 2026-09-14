@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
@@ -8,6 +8,8 @@ import {
   getCharacterAvatarLargeUrl,
   getCharacterAvatarThumbUrl
 } from '../data/characterAvatars';
+import { sfx } from '../services/audio';
+import { vibrar } from '../services/haptics';
 
 const CLASSIC_EMOJIS = [
   '😎', '🕺', '💃', '🎧', '🎤', '🎸', '🥁', '🎹', '🔥', '⚡',
@@ -24,6 +26,26 @@ export default function AvatarPicker({ value, onChange, className = '' }) {
   const selectedCharacter = useMemo(() => findCharacterAvatarByUrl(value), [value]);
   const [activeCategory, setActiveCategory] = useState(selectedCharacter?.category || AVATAR_CATEGORIES[0].id);
   const [previewEntry, setPreviewEntry] = useState(null);
+  // ¿Queda algo por debajo del borde? Es lo que enciende el degradado del
+  // fondo. Empieza en `true` porque la lista casi siempre desborda, y si no
+  // desborda el primer evento de scroll lo corrige al instante.
+  const [hayMas, setHayMas] = useState(true);
+  const rejillaRef = useRef(null);
+
+  // Se recalcula al cambiar de categoría: cada una tiene un número distinto
+  // de personajes, y en las cortas no debe quedarse el degradado encendido
+  // sugiriendo un contenido que no existe.
+  const revisarDesborde = useCallback(() => {
+    const el = rejillaRef.current;
+    if (!el) return;
+    // 4 px de tolerancia: el desplazamiento no siempre cae en un entero y sin
+    // margen el degradado parpadea al llegar abajo del todo.
+    setHayMas(el.scrollHeight - el.scrollTop - el.clientHeight > 4);
+  }, []);
+
+  useEffect(() => {
+    revisarDesborde();
+  }, [activeCategory, revisarDesborde]);
 
   const isClassicTab = activeCategory === 'clasicos';
   const itemsInCategory = isClassicTab
@@ -31,19 +53,19 @@ export default function AvatarPicker({ value, onChange, className = '' }) {
     : CHARACTER_AVATARS.filter((entry) => entry.category === activeCategory);
 
   const handleOpenPreview = (entry) => {
-    if (navigator.vibrate) navigator.vibrate(12);
+    vibrar('seleccion'); sfx.toque();
     setPreviewEntry(entry);
   };
 
   const handleConfirmPreview = () => {
     if (!previewEntry) return;
-    if (navigator.vibrate) navigator.vibrate([18, 30, 18]);
+    vibrar('confirmar'); sfx.confirmar();
     onChange(getCharacterAvatarLargeUrl(previewEntry.slug));
     setPreviewEntry(null);
   };
 
   const handlePickEmoji = (emoji) => {
-    if (navigator.vibrate) navigator.vibrate(18);
+    vibrar('seleccion'); sfx.toque();
     onChange(emoji);
   };
 
@@ -80,15 +102,44 @@ export default function AvatarPicker({ value, onChange, className = '' }) {
         </button>
       </div>
 
-      {/* Grid de opciones */}
+      {!isClassicTab && (
+        <p className="app-etiqueta mb-2 mt-1 text-center text-[0.6rem] text-white/40">
+          Toca una cara para verla en grande
+        </p>
+      )}
+
+      {/* ── Rejilla de opciones ────────────────────────────────────────────
+          TRES ARREGLOS, y los tres eran quejas reales:
+
+          1. «Es muy grande y a veces se topa con los botones».
+             La altura era `max-h-80`: 20rem FIJOS. Y rem crece con el ajuste
+             de tamaño de letra, así que en "letra muy grande" pasaba de 340 a
+             460 px y se comía los botones de abajo. Ahora el techo lo pone el
+             VIEWPORT (`42svh`), que es lo único que no puede ser más alto que
+             la pantalla; el `min()` con 22rem evita que en una tablet se
+             estire sin motivo.
+
+          2. «No se ve que se pueda deslizar más».
+             No había ninguna señal de que hubiera contenido debajo: la última
+             fila se cortaba limpia contra el borde y parecía el final. Ahora
+             hay un degradado en el pie que solo aparece cuando queda algo por
+             ver — la señal universal de "sigue".
+
+          3. Cuatro columnas en vez de tres: caben más caras sin desplazar, y
+             cada una sigue teniendo tamaño de sobra para el dedo.
+      ──────────────────────────────────────────────────────────────────── */}
+      <div className="relative">
       <AnimatePresence mode="wait">
         <motion.div
           key={activeCategory}
+          ref={rejillaRef}
+          onScroll={revisarDesborde}
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -6 }}
           transition={{ duration: 0.16 }}
-          className="grid max-h-80 grid-cols-3 gap-3 overflow-y-auto rounded-2xl border border-white/10 bg-black/20 p-3 sm:grid-cols-4"
+          style={{ maxHeight: 'min(42svh, 22rem)', overscrollBehavior: 'contain' }}
+          className="grid grid-cols-4 gap-3 overflow-y-auto rounded-2xl border border-white/10 bg-black/20 p-3 sm:grid-cols-5"
         >
           {isClassicTab ? (
             CLASSIC_EMOJIS.map((emoji) => (
@@ -137,8 +188,11 @@ export default function AvatarPicker({ value, onChange, className = '' }) {
                         <span className="material-symbols-outlined text-black" style={{ fontSize: '15px' }}>check</span>
                       </span>
                     )}
-                    <span className="absolute left-0.5 top-0.5 flex h-6 w-6 items-center justify-center rounded-full bg-black/55 text-white backdrop-blur-sm">
-                      <span className="material-symbols-outlined" style={{ fontSize: '15px' }}>zoom_in</span>
+                    {/* La lupa iba a 15 px sobre negro translúcido: nadie la
+                        veía, y era la única pista de que tocar abre la vista
+                        ampliada en vez de elegir directamente. */}
+                    <span className="absolute inset-x-0 bottom-0 flex h-1/3 items-end justify-center bg-gradient-to-t from-black/75 to-transparent pb-0.5 text-white/90">
+                      <span className="material-symbols-outlined" style={{ fontSize: '17px' }}>zoom_in</span>
                     </span>
                   </span>
                   <span className="max-w-full truncate text-xs font-bold leading-tight text-white/75">
@@ -150,6 +204,25 @@ export default function AvatarPicker({ value, onChange, className = '' }) {
           )}
         </motion.div>
       </AnimatePresence>
+
+        {/* El "sigue habiendo cosas". Solo cuando de verdad las hay, y sin
+            capturar toques para que no estorbe a la fila que tapa a medias. */}
+        <AnimatePresence>
+          {hayMas && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-x-px bottom-px h-14 rounded-b-2xl bg-gradient-to-t from-[#0b1120] via-[#0b1120]/80 to-transparent"
+            >
+              <span className="material-symbols-outlined absolute bottom-1 left-1/2 -translate-x-1/2 text-white/45 text-lg">
+                expand_more
+              </span>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
 
       {/* Vista ampliada — foto grande + nombre grande antes de confirmar.
           En un portal a <body>: este selector puede vivir dentro de un
@@ -165,7 +238,7 @@ export default function AvatarPicker({ value, onChange, className = '' }) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[320] flex items-center justify-center bg-black/85 px-6 backdrop-blur-md"
+              className="fixed inset-0 z-[320] flex items-center justify-center bg-black/85 px-6"
               onClick={() => setPreviewEntry(null)}
             >
             <motion.div

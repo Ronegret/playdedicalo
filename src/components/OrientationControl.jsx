@@ -72,7 +72,7 @@ export default function OrientationControl({ compact = false }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             style={{ top: rect.top, right: rect.right }}
-            className="fixed z-[320] w-[min(17rem,calc(100vw-1.5rem))] rounded-2xl border border-white/12 bg-surface-container/97 p-2 shadow-[0_20px_50px_rgba(0,0,0,0.5)] backdrop-blur-xl"
+            className="fixed z-[320] w-[min(17rem,calc(100vw-1.5rem))] rounded-2xl border border-white/12 bg-surface-container/97 p-2 shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
           >
             <p className="px-2 py-1.5 font-label-caps text-[0.65rem] tracking-[0.14em] text-on-surface-variant">
               CÓMO SE VE EL JUEGO

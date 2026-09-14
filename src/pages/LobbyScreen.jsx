@@ -11,6 +11,9 @@ import ProfileMenu from '../components/ProfileMenu';
 import HeaderLogo from '../components/HeaderLogo';
 import SabotageSettings from '../components/SabotageSettings';
 import { auth } from '../firebase';
+import { useWakeLock } from '../hooks/useWakeLock';
+import { sfx } from '../services/audio';
+import { vibrar } from '../services/haptics';
 
 
 
@@ -67,6 +70,11 @@ export default function LobbyScreen() {
     audioEnTv
   } = useGameStore();
   const [showQR, setShowQR] = useState(false);
+  // Mientras el QR está en pantalla, el móvil no puede atenuarse: nadie lo
+  // está tocando (lo sostiene en alto para que OTRO lo escanee) y a los
+  // treinta segundos el sistema baja el brillo. Atenuada, la cámara de
+  // enfrente deja de leer el código.
+  useWakeLock(showQR);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
   const [pinCopied, setPinCopied] = useState(false);
   const [linkShared, setLinkShared] = useState(false);
@@ -155,7 +163,7 @@ export default function LobbyScreen() {
             transition={{ type: 'spring', stiffness: 200, damping: 20 }}
             className="fixed top-20 inset-x-0 z-[290] flex justify-center px-5 pointer-events-none"
           >
-            <div className="rounded-2xl border border-vinyl-orange/50 bg-vinyl-orange/15 backdrop-blur-lg p-3 flex items-center gap-3 max-w-sm w-full">
+            <div className="rounded-2xl border border-vinyl-orange/50 bg-vinyl-orange/15 p-3 flex items-center gap-3 max-w-sm w-full">
               <span className="material-symbols-outlined text-vinyl-orange text-2xl shrink-0">wifi_off</span>
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-black text-white">{disconnectToast} se desconectó</p>
@@ -166,7 +174,7 @@ export default function LobbyScreen() {
         )}
       </AnimatePresence>
 
-      <header className="fixed top-0 left-0 right-0 h-16 bg-surface/85 backdrop-blur-xl border-b border-white/10 flex justify-between items-center px-margin-mobile z-50">
+      <header className="fixed top-0 left-0 right-0 h-16 bg-surface/97 border-b border-white/10 flex justify-between items-center px-margin-mobile z-50">
         <button onClick={handleExit} className="min-h-touch text-on-surface-variant hover:text-white transition-colors flex items-center font-label-caps text-xs gap-2">
           <span className="material-symbols-outlined text-xl">arrow_back</span> SALIR
         </button>
@@ -202,7 +210,7 @@ export default function LobbyScreen() {
               className="absolute rounded-full bg-white overflow-hidden flex items-center justify-center"
               style={{ inset: '13%', boxShadow: '0 0 0 5px rgba(0,0,0,0.6), 0 0 0 8px rgba(255,122,26,0.22), 0 0 34px rgba(255,122,26,0.5)' }}
             >
-              <img src="/images/logo-main.png" alt="Dedícalo" className="w-[92%] h-[92%] object-contain drop-shadow-[0_5px_8px_rgba(0,0,0,0.28)]" draggable={false} />
+              <img src="/images/logo-main.webp" alt="Dedícalo" className="w-[92%] h-[92%] object-contain drop-shadow-[0_5px_8px_rgba(0,0,0,0.28)]" draggable={false} />
             </div>
           </div>
           {/* Mini EQ under vinyl */}
@@ -217,18 +225,24 @@ export default function LobbyScreen() {
       )}
 
       <section className="z-10 flex w-full flex-col gap-3 sm:gap-4">
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-md sm:p-5">
+        <div className="rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-5">
           <div className="flex items-center justify-between gap-4">
             <div>
               <p className="font-label-caps text-neon-green text-xs">RONDA {round}</p>
               <h2 className="font-headline-lg-mobile text-2xl font-bold text-on-surface mt-1">PIN DE SALA</h2>
             </div>
+            {/* Era un icono naranja sobre un fondo al 5%: no se leía como
+                botón, y es justo el que abre el código que tienen que
+                escanear los demás — la acción más usada del lobby. Ahora
+                lleva el verde de marca, borde, etiqueta y respuesta al
+                toque. */}
             <button
-              onClick={() => setShowQR(true)}
-              className="w-11 h-11 bg-white/5 rounded-xl hover:bg-white/10 transition-colors flex items-center justify-center"
+              onClick={() => { vibrar('toque'); sfx.toque(); setShowQR(true); }}
+              className="app-pulsable flex min-h-touch flex-col items-center justify-center gap-0.5 rounded-xl border border-neon-green/45 bg-neon-green/12 px-3 py-2 text-neon-green transition-colors hover:bg-neon-green/20"
               aria-label="Mostrar QR de la sala"
             >
-              <span className="material-symbols-outlined text-primary">qr_code_scanner</span>
+              <span className="material-symbols-outlined text-xl leading-none">qr_code_scanner</span>
+              <span className="app-etiqueta text-[0.55rem] leading-none">Ver QR</span>
             </button>
           </div>
 
@@ -318,7 +332,7 @@ export default function LobbyScreen() {
         {conectandoTv && <ConectarTv onCerrar={() => setConectandoTv(false)} />}
 
         {role === 'host' && (
-          <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-4 text-left">
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-left">
             <p className="font-label-caps text-neon-green text-xs mb-3">{gameLocked ? 'PARTIDA EN CURSO' : 'MODO DE JUEGO'}</p>
             <div className="rounded-2xl border border-vinyl-orange/30 bg-[linear-gradient(135deg,rgba(255,122,26,0.14),rgba(168,85,247,0.12))] p-4 text-left">
               <p className="font-label-caps text-[0.588rem] text-vinyl-orange tracking-[0.2em]">AÑOS LOCOS</p>
@@ -438,7 +452,7 @@ export default function LobbyScreen() {
               initial={{ opacity: 0, x: -12 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.06, type: 'spring', stiffness: 180 }}
-              className={`rounded-xl border p-3.5 backdrop-blur-md transition-colors hover:border-white/20 sm:p-4 ${
+              className={`rounded-xl border p-3.5 transition-colors hover:border-white/20 sm:p-4 ${
                 presence.status === 'kicked'
                   ? 'border-white/8 bg-white/[0.03] opacity-55'
                   : presence.status === 'reconnecting'
@@ -492,22 +506,47 @@ export default function LobbyScreen() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm px-margin-mobile"
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/92 px-margin-mobile"
             onClick={() => setShowQR(false)}
           >
+            {/* TARJETA BLANCA, no oscura, y a propósito.
+                Esto se levanta en alto para que OTRA persona lo escanee, así
+                que manda la cámara de enfrente, no la estética de la app:
+                una pantalla casi toda blanca sale mucho más brillante que una
+                oscura con un cuadrito blanco, y es lo que decide si la cámara
+                engancha el código o no en una habitación con poca luz.
+                Y ocupa casi todo el ancho: antes eran 12rem —unos 200 px— en
+                mitad de una pantalla negra. */}
             <motion.div
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
-              className="bg-surface-container p-7 rounded-2xl border border-white/10 flex flex-col items-center gap-5"
+              transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+              className="flex w-full max-w-sm flex-col items-center gap-4 rounded-3xl bg-white p-6"
               onClick={(event) => event.stopPropagation()}
             >
-              <h3 className="font-headline-lg text-2xl text-white">Escanea para unirte</h3>
-              <div className="p-4 bg-white rounded-2xl">
-                <CodigoQr valor={`${window.location.origin}/guest/join?pin=${pin}`} tam="12rem" alt="Código QR para unirse a la sala" />
+              <h3 className="app-etiqueta text-xs text-black/50">Escanea para unirte</h3>
+
+              <CodigoQr
+                valor={`${window.location.origin}/guest/join?pin=${pin}`}
+                tam="min(72vw, 20rem)"
+                alt="Código QR para unirse a la sala"
+              />
+
+              <div className="text-center">
+                <p className="app-etiqueta text-[0.65rem] text-black/45">o escribe este PIN</p>
+                {/* selectable: es lo único de la app que la gente necesita
+                    copiar de verdad, y el bloqueo global de selección lo
+                    habría dejado sin poder copiarse. */}
+                <p className="app-cifra selectable mt-1 text-5xl tracking-[0.2em] text-black">{pin}</p>
               </div>
-              <p className="font-stats-xl text-4xl text-primary tracking-widest">{pin}</p>
-              <button onClick={() => setShowQR(false)} className="px-6 py-2 bg-white/10 rounded-full font-label-caps text-xs hover:bg-white/20 transition-colors">CERRAR</button>
+
+              <button
+                onClick={() => setShowQR(false)}
+                className="app-pulsable mt-1 w-full rounded-2xl bg-black/8 py-3 app-etiqueta text-xs text-black/70"
+              >
+                Cerrar
+              </button>
             </motion.div>
           </motion.div>
         )}
@@ -517,7 +556,7 @@ export default function LobbyScreen() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[110] flex items-end sm:items-center justify-center bg-black/80 backdrop-blur-sm px-4 pb-4 sm:pb-0"
+            className="fixed inset-0 z-[110] flex items-end sm:items-center justify-center bg-black/92 px-4 pb-4 sm:pb-0"
             onClick={() => setShowExitConfirm(false)}
           >
             <motion.div

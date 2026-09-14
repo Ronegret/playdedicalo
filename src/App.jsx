@@ -8,6 +8,8 @@ import ErrorBoundary from './components/ErrorBoundary';
 import OfflineBanner from './components/OfflineBanner';
 import { stopBgMusic } from './hooks/useBgMusic';
 import { useLandscapeBodyClass } from './hooks/useOrientation';
+import { useModoLigero } from './hooks/useModoLigero';
+import { despertarAudio } from './services/audio';
 
 // After a new deploy, a tab left open from before still points at the old,
 // content-hashed chunk filenames — those 404 on the server and the dynamic
@@ -46,19 +48,63 @@ const TvScreen = lazyWithReload(() => import('./pages/TvScreen'));
 // Lo que abre el anfitrión al escanear el QR del televisor.
 const TvLinkScreen = lazyWithReload(() => import('./pages/TvLinkScreen'));
 
+/* ── Precarga del camino probable ───────────────────────────────────────────
+   Antes, la PRIMERA vez que alguien iba a cualquier pantalla, su trozo de
+   JavaScript aún no estaba descargado: React suspendía, se desmontaba todo y
+   salía el cartel de "CARGANDO — Preparando la sala musical" a pantalla
+   completa. Ninguna app instalada borra la pantalla para cambiar de sección.
+
+   Desde cada pantalla solo se puede ir a dos o tres sitios. Así que en cuanto
+   una pantalla está pintada y el navegador está ocioso, se traen los trozos
+   de los sitios a los que se puede ir desde ahí. Cuando la persona toca el
+   botón, el código YA está: la transición es instantánea y el cartel no
+   aparece nunca.
+
+   Va en requestIdleCallback a propósito: precargar es lo menos urgente que
+   hay, y no puede robarle tiempo a la pantalla que se está pintando ahora.
+─────────────────────────────────────────────────────────────────────────── */
+const VECINAS = {
+  '/': [() => import('./pages/RoleSelectionScreen'), () => import('./pages/HowToPlayScreen')],
+  '/role-selection': [() => import('./pages/HostSyncScreen'), () => import('./pages/GuestJoinScreen')],
+  '/host/sync': [() => import('./pages/LobbyScreen')],
+  '/guest/join': [() => import('./pages/LobbyScreen')],
+  '/lobby': [() => import('./pages/GameScreen')],
+  '/game': [() => import('./pages/ResultScreen')],
+  '/game/result': [() => import('./pages/LobbyScreen')],
+  '/tv-link': [() => import('./pages/TvScreen')]
+};
+
+const yaPrecargadas = new Set();
+
+function precargarVecinas(ruta) {
+  const vecinas = VECINAS[ruta];
+  if (!vecinas || yaPrecargadas.has(ruta)) return;
+  yaPrecargadas.add(ruta);
+
+  const traer = () => vecinas.forEach((importar) => { importar().catch(() => {}); });
+  if ('requestIdleCallback' in window) window.requestIdleCallback(traer, { timeout: 2500 });
+  else window.setTimeout(traer, 1200);
+}
+
+/**
+ * Espera.
+ *
+ * Es deliberadamente IGUAL que la pantalla de arranque de index.html: mismo
+ * fondo, mismo logo, misma barra, mismo tamaño. Antes esto era otra cosa
+ * —disco girando, "CARGANDO", "Preparando la sala musical..."— así que al
+ * abrir la app se veían DOS esperas distintas seguidas, y cada cambio de
+ * aspecto se lee como un paso más.
+ *
+ * Siendo idénticas, el usuario no percibe una transición: percibe una sola
+ * espera que sigue ahí. Y con la precarga de vecinas, esta pantalla ya casi
+ * nunca llega a aparecer al navegar.
+ */
 function PageLoader() {
   return (
-    <div className="fixed inset-0 z-[999] flex flex-col items-center justify-center gap-5 bg-background px-6 text-center">
-      <div className="relative flex h-28 w-28 items-center justify-center">
-        <div className="absolute inset-0 rounded-full border border-vinyl-orange/25 ring-expand-anim" />
-        <div className="absolute inset-3 rounded-full bg-[repeating-radial-gradient(circle,#05070c_0_4px,#172033_5px_6px,#05070c_7px_10px)] vinyl-spin shadow-[0_18px_42px_rgba(0,0,0,0.45)]" />
-        <div className="relative z-10 flex h-14 w-14 items-center justify-center overflow-hidden rounded-full bg-white p-1.5">
-          <img src="/images/icon-app.png" alt="Dedícalo" className="h-full w-full object-contain" />
-        </div>
-      </div>
-      <div>
-        <p className="font-label-caps text-xs tracking-[0.28em] text-neon-green">CARGANDO</p>
-        <p className="mt-2 text-sm font-bold text-on-surface">Preparando la sala musical...</p>
+    <div className="fixed inset-0 z-[999] flex flex-col items-center justify-center gap-[22px] bg-[#071025] px-6">
+      <img src="/images/app/icon-512.png" alt="" width={124} height={124} className="h-[124px] w-[124px] object-contain" />
+      <div className="h-[3px] w-32 overflow-hidden rounded-[3px] bg-white/10">
+        <i className="block h-full w-2/5 rounded-[3px] bg-gradient-to-r from-vinyl-orange to-electric-purple [animation:arranque-vaiven_1.1s_ease-in-out_infinite]" />
       </div>
     </div>
   );
@@ -68,6 +114,8 @@ import { useGameStore } from './store/useGameStore';
 
 function App() {
   useLandscapeBodyClass();
+  // Mide los fotogramas reales en este móvil y baja la calidad si no llega.
+  useModoLigero();
   const location = useLocation();
   const navigate = useNavigate();
   const [sessionChecked, setSessionChecked] = useState(false);
@@ -79,6 +127,13 @@ function App() {
   // leaving them stuck on "Reconectando" until they touch something.
   useEffect(() => {
     const reconnect = () => {
+      // El contexto de Web Audio se SUSPENDE solo cuando la app pasa a
+      // segundo plano (una llamada, bloquear la pantalla, cambiar de app).
+      // Al volver no se reanuda por su cuenta: sin esto, el anfitrión vuelve
+      // a la partida y ni la música ni los efectos suenan nunca más, sin
+      // ningún mensaje de error. Es barato y no depende de estar en una sala.
+      despertarAudio();
+
       const { pin, _subscribeToRoom, markPresenceOnline } = useGameStore.getState();
       if (!pin) return;
       _subscribeToRoom(pin);
@@ -100,6 +155,13 @@ function App() {
   // Keep the intro track available on the first two entry screens.
   useEffect(() => {
     if (!['/', '/role-selection'].includes(location.pathname)) stopBgMusic();
+  }, [location.pathname]);
+
+  // En cuanto esta pantalla está pintada, se traen en segundo plano los
+  // trozos de las pantallas a las que se puede ir desde aquí. Es lo que hace
+  // que el cartel de "CARGANDO" deje de salir al navegar.
+  useEffect(() => {
+    precargarVecinas(location.pathname);
   }, [location.pathname]);
 
   useEffect(() => {

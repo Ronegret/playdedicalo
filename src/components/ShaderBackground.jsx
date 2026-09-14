@@ -19,7 +19,7 @@ export default function ShaderBackground() {
     >
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-95"
-        style={{ backgroundImage: "url('/images/background-dark.png')" }}
+        style={{ backgroundImage: "url('/images/background-dark.webp')" }}
       />
 
       <div className="absolute inset-0 bg-gradient-to-b from-surface/35 via-background/35 to-background/90" />

@@ -249,7 +249,7 @@ export default function HostSyncScreen() {
       exit={{ opacity: 0, x: -50 }}
       className="app-screen safe-bottom-action relative z-10 overflow-y-auto pt-safe-header md:px-8 lg:px-16"
     >
-            <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-white/8 flex justify-between items-center px-4 md:px-8 h-16">
+            <header className="fixed top-0 left-0 right-0 z-50 bg-background/97 border-b border-white/8 flex justify-between items-center px-4 md:px-8 h-16">
         <button
           onClick={() => navigate('/role-selection')}
           className="min-h-touch text-on-surface-variant hover:text-white transition-colors flex items-center gap-2 font-label-caps text-xs tracking-[0.18em]"
@@ -274,7 +274,7 @@ export default function HostSyncScreen() {
         <div className="flex w-full flex-col items-center gap-4">
 
           <div className="mt-1">
-            <VinylVisualizer rotating={Boolean(googleUser)} size="compact" logoSrc="/images/icon-app.png" />
+            <VinylVisualizer rotating={Boolean(googleUser)} size="compact" logoSrc="/images/icon-app.webp" />
           </div>
 
           <div className="text-center">

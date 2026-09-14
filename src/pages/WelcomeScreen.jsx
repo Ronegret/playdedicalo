@@ -1,29 +1,15 @@
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NeonButton from '../components/NeonButton';
 import FontSizeControl from '../components/FontSizeControl';
 import { useBgMusic } from '../hooks/useBgMusic';
+import BotonInstalar from '../components/BotonInstalar';
 
 const EQ_BARS = [0.4, 0.7, 0.55, 0.9, 0.45, 0.8, 0.6, 0.35, 0.75, 0.5];
 
 export default function WelcomeScreen() {
   const navigate = useNavigate();
   const { paused: bgPaused, toggle: toggleBg } = useBgMusic();
-  const [installPrompt, setInstallPrompt] = useState(null);
-
-  useEffect(() => {
-    const handler = (e) => { e.preventDefault(); setInstallPrompt(e); };
-    window.addEventListener('beforeinstallprompt', handler);
-    return () => window.removeEventListener('beforeinstallprompt', handler);
-  }, []);
-
-  const handleInstall = () => {
-    if (!installPrompt) return;
-    installPrompt.prompt();
-    installPrompt.userChoice.then(() => setInstallPrompt(null));
-  };
-
   return (
     <motion.main
       initial={{ opacity: 0 }}
@@ -61,7 +47,11 @@ export default function WelcomeScreen() {
             aria-label={bgPaused ? 'Reproducir cancion de Dedicalo' : 'Pausar cancion de Dedicalo'}
             className="relative cursor-pointer"
             style={{
-              width: 'min(clamp(132px, 28svh, 340px), calc(100vw - 72px))',
+              // 26svh en vez de 28, y con un tope por ALTO además del de
+              // ancho: los anillos que laten crecen un 18% por fuera del
+              // disco y se salían 214 px por encima del borde de la pantalla,
+              // que es lo que hacía que el disco se viera cortado arriba.
+              width: 'min(clamp(124px, 26svh, 320px), calc(100vw - 88px))',
               aspectRatio: '1',
             }}
           >
@@ -101,19 +91,26 @@ export default function WelcomeScreen() {
               }}
             >
               <img
-                src="/images/logo-main.png"
+                src="/images/logo-main.webp"
                 alt="Dedícalo"
                 className="w-[92%] h-[92%] object-contain drop-shadow-[0_6px_10px_rgba(0,0,0,0.28)]"
                 draggable={false}
               />
             </div>
 
-            {/* Pause overlay — visible when bg music is paused */}
+            {/* Pause overlay — visible when bg music is paused.
+                Velo RADIAL en vez de un tinte plano: oscurece el centro
+                —donde va el botón— y deja respirar el borde, así el logo se
+                sigue reconociendo por debajo. Un 70% plano lo dejaba gris y
+                turbio, y el logo es lo mejor que tiene esta pantalla. */}
             {bgPaused && (
-              <div className="absolute inset-0 rounded-full flex items-center justify-center bg-black/40 backdrop-blur-[2px]">
+              <div
+                className="absolute inset-0 flex items-center justify-center rounded-full"
+                style={{ background: 'radial-gradient(circle at 50% 50%, rgba(0,0,0,.78) 0%, rgba(0,0,0,.62) 55%, rgba(0,0,0,.28) 100%)' }}
+              >
                 <div className="flex flex-col items-center gap-1">
-                  <span className="material-symbols-outlined text-white/90" style={{ fontSize: '3rem' }}>play_arrow</span>
-                  <span className="font-label-caps text-[0.529rem] tracking-[0.18em] text-white/80">TOCA PARA SONAR</span>
+                  <span className="material-symbols-outlined text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]" style={{ fontSize: '3rem' }}>play_arrow</span>
+                  <span className="font-label-caps text-[0.529rem] tracking-[0.18em] text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">TOCA PARA SONAR</span>
                 </div>
               </div>
             )}
@@ -204,16 +201,7 @@ export default function WelcomeScreen() {
             >
               Cómo se juega
             </button>
-            {installPrompt && (
-              <button
-                type="button"
-                onClick={handleInstall}
-                className="min-h-touch rounded-2xl border border-electric-purple/30 bg-electric-purple/8 text-electric-purple/80 text-xs font-semibold uppercase tracking-[0.18em] flex items-center justify-center gap-2 hover:bg-electric-purple/15 active:scale-95 transition-all"
-              >
-                <span className="material-symbols-outlined text-base">download</span>
-                Instalar app
-              </button>
-            )}
+            <BotonInstalar />
           </motion.div>
 
           {/* Pie legal. Va en la portada porque es la única pantalla por la

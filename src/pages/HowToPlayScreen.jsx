@@ -206,7 +206,7 @@ export default function HowToPlayScreen() {
       className="app-screen relative z-10 overflow-y-auto no-scrollbar sm:px-6 lg:px-10"
       style={{ paddingTop: 'calc(5rem + env(safe-area-inset-top, 0px) + 12px)' }}
     >
-      <header className="fixed left-0 right-0 top-0 z-50 flex items-center border-b border-white/8 bg-background/85 px-4 backdrop-blur-xl sm:px-6"
+      <header className="fixed left-0 right-0 top-0 z-50 flex items-center border-b border-white/8 bg-background/97 px-4 sm:px-6"
         style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 12px)', minHeight: 'calc(4rem + env(safe-area-inset-top, 0px) + 12px)' }}
       >
         <button
@@ -223,15 +223,23 @@ export default function HowToPlayScreen() {
         {/* Hero — responsive height, no fixed px that clips content */}
         <section className="relative mt-3 overflow-hidden rounded-[28px] border border-white/10 bg-[#070917]">
           <img
-            src="/images/hero-how-to-play.png"
+            src="/images/hero-how-to-play.webp"
             alt="Grupo jugando Dedícalo con música"
-            className="absolute inset-0 h-full w-full object-cover opacity-45"
+            className="absolute inset-0 h-full w-full object-cover opacity-55"
             draggable={false}
             onError={(e) => { e.currentTarget.style.display = 'none'; }}
           />
           {/* Animated background fallback if image missing */}
           <div className="absolute inset-0 animated-mesh" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#05060f] via-[#05060f]/75 to-[#05060f]/20" />
+          {/* EL VELO IBA AL REVÉS.
+              El degradado protegía de abajo arriba (`to-…/20`), pero el
+              titular va ARRIBA — justo donde la imagen quedaba al 80%. Y esa
+              imagen es una captura de otra pantalla del juego, con sus propios
+              textos: se leía "Únete y escucha" y "Sala 873216" POR DEBAJO del
+              titular, y el resultado era ilegible.
+              Ahora el velo es más fuerte donde vive el texto y deja ver la foto
+              en la franja media, que es donde aporta algo. */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#05060f]/80 via-[#05060f]/55 to-[#05060f]" />
           <div className="relative px-5 pb-8 pt-10 sm:px-8 sm:pb-12 sm:pt-14 lg:px-10 lg:pb-14">
             <p className="font-label-caps text-sm tracking-[0.22em] text-neon-green">Cómo se juega</p>
             <h1 className="heading-impact mt-3 font-headline-lg font-black text-white">

@@ -21,7 +21,7 @@ export default function RotatePrompt() {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="fixed inset-x-3 z-[310] rounded-2xl border border-chaos-gold/40 bg-surface-container/97 p-4 shadow-[0_20px_50px_rgba(0,0,0,0.5)] backdrop-blur-xl"
+      className="fixed inset-x-3 z-[310] rounded-2xl border border-chaos-gold/40 bg-surface-container/97 p-4 shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
       style={{ bottom: 'calc(1rem + env(safe-area-inset-bottom, 0px))' }}
       role="status"
     >

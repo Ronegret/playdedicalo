@@ -34,8 +34,18 @@ const NOMBRE = /^[a-z][a-z0-9_]*$/;
 const NO_SON_ICONOS = new Set([
   'icon', 'true', 'false', 'null', 'undefined', 'default', 'className',
   'fallback', 'nextIcon', 'prev', 'next', 'index', 'text', 'title', 'name',
-  'color', 'accent', 'format', 'type', 'short', 'description', 'mode',
-  'timeline', 'album'
+  'color', 'accent', 'format', 'type', 'short', 'description', 'mode'
+  // OJO: aquí estuvieron 'album' y 'timeline', y era un FALLO. Los dos son
+  // iconos de verdad y el código los usa: 'album' dos veces en
+  // ShaderBackground (que es GLOBAL, así que salía en todas las pantallas) y
+  // 'timeline' en HowToPlayScreen. Al estar en esta lista no viajaban en el
+  // subconjunto, y el navegador dibujaba las palabras "ALBUM" y "TIMELINE" en
+  // grande sobre el fondo. Justo el fallo que este script existe para evitar,
+  // causado por el propio script.
+  //
+  // Antes de meter una palabra aquí: comprueba que NO es un nombre válido de
+  // Material Symbols. Un falso positivo solo añade unos bytes; un icono de
+  // verdad en esta lista se publica como texto en mitad de la pantalla.
 ]);
 
 const iconos = new Set();
@@ -87,19 +97,24 @@ for (const archivo of fuentes) {
 
 const lista = [...iconos].sort();
 
-// Se piden con los mismos ejes variables que ya usaba la URL original
-// (peso 100..700 y relleno 0..1) para no cambiar cómo se ven.
-const URL_ICONOS = `https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&icon_names=${lista.join(',')}&display=block`;
+// La lista ya NO se escribe como un <link> a Google: la fuente de iconos se
+// sirve desde el propio dominio (ver scripts/fuentes.mjs), así que el
+// navegador de quien juega no se conecta a ningún tercero.
+//
+// Pero la lista sigue haciendo falta, porque es el parámetro con el que
+// Google arma el subconjunto al descargarlo. Vive aquí, en un <meta>, y
+// `fuentes.mjs` la lee de aquí. Así este script sigue siendo la única fuente
+// de verdad de qué iconos usa el juego.
+const META = /<meta name="dedicalo-iconos" content="[^"]*"\s*\/?>/;
 
 const html = readFileSync(INDEX, 'utf8');
-const LINEA = /<link href="https:\/\/fonts\.googleapis\.com\/css2\?family=Material\+Symbols[^"]*" rel="stylesheet">/;
 
-if (!LINEA.test(html)) {
-  console.error('No encuentro la línea de Material Symbols en index.html.');
+if (!META.test(html)) {
+  console.error('No encuentro <meta name="dedicalo-iconos"> en index.html.');
   process.exit(1);
 }
 
-const nuevo = html.replace(LINEA, `<link href="${URL_ICONOS}" rel="stylesheet">`);
+const nuevo = html.replace(META, `<meta name="dedicalo-iconos" content="${lista.join(',')}" />`);
 const comprobar = process.argv.includes('--check');
 
 console.log(`Iconos usados en el código: ${lista.length}`);

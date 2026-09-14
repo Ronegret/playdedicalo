@@ -35,7 +35,7 @@ export default function SupportButton({ compact = false, className = '' }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[250] flex items-end sm:items-center justify-center bg-black/80 backdrop-blur-sm px-4 pb-6 sm:pb-0"
+            className="fixed inset-0 z-[250] flex items-end sm:items-center justify-center bg-black/92 px-4 pb-6 sm:pb-0"
             onClick={() => setOpen(false)}
           >
             <motion.div

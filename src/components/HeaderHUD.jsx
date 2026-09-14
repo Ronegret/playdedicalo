@@ -56,7 +56,7 @@ export default function HeaderHUD({ onExit }) {
   const myYears = getTimelineProgress(ownPlayer);
 
   return (
-    <div className="fixed inset-x-0 top-0 z-[100] border-b border-white/10 bg-surface/80 shadow-md backdrop-blur-xl">
+    <div className="fixed inset-x-0 top-0 z-[100] border-b border-white/10 bg-surface/80 shadow-md app-blur-permitido">
       <div style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 12px)' }}>
         {/* Columnas laterales a su ancho natural (nunca se disputan espacio
             entre sí) + una única columna central flexible que se achica o
@@ -140,7 +140,7 @@ export default function HeaderHUD({ onExit }) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.18 }}
-              className="absolute right-2 top-[calc(64px+env(safe-area-inset-top,0px)+18px)] z-[101] max-h-[65vh] w-[min(21rem,calc(100vw-1rem))] overflow-y-auto rounded-2xl border border-white/10 bg-surface-container/95 p-2 shadow-[0_20px_50px_rgba(0,0,0,0.45)] backdrop-blur-xl"
+              className="absolute right-2 top-[calc(64px+env(safe-area-inset-top,0px)+18px)] z-[101] max-h-[65vh] w-[min(21rem,calc(100vw-1rem))] overflow-y-auto rounded-2xl border border-white/10 bg-surface-container/95 p-2 shadow-[0_20px_50px_rgba(0,0,0,0.45)]"
             >
               <p className="px-2 py-1 font-label-caps text-xs tracking-widest text-on-surface-variant">JUGADORES</p>
               <div className="flex flex-col gap-1">

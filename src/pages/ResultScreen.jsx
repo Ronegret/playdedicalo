@@ -6,6 +6,8 @@ import { isImageAvatar } from '../data/characterAvatars';
 import ProfileMenu from '../components/ProfileMenu';
 import JoinRequestBanner from '../components/JoinRequestBanner';
 import { auth } from '../firebase';
+import { sfx } from '../services/audio';
+import { vibrar } from '../services/haptics';
 
 const RESULT_STYLES = {
   success: {
@@ -317,9 +319,12 @@ export default function ResultScreen() {
   // del anfitrión (puede diferir si hubo bloqueo/robo de año), y solo en
   // esta pantalla de ronda, no en el podio final.
   useEffect(() => {
-    if (isFinal || !navigator.vibrate) return;
-    if (resultType === 'success') navigator.vibrate([15, 55, 15]);
-    else if (resultType === 'fail') navigator.vibrate([70, 40, 70, 40, 130]);
+    if (isFinal) return;
+    // El sonido va SIEMPRE, la vibracion solo donde existe: en iPhone no
+    // hay vibracion posible en web, y el resultado de la ronda no puede
+    // quedarse sin confirmacion en la mitad de los moviles.
+    if (resultType === 'success') { vibrar('acierto'); sfx.acierto(); }
+    else if (resultType === 'fail') { vibrar('fallo'); sfx.fallo(); }
   }, [isFinal, resultType]);
 
   useEffect(() => {
@@ -567,7 +572,7 @@ export default function ResultScreen() {
           initial={{ y: -18, opacity: 0, scale: 0.96 }}
           animate={{ y: 0, opacity: 1, scale: 1 }}
           transition={{ type: 'spring', stiffness: 150, damping: 18 }}
-          className={`relative overflow-hidden rounded-[2rem] border ${style.border} bg-black/35 backdrop-blur-sm px-5 py-7 text-center shadow-[0_20px_80px_rgba(0,0,0,0.45)]`}
+          className={`relative overflow-hidden rounded-[2rem] border ${style.border} bg-black/35 px-5 py-7 text-center shadow-[0_20px_80px_rgba(0,0,0,0.45)]`}
           style={{ boxShadow: `0 18px 80px rgba(0,0,0,0.45), 0 0 70px ${style.glowColor}` }}
         >
           <div
@@ -696,7 +701,7 @@ export default function ResultScreen() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.12 }}
-          className="mt-3 flex items-center gap-3 rounded-2xl border border-white/10 bg-black/30 p-4 backdrop-blur-sm"
+          className="mt-3 flex items-center gap-3 rounded-2xl border border-white/10 bg-black/30 p-4"
         >
           <div
             className="rounded-xl overflow-hidden shrink-0"
@@ -807,7 +812,7 @@ export default function ResultScreen() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[220] flex items-end justify-center bg-black/80 px-4 pb-4 backdrop-blur-sm sm:items-center sm:pb-0"
+            className="fixed inset-0 z-[220] flex items-end justify-center bg-black/92 px-4 pb-4 sm:items-center sm:pb-0"
             onClick={() => setShowExitConfirm(false)}
           >
             <motion.div

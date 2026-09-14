@@ -64,6 +64,53 @@ html.fs-xl {
     touch-action: pan-y;
   }
 
+  /* ── Tacto de aplicación, no de página web ────────────────────────────
+     Tres detalles diminutos que, juntos, son la diferencia entre "esto es
+     una app" y "esto es una web abierta en el móvil". Son gratis y hasta
+     ahora no estaban:
+
+     1. El DESTELLO GRIS al tocar. Lo pinta el sistema sobre cualquier cosa
+        pulsable y no lo hace ninguna app nativa. Es probablemente el
+        delator número uno.
+     2. SELECCIONAR TEXTO al mantener pulsado. En una app nativa un botón
+        no se puede "seleccionar"; aquí salían las pinzas azules y el menú
+        de copiar encima de un botón del juego.
+     3. El menú de GUARDAR IMAGEN al mantener pulsado un avatar o el logo.
+
+     El texto que SÍ hay que poder copiar —el PIN de la sala, el código— se
+     marca aparte con .selectable, más abajo.
+  ─────────────────────────────────────────────────────────────────────── */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+
+  /* Excepción deliberada: lo que la gente necesita copiar de verdad. */
+  .selectable,
+  input,
+  textarea {
+    -webkit-user-select: text;
+    user-select: text;
+    -webkit-touch-callout: default;
+  }
+
+  /* Ningún botón del juego debe comportarse como texto de una página. */
+  button,
+  a,
+  [role='button'] {
+    -webkit-user-drag: none;
+    touch-action: manipulation;
+  }
+
+  img {
+    -webkit-user-drag: none;
+  }
+
   /* Todos los headers fijos respetan la muesca/isla del iPhone, más 12px de
      aire extra: pegar el contenido justo al borde del sensor se lee apretado
      incluso cuando técnicamente no lo tapa. */
@@ -439,8 +486,11 @@ html.fs-xl {
     font-size: min(4.75rem, max(1.9rem, 10vw));
     line-height: 0.96;
     letter-spacing: -0.035em;
+    /* `hyphens: auto` partía las palabras a mitad —"memo-ria"— y en un
+       titular grande eso no se lee como tipografía, se lee como un error.
+       `overflow-wrap: anywhere` se queda como red de seguridad: solo actúa si
+       una palabra de verdad no cabe, en vez de guionar por gusto. */
     overflow-wrap: anywhere;
-    hyphens: auto;
   }
 
   .heading-page {
@@ -448,7 +498,6 @@ html.fs-xl {
     line-height: 1.05;
     letter-spacing: -0.02em;
     overflow-wrap: anywhere;
-    hyphens: auto;
   }
 
   /* Titular gigante de impacto (overlay de sabotaje, cuenta atras). */
@@ -482,11 +531,115 @@ html.fs-xl {
     display: none;
   }
 
+  /* ── Superficies del móvil ────────────────────────────────────────────
+     POR QUÉ SE VA EL DESENFOQUE.
+
+     Había 48 `backdrop-blur` en las pantallas de móvil. Cada uno obliga al
+     navegador a capturar lo que hay detrás, aplicarle un desenfoque
+     gaussiano y recomponer — y a REPETIRLO EN CADA FOTOGRAMA si algo se
+     mueve por debajo, que en este juego se mueve siempre. En un Android de
+     gama media eso no se nota a veces: se nota siempre.
+
+     El diagnóstico ya estaba escrito en este mismo archivo, en el bloque de
+     la televisión ("es lo que peor llevan las GPU... y la app lo usa en 48
+     sitios"). Se arregló allí y nunca se aplicó aquí.
+
+     Lo que las sustituye no es una caja plana. Es la misma receta de
+     .tv-carta: borde fino + brillo interior arriba + sombra proyectada
+     abajo. Tres detalles que dan MÁS sensación de profundidad que el
+     desenfoque, y cuestan cero: se pintan una vez y no vuelven a calcularse.
+  ─────────────────────────────────────────────────────────────────────── */
+
+  /* Superficie estándar. Sustituye a glass-surface en todas las tarjetas. */
+  .app-carta {
+    background: linear-gradient(165deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02) 45%, rgba(0, 0, 0, 0.22));
+    border: 1px solid rgba(255, 255, 255, 0.11);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.13),
+      0 8px 24px rgba(0, 0, 0, 0.42);
+  }
+
+  /* Variante elevada: menús, hojas que suben desde abajo. */
+  .app-carta-alta {
+    background: linear-gradient(165deg, rgba(20, 30, 52, 0.98), rgba(9, 14, 26, 0.99));
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.16),
+      0 18px 48px rgba(0, 0, 0, 0.62);
+  }
+
+  /* Fondo de modal. Opaco de verdad en vez de desenfocado: en un overlay a
+     pantalla completa el desenfoque es el caso MÁS caro que existe, porque
+     la zona a capturar es la pantalla entera. */
+  .app-velo {
+    background: rgba(4, 8, 18, 0.88);
+  }
+
+  /* glass-surface se mantiene por compatibilidad, pero ya sin desenfoque:
+     cualquier sitio que aún la use deja de pagar el coste automáticamente. */
   .glass-surface {
-    background: rgba(8, 16, 31, 0.62);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
+    background: linear-gradient(165deg, rgba(14, 24, 44, 0.92), rgba(8, 14, 28, 0.96));
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.11),
+      0 8px 24px rgba(0, 0, 0, 0.4);
+  }
+
+  /* El desenfoque SÍ se justifica en un sitio: una barra fina y fija sobre
+     contenido que se desplaza, donde la zona a capturar es pequeña. Se deja
+     una clase explícita para que usarlo sea una decisión y no un descuido. */
+  .app-blur-permitido {
+    background: rgba(8, 16, 31, 0.72);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
     border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  /* ── Lenguaje tipográfico del móvil ───────────────────────────────────
+     La televisión tenía .tv-titular, .tv-etiqueta y .tv-cifra; el móvil no
+     tenía equivalente y tiraba de los valores por defecto de Tailwind. Eso
+     solo ya hacía que una pantalla pareciera un formulario y la otra un
+     programa de televisión.
+  ─────────────────────────────────────────────────────────────────────── */
+  .app-titular {
+    font-family: 'Montserrat', Arial, sans-serif;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+
+  .app-etiqueta {
+    font-family: 'Barlow Condensed', 'Montserrat', Arial, sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+  }
+
+  /* Cifras que no bailan al cambiar: marcadores, cuentas atrás, PIN. */
+  .app-cifra {
+    font-family: 'Montserrat', Arial, sans-serif;
+    font-weight: 900;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+
+  /* ── Respuesta al toque ───────────────────────────────────────────────
+     Quitamos el destello gris del sistema, así que hay que devolver una
+     respuesta propia — si no, tocar un botón no confirma nada y la app se
+     siente muerta. Una app nativa hunde el botón; esto hace lo mismo.
+     Solo `transform`, así que es gratis.
+  ─────────────────────────────────────────────────────────────────────── */
+  .app-pulsable {
+    transition: transform 140ms cubic-bezier(0.2, 0.9, 0.3, 1.1);
+  }
+
+  .app-pulsable:active {
+    transform: scale(0.96);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .app-pulsable { transition: none; }
+    .app-pulsable:active { transform: none; }
   }
 
   .vinyl-shadow {
@@ -619,6 +772,74 @@ html.fs-xl {
   50%       { transform: translateY(-7px) rotate(4deg); }
 }
 .crown-bounce-anim { animation: crown-bounce 1.8s ease-in-out infinite; }
+
+/* ─── Modo ligero del MÓVIL ──────────────────────────────────────────────
+   Hermano del .tv-ligero de la televisión, y por el mismo motivo: el abanico
+   de móviles es enorme y no hay forma de acertar el ajuste correcto desde
+   aquí. Lo enciende useModoLigero cuando mide que el aparato no llega.
+
+   Se apaga TODO lo que se repite sin parar. Se dejan las entradas y las
+   transiciones, que duran medio segundo, no pueden acumularse y son las que
+   comunican lo que está pasando.
+
+   La cuenta que lo motiva: había hasta 48 bucles infinitos simultáneos
+   (42 clases propias + 6 de Tailwind), cada uno manteniendo su propia capa
+   de composición viva. En un móvil de gama media eso es más de lo que la
+   GPU puede sostener a 60 fps.
+──────────────────────────────────────────────────────────────────────────── */
+.app-ligero .float-slow,
+.app-ligero .float-medium,
+.app-ligero .float-rotate,
+.app-ligero .beat-anim,
+.app-ligero .ring-expand-anim,
+.app-ligero .glow-breathe,
+.app-ligero .eq-bar,
+.app-ligero .vinyl-spin,
+.app-ligero .animated-mesh,
+.app-ligero .disco-lights,
+.app-ligero .crown-bounce-anim,
+.app-ligero .text-animated-gradient,
+.app-ligero .animate-pulse,
+.app-ligero .animate-ping,
+.app-ligero .animate-spin,
+.app-ligero .animate-bounce {
+  animation: none !important;
+}
+
+/* El degradado animado sin animación se quedaría con el texto invisible,
+   porque el relleno es transparente y el color lo pone el fondo. */
+.app-ligero .text-animated-gradient {
+  background-position: 0% 50%;
+}
+
+/* Un ecualizador quieto a media altura sigue leyéndose como ecualizador;
+   aplastado contra el suelo parece roto. */
+.app-ligero .eq-bar { transform: scaleY(0.55); }
+
+/* El confeti es lo más caro de todo: decenas de elementos cayendo a la vez.
+   En un aparato justo desaparece — el podio ya se entiende sin él. */
+.app-ligero .confetti-piece { display: none !important; }
+
+/* Los anillos viven en opacity 0 mientras animan: quietos serían aros
+   muertos alrededor del disco. */
+.app-ligero .ring-expand-anim { display: none !important; }
+
+/* Las sombras de neón obligan a recalcular el desenfoque de la sombra en
+   cada repintado. Se conserva el color, se quita el halo. */
+.app-ligero .neon-glow-purple,
+.app-ligero .neon-glow-green,
+.app-ligero .vinyl-shadow {
+  box-shadow: none !important;
+}
+
+/* Misma animación que usa la pantalla de arranque de index.html. Se repite
+   aquí para que PageLoader la tenga aunque ese <style> en línea se elimine:
+   las dos esperas tienen que ser idénticas, y una barra quieta en una y
+   moviéndose en la otra delataría que son dos pantallas distintas. */
+@keyframes arranque-vaiven {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(350%); }
+}
 
 /* ─── Subtle dot/grid overlay ───────────────────────── */
 .bg-grid {

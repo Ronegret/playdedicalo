@@ -12,6 +12,8 @@ import { StepActionBar, StepPanel, StepProgress } from '../components/WizardStep
 import { findCharacterAvatarByUrl, isImageAvatar } from '../data/characterAvatars';
 import { escanearQr } from '../services/escanerQr';
 import { auth, authReady, googleProvider } from '../firebase';
+import { sfx } from '../services/audio';
+import { vibrar } from '../services/haptics';
 
 // Orden deliberado: primero el PIN (lo que la persona tiene delante en ese
 // momento), después su nombre, después el personaje. Antes todo estaba en
@@ -162,7 +164,7 @@ export default function GuestJoinScreen() {
         setAlert({ tone: 'error', title: 'PIN incorrecto', message: result.message });
         return;
       }
-      if (navigator.vibrate) navigator.vibrate(20);
+      vibrar('toque'); sfx.toque();
       setStep(1);
     } finally {
       checkingPinRef.current = false;
@@ -186,7 +188,7 @@ export default function GuestJoinScreen() {
         if (nextPin.length !== 4) return false;
         setPin(nextPin);
         setScannerOpen(false);
-        if (navigator.vibrate) navigator.vibrate([20, 40, 20]);
+        vibrar('confirmar'); sfx.confirmar();
         // Mismo camino que escribirlo a mano: así un QR de una sala ya
         // cerrada también avisa en vez de dejar seguir.
         advanceFromPin(nextPin);
@@ -298,7 +300,7 @@ export default function GuestJoinScreen() {
 
   return (
     <motion.main className="app-screen safe-bottom-action app-shell relative z-10 overflow-y-auto pt-safe-header text-center">
-      <header className="fixed top-0 w-full z-50 bg-glass-surface backdrop-blur-md border-b border-white/10 flex items-center justify-between px-margin-mobile h-16 left-0">
+      <header className="fixed top-0 w-full z-50 bg-glass-surface border-b border-white/10 flex items-center justify-between px-margin-mobile h-16 left-0">
         <button onClick={() => navigate('/role-selection')} className="min-h-touch text-on-surface-variant hover:text-white transition-colors flex items-center gap-2 font-label-caps text-xs tracking-[0.18em]">
           <span className="material-symbols-outlined text-xl">arrow_back</span> VOLVER
         </button>
@@ -306,7 +308,12 @@ export default function GuestJoinScreen() {
         {googleUser ? <ProfileMenu user={googleUser} /> : <FontSizeControl />}
       </header>
 
-      <div className="flex flex-col items-center gap-5 sm:gap-6">
+      {/* `min-h-full` + `justify-center`: los pasos de este asistente son
+          cortos y se quedaban pegados arriba con media pantalla vacía debajo,
+          que es de las cosas que más "sin terminar" hacen parecer una app.
+          Centrado cuando cabe, y si un paso crece (el selector de avatar) el
+          contenedor sigue desplazándose con normalidad. */}
+      <div className="flex min-h-full flex-col items-center justify-center gap-5 pb-6 sm:gap-6">
         <StepProgress steps={GUEST_STEPS} current={step} onGoTo={setStep} />
 
         <AnimatePresence mode="wait">
@@ -348,7 +355,17 @@ export default function GuestJoinScreen() {
                     inputMode="numeric"
                     maxLength={1}
                     aria-label={`Dígito ${index + 1} del PIN`}
-                    className="h-20 rounded-2xl border-2 border-white/10 bg-black/30 text-center font-stats-xl text-4xl text-neon-green outline-none transition-colors focus:border-neon-green focus:bg-black/50"
+                    className={`h-20 rounded-2xl border-2 text-center font-stats-xl text-4xl text-neon-green outline-none transition-all focus:border-neon-green focus:bg-black/60 focus:shadow-[0_0_0_4px_rgba(57,255,20,0.14)] ${
+                      digit.trim()
+                        ? 'border-neon-green/55 bg-black/50'
+                        : index === pinDigits.findIndex((d) => !d.trim())
+                          // La SIGUIENTE casilla vacía se marca sola. Cuatro
+                          // cuadros oscuros e idénticos no decían dónde
+                          // escribir —ni siquiera que fueran escribibles—; con
+                          // una resaltada el sitio es obvio sin leer nada.
+                          ? 'border-neon-green/45 bg-black/45 animate-pulse'
+                          : 'border-white/10 bg-black/30'
+                    }`}
                     value={digit.trim()}
                     onChange={(event) => updatePinAt(index, event.target.value)}
                     onKeyDown={(event) => handlePinKeyDown(event, index)}
@@ -494,7 +511,7 @@ export default function GuestJoinScreen() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[250] flex items-center justify-center bg-black/90 px-6 backdrop-blur-md"
+            className="fixed inset-0 z-[250] flex items-center justify-center bg-black/90 px-6"
           >
             <motion.div
               initial={{ scale: 0.94, y: 20 }}
@@ -569,7 +586,7 @@ export default function GuestJoinScreen() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[120] bg-black/85 backdrop-blur-sm flex items-center justify-center px-margin-mobile"
+            className="fixed inset-0 z-[120] bg-black/85 flex items-center justify-center px-margin-mobile"
           >
             <motion.div
               initial={{ scale: 0.94, y: 20 }}

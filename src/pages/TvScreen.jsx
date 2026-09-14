@@ -502,7 +502,7 @@ export default function TvScreen() {
       <div className={ligero ? 'tv-root tv-ligero' : 'tv-root'} style={{ padding: SAFE }}>
         <div className="flex h-full flex-col items-center justify-center">
           <img
-            src="/images/logo-main.png"
+            src="/images/logo-main.webp"
             alt="Dedícalo Play"
             style={{ height: '13vmin', width: 'auto' }}
           />
@@ -672,7 +672,7 @@ export default function TvScreen() {
           className="tv-pop absolute inset-0 z-30 flex flex-col items-center justify-center"
           style={{ background: '#070a10' }}
         >
-          <img src="/images/logo-main.png" alt="Dedícalo Play"
+          <img src="/images/logo-main.webp" alt="Dedícalo Play"
             style={{ height: '7vmin', width: 'auto' }} />
 
           <p style={{ fontSize: '5vmin', letterSpacing: '0.12em' }}
@@ -795,7 +795,7 @@ export default function TvScreen() {
 
         <div className="flex min-w-0 flex-1 flex-col">
           <header className="flex items-baseline justify-between">
-            <img src="/images/logo-main.png" alt="Dedícalo Play" style={{ height: '5.5vmin', width: 'auto' }} />
+            <img src="/images/logo-main.webp" alt="Dedícalo Play" style={{ height: '5.5vmin', width: 'auto' }} />
             {phase !== 'lobby' && phase !== 'final' && (
               <p
                 className="tv-etiqueta rounded-full px-[2vmin] py-[0.7vmin] text-tv-ink"

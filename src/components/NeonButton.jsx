@@ -1,5 +1,7 @@
 import { motion } from 'framer-motion';
 import { useRef } from 'react';
+import { sfx } from '../services/audio';
+import { vibrar } from '../services/haptics';
 
 export default function NeonButton({
   children,
@@ -23,6 +25,13 @@ export default function NeonButton({
 
   const handleClick = (e) => {
     if (disabled) return;
+
+    // Respuesta inmediata, ANTES de cualquier trabajo: el toque tiene que
+    // notarse en el mismo fotograma. Los dos canales van juntos a propósito
+    // —en iPhone no hay vibración posible en web, y en una fiesta con ruido
+    // no se oye nada— así que cada uno cubre el hueco del otro.
+    sfx.toque();
+    vibrar('toque');
 
     const btn = buttonRef.current;
     if (btn) {

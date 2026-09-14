@@ -18,7 +18,12 @@
     "anos-canciones": "node scripts/anos-canciones.mjs",
     "anos-musicbrainz": "node scripts/anos-musicbrainz.mjs",
     "resolver-previews": "node scripts/resolver-previews.mjs",
-    "caratulas": "node scripts/caratulas-apple.mjs"
+    "caratulas": "node scripts/caratulas-apple.mjs",
+    "revisar-pantallas": "node scripts/revisar-pantallas.mjs",
+    "iconos-app": "node scripts/iconos-app.mjs",
+    "optimizar-imagenes": "node scripts/optimizar-imagenes.mjs",
+    "partir-catalogo": "node scripts/partir-catalogo.mjs",
+    "fuentes": "node scripts/fuentes.mjs"
   },
   "dependencies": {
     "firebase": "^12.14.0",
