@@ -592,8 +592,10 @@ function TimelinePlacementQuestion({
     if (!rail) return undefined;
     const centrar = window.setTimeout(() => {
       if (cabeTodo) { rail.scrollLeft = 0; return; }
-      const medio = gapRefs.current[Math.floor(huecos.length / 2)];
-      if (medio) rail.scrollLeft = medio.offsetLeft + medio.offsetWidth / 2 - rail.clientWidth / 2;
+      // Centro exacto del contenido, no del hueco central: con un número
+      // par de huecos (2 con un solo año) el centro cae en el disco y se ven
+      // los dos lados por igual, en vez de esconder medio primer hueco.
+      rail.scrollLeft = (rail.scrollWidth - rail.clientWidth) / 2;
     }, 0);
     return () => window.clearTimeout(centrar);
   }, [huecos.length, layout, cabeTodo]);

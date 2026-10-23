@@ -202,7 +202,7 @@ const PODIUM_STYLE = {
   2: { order: 'order-3', avatarSize: 'min(5.75rem, max(3.2rem, 17.5vw), 23.6vh)', stepHeight: 'h-10', color: '#ff7a1a', label: '3°', ring: '0 0 30px rgba(255,122,26,0.35)' }
 };
 
-function PodiumSlot({ player, rank, goalYears, isMe = false }) {
+function PodiumSlot({ player, rank, placeLabel, goalYears, isMe = false }) {
   const style = PODIUM_STYLE[rank];
   const isChampion = rank === 0;
   return (
@@ -248,7 +248,7 @@ function PodiumSlot({ player, rank, goalYears, isMe = false }) {
         className={`mt-2 flex w-full items-start justify-center rounded-t-2xl ${style.stepHeight}`}
         style={{ background: `linear-gradient(180deg, ${style.color}33, ${style.color}0d)`, border: `1px solid ${style.color}55` }}
       >
-        <span className="mt-2 font-headline-lg text-2xl font-black" style={{ color: style.color }}>{style.label}</span>
+        <span className="mt-2 font-headline-lg text-2xl font-black" style={{ color: style.color }}>{placeLabel ?? style.label}</span>
       </div>
     </motion.div>
   );
@@ -258,7 +258,17 @@ function Podium({ podium, goalYears, meId = null }) {
   return (
     <div className="mt-2 flex w-full items-end justify-center gap-2 px-1">
       {podium.map((player, index) => (
-        <PodiumSlot key={player.id} player={player} rank={index} goalYears={goalYears} isMe={Boolean(meId) && player.id === meId} />
+        // El escalón (altura, color) va por posición, pero el número dice el
+        // puesto REAL: con un empate a años, dos jugadores son "=1º" y no
+        // uno 1º y otro 2º sin motivo.
+        <PodiumSlot
+          key={player.id}
+          player={player}
+          rank={index}
+          placeLabel={`${isTiedOnYears(podium, player) ? '=' : ''}${rankByYears(podium, player)}º`}
+          goalYears={goalYears}
+          isMe={Boolean(meId) && player.id === meId}
+        />
       ))}
     </div>
   );

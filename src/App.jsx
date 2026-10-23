@@ -127,6 +127,9 @@ function precargarVecinas(ruta) {
  * nunca llega a aparecer al navegar.
  */
 function PageLoader() {
+  // Mientras la intro de index.html siga encima, esta pantalla la "retiene":
+  // la intro no se va hasta que la app tenga algo de verdad que enseñar.
+  useEffect(() => window.__retenerArranque?.(), []);
   return (
     <div className="fixed inset-0 z-[999] flex flex-col items-center justify-center gap-[22px] bg-[#050816] px-6">
       {/* La misma imagen que la pantalla de arranque de index.html (ver allí

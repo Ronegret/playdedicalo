@@ -3,8 +3,11 @@
 // dispare install/activate (con muchas actualizaciones seguidas en camino,
 // que esto quede desactualizado es justo lo que hace que alguien vea la
 // app vieja aunque ya se haya desplegado la nueva).
-const CACHE = 'dedicalo-v7';
-const PRECACHE = ['/index.html', '/manifest.json', '/images/icon-app.webp', '/images/logo-main.webp', '/dedi.mp3'];
+const CACHE = 'dedicalo-v8';
+// Sin /dedi.mp3: son 2,8 MB que se bajaban al instalar aunque nadie tocara
+// el disco de la portada (y en datos móviles). Se guarda la primera vez que
+// suena, más abajo.
+const PRECACHE = ['/index.html', '/manifest.json', '/images/icon-app.webp', '/images/logo-main.webp'];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(
@@ -64,11 +67,17 @@ self.addEventListener('fetch', (e) => {
     caches.match(request).then((cached) => {
       if (cached) return cached;
       return fetch(request).then((res) => {
-        if (res.ok) {
-          const p = url.pathname;
-          if (p.startsWith('/images/') || p === '/manifest.json' || p === '/dedi.mp3') {
-            caches.open(CACHE).then((c) => c.put(request, res.clone()));
-          }
+        const p = url.pathname;
+        if (res.status === 200 && (p.startsWith('/images/') || p === '/manifest.json' || p === '/dedi.mp3')) {
+          caches.open(CACHE).then((c) => c.put(request, res.clone())).catch(() => {});
+        } else if (res.status === 206 && p === '/dedi.mp3') {
+          // El <audio> pide trozos (206) y un trozo no se puede guardar. Se
+          // baja el archivo entero aparte, una vez, para la próxima.
+          e.waitUntil(
+            fetch('/dedi.mp3')
+              .then((full) => full.status === 200 && caches.open(CACHE).then((c) => c.put('/dedi.mp3', full)))
+              .catch(() => {})
+          );
         }
         return res;
       });

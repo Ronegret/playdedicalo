@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 
 // Completa el sistema de escala de fuente que ya vive en index.css
-// (--vinyl-size / --font-scale via html.fs-large / html.fs-xl) pero que no
+// (html.fs-large / html.fs-xl suben la letra raíz a 20 y 23 px) pero que no
 // tenía ningún control conectado — las clases existían, nada las aplicaba.
 const STORAGE_KEY = 'dedicalo_font_scale';
 const SCALES = ['normal', 'large', 'xl'];

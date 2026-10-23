@@ -333,7 +333,7 @@ export default function GuestJoinScreen() {
           que es de las cosas que más "sin terminar" hacen parecer una app.
           Centrado cuando cabe, y si un paso crece (el selector de avatar) el
           contenedor sigue desplazándose con normalidad. */}
-      <div className="flex min-h-full flex-col items-center justify-center gap-5 pb-6 sm:gap-6">
+      <div className="join-flujo flex min-h-full flex-col items-center justify-center gap-5 pb-6 sm:gap-6">
         {/* En el paso del PIN el rótulo "PIN de la sala" repetía el titular
             justo debajo; ahí sobra. */}
         <StepProgress steps={GUEST_STEPS} current={step} onGoTo={setStep} showLabel={step !== 0} />
@@ -355,22 +355,25 @@ export default function GuestJoinScreen() {
                 </p>
               </section>
 
+              {/* join-pin-cuerpo: en horizontal, QR a la izquierda y casillas
+                  a la derecha, en una sola fila que sí cabe en 390 px. */}
+              <div className="join-pin-cuerpo">
               <button
                 type="button"
                 onClick={() => setScannerOpen(true)}
-                className="mt-5 flex min-h-touch w-full items-center justify-center gap-2 rounded-2xl border-2 border-neon-green/45 bg-neon-green/10 px-4 py-3 font-label-caps text-base font-black text-neon-green active:scale-95 transition-transform"
+                className="join-qr mt-5 flex min-h-touch w-full items-center justify-center gap-2 rounded-2xl border-2 border-neon-green/45 bg-neon-green/10 px-4 py-3 font-label-caps text-base font-black text-neon-green active:scale-95 transition-transform"
               >
                 <span aria-hidden="true" className="material-symbols-outlined text-2xl">qr_code_scanner</span>
                 {isCheckingPin ? 'COMPROBANDO...' : 'ESCANEAR QR'}
               </button>
 
-              <div className="my-4 flex items-center gap-3">
+              <div className="join-o my-4 flex items-center gap-3">
                 <span className="h-px flex-1 bg-white/12" />
                 <span className="font-label-caps text-xs text-on-surface-variant">O ESCRÍBELO</span>
                 <span className="h-px flex-1 bg-white/12" />
               </div>
 
-              <div className="grid grid-cols-4 gap-3" onPaste={handlePinPaste}>
+              <div className="join-pin grid grid-cols-4 gap-3" onPaste={handlePinPaste}>
                 {pinDigits.map((digit, index) => (
                   <input
                     key={index}
@@ -395,6 +398,7 @@ export default function GuestJoinScreen() {
                     onKeyDown={(event) => handlePinKeyDown(event, index)}
                   />
                 ))}
+              </div>
               </div>
             </StepPanel>
           )}
