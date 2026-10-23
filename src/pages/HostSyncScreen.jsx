@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getRedirectResult, onAuthStateChanged, signInWithPopup, signInWithRedirect } from 'firebase/auth';
 import { DEDICALO_PLAYLISTS, MAX_TIMELINE_GOAL_YEARS, MIN_TIMELINE_GOAL_YEARS, PLAYLIST_META, useGameStore } from '../store/useGameStore';
+import { claseTintaSobre } from '../utils/contraste';
 import { auth, authReady, googleProvider } from '../firebase';
 import { getPlaylistRequestUrl, openMailto } from '../config/support';
 import VinylVisualizer from '../components/VinylVisualizer';
@@ -52,7 +53,7 @@ function PlaylistArtwork({ meta, isSelected }) {
           <span className="h-2 w-2 rounded-full bg-white/80" />
         </div>
         <div className="mt-2 flex flex-1 items-center justify-center rounded-lg bg-black/25 ring-1 ring-white/10">
-          <span className="material-symbols-outlined text-[1.765rem] text-white drop-shadow">
+          <span aria-hidden="true" className="material-symbols-outlined text-[1.765rem] text-white drop-shadow">
             {meta.icon}
           </span>
         </div>
@@ -249,15 +250,22 @@ export default function HostSyncScreen() {
       exit={{ opacity: 0, x: -50 }}
       className="app-screen safe-bottom-action relative z-10 overflow-y-auto pt-safe-header md:px-8 lg:px-16"
     >
-            <header className="fixed top-0 left-0 right-0 z-50 bg-background/97 border-b border-white/8 flex justify-between items-center px-4 md:px-8 h-16">
+            <header className="fixed top-0 left-0 right-0 z-50 bg-background/97 border-b border-white/8 flex min-w-0 items-center justify-between gap-2 px-4 md:px-8 h-16">
+        {/* La palabra VOLVER se esconde en pantallas estrechas y queda solo
+            la flecha. Con la letra en tamaño XL (raiz a 23px) esta cabecera
+            de tres columnas sumaba mas de 430px en un movil de 375px, y como
+            el body lleva overflow-x:hidden no se desbordaba: se recortaba en
+            silencio. El aria-label mantiene el nombre accesible cuando el
+            texto no se ve. */}
         <button
           onClick={() => navigate('/role-selection')}
-          className="min-h-touch text-on-surface-variant hover:text-white transition-colors flex items-center gap-2 font-label-caps text-xs tracking-[0.18em]"
+          aria-label="Volver"
+          className="min-h-touch shrink-0 text-on-surface-variant hover:text-white transition-colors flex items-center gap-2 font-label-caps text-xs tracking-[0.18em]"
         >
-          <span className="material-symbols-outlined text-xl">arrow_back</span>
-          VOLVER
+          <span aria-hidden="true" className="material-symbols-outlined text-xl">arrow_back</span>
+          <span className="hidden xs:inline">VOLVER</span>
         </button>
-        <h1 className="font-headline-xl text-2xl italic tracking-tighter text-electric-purple select-none">
+        <h1 className="min-w-0 truncate font-headline-xl text-xl italic tracking-tighter text-electric-purple select-none sm:text-2xl">
           ANFITRIÓN
         </h1>
         {googleUser ? <ProfileMenu user={googleUser} /> : <FontSizeControl />}
@@ -293,7 +301,7 @@ export default function HostSyncScreen() {
                 color="white"
                 onClick={handleGoogleLogin}
                 disabled={authStatus === 'loading'}
-                icon={<span className="material-symbols-outlined font-bold">login</span>}
+                icon={<span aria-hidden="true" className="material-symbols-outlined font-bold">login</span>}
               >
                 {authStatus === 'loading' ? 'CONECTANDO...' : 'ENTRAR CON GOOGLE'}
               </NeonButton>
@@ -305,9 +313,9 @@ export default function HostSyncScreen() {
                 onClick={() => setStep(1)}
                 className="flex min-h-touch w-full items-center justify-center gap-2 rounded-2xl border border-vinyl-orange/30 bg-vinyl-orange/10 px-4 py-3 text-sm font-bold text-white active:scale-[0.98]"
               >
-                <span className="material-symbols-outlined text-vinyl-orange text-lg">check_circle</span>
+                <span aria-hidden="true" className="material-symbols-outlined text-vinyl-orange text-lg">check_circle</span>
                 {googleUser.displayName?.split(' ')[0] || 'Google'} listo
-                <span className="material-symbols-outlined text-vinyl-orange">arrow_forward</span>
+                <span aria-hidden="true" className="material-symbols-outlined text-vinyl-orange">arrow_forward</span>
               </button>
             )}
             {authMessage && (
@@ -344,7 +352,7 @@ export default function HostSyncScreen() {
                       className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/12 bg-white/8 text-white active:scale-95"
                       aria-label="Reducir duración"
                     >
-                      <span className="material-symbols-outlined">remove</span>
+                      <span aria-hidden="true" className="material-symbols-outlined">remove</span>
                     </button>
                     <button
                       type="button"
@@ -352,7 +360,7 @@ export default function HostSyncScreen() {
                       className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/12 bg-white/8 text-white active:scale-95"
                       aria-label="Aumentar duración"
                     >
-                      <span className="material-symbols-outlined">add</span>
+                      <span aria-hidden="true" className="material-symbols-outlined">add</span>
                     </button>
                   </div>
                 </div>
@@ -393,7 +401,7 @@ export default function HostSyncScreen() {
                       : 'border-white/15 bg-white/5 text-white'
                   }`}
                 >
-                  <span className="material-symbols-outlined">{tvConectada ? 'check_circle' : 'tv'}</span>
+                  <span aria-hidden="true" className="material-symbols-outlined">{tvConectada ? 'check_circle' : 'tv'}</span>
                   {tvConectada ? 'TELE CONECTADA' : 'JUGAR EN LA TELE (OPCIONAL)'}
                 </button>
                 <p className="mt-2 text-center text-sm leading-relaxed text-on-surface-variant">
@@ -418,7 +426,7 @@ export default function HostSyncScreen() {
               <div className="mt-4 rounded-2xl border border-white/10 bg-white/5 p-4 text-left">
                 <p className="font-label-caps text-xs tracking-[0.2em] text-neon-green">RESUMEN</p>
                 <div className="mt-2 flex items-center gap-3">
-                  <span className="material-symbols-outlined text-2xl" style={{ color: selectedMeta.color }}>
+                  <span aria-hidden="true" className="material-symbols-outlined text-2xl" style={{ color: selectedMeta.color }}>
                     {selectedMeta.icon}
                   </span>
                   <div className="min-w-0">
@@ -449,7 +457,7 @@ export default function HostSyncScreen() {
                   borderColor: `${selectedMeta.color}44`,
                 }}
               >
-                <span className="material-symbols-outlined text-sm" style={{ color: selectedMeta.color }}>
+                <span aria-hidden="true" className="material-symbols-outlined text-sm" style={{ color: selectedMeta.color }}>
                   {selectedMeta.icon}
                 </span>
                 {selectedPlaylistData.name}
@@ -508,7 +516,7 @@ export default function HostSyncScreen() {
                       <div className="min-w-0 flex-1 sm:w-full">
                         <div className="mb-2 flex items-center gap-2">
                           <span
-                            className="inline-flex h-6 items-center rounded-full px-2 font-label-caps text-[0.65rem] tracking-[0.18em] text-black"
+                            className={`inline-flex h-6 items-center rounded-full px-2 font-label-caps text-[0.72rem] tracking-[0.18em] ${claseTintaSobre(meta.accent)}`}
                             style={{ backgroundColor: meta.accent }}
                           >
                             {meta.format}
@@ -539,7 +547,7 @@ export default function HostSyncScreen() {
                         className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-full shadow-lg"
                         style={{ backgroundColor: meta.color }}
                       >
-                        <span className="material-symbols-outlined text-black" style={{ fontSize: '16px', lineHeight: 1 }}>
+                        <span aria-hidden="true" className="material-symbols-outlined text-black" style={{ fontSize: '16px', lineHeight: 1 }}>
                           check
                         </span>
                       </motion.div>
@@ -556,7 +564,7 @@ export default function HostSyncScreen() {
                 backgroundColor: `${selectedMeta.color}0d`,
               }}
             >
-              <span
+              <span aria-hidden="true"
                 className="material-symbols-outlined text-2xl shrink-0"
                 style={{ color: selectedMeta.color }}
               >

@@ -24,7 +24,7 @@ export default function SupportButton({ compact = false, className = '' }) {
       >
         <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
         <span className="relative flex items-center justify-center gap-2 font-label-caps tracking-[0.16em]">
-          <span className="material-symbols-outlined text-vinyl-orange text-base">payments</span>
+          <span aria-hidden="true" className="material-symbols-outlined text-vinyl-orange text-base">payments</span>
           Apoyar con Bizum
         </span>
       </button>
@@ -58,7 +58,7 @@ export default function SupportButton({ compact = false, className = '' }) {
                   onClick={handleCopy}
                   className="shrink-0 min-h-touch px-3 rounded-lg border border-vinyl-orange/40 bg-vinyl-orange/15 text-vinyl-orange font-label-caps text-[0.65rem] font-bold active:scale-95 transition-transform flex items-center gap-1.5"
                 >
-                  <span className="material-symbols-outlined text-sm">{copied ? 'check' : 'content_copy'}</span>
+                  <span aria-hidden="true" className="material-symbols-outlined text-sm">{copied ? 'check' : 'content_copy'}</span>
                   {copied ? 'COPIADO' : 'COPIAR'}
                 </button>
               </div>

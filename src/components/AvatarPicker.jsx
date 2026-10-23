@@ -84,7 +84,7 @@ export default function AvatarPicker({ value, onChange, className = '' }) {
                 : 'border-white/12 bg-white/5 text-white/65'
             }`}
           >
-            <span className="material-symbols-outlined text-base">{cat.icon}</span>
+            <span aria-hidden="true" className="material-symbols-outlined text-base">{cat.icon}</span>
             {cat.label}
           </button>
         ))}
@@ -97,7 +97,7 @@ export default function AvatarPicker({ value, onChange, className = '' }) {
               : 'border-white/12 bg-white/5 text-white/65'
           }`}
         >
-          <span className="material-symbols-outlined text-base">mood</span>
+          <span aria-hidden="true" className="material-symbols-outlined text-base">mood</span>
           Clásicos
         </button>
       </div>
@@ -185,14 +185,14 @@ export default function AvatarPicker({ value, onChange, className = '' }) {
                     />
                     {isSelected && (
                       <span className="absolute bottom-0.5 right-0.5 flex h-6 w-6 items-center justify-center rounded-full bg-neon-green shadow-[0_0_10px_rgba(57,255,20,0.6)]">
-                        <span className="material-symbols-outlined text-black" style={{ fontSize: '15px' }}>check</span>
+                        <span aria-hidden="true" className="material-symbols-outlined text-black" style={{ fontSize: '15px' }}>check</span>
                       </span>
                     )}
                     {/* La lupa iba a 15 px sobre negro translúcido: nadie la
                         veía, y era la única pista de que tocar abre la vista
                         ampliada en vez de elegir directamente. */}
                     <span className="absolute inset-x-0 bottom-0 flex h-1/3 items-end justify-center bg-gradient-to-t from-black/75 to-transparent pb-0.5 text-white/90">
-                      <span className="material-symbols-outlined" style={{ fontSize: '17px' }}>zoom_in</span>
+                      <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: '17px' }}>zoom_in</span>
                     </span>
                   </span>
                   <span className="max-w-full truncate text-xs font-bold leading-tight text-white/75">
@@ -216,7 +216,7 @@ export default function AvatarPicker({ value, onChange, className = '' }) {
               aria-hidden="true"
               className="pointer-events-none absolute inset-x-px bottom-px h-14 rounded-b-2xl bg-gradient-to-t from-[#0b1120] via-[#0b1120]/80 to-transparent"
             >
-              <span className="material-symbols-outlined absolute bottom-1 left-1/2 -translate-x-1/2 text-white/45 text-lg">
+              <span aria-hidden="true" className="material-symbols-outlined absolute bottom-1 left-1/2 -translate-x-1/2 text-white/45 text-lg">
                 expand_more
               </span>
             </motion.div>
@@ -255,7 +255,7 @@ export default function AvatarPicker({ value, onChange, className = '' }) {
                 aria-label="Cerrar"
                 className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white active:scale-90"
               >
-                <span className="material-symbols-outlined">close</span>
+                <span aria-hidden="true" className="material-symbols-outlined">close</span>
               </button>
 
               <div className="h-56 w-56 max-w-full overflow-hidden rounded-full border-4 border-neon-green shadow-[0_0_50px_rgba(57,255,20,0.4)]">
@@ -273,7 +273,7 @@ export default function AvatarPicker({ value, onChange, className = '' }) {
                 onClick={handleConfirmPreview}
                 className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-neon-green font-label-caps text-base font-black text-black active:scale-95"
               >
-                <span className="material-symbols-outlined text-xl">check_circle</span>
+                <span aria-hidden="true" className="material-symbols-outlined text-xl">check_circle</span>
                 {selectedCharacter?.slug === previewEntry.slug ? 'YA ES TU PERSONAJE' : `ELEGIR A ${previewEntry.name.toUpperCase()}`}
               </button>
             </motion.div>

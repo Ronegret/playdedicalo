@@ -86,7 +86,7 @@ export default function BotonInstalar() {
         onClick={alPulsar}
         className="app-pulsable min-h-touch w-full rounded-2xl border border-electric-purple/30 bg-electric-purple/8 text-electric-purple/80 text-xs font-semibold uppercase tracking-[0.18em] flex items-center justify-center gap-2 hover:bg-electric-purple/15 transition-colors"
       >
-        <span className="material-symbols-outlined text-base">{ios ? 'ios_share' : 'download'}</span>
+        <span aria-hidden="true" className="material-symbols-outlined text-base">{ios ? 'ios_share' : 'download'}</span>
         Instalar app
       </button>
 
@@ -107,7 +107,7 @@ export default function BotonInstalar() {
               onClick={(e) => e.stopPropagation()}
               className="app-carta-alta w-full max-w-sm rounded-3xl p-6 text-center"
             >
-              <span className="material-symbols-outlined text-3xl text-neon-green">smartphone</span>
+              <span aria-hidden="true" className="material-symbols-outlined text-3xl text-neon-green">smartphone</span>
               <h2 className="app-titular mt-3 text-2xl text-on-surface">Añadir a tu iPhone</h2>
               <p className="copy-readable mt-2 text-on-surface-variant">
                 Safari no permite instalarla sola. Son dos toques:
@@ -129,7 +129,7 @@ export default function BotonInstalar() {
                       {i + 1}
                     </span>
                     <span className="copy-readable text-on-surface-variant">
-                      <span className="material-symbols-outlined mr-1 align-[-4px] text-base text-neon-green">{icono}</span>
+                      <span aria-hidden="true" className="material-symbols-outlined mr-1 align-[-4px] text-base text-neon-green">{icono}</span>
                       {texto}
                     </span>
                   </li>

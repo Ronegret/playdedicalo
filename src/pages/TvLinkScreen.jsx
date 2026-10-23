@@ -30,6 +30,7 @@ export default function TvLinkScreen() {
   useEffect(() => {
     if (!codigo) return undefined;
     let vivo = true;
+    let temporizador;
 
     (async () => {
       // Recuperar la sala guardada antes de decidir nada. Solo hace falta si
@@ -52,14 +53,16 @@ export default function TvLinkScreen() {
         // de confirmación mientras la sala espera.
         const rol = useGameStore.getState().role;
         const fase = useGameStore.getState().phase;
-        setTimeout(() => navigate(fase === 'lobby' || rol === 'host' ? '/lobby' : '/game'), 1500);
+        temporizador = setTimeout(() => navigate(fase === 'lobby' || rol === 'host' ? '/lobby' : '/game'), 1500);
       } else {
         setEstado('error');
         setMensaje(r.message);
       }
     })();
 
-    return () => { vivo = false; };
+    // Sin limpiar el temporizador, salir de esta pantalla antes de que pasen
+    // los 1,5 s te arrastraba a /lobby desde donde estuvieras.
+    return () => { vivo = false; if (temporizador) clearTimeout(temporizador); };
   }, [codigo, enlazar, recuperarSesion, navigate]);
 
   return (
@@ -68,7 +71,7 @@ export default function TvLinkScreen() {
 
       {estado === 'listo' ? (
         <>
-          <span className="material-symbols-outlined text-neon-green" style={{ fontSize: '5rem' }}>
+          <span aria-hidden="true" className="material-symbols-outlined text-neon-green" style={{ fontSize: '5rem' }}>
             check_circle
           </span>
           <h1 className="heading-page mt-4 font-headline-lg font-black text-on-surface">
@@ -80,7 +83,7 @@ export default function TvLinkScreen() {
         </>
       ) : estado === 'sin-sala' ? (
         <>
-          <span className="material-symbols-outlined text-chaos-gold" style={{ fontSize: '4rem' }}>
+          <span aria-hidden="true" className="material-symbols-outlined text-chaos-gold" style={{ fontSize: '4rem' }}>
             meeting_room
           </span>
           <h1 className="heading-page mt-4 font-headline-lg font-black text-on-surface">
@@ -99,7 +102,7 @@ export default function TvLinkScreen() {
         </>
       ) : estado === 'error' ? (
         <>
-          <span className="material-symbols-outlined text-error" style={{ fontSize: '4rem' }}>
+          <span aria-hidden="true" className="material-symbols-outlined text-error" style={{ fontSize: '4rem' }}>
             error
           </span>
           <h1 className="heading-page mt-4 font-headline-lg font-black text-on-surface">
@@ -116,7 +119,7 @@ export default function TvLinkScreen() {
         </>
       ) : (
         <>
-          <span className="material-symbols-outlined animate-pulse text-neon-green" style={{ fontSize: '4rem' }}>
+          <span aria-hidden="true" className="material-symbols-outlined animate-pulse text-neon-green" style={{ fontSize: '4rem' }}>
             tv
           </span>
           <p className="mt-4 text-on-surface-variant">Conectando con la tele...</p>

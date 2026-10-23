@@ -104,7 +104,7 @@ function FichaJugador({ jugador, tam, puesto, meta, resultado, estado }) {
               opacity: respondio && !resultado ? 0.85 : 1
             }}
           >
-            <span
+            <span aria-hidden="true"
               className="material-symbols-outlined"
               style={{ fontSize: `calc(${tam} * 0.22)`, color: '#0b0f17' }}
             >

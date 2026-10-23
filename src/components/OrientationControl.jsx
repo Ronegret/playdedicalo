@@ -54,7 +54,7 @@ export default function OrientationControl({ compact = false }) {
         aria-expanded={abierto}
         className={`relative flex min-h-touch items-center justify-center gap-1.5 rounded-xl border border-white/15 bg-white/5 text-white transition-colors active:scale-95 ${compact ? 'w-12' : 'px-3'}`}
       >
-        <span className="material-symbols-outlined">{ICONO[mode]}</span>
+        <span aria-hidden="true" className="material-symbols-outlined">{ICONO[mode]}</span>
         {!compact && (
           <span className="font-label-caps text-[0.65rem] font-bold tracking-wide">
             {ORIENTATION_LABELS[mode].toUpperCase()}
@@ -86,14 +86,14 @@ export default function OrientationControl({ compact = false }) {
                   mode === opcion ? 'bg-neon-green/15 text-neon-green' : 'text-white hover:bg-white/6'
                 }`}
               >
-                <span className="material-symbols-outlined shrink-0">{ICONO[opcion]}</span>
+                <span aria-hidden="true" className="material-symbols-outlined shrink-0">{ICONO[opcion]}</span>
                 <span className="flex-1">
                   <span className="block font-bold leading-tight">{ORIENTATION_LABELS[opcion]}</span>
                   <span className="block text-[0.78rem] leading-tight text-on-surface-variant">
                     {ORIENTATION_HINTS[opcion]}
                   </span>
                 </span>
-                {mode === opcion && <span className="material-symbols-outlined shrink-0">check</span>}
+                {mode === opcion && <span aria-hidden="true" className="material-symbols-outlined shrink-0">check</span>}
               </button>
             ))}
             <p className="px-3 py-2 text-[0.78rem] leading-snug text-on-surface-variant">

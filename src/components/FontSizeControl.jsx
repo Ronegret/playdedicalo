@@ -87,7 +87,7 @@ export default function FontSizeControl({ className = '' }) {
         aria-expanded={open}
         className="flex min-h-touch items-center gap-1.5 rounded-xl border border-white/12 bg-white/5 px-2.5 text-on-surface-variant transition-colors active:scale-95 hover:text-white"
       >
-        <span className="material-symbols-outlined text-xl">format_size</span>
+        <span aria-hidden="true" className="material-symbols-outlined text-xl">format_size</span>
         <span className="font-label-caps text-xs font-bold tracking-wide">LETRA</span>
       </button>
 
@@ -128,7 +128,7 @@ export default function FontSizeControl({ className = '' }) {
                   <span className={`w-7 shrink-0 text-center font-black leading-none ${option.textClass}`}>A</span>
                   <span className="font-label-caps text-xs font-bold">{option.label}</span>
                   {scale === option.id && (
-                    <span className="material-symbols-outlined ml-auto text-base">check</span>
+                    <span aria-hidden="true" className="material-symbols-outlined ml-auto text-base">check</span>
                   )}
                 </button>
               ))}

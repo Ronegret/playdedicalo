@@ -56,7 +56,7 @@ export default function SabotageSettings({ enabled, types, onChange, disabled = 
               active ? 'left-[calc(100%-2.25rem)] bg-neon-green text-black' : 'left-1 bg-white/60 text-black'
             }`}
           >
-            <span className="material-symbols-outlined text-lg">{active ? 'bolt' : 'block'}</span>
+            <span aria-hidden="true" className="material-symbols-outlined text-lg">{active ? 'bolt' : 'block'}</span>
           </span>
         </button>
       </div>
@@ -87,7 +87,7 @@ export default function SabotageSettings({ enabled, types, onChange, disabled = 
                     on ? 'border-neon-green/70 bg-neon-green/10' : 'border-white/12 bg-black/20'
                   }`}
                 >
-                  <span
+                  <span aria-hidden="true"
                     className={`material-symbols-outlined shrink-0 text-2xl ${
                       on ? 'text-neon-green' : 'text-white/40'
                     }`}
@@ -98,7 +98,7 @@ export default function SabotageSettings({ enabled, types, onChange, disabled = 
                     <span className="block font-label-caps text-base font-black text-white">{type.name}</span>
                     <span className="block text-sm leading-snug text-on-surface-variant">{type.short}</span>
                   </span>
-                  <span
+                  <span aria-hidden="true"
                     className={`material-symbols-outlined shrink-0 ${on ? 'text-neon-green' : 'text-white/25'}`}
                   >
                     {on ? 'check_circle' : 'radio_button_unchecked'}

@@ -100,7 +100,7 @@ function Teclado({ onConfirmar }) {
             className="rounded-[1vmin] border-[0.25vmin] font-bold"
             style={{
               width: '11vmin', height: '7vmin',
-              fontSize: tecla.length > 1 ? '1.8vmin' : '3.2vmin',
+              fontSize: tecla.length > 1 ? 'var(--tv-sm)' : '3.2vmin',
               borderColor: foco === i ? '#39ff14' : 'rgba(255,255,255,.16)',
               background: foco === i ? 'rgba(57,255,20,.16)' : 'rgba(255,255,255,.04)',
               color: foco === i ? '#39ff14' : '#c9d2e2'
@@ -520,7 +520,7 @@ export default function TvScreen() {
                 type="button"
                 onClick={() => setVerTeclado(false)}
                 className="mt-[3vmin] rounded-[1vmin] border-[0.25vmin] border-white/20 px-[2.5vmin] py-[1.2vmin]"
-                style={{ fontSize: '1.9vmin', color: '#93a0b8' }}
+                style={{ fontSize: 'var(--tv-md)', color: '#93a0b8' }}
               >
                 Mejor escaneo el código
               </button>
@@ -537,7 +537,7 @@ export default function TvScreen() {
                     className="tv-pop mt-[3vmin] flex items-center gap-[1.6vmin] rounded-full px-[3.5vmin] py-[1.4vmin]"
                     style={{ background: 'rgba(57,255,20,.14)', border: '0.3vmin solid rgba(57,255,20,.55)' }}
                   >
-                    <span className="material-symbols-outlined text-neon-green" style={{ fontSize: '3.4vmin' }}>
+                    <span aria-hidden="true" className="material-symbols-outlined text-neon-green" style={{ fontSize: '3.4vmin' }}>
                       check_circle
                     </span>
                     <p style={{ fontSize: '2.6vmin' }} className="font-black text-tv-ink">Tele conectada</p>
@@ -567,7 +567,7 @@ export default function TvScreen() {
                                 border: `0.35vmin solid ${encendido ? '#39ff14' : 'rgba(255,255,255,.15)'}`
                               }}
                             >
-                              <span
+                              <span aria-hidden="true"
                                 className="material-symbols-outlined"
                                 style={{ fontSize: '4.4vmin', color: encendido ? '#39ff14' : '#4a5568' }}
                               >
@@ -575,7 +575,7 @@ export default function TvScreen() {
                               </span>
                             </div>
                             <p
-                              style={{ fontSize: '1.9vmin', color: encendido ? '#eef3ff' : '#4a5568' }}
+                              style={{ fontSize: 'var(--tv-md)', color: encendido ? '#eef3ff' : '#4a5568' }}
                               className="mt-[1.2vmin] text-center font-bold"
                             >
                               {paso.texto}
@@ -645,7 +645,7 @@ export default function TvScreen() {
                     type="button"
                     onClick={() => setVerTeclado(true)}
                     className="tv-boton mt-[3vmin] rounded-[1vmin] border-[0.25vmin] border-white/20 px-[2.5vmin] py-[1.2vmin]"
-                    style={{ fontSize: '1.9vmin', color: '#93a0b8' }}
+                    style={{ fontSize: 'var(--tv-md)', color: '#93a0b8' }}
                   >
                     Ya hay una sala · escribir su PIN
                   </button>
@@ -722,7 +722,7 @@ export default function TvScreen() {
             VOLVER AHORA
           </button>
 
-          <p style={{ fontSize: '1.8vmin' }} className="mt-[2vmin] text-tv-dim">
+          <p style={{ fontSize: 'var(--tv-sm)' }} className="mt-[2vmin] text-tv-dim">
             o pulsa ATRÁS en el mando
           </p>
         </div>
@@ -737,11 +737,11 @@ export default function TvScreen() {
             border: '0.3vmin solid rgba(57,255,20,.6)'
           }}
         >
-          <span className="material-symbols-outlined text-neon-green tv-latido" style={{ fontSize: '3.4vmin' }}>
+          <span aria-hidden="true" className="material-symbols-outlined text-neon-green tv-latido" style={{ fontSize: '3.4vmin' }}>
             check_circle
           </span>
           <div className="text-left">
-            <p style={{ fontSize: '1.7vmin', letterSpacing: '0.24em' }} className="text-neon-green">
+            <p style={{ fontSize: 'var(--tv-xs)', letterSpacing: '0.24em' }} className="text-neon-green">
               TELE CONECTADA
             </p>
             <p style={{ fontSize: '3vmin' }} className="font-black text-tv-ink">
@@ -766,7 +766,7 @@ export default function TvScreen() {
               ocupar sitio ni moverse. */}
           <div className="tv-cinta-musica absolute left-0 right-0 top-0" style={{ height: '0.6vmin' }} />
 
-          <p style={{ fontSize: '1.7vmin' }} className="tv-etiqueta mt-[0.8vmin] text-tv-dim">Entra con</p>
+          <p style={{ fontSize: 'var(--tv-xs)' }} className="tv-etiqueta mt-[0.8vmin] text-tv-dim">Entra con</p>
           <p style={{ fontSize: '8.4vmin', letterSpacing: '0.02em' }}
             className="tv-cifra tv-degradado-verde">
             {pin || pinElegido}
@@ -777,16 +777,16 @@ export default function TvScreen() {
               <CodigoQr valor={enlaceJugar} tam="16vmin" alt="Código QR para entrar" />
             </div>
           )}
-          <p style={{ fontSize: '1.6vmin' }} className="tv-etiqueta mt-[1.4vmin] text-center text-tv-dim">
+          <p style={{ fontSize: 'var(--tv-sm)' }} className="tv-etiqueta mt-[1.4vmin] text-center text-tv-dim">
             play.dedicalo.es
           </p>
-          <p style={{ fontSize: '1.7vmin' }} className="mt-[1.2vmin] text-center leading-snug text-tv-dim">
+          <p style={{ fontSize: 'var(--tv-xs)' }} className="mt-[1.2vmin] text-center leading-snug text-tv-dim">
             Puedes unirte en cualquier momento
           </p>
           {audioEnTv && (
-            <p style={{ fontSize: '1.6vmin' }}
+            <p style={{ fontSize: 'var(--tv-sm)' }}
               className="tv-etiqueta mt-auto flex items-center gap-[0.6vmin] pt-[1.5vmin] text-neon-green">
-              <span className="material-symbols-outlined" style={{ fontSize: '2.2vmin' }}>volume_up</span>
+              <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: '2.2vmin' }}>volume_up</span>
               Suena aquí
             </p>
           )}
@@ -800,7 +800,7 @@ export default function TvScreen() {
               <p
                 className="tv-etiqueta rounded-full px-[2vmin] py-[0.7vmin] text-tv-ink"
                 style={{
-                  fontSize: '1.9vmin',
+                  fontSize: 'var(--tv-md)',
                   background: 'rgba(168,85,247,.16)',
                   border: '0.2vmin solid rgba(168,85,247,.45)'
                 }}
@@ -879,7 +879,7 @@ export default function TvScreen() {
                       boxShadow: '0 0 6vmin rgba(57,255,20,.22), inset 0 0 4vmin rgba(0,0,0,.6)'
                     }}
                   >
-                    <p style={{ fontSize: '1.7vmin' }} className="tv-etiqueta text-electric-purple">
+                    <p style={{ fontSize: 'var(--tv-xs)' }} className="tv-etiqueta text-electric-purple">
                       Años Locos
                     </p>
                     <p style={{ fontSize: '3.6vmin', letterSpacing: '0.02em' }}
@@ -908,7 +908,7 @@ export default function TvScreen() {
                   ))}
                 </div>
 
-                <p style={{ fontSize: '1.9vmin' }} className="tv-etiqueta mt-[1.8vmin] text-tv-dim">
+                <p style={{ fontSize: 'var(--tv-md)' }} className="tv-etiqueta mt-[1.8vmin] text-tv-dim">
                   {audioEnTv
                     ? 'Suena aquí · nadie ve el título'
                     : 'Suena en el móvil del anfitrión'}
@@ -969,7 +969,7 @@ export default function TvScreen() {
                 {/* La barra hace que se vea desde lejos cuánto falta, sin
                     tener que leer dos números pequeños y dividirlos. */}
                 <div className="mt-[2vmin] overflow-hidden rounded-full"
-                  style={{ width: '52vmin', height: '1.6vmin', background: 'rgba(255,255,255,.09)' }}>
+                  style={{ width: '52vmin', height: 'var(--tv-sm)', background: 'rgba(255,255,255,.09)' }}>
                   <div
                     style={{
                       width: `${conectados.length ? (respondieron / conectados.length) * 100 : 0}%`,
@@ -981,14 +981,14 @@ export default function TvScreen() {
                 </div>
 
                 {respondieron > 0 && respondieron < conectados.length && (
-                  <p style={{ fontSize: '1.9vmin' }} className="tv-etiqueta mt-[1.6vmin] text-tv-dim">
+                  <p style={{ fontSize: 'var(--tv-md)' }} className="tv-etiqueta mt-[1.6vmin] text-tv-dim">
                     Faltan {conectados.length - respondieron}
                   </p>
                 )}
               </div>
             )}
 
-            {hayReveal && currentTrack && (
+            {hayReveal && currentTrack && phase !== 'final' && (
               <div className="tv-carta tv-pop relative flex items-center gap-[4vmin] overflow-hidden rounded-[2.4vmin] px-[4vmin] py-[3vmin]">
                 {/* Destello que cruza la tarjeta: un elemento moviéndose en
                     horizontal, y hace que el momento del revelado se sienta
@@ -1003,7 +1003,7 @@ export default function TvScreen() {
                   <div
                     className="absolute overflow-hidden"
                     style={{
-                      inset: 0, borderRadius: '1.6vmin',
+                      inset: 0, borderRadius: 'var(--tv-sm)',
                       boxShadow: '0 1.4vmin 4vmin rgba(0,0,0,.65)',
                       border: '0.3vmin solid rgba(255,255,255,.12)'
                     }}
@@ -1013,7 +1013,7 @@ export default function TvScreen() {
                         disco decente en vez del icono de imagen rota. */}
                     <div className="absolute inset-0 flex items-center justify-center"
                       style={{ background: 'linear-gradient(135deg,#1b2230,#0e131c)' }}>
-                      <span className="material-symbols-outlined text-neon-green" style={{ fontSize: '6vmin' }}>
+                      <span aria-hidden="true" className="material-symbols-outlined text-neon-green" style={{ fontSize: '6vmin' }}>
                         music_note
                       </span>
                     </div>
@@ -1029,7 +1029,7 @@ export default function TvScreen() {
                 </div>
 
                 <div className="relative min-w-0 text-left">
-                  <p style={{ fontSize: '1.8vmin' }} className="tv-etiqueta text-tv-dim">
+                  <p style={{ fontSize: 'var(--tv-sm)' }} className="tv-etiqueta text-tv-dim">
                     La canción era
                   </p>
                   <p style={{ fontSize: '4vmin' }} className="tv-titular mt-[0.5vmin] truncate text-tv-ink">
@@ -1043,9 +1043,9 @@ export default function TvScreen() {
                     {currentQuestion?.songYear ?? currentTrack.releaseYear}
                   </p>
                   {ganadorRapido && (
-                    <p style={{ fontSize: '1.9vmin' }}
+                    <p style={{ fontSize: 'var(--tv-md)' }}
                       className="tv-etiqueta mt-[0.4vmin] flex items-center gap-[0.6vmin] text-chaos-gold">
-                      <span className="material-symbols-outlined" style={{ fontSize: '2.4vmin' }}>bolt</span>
+                      <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: '2.4vmin' }}>bolt</span>
                       {ganadorRapido} respondió primero
                     </p>
                   )}
@@ -1116,10 +1116,10 @@ export default function TvScreen() {
               {sabotajes.map((s, i) => (
                 <p
                   key={i}
-                  style={{ fontSize: '1.9vmin', background: 'rgba(255,122,26,.12)', border: '0.2vmin solid rgba(255,122,26,.35)' }}
+                  style={{ fontSize: 'var(--tv-md)', background: 'rgba(255,122,26,.12)', border: '0.2vmin solid rgba(255,122,26,.35)' }}
                   className="flex items-center gap-[0.6vmin] rounded-full px-[1.5vmin] py-[0.5vmin] font-bold text-vinyl-orange"
                 >
-                  <span className="material-symbols-outlined" style={{ fontSize: '2.2vmin' }}>bolt</span>
+                  <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: '2.2vmin' }}>bolt</span>
                   {s.de} saboteó a {s.a}
                 </p>
               ))}

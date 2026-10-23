@@ -19,7 +19,7 @@ function MiniVinyl({ active = false, color = '#ff7a1a', icon = 'play_arrow' }) {
         <div className="absolute inset-[45%] rounded-full bg-black" />
       </motion.div>
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className="material-symbols-outlined relative z-10 text-black" style={{ fontSize: 22 }}>
+        <span aria-hidden="true" className="material-symbols-outlined relative z-10 text-black" style={{ fontSize: 22 }}>
           {icon}
         </span>
       </div>
@@ -55,7 +55,7 @@ function AlbumTrackHero({ paused, onToggle }) {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ type: 'spring', stiffness: 120, damping: 16 }}
       className="relative w-full max-w-[320px] sm:max-w-[360px]"
-      aria-label="Logo Dedícalo"
+     
     >
       <div className="absolute -inset-6 rounded-full bg-vinyl-orange/20 blur-3xl" />
       <div className="absolute -left-8 top-12 h-20 w-20 rounded-full border border-vinyl-orange/25 ring-expand-anim" />
@@ -93,20 +93,28 @@ function AlbumTrackHero({ paused, onToggle }) {
                 className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-vinyl-orange text-black shadow-[0_8px_0_rgba(83,28,0,0.85),0_0_22px_rgba(255,122,26,0.45)] active:translate-y-1 active:shadow-[0_4px_0_rgba(83,28,0,0.85),0_0_18px_rgba(255,122,26,0.38)] transition-all"
                 aria-label={paused ? 'Reproducir canción de Dedícalo' : 'Pausar canción de Dedícalo'}
               >
-                <span className="material-symbols-outlined text-2xl">{paused ? 'play_arrow' : 'pause'}</span>
+                <span aria-hidden="true" className="material-symbols-outlined text-2xl">{paused ? 'play_arrow' : 'pause'}</span>
               </motion.button>
+              {/* INDICADOR DE ACTIVIDAD, NO DE PROGRESO.
+                  Antes aqui habia una barra que iba del 18% al 78% en bucle y
+                  dos tiempos fijos, "00:07" y "03:33", que no se movian nunca.
+                  El reproductor de fondo no expone posicion, asi que todo eso
+                  era decorado: daba a entender "vas por el segundo 7 de 3:33",
+                  que es falso, y en una pantalla de inicio se lee como que la
+                  app esta rota. Un barrido continuo dice "esto suena" sin
+                  afirmar nada sobre donde va. */}
               <div className="min-w-0 flex-1">
-                <div className="h-2 overflow-hidden rounded-full bg-white/10">
+                <div className="h-2 overflow-hidden rounded-full bg-white/10" aria-hidden="true">
                   <motion.div
-                    animate={paused ? { width: '18%' } : { width: ['18%', '78%', '18%'] }}
-                    transition={paused ? { duration: 0.2 } : { repeat: Infinity, duration: 3.5, ease: 'easeInOut' }}
-                    className="h-full rounded-full bg-gradient-to-r from-vinyl-orange via-electric-purple to-deep-blue"
+                    animate={paused ? { x: '0%' } : { x: ['-100%', '100%'] }}
+                    transition={paused ? { duration: 0.2 } : { repeat: Infinity, duration: 2.2, ease: 'linear' }}
+                    className="h-full w-full rounded-full bg-gradient-to-r from-transparent via-vinyl-orange to-transparent"
+                    style={{ opacity: paused ? 0.25 : 1 }}
                   />
                 </div>
-                <div className="mt-1 flex justify-between font-label-caps text-[0.65rem] tracking-[0.14em] text-white/35">
-                  <span>00:07</span>
-                  <span>03:33</span>
-                </div>
+                <p className="mt-1 font-label-caps text-[0.7rem] tracking-[0.14em] text-white/55">
+                  {paused ? 'EN PAUSA' : 'SUENA AHORA'}
+                </p>
               </div>
             </div>
           </div>
@@ -132,7 +140,7 @@ function AlbumTrackHero({ paused, onToggle }) {
         <div className="relative mt-3 flex items-center justify-center gap-2 rounded-full border border-white/10 bg-black/20 px-3 py-2">
           <span className="h-1.5 w-1.5 rounded-full bg-neon-green shadow-[0_0_12px_rgba(57,255,20,0.8)]" />
           <p className="font-label-caps text-[0.706rem] tracking-[0.24em] text-white/60">
-            {paused ? 'TOCA PLAY PARA ESCUCHAR' : 'SONANDO · TOCA PARA PAUSAR'}
+            {paused ? 'TOCA ▶ PARA ESCUCHAR' : 'SONANDO · TOCA ⏸ PARA PAUSAR'}
           </p>
         </div>
       </div>
@@ -176,7 +184,7 @@ function RoleCard({ type, title, text, action, icon, color, glow, onClick }) {
         <Equalizer color={color} />
         <span className="flex items-center gap-2 font-label-caps text-xs tracking-[0.18em] text-white">
           {action}
-          <span className="material-symbols-outlined text-base" style={{ color }}>arrow_forward</span>
+          <span aria-hidden="true" className="material-symbols-outlined text-base" style={{ color }}>arrow_forward</span>
         </span>
       </div>
     </motion.button>
@@ -194,13 +202,14 @@ export default function RoleSelectionScreen() {
       exit={{ opacity: 0, y: -20 }}
       className="app-screen safe-bottom-action relative z-10 mx-auto flex w-full max-w-[460px] flex-col items-center overflow-y-auto pt-safe-header text-center"
     >
-      <header className="fixed left-0 right-0 top-0 z-50 flex h-16 items-center justify-between border-b border-white/8 bg-background/78 px-margin-mobile">
+      <header className="fixed left-0 right-0 top-0 z-50 flex h-16 min-w-0 items-center justify-between gap-2 border-b border-white/8 bg-background/78 px-margin-mobile">
         <button
           onClick={() => navigate('/')}
-          className="min-h-touch flex items-center gap-2 font-label-caps text-xs tracking-[0.18em] text-on-surface-variant transition-colors hover:text-white"
+          aria-label="Volver"
+          className="min-h-touch shrink-0 flex items-center gap-2 font-label-caps text-xs tracking-[0.18em] text-on-surface-variant transition-colors hover:text-white"
         >
-          <span className="material-symbols-outlined text-xl">arrow_back</span>
-          VOLVER
+          <span aria-hidden="true" className="material-symbols-outlined text-xl">arrow_back</span>
+          <span className="hidden xs:inline">VOLVER</span>
         </button>
         <FontSizeControl />
       </header>

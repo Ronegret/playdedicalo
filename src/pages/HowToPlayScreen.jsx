@@ -103,7 +103,7 @@ function StepCard({ step, index }) {
     >
       <div className="flex items-start gap-4">
         <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-vinyl-orange/35 bg-vinyl-orange/15 text-vinyl-orange">
-          <span className="material-symbols-outlined text-[2rem]">{step.icon}</span>
+          <span aria-hidden="true" className="material-symbols-outlined text-[2rem]">{step.icon}</span>
         </span>
         <div>
           <h3 className="font-black leading-tight text-white" style={{ fontSize: 'min(1.3rem, max(1rem, 4vw), 5.4vh)' }}>{step.title}</h3>
@@ -129,7 +129,7 @@ function TimelineDemo() {
     <div className="rounded-[24px] border border-electric-purple/35 bg-electric-purple/10 p-4 sm:p-5">
       <div className="flex items-center gap-3">
         <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-electric-purple text-white">
-          <span className="material-symbols-outlined text-3xl">touch_app</span>
+          <span aria-hidden="true" className="material-symbols-outlined text-3xl">touch_app</span>
         </span>
         <div>
           <h3 className="text-xl font-black text-white">Tu misión en cada ronda</h3>
@@ -177,7 +177,7 @@ function SabotageCard({ item }) {
   return (
     <article className="rounded-2xl border border-[#b96cff]/35 bg-[#b96cff]/12 p-4">
       <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#b96cff] text-white">
-        <span className="material-symbols-outlined text-3xl">{item.icon}</span>
+        <span aria-hidden="true" className="material-symbols-outlined text-3xl">{item.icon}</span>
       </span>
       <h3 className="mt-4 text-lg font-black text-white">{item.title}</h3>
       <p className="mt-2 text-base leading-relaxed text-on-surface-variant">{item.text}</p>
@@ -213,7 +213,7 @@ export default function HowToPlayScreen() {
           onClick={() => navigate('/')}
           className="flex min-h-touch items-center gap-2 font-label-caps text-sm tracking-[0.16em] text-on-surface-variant transition-colors hover:text-white active:scale-95"
         >
-          <span className="material-symbols-outlined text-2xl">arrow_back</span>
+          <span aria-hidden="true" className="material-symbols-outlined text-2xl">arrow_back</span>
           Volver
         </button>
         <span className="ml-3 font-label-caps text-xs tracking-[0.18em] text-on-surface-variant/60">MANUAL</span>
@@ -317,7 +317,7 @@ export default function HowToPlayScreen() {
           <div className="rounded-2xl border border-white/12 bg-black/25 p-4">
             <div className="flex items-center gap-3">
               <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-chaos-gold text-black">
-                <span className="material-symbols-outlined text-2xl">star</span>
+                <span aria-hidden="true" className="material-symbols-outlined text-2xl">star</span>
               </span>
               <div>
                 <p className="text-lg font-black text-white">Botón "CANJEAR"</p>
@@ -339,9 +339,9 @@ export default function HowToPlayScreen() {
             {FAQ.map(([question, answer]) => (
               <details key={question} className="group rounded-2xl border border-white/10 bg-white/[0.045]">
                 <summary className="flex cursor-pointer list-none items-center gap-3 px-4 py-5" style={{ minHeight: '3.5rem' }}>
-                  <span className="material-symbols-outlined text-2xl text-neon-green shrink-0">help</span>
+                  <span aria-hidden="true" className="material-symbols-outlined text-2xl text-neon-green shrink-0">help</span>
                   <span className="flex-1 font-black leading-snug text-white" style={{ fontSize: 'min(1.2rem, max(0.95rem, 3.8vw), 5.1vh)' }}>{question}</span>
-                  <span className="material-symbols-outlined text-on-surface-variant transition-transform group-open:rotate-180 shrink-0">expand_more</span>
+                  <span aria-hidden="true" className="material-symbols-outlined text-on-surface-variant transition-transform group-open:rotate-180 shrink-0">expand_more</span>
                 </summary>
                 <p className="px-4 pb-6 pl-14 leading-relaxed text-on-surface-variant" style={{ fontSize: 'min(1.08rem, max(0.9rem, 3.4vw), 4.6vh)' }}>{answer}</p>
               </details>
@@ -364,7 +364,7 @@ export default function HowToPlayScreen() {
             >
               <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
               <span className="relative flex items-center justify-center gap-2 font-label-caps tracking-[0.14em]">
-                <span className="material-symbols-outlined text-xl text-vinyl-orange">playlist_add</span>
+                <span aria-hidden="true" className="material-symbols-outlined text-xl text-vinyl-orange">playlist_add</span>
                 Enviar playlist
               </span>
             </button>

@@ -1,10 +1,11 @@
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCombinedTimelineYears, getTimelineProgress, useGameStore } from '../store/useGameStore';
 import { isImageAvatar } from '../data/characterAvatars';
 import ProfileMenu from '../components/ProfileMenu';
 import JoinRequestBanner from '../components/JoinRequestBanner';
+import TimelineYears from '../components/TimelineYears';
 import { auth } from '../firebase';
 import { sfx } from '../services/audio';
 import { vibrar } from '../services/haptics';
@@ -18,7 +19,9 @@ const RESULT_STYLES = {
     borderHex: '#39ff14',
     text: 'text-neon-green',
     icon: 'check_circle',
-    title: '¡ACERTASTE!',
+    // Es exactamente lo que se ve en pantalla: antes aquí decía
+    // '¡ACERTASTE!' pero el render lo pisaba con 'CORRECTO' (texto muerto).
+    title: 'CORRECTO',
     copy: 'Sumaste puntos y mantienes el pulso.'
   },
   fail: {
@@ -47,35 +50,6 @@ const RESULT_STYLES = {
 
 
 
-function TimelineYears({ years = [], wildcards = 0, goalYears = 12 }) {
-  const progress = Math.min(years.length + wildcards, goalYears);
-  return (
-    <div className="mt-2 flex flex-wrap items-center gap-1.5 pl-11">
-      <span className="font-label-caps text-xs text-on-surface-variant">
-        {progress}/{goalYears}
-      </span>
-      {years.slice(0, goalYears).map((year, index) => (
-        <span
-          key={`${year}-${index}`}
-          className="w-9 h-9 rounded-full border-2 border-neon-green/60 bg-black/30 flex items-center justify-center text-[0.65rem] font-black text-neon-green"
-          title={year}
-        >
-          {String(year).slice(2)}
-        </span>
-      ))}
-      {Array.from({ length: Math.max(0, Math.min(wildcards, goalYears - years.length)) }, (_, index) => (
-        <span
-          key={`wildcard-${index}`}
-          className="w-9 h-9 rounded-full border-2 border-chaos-gold/60 bg-chaos-gold/15 flex items-center justify-center"
-          title="Canjeada con puntos"
-        >
-          <span className="material-symbols-outlined text-chaos-gold text-base">star</span>
-        </span>
-      ))}
-    </div>
-  );
-}
-
 function PlayerAvatar({ player, className = 'w-10 h-10 text-xl', style }) {
   return isImageAvatar(player.avatar) ? (
     <img src={player.avatar} alt={player.name} className={`${className} rounded-full object-cover border border-white/10 shrink-0`} style={style} />
@@ -95,10 +69,12 @@ function RankingList({ players, final = false, showTimeline = false, goalYears =
     <div className="flex flex-col gap-2 w-full">
       {players.map((player, index) => {
         const rank = startRank + index;
+        // Oro/plata/bronce iguales que en el podio (#ffbf4d/#e2e8f0/#ff7a1a):
+        // el primer puesto es dorado en toda la app, no verde.
         const medalClass = rank === 0
-          ? 'bg-neon-green text-black'
-          : rank === 1 ? 'bg-white/20 text-white'
-            : rank === 2 ? 'bg-electric-purple/30 text-white'
+          ? 'bg-chaos-gold text-black'
+          : rank === 1 ? 'bg-[#e2e8f0] text-black'
+            : rank === 2 ? 'bg-vinyl-orange text-black'
               : 'bg-black/20 text-on-surface-variant';
         return (
           <motion.div
@@ -106,7 +82,7 @@ function RankingList({ players, final = false, showTimeline = false, goalYears =
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.04 }}
-            className={`p-4 rounded-2xl border ${final && rank === 0 ? 'bg-neon-green/10 border-neon-green/50' : muted ? 'bg-white/[0.03] border-white/5 opacity-70' : 'bg-white/5 border-white/10'}`}
+            className={`p-4 rounded-2xl border ${final && rank === 0 ? 'bg-chaos-gold/10 border-chaos-gold/50' : muted ? 'bg-white/[0.03] border-white/5 opacity-70' : 'bg-white/5 border-white/10'}`}
           >
             <div className="flex justify-between items-center gap-3">
               <div className="flex items-center gap-3 min-w-0">
@@ -121,7 +97,7 @@ function RankingList({ players, final = false, showTimeline = false, goalYears =
                 <p className="mt-0.5 text-xs text-on-surface-variant leading-none">{player.points} pts</p>
               </div>
             </div>
-            {showTimeline && <TimelineYears years={getCombinedTimelineYears(player)} wildcards={Number(player.wildcards || 0)} goalYears={goalYears} />}
+            {showTimeline && <TimelineYears years={getCombinedTimelineYears(player)} wildcards={Number(player.wildcards || 0)} goalYears={goalYears} className="pl-11" />}
           </motion.div>
         );
       })}
@@ -240,7 +216,11 @@ function PodiumSlot({ player, rank, goalYears }) {
       <p className="mt-2 max-w-[7rem] truncate text-center font-label-caps font-black uppercase tracking-wide text-white" style={{ fontSize: isChampion ? '1.2rem' : '1rem' }}>
         {player.name}
       </p>
-      <p className="text-xs text-on-surface-variant">{getTimelineProgress(player)}/{goalYears} · {player.points} pts</p>
+      {/* Se gana por años: van en blanco y primero; los puntos, debajo. */}
+      <p className="mt-0.5 text-base font-black leading-tight text-white tabular-nums">
+        {getTimelineProgress(player)}/{goalYears} <span className="text-sm font-bold text-on-surface-variant">años</span>
+      </p>
+      <p className="text-sm leading-tight text-on-surface-variant tabular-nums">{player.points} pts</p>
       <div
         className={`mt-2 flex w-full items-start justify-center rounded-t-2xl ${style.stepHeight}`}
         style={{ background: `linear-gradient(180deg, ${style.color}33, ${style.color}0d)`, border: `1px solid ${style.color}55` }}
@@ -275,6 +255,11 @@ export default function ResultScreen() {
 
   const guestReveal = revealResults?.[guestId] || null;
   const guestPoints = guestReveal?.points ?? players.find((p) => p.id === guestId)?.points ?? 10;
+  // Se gana por años, no por puntos: el progreso propio es el número
+  // protagonista del resultado de la ronda.
+  const ownPlayer = players.find((p) => p.id === guestId) || null;
+  const myYears = ownPlayer ? getTimelineProgress(ownPlayer) : null;
+  const goalYears = targetYears || 12;
   const isFinal = phase === 'final';
   const winner = Array.isArray(players) && players.length
     ? [...players].sort((a, b) => getTimelineProgress(b) - getTimelineProgress(a))[0]
@@ -285,7 +270,7 @@ export default function ResultScreen() {
   const style = RESULT_STYLES[resultType] || RESULT_STYLES.success;
   const isSuccess = resultType === 'success';
   const isFail = resultType === 'fail';
-  const resultWord = isSuccess ? 'CORRECTO' : isFail ? 'FALLASTE' : style.title;
+  const resultWord = style.title;
   // Acertaste, pero el sabotaje "Robo de año" se llevó el año igual —
   // avisar aparte porque el estilo base sigue siendo "success" (sí sumaste
   // puntos), solo que tu ruta no creció esta vez.
@@ -314,18 +299,38 @@ export default function ResultScreen() {
     if (phase === 'countdown' || phase === 'listen' || phase === 'blackout') navigate('/game');
   }, [phase, pin, role, navigate]);
 
-  // Refuerzo háptico del resultado — la ronda ya vibra al tocar la
-  // respuesta (GameScreen), pero acá se confirma con el resultado OFICIAL
-  // del anfitrión (puede diferir si hubo bloqueo/robo de año), y solo en
-  // esta pantalla de ronda, no en el podio final.
+  // Sonido y vibración del resultado. Este es el ÚNICO sitio donde suenan
+  // acierto/fallo: al tocar la respuesta GameScreen ya solo da un sonido
+  // neutro, porque el resultado OFICIAL lo decide el anfitrión (puede
+  // diferir si hubo bloqueo/robo de año). Solo en la ronda, no en el podio.
   useEffect(() => {
-    if (isFinal) return;
+    if (isFinal) return undefined;
+    // Primero el "golpe" de revelar el año; el patrón de acierto/fallo va
+    // un poco después porque navigator.vibrate cancela el patrón anterior
+    // y, lanzados juntos, el de revelar no llegaría a notarse.
+    vibrar('revelar');
     // El sonido va SIEMPRE, la vibracion solo donde existe: en iPhone no
     // hay vibracion posible en web, y el resultado de la ronda no puede
     // quedarse sin confirmacion en la mitad de los moviles.
-    if (resultType === 'success') { vibrar('acierto'); sfx.acierto(); }
-    else if (resultType === 'fail') { vibrar('fallo'); sfx.fallo(); }
+    let patron = null;
+    if (resultType === 'success') { sfx.acierto(); patron = 'acierto'; }
+    else if (resultType === 'fail') { sfx.fallo(); patron = 'fallo'; }
+    if (!patron) return undefined;
+    const timer = window.setTimeout(() => vibrar(patron), 220);
+    return () => window.clearTimeout(timer);
   }, [isFinal, resultType]);
+
+  // Podio final: antes era completamente mudo. Suena una sola vez por
+  // partida — el ref evita que cualquier re-render (llega un jugador, cambia
+  // la presencia de alguien) vuelva a lanzar la fanfarria.
+  const victoryPlayedRef = useRef(false);
+  useEffect(() => {
+    if (!isFinal) { victoryPlayedRef.current = false; return; }
+    if (victoryPlayedRef.current) return;
+    victoryPlayedRef.current = true;
+    sfx.victoria();
+    vibrar('victoria');
+  }, [isFinal]);
 
   useEffect(() => {
     if (roomError) { clearRoomError(); navigate('/role-selection'); }
@@ -363,7 +368,7 @@ export default function ResultScreen() {
 
   const handleShare = async () => {
     const text = isFinal && winner
-      ? `¡${winner.name} ganó en Dedícalo con ${winner.points} puntos! 🎵 ¿Te atreves ${window.location.origin}`
+      ? `¡${winner.name} ganó en Dedícalo con ${getTimelineProgress(winner)} años en su ruta! 🎵 ¿Te atreves ${window.location.origin}`
       : `Llevo ${guestPoints} puntos en Dedícalo 🎵 ${window.location.origin}`;
     try {
       if (navigator.share) {
@@ -408,13 +413,13 @@ export default function ResultScreen() {
         />
         <ConfettiField />
 
-        <div className="mx-auto flex min-h-full max-w-lg flex-col items-center px-5 pb-[calc(2rem+env(safe-area-inset-bottom,0px))] pt-[calc(4.5rem+env(safe-area-inset-top,0px))]">
+        <div className="podio-final mx-auto flex min-h-full max-w-lg flex-col items-center px-5 pb-[calc(2rem+env(safe-area-inset-bottom,0px))] pt-[calc(4.5rem+env(safe-area-inset-top,0px))]">
           <button
             type="button"
             onClick={handleFinish}
-            className="absolute top-safe left-4 z-[100] min-h-touch rounded-xl border border-white/12 bg-black/35 px-3 text-white/75 font-label-caps text-[0.65rem] tracking-[0.16em] flex items-center gap-1.5 active:scale-95 transition-all"
+            className="absolute top-safe left-4 z-[100] min-h-touch rounded-xl border border-white/12 bg-black/35 px-3 text-white/75 font-label-caps text-[0.8rem] tracking-[0.16em] flex items-center gap-1.5 active:scale-95 transition-all"
           >
-            <span className="material-symbols-outlined text-base">arrow_back</span>
+            <span aria-hidden="true" className="material-symbols-outlined text-base">arrow_back</span>
             {role === 'host' ? 'CERRAR' : 'SALIR'}
           </button>
           <div className="absolute top-safe right-4 z-[100]">
@@ -430,10 +435,15 @@ export default function ResultScreen() {
               META {targetYears} CANCIONES
             </p>
             <h1 className="font-headline-lg text-3xl font-black mt-1 mb-1">¡SE ACABÓ LA FIESTA!</h1>
+            {/* El nombre del ganador es lo más grande del podio: es lo que
+                todo el mundo busca con la mirada (y lo que se fotografía). */}
             {podium[0] && (
-              <p className="text-sm text-on-surface-variant">
-                <span className="font-black text-chaos-gold">{podium[0].name}</span> se queda con la cabina 🎧
-              </p>
+              <>
+                <p className="mt-2 break-words font-headline-lg text-4xl font-black uppercase leading-none text-chaos-gold drop-shadow-[0_0_18px_rgba(255,191,77,0.45)]">
+                  {podium[0].name}
+                </p>
+                <p className="mt-1 text-base text-on-surface-variant">se queda con la cabina 🎧</p>
+              </>
             )}
 
             {podium.length > 0 && <Podium podium={podium} goalYears={targetYears} />}
@@ -442,7 +452,7 @@ export default function ResultScreen() {
 
             {rest.length > 0 && (
               <div className="mt-6 w-full text-left">
-                <p className="mb-2 flex items-center gap-1.5 font-label-caps text-xs tracking-[0.18em] text-white/45">
+                <p className="mb-2 flex items-center gap-1.5 font-label-caps text-sm tracking-[0.18em] text-white/75">
                   😅 PERDEDORES — próxima vez será
                 </p>
                 <RankingList players={rest} startRank={3} goalYears={targetYears} muted />
@@ -457,7 +467,7 @@ export default function ResultScreen() {
                   disabled={isRestarting}
                   className="w-full h-12 rounded-xl bg-neon-green text-black font-label-caps text-sm uppercase font-bold active:scale-95 transition-all disabled:opacity-60 flex items-center justify-center gap-2"
                 >
-                  <span className="material-symbols-outlined text-lg">{isRestarting ? 'autorenew' : 'replay'}</span>
+                  <span aria-hidden="true" className="material-symbols-outlined text-lg">{isRestarting ? 'autorenew' : 'replay'}</span>
                   {isRestarting ? 'PREPARANDO REVANCHA...' : 'JUGAR OTRA VEZ'}
                 </button>
               )}
@@ -470,13 +480,15 @@ export default function ResultScreen() {
                 onClick={handleShare}
                 className="w-full min-h-touch rounded-xl border border-white/15 bg-white/5 text-white font-label-caps text-xs font-bold active:scale-95 transition-all flex items-center justify-center gap-2"
               >
-                <span className="material-symbols-outlined text-base">share</span>
+                <span aria-hidden="true" className="material-symbols-outlined text-base">share</span>
                 {shareCopied ? 'COPIADO' : 'COMPARTIR RESULTADO'}
               </button>
+              {/* Secundario a propósito: JUGAR OTRA VEZ es la única acción
+                  principal; cerrar la sala no debe competir con ella. */}
               {role === 'host' && (
                 <button
                   onClick={handleFinish}
-                  className="w-full h-12 rounded-xl bg-primary text-white font-label-caps text-sm uppercase font-bold border border-white/20 active:scale-95 transition-all"
+                  className="w-full h-12 rounded-xl bg-transparent text-white/90 font-label-caps text-sm uppercase font-bold border border-white/25 active:scale-95 transition-all"
                 >
                   CERRAR SALA
                 </button>
@@ -559,9 +571,9 @@ export default function ResultScreen() {
         <button
           type="button"
           onClick={() => setShowExitConfirm(true)}
-          className="absolute top-safe left-4 z-[100] min-h-touch rounded-xl border border-white/12 bg-black/35 px-3 text-white/75 font-label-caps text-[0.65rem] tracking-[0.16em] flex items-center gap-1.5 active:scale-95 transition-all"
+          className="absolute top-safe left-4 z-[100] min-h-touch rounded-xl border border-white/12 bg-black/35 px-3 text-white/75 font-label-caps text-[0.8rem] tracking-[0.16em] flex items-center gap-1.5 active:scale-95 transition-all"
         >
-          <span className="material-symbols-outlined text-base">arrow_back</span>
+          <span aria-hidden="true" className="material-symbols-outlined text-base">arrow_back</span>
           {role === 'host' ? 'CERRAR' : 'SALIR'}
         </button>
 
@@ -654,30 +666,39 @@ export default function ResultScreen() {
             {resultWord}
           </motion.h1>
 
-          <div className="relative mt-5 flex items-end justify-center gap-4">
-            <div>
-              <p className="font-label-caps text-sm text-white/55">TUS PUNTOS</p>
+          {/* Lo grande es la ruta (años n/meta), que es lo que decide la
+              partida. Los puntos siguen a la vista pero en segundo plano:
+              solo son moneda para sabotear o canjear un año. */}
+          {myYears !== null && (
+            <div className="relative mt-5">
+              <p className="font-label-caps text-sm text-white/75">TU RUTA</p>
               <motion.p
                 initial={{ y: 12, scale: 0.75, opacity: 0 }}
                 animate={{ y: 0, scale: 1, opacity: 1 }}
                 transition={{ delay: 0.22, type: 'spring', stiffness: 150 }}
-                className={`font-stats-xl font-black leading-none ${style.text}`}
+                className="font-stats-xl font-black leading-none text-white tabular-nums"
                 style={{ fontSize: 'min(4.5rem, max(2.4rem, 17vw), 23.0vh)' }}
+                aria-label={`${myYears} de ${goalYears} años`}
               >
-                {guestPoints}
+                {myYears}<span className="text-on-surface-variant" style={{ fontSize: '0.5em' }}>/{goalYears}</span>
               </motion.p>
             </div>
+          )}
+
+          <div className="relative mt-3 flex flex-wrap items-center justify-center gap-2">
+            <p className="font-label-caps text-sm text-white/75">PUNTOS</p>
+            <p className="font-stats-xl text-2xl font-black leading-none text-white tabular-nums">{guestPoints}</p>
             {deltaLabel && (
               <motion.div
-                initial={{ y: 18, opacity: 0, rotate: 8 }}
+                initial={{ y: 10, opacity: 0, rotate: 8 }}
                 animate={{ y: 0, opacity: 1, rotate: 0 }}
                 transition={{ delay: 0.35, type: 'spring', stiffness: 140 }}
-                className={`mb-3 flex items-center gap-1.5 rounded-2xl border border-current/30 bg-black/30 px-4 py-2 text-3xl font-black ${deltaColor}`}
+                className={`flex items-center gap-1 rounded-xl border border-current/30 bg-black/30 px-2.5 py-1 text-lg font-black leading-none ${deltaColor}`}
                 title={iWasFastest ? 'Incluye +1 por responder primero' : undefined}
               >
                 {deltaLabel}
                 {iWasFastest && (
-                  <span className="material-symbols-outlined text-chaos-gold" style={{ fontSize: '1.4rem' }}>bolt</span>
+                  <span aria-hidden="true" className="material-symbols-outlined text-chaos-gold" style={{ fontSize: '1.1rem' }}>bolt</span>
                 )}
               </motion.div>
             )}
@@ -689,7 +710,7 @@ export default function ResultScreen() {
                 ve como logro y el resto se entera de quien fue. */}
             {(iWasFastest || speedWinnerName) && (
               <p className="mt-2 flex items-center justify-center gap-1.5 text-sm text-chaos-gold/90">
-                <span className="material-symbols-outlined text-base">bolt</span>
+                <span aria-hidden="true" className="material-symbols-outlined text-base">bolt</span>
                 {iWasFastest
                   ? '+1 por responder primero'
                   : `${speedWinnerName} respondió primero (+1)`}
@@ -712,14 +733,14 @@ export default function ResultScreen() {
               <img src={currentTrack.albumImage} alt={currentTrack?.name || 'Canción'} className="w-full h-full object-cover" />
             ) : (
               <div className="w-full h-full bg-black/40 flex items-center justify-center">
-                <span className={`material-symbols-outlined ${style.text}`} style={{ fontSize: '2rem' }}>{style.icon}</span>
+                <span aria-hidden="true" className={`material-symbols-outlined ${style.text}`} style={{ fontSize: '2rem' }}>{style.icon}</span>
               </div>
             )}
           </div>
           <div className="flex-1 min-w-0 text-left">
-            <p className="font-label-caps text-xs text-white/45 tracking-widest">LA CANCIÓN ERA</p>
+            <p className="font-label-caps text-sm text-white/75 tracking-widest">LA CANCIÓN ERA</p>
             <p className="mt-1 font-black text-white text-base leading-tight line-clamp-2">
-              {currentTrack?.name || style.copy}
+              {currentTrack?.name || 'Canción de esta ronda'}
             </p>
             {currentTrack?.artist && (
               <p className="text-sm text-white/60 mt-0.5 truncate">{currentTrack.artist}</p>
@@ -731,8 +752,13 @@ export default function ResultScreen() {
                 transition={{ delay: 0.38, type: 'spring', stiffness: 140 }}
                 className="mt-1 flex items-baseline gap-1.5"
               >
-                <span className="font-label-caps text-xs text-white/40">AÑO</span>
-                <span className={`font-black text-4xl leading-none ${style.text}`}>
+                <span className="font-label-caps text-sm text-white/75">AÑO</span>
+                {/* El año revelado es EL dato de la ronda (es lo que se coloca
+                    en la ruta): tamaño de titular, no de dato secundario. */}
+                <span
+                  className={`font-stats-xl font-black leading-none tabular-nums ${style.text}`}
+                  style={{ fontSize: 'min(4rem, max(2.5rem, 13vw), 16vh)' }}
+                >
                   {currentTrack.releaseYear}
                 </span>
               </motion.div>
@@ -747,7 +773,7 @@ export default function ResultScreen() {
             transition={{ delay: 0.28 }}
             className="mt-2.5"
           >
-            <p className="font-label-caps text-xs text-white/45 tracking-widest text-center mb-2">
+            <p className="font-label-caps text-sm text-white/75 tracking-widest text-center mb-2">
               ASÍ VAN TODOS
             </p>
             <div className="flex flex-col gap-1.5">
@@ -761,12 +787,15 @@ export default function ResultScreen() {
                   }`}
                 >
                   <span className={`w-8 h-8 rounded-lg text-sm font-black flex items-center justify-center shrink-0 ${
-                    index === 0 ? 'bg-neon-green text-black' : 'bg-white/10 text-white'
+                    index === 0 ? 'bg-chaos-gold text-black'
+                      : index === 1 ? 'bg-[#e2e8f0] text-black'
+                        : index === 2 ? 'bg-vinyl-orange text-black'
+                          : 'bg-white/10 text-white'
                   }`}>
                     {index + 1}
                   </span>
-                  <PlayerAvatar player={player} className="w-20 h-20 text-4xl border-2 border-white/10" />
-                  <span className="font-label-caps text-xl font-black uppercase tracking-wide text-white truncate flex-1">{player.name}</span>
+                  <PlayerAvatar player={player} className="w-12 h-12 text-2xl border-2 border-white/10" />
+                  <span className="font-label-caps text-lg font-black uppercase tracking-wide text-white truncate flex-1">{player.name}</span>
                   <div className="text-right shrink-0">
                     <p className="text-sm font-black text-neon-green">
                       {getTimelineProgress(player)}/{targetYears} CANCIONES
@@ -804,7 +833,7 @@ export default function ResultScreen() {
             onClick={handleShare}
             className="w-full h-12 rounded-xl border border-white/12 bg-white/5 text-white font-label-caps text-sm font-bold active:scale-95 transition-all flex items-center justify-center gap-2"
           >
-            <span className="material-symbols-outlined text-base">share</span>
+            <span aria-hidden="true" className="material-symbols-outlined text-base">share</span>
             {shareCopied ? 'COPIADO' : 'COMPARTIR'}
           </button>
         </motion.div>
@@ -825,7 +854,7 @@ export default function ResultScreen() {
               className="w-full max-w-sm rounded-2xl border border-white/10 bg-surface-container p-5 text-center shadow-[0_0_50px_rgba(0,0,0,0.6)]"
               onClick={(e) => e.stopPropagation()}
             >
-              <span className="material-symbols-outlined text-vinyl-orange" style={{ fontSize: '2.4rem' }}>
+              <span aria-hidden="true" className="material-symbols-outlined text-vinyl-orange" style={{ fontSize: '2.4rem' }}>
                 {role === 'host' ? 'emoji_events' : 'logout'}
               </span>
               <h3 className="mt-3 font-headline-lg text-xl font-black text-white">

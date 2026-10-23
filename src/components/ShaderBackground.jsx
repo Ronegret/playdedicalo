@@ -40,7 +40,7 @@ export default function ShaderBackground() {
       />
 
       {MUSIC_ICONS.map((note, index) => (
-        <span
+        <span aria-hidden="true"
           key={`${note.icon}-${index}`}
           className="material-symbols-outlined absolute select-none float-slow"
           style={{

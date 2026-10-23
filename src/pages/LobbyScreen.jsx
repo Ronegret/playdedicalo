@@ -14,37 +14,12 @@ import { auth } from '../firebase';
 import { useWakeLock } from '../hooks/useWakeLock';
 import { sfx } from '../services/audio';
 import { vibrar } from '../services/haptics';
+import TimelineYears from '../components/TimelineYears';
 
 
 
-function TimelineYears({ years = [], wildcards = 0, goalYears = 12 }) {
-  const progress = Math.min(years.length + wildcards, goalYears);
-  return (
-    <div className="mt-2 flex flex-wrap items-center gap-2 pl-0 sm:pl-9">
-      <span className="font-label-caps text-xs text-on-surface-variant font-bold">Ruta {progress}/{goalYears}</span>
-      {years.slice(0, goalYears).map((year, index) => (
-        <span
-          key={`${year}-${index}`}
-          className="w-9 h-9 rounded-full border-2 border-neon-green/60 bg-black/30 flex items-center justify-center text-[0.65rem] font-black text-neon-green shadow-[0_0_10px_rgba(57,255,20,0.25)]"
-          title={String(year)}
-        >
-          {String(year).slice(2)}
-        </span>
-      ))}
-      {Array.from({ length: Math.max(0, Math.min(wildcards, goalYears - years.length)) }, (_, index) => (
-        <span
-          key={`wildcard-${index}`}
-          className="w-9 h-9 rounded-full border-2 border-chaos-gold/60 bg-chaos-gold/15 flex items-center justify-center shadow-[0_0_10px_rgba(255,191,77,0.28)]"
-          title="Canjeada con puntos"
-        >
-          <span className="material-symbols-outlined text-chaos-gold text-base">star</span>
-        </span>
-      ))}
-    </div>
-  );
-}
-
-
+// La ruta de años vive en un componente compartido con ResultScreen: antes
+// había dos copias que ya se habían separado.
 
 export default function LobbyScreen() {
   const navigate = useNavigate();
@@ -164,10 +139,10 @@ export default function LobbyScreen() {
             className="fixed top-20 inset-x-0 z-[290] flex justify-center px-5 pointer-events-none"
           >
             <div className="rounded-2xl border border-vinyl-orange/50 bg-vinyl-orange/15 p-3 flex items-center gap-3 max-w-sm w-full">
-              <span className="material-symbols-outlined text-vinyl-orange text-2xl shrink-0">wifi_off</span>
+              <span aria-hidden="true" className="material-symbols-outlined text-vinyl-orange text-2xl shrink-0">wifi_off</span>
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-black text-white">{disconnectToast} se desconectó</p>
-                <p className="text-[0.706rem] text-vinyl-orange/80">Tiene 30 segundos para volver antes de quedar fuera.</p>
+                <p className="text-xs text-vinyl-orange/80">Tiene 30 segundos para volver antes de quedar fuera.</p>
               </div>
             </div>
           </motion.div>
@@ -176,7 +151,7 @@ export default function LobbyScreen() {
 
       <header className="fixed top-0 left-0 right-0 h-16 bg-surface/97 border-b border-white/10 flex justify-between items-center px-margin-mobile z-50">
         <button onClick={handleExit} className="min-h-touch text-on-surface-variant hover:text-white transition-colors flex items-center font-label-caps text-xs gap-2">
-          <span className="material-symbols-outlined text-xl">arrow_back</span> SALIR
+          <span aria-hidden="true" className="material-symbols-outlined text-xl">arrow_back</span> SALIR
         </button>
         <HeaderLogo />
         <ProfileMenu user={role === 'host' ? auth.currentUser : null} guestAvatar={role === 'guest' ? guestAvatar : null} />
@@ -241,8 +216,8 @@ export default function LobbyScreen() {
               className="app-pulsable flex min-h-touch flex-col items-center justify-center gap-0.5 rounded-xl border border-neon-green/45 bg-neon-green/12 px-3 py-2 text-neon-green transition-colors hover:bg-neon-green/20"
               aria-label="Mostrar QR de la sala"
             >
-              <span className="material-symbols-outlined text-xl leading-none">qr_code_scanner</span>
-              <span className="app-etiqueta text-[0.65rem] leading-none">Ver QR</span>
+              <span aria-hidden="true" className="material-symbols-outlined text-xl leading-none">qr_code_scanner</span>
+              <span className="app-etiqueta text-micro-caps leading-none">Ver QR</span>
             </button>
           </div>
 
@@ -270,7 +245,7 @@ export default function LobbyScreen() {
               }}
               className="min-h-touch rounded-xl border border-white/10 bg-white/5 text-on-surface-variant font-label-caps text-xs flex items-center justify-center gap-2 active:scale-95 transition-all hover:bg-white/10"
             >
-              <span className="material-symbols-outlined text-sm">{pinCopied ? 'check' : 'content_copy'}</span>
+              <span aria-hidden="true" className="material-symbols-outlined text-sm">{pinCopied ? 'check' : 'content_copy'}</span>
               {pinCopied ? 'COPIADO' : 'COPIAR PIN'}
             </button>
             <button
@@ -291,7 +266,7 @@ export default function LobbyScreen() {
               }}
               className="min-h-touch rounded-xl border border-neon-green/25 bg-neon-green/8 text-neon-green font-label-caps text-xs flex items-center justify-center gap-2 active:scale-95 transition-all hover:bg-neon-green/15"
             >
-              <span className="material-symbols-outlined text-sm">{linkShared ? 'check' : 'share'}</span>
+              <span aria-hidden="true" className="material-symbols-outlined text-sm">{linkShared ? 'check' : 'share'}</span>
               {linkShared ? 'COPIADO' : 'COMPARTIR'}
             </button>
           </div>
@@ -302,7 +277,7 @@ export default function LobbyScreen() {
             audioEnTv ? 'border-neon-green/40 bg-neon-green/8' : 'border-white/10 bg-white/5'
           }`}>
             <div className="flex items-center gap-3">
-              <span className={`material-symbols-outlined text-2xl ${audioEnTv ? 'text-neon-green' : 'text-on-surface-variant'}`}>
+              <span aria-hidden="true" className={`material-symbols-outlined text-2xl ${audioEnTv ? 'text-neon-green' : 'text-on-surface-variant'}`}>
                 tv
               </span>
               <div className="min-w-0 flex-1">
@@ -322,7 +297,7 @@ export default function LobbyScreen() {
                 onClick={() => setConectandoTv(true)}
                 className="mt-3 flex min-h-touch w-full items-center justify-center gap-2 rounded-xl border border-neon-green/40 bg-neon-green/10 font-label-caps text-sm font-black text-neon-green active:scale-[0.98]"
               >
-                <span className="material-symbols-outlined">qr_code_scanner</span>
+                <span aria-hidden="true" className="material-symbols-outlined">qr_code_scanner</span>
                 CONECTAR TELE
               </button>
             )}
@@ -335,7 +310,7 @@ export default function LobbyScreen() {
           <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-left">
             <p className="font-label-caps text-neon-green text-xs mb-3">{gameLocked ? 'PARTIDA EN CURSO' : 'MODO DE JUEGO'}</p>
             <div className="rounded-2xl border border-vinyl-orange/30 bg-[linear-gradient(135deg,rgba(255,122,26,0.14),rgba(168,85,247,0.12))] p-4 text-left">
-              <p className="font-label-caps text-[0.706rem] text-vinyl-orange tracking-[0.2em]">AÑOS LOCOS</p>
+              <p className="font-label-caps text-micro-caps text-vinyl-orange tracking-[0.2em]">AÑOS LOCOS</p>
               <h3 className="mt-1 text-lg font-black text-white">{targetYears} canciones para ganar</h3>
               <p className="mt-1 text-sm text-on-surface-variant">
                 Una sola mecánica: escucha, coloca el año y completa tu ruta antes que los demás.
@@ -365,7 +340,7 @@ export default function LobbyScreen() {
 
             {!gameLocked && (
               <div className="mt-4">
-                <p className="mb-2 font-label-caps text-[0.706rem] text-vinyl-orange tracking-[0.2em]">ESTILO DE PLAYLIST</p>
+                <p className="mb-2 font-label-caps text-micro-caps text-vinyl-orange tracking-[0.2em]">ESTILO DE PLAYLIST</p>
                 <div className="no-scrollbar -mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
                   {DEDICALO_PLAYLISTS.map((playlist) => {
                     const meta = PLAYLIST_META[playlist.id] || { icon: 'music_note', color: '#ff7a1a' };
@@ -375,20 +350,26 @@ export default function LobbyScreen() {
                         key={playlist.id}
                         type="button"
                         onClick={() => hostSetSpotifyPlaylistUrl(playlist.url)}
+                        aria-pressed={isSelected}
                         className="flex min-h-touch shrink-0 items-center gap-2 rounded-xl border px-3 py-2.5 transition-all active:scale-95"
                         style={isSelected
                           ? { borderColor: `${meta.color}cc`, backgroundColor: `${meta.color}18` }
                           : { borderColor: 'rgba(255,255,255,0.1)', backgroundColor: 'rgba(0,0,0,0.2)' }}
                       >
-                        <span className="material-symbols-outlined text-lg" style={{ color: isSelected ? meta.color : 'rgba(255,255,255,0.6)' }}>
+                        <span aria-hidden="true" className="material-symbols-outlined text-lg" style={{ color: isSelected ? meta.color : 'rgba(255,255,255,0.6)' }}>
                           {meta.icon}
                         </span>
+                        {/* La seleccionada no se distingue solo por color (daltonismo,
+                            poca luz): lleva además check y peso negro. */}
                         <span
-                          className="whitespace-nowrap font-label-caps text-[0.65rem] font-bold"
-                          style={{ color: isSelected ? '#ffffff' : 'rgba(255,255,255,0.68)' }}
+                          className={`whitespace-nowrap font-label-caps text-micro-caps ${isSelected ? 'font-black' : 'font-bold'}`}
+                          style={{ color: isSelected ? '#ffffff' : 'rgba(255,255,255,0.85)' }}
                         >
                           {playlist.name}
                         </span>
+                        {isSelected && (
+                          <span aria-hidden="true" className="material-symbols-outlined text-base text-white">check_circle</span>
+                        )}
                       </button>
                     );
                   })}
@@ -433,12 +414,16 @@ export default function LobbyScreen() {
         {role === 'host' && (
           <div className="barra-inferior accion-lobby fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-background/97 px-4 pt-3"
                style={{ paddingBottom: 'calc(0.75rem + env(safe-area-inset-bottom, 0px))' }}>
+            {/* El botón más importante del lobby era el más plano de la app.
+                Ahora es el objeto más "físico" de la pantalla, como los demás
+                botones principales del juego: se hunde al pulsarlo. Sin
+                app-pulsable: su scale() pelearía con el translate del hundido. */}
             <button
               data-accion="principal"
               onClick={handleHostStartGame}
-              className="app-pulsable mx-auto flex h-12 w-full max-w-lg items-center justify-center gap-2 rounded-xl bg-neon-green font-label-caps text-label-caps font-bold text-black"
+              className="mx-auto flex h-16 w-full max-w-lg items-center justify-center gap-2 rounded-2xl bg-neon-green font-label-caps text-label-caps font-black text-black shadow-[0_8px_0_rgba(18,90,0,0.9),0_0_30px_rgba(57,255,20,0.35)] transition-[transform,box-shadow] duration-100 active:translate-y-1 active:shadow-[0_4px_0_rgba(18,90,0,0.9)] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
             >
-              <span className="material-symbols-outlined">play_arrow</span>
+              <span aria-hidden="true" className="material-symbols-outlined">play_arrow</span>
               INICIAR RONDA
             </button>
           </div>
@@ -454,7 +439,7 @@ export default function LobbyScreen() {
       <section className="z-10 mt-6 w-full sm:mt-8">
         <div className="flex items-center gap-4 mb-5">
           <div className="h-[1px] flex-grow bg-gradient-to-r from-transparent to-white/10" />
-          <span className="font-label-caps text-label-caps text-on-surface-variant/70 tracking-widest">JUGADORES ({players.length})</span>
+          <span className="font-label-caps text-label-caps text-on-surface-variant tracking-widest">JUGADORES ({players.length})</span>
           <div className="h-[1px] flex-grow bg-gradient-to-l from-transparent to-white/10" />
         </div>
 
@@ -489,7 +474,7 @@ export default function LobbyScreen() {
                   )}
                   <div className="min-w-0">
                     <span className="block truncate font-label-caps text-xl font-black uppercase tracking-wide text-white">{player.name}</span>
-                    <span className={`mt-0.5 block font-label-caps text-[0.706rem] ${
+                    <span className={`mt-0.5 block font-label-caps text-micro-caps ${
                       presence.status === 'online'
                         ? 'text-neon-green'
                         : presence.status === 'reconnecting'
@@ -508,10 +493,10 @@ export default function LobbyScreen() {
                   <p className="font-black text-neon-green drop-shadow-[0_0_8px_rgba(57,255,20,0.4)] leading-none">
                     {getTimelineProgress(player)}<span className="text-xs text-on-surface-variant">/{targetYears}</span>
                   </p>
-                  <p className="mt-1 text-[0.706rem] text-on-surface-variant leading-none">{player.points} pts</p>
+                  <p className="mt-1 text-micro-caps text-on-surface-variant leading-none">{player.points} pts</p>
                 </div>
               </div>
-              <TimelineYears years={getCombinedTimelineYears(player)} wildcards={Number(player.wildcards || 0)} goalYears={targetYears} />
+              <TimelineYears years={getCombinedTimelineYears(player)} wildcards={Number(player.wildcards || 0)} goalYears={targetYears} glow className="pl-0 sm:pl-9" />
             </motion.div>
           );})}
         </div>
@@ -551,7 +536,7 @@ export default function LobbyScreen() {
               />
 
               <div className="text-center">
-                <p className="app-etiqueta text-[0.65rem] text-black/45">o escribe este PIN</p>
+                <p className="app-etiqueta text-micro-caps text-black/60">o escribe este PIN</p>
                 {/* selectable: es lo único de la app que la gente necesita
                     copiar de verdad, y el bloqueo global de selección lo
                     habría dejado sin poder copiarse. */}
@@ -584,7 +569,7 @@ export default function LobbyScreen() {
               className="w-full max-w-sm rounded-2xl border border-white/10 bg-surface-container p-6 text-center shadow-[0_0_50px_rgba(0,0,0,0.6)]"
               onClick={(e) => e.stopPropagation()}
             >
-              <span className="material-symbols-outlined text-intense-red" style={{ fontSize: '2.5rem' }}>logout</span>
+              <span aria-hidden="true" className="material-symbols-outlined text-intense-red" style={{ fontSize: '2.5rem' }}>logout</span>
               <h3 className="mt-3 font-headline-lg text-xl font-black text-white">
                 {role === 'host' ? '¿Cerrar la sala' : '¿Salir de la sala'}
               </h3>

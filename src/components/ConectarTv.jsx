@@ -127,7 +127,7 @@ export default function ConectarTv({ onCerrar, alConectar, antesDeCrearSala = fa
           aria-label="Cerrar"
           className="flex min-h-touch w-12 items-center justify-center rounded-xl border border-white/20 text-white"
         >
-          <span className="material-symbols-outlined">close</span>
+          <span aria-hidden="true" className="material-symbols-outlined">close</span>
         </button>
       </div>
 
@@ -135,7 +135,7 @@ export default function ConectarTv({ onCerrar, alConectar, antesDeCrearSala = fa
         {modo === 'codigo' ? (
           <>
             <div className="mt-2 flex h-16 w-16 items-center justify-center rounded-2xl border border-neon-green/40 bg-neon-green/10">
-              <span className="material-symbols-outlined text-3xl text-neon-green">tv</span>
+              <span aria-hidden="true" className="material-symbols-outlined text-3xl text-neon-green">tv</span>
             </div>
             <h2 className="mt-4 text-center text-2xl font-black leading-tight text-white">
               Escribe el código<br />que sale en la tele
@@ -170,7 +170,7 @@ export default function ConectarTv({ onCerrar, alConectar, antesDeCrearSala = fa
               onClick={() => { setModo('camara'); setError(''); }}
               className="mt-6 flex min-h-touch items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 font-label-caps text-sm font-bold text-white"
             >
-              <span className="material-symbols-outlined">qr_code_scanner</span>
+              <span aria-hidden="true" className="material-symbols-outlined">qr_code_scanner</span>
               PREFIERO ESCANEAR EL QR
             </button>
           </>
@@ -195,7 +195,7 @@ export default function ConectarTv({ onCerrar, alConectar, antesDeCrearSala = fa
               onClick={() => { setModo('codigo'); setError(''); }}
               className="mt-5 flex min-h-touch items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 font-label-caps text-sm font-bold text-white"
             >
-              <span className="material-symbols-outlined">keyboard</span>
+              <span aria-hidden="true" className="material-symbols-outlined">keyboard</span>
               ESCRIBIR EL CÓDIGO
             </button>
           </>

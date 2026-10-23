@@ -84,7 +84,7 @@ export function StepActionBar({
               onClick={onBack}
               className="flex h-14 items-center justify-center gap-1.5 rounded-2xl border border-white/12 bg-white/5 px-4 font-label-caps text-sm font-bold text-white active:scale-95 transition-transform"
             >
-              <span className="material-symbols-outlined text-lg">arrow_back</span>
+              <span aria-hidden="true" className="material-symbols-outlined text-lg">arrow_back</span>
               {backLabel}
             </button>
           )}
@@ -96,7 +96,7 @@ export function StepActionBar({
             className="flex h-14 items-center justify-center gap-2 rounded-2xl bg-neon-green font-label-caps text-base font-black text-black shadow-[0_0_28px_rgba(57,255,20,0.35)] transition-all disabled:bg-white/10 disabled:text-white/40 disabled:shadow-none"
           >
             {nextLabel}
-            <span className="material-symbols-outlined text-xl">{nextIcon}</span>
+            <span aria-hidden="true" className="material-symbols-outlined text-xl">{nextIcon}</span>
           </motion.button>
         </div>
       </div>

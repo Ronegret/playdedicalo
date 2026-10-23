@@ -7,58 +7,36 @@ export default {
   darkMode: "class",
   theme: {
     extend: {
+      // Un escalon por debajo del `sm` de Tailwind (640px). Hace falta porque
+      // los moviles mas estrechos que se usan de verdad (iPhone SE, 375px)
+      // caen todos por debajo de `sm`, asi que `sm:` no sirve para distinguir
+      // "movil estrecho" de "movil normal": con `sm:` una etiqueta se
+      // esconderia en TODOS los telefonos.
+      "screens": {
+        "xs": "380px"
+      },
+      // Solo los colores que la app usa de verdad: el volcado Material-3
+      // (33 tokens sin uso) se quitó para que el autocompletado no ofrezca
+      // colores que nadie ha diseñado para este juego.
       "colors": {
-        "on-primary": "#fff7ef",
         "primary": "#ff8a1f",
-        "on-secondary-container": "#08121f",
-        "error-container": "#39111f",
-        "on-tertiary-container": "#fff7ef",
         "surface-container-high": "#142135",
-        "on-primary-fixed": "#fff2dd",
-        "inverse-on-surface": "#0c1221",
         "vinyl-orange": "#ff7a1a",
         "surface": "#07101f",
-        "on-secondary-fixed": "#fff4e3",
-        "on-secondary-fixed-variant": "#ffb46b",
-        "inverse-primary": "#a855f7",
         "surface-container-lowest": "#040912",
-        "surface-dim": "#07101f",
-        "on-tertiary-fixed-variant": "#ffd0dc",
         "surface-container-low": "#0c1526",
         "surface-container": "#101a2d",
-        "surface-tint": "#ff7a1a",
-        "on-secondary": "#ffe6cb",
-        "tertiary": "#a855f7",
-        "on-tertiary": "#21001a",
         "neon-green": "#39ff14",
-        "tertiary-fixed": "#ffe1fb",
-        "primary-fixed-dim": "#ffb46b",
-        "secondary-fixed": "#ffd18f",
-        "outline-variant": "#344866",
-        "on-tertiary-fixed": "#21001a",
-        "on-primary-container": "#fff9f0",
-        "on-error": "#fff3f6",
-        "secondary-container": "#1b2e4a",
         "on-surface": "#f4f8ff",
-        "primary-container": "#ff7a1a",
         "deep-blue": "#3f78ff",
-        "tertiary-container": "#33204a",
         "surface-container-highest": "#18263d",
-        "on-primary-fixed-variant": "#ff9f45",
-        "outline": "#6f87a8",
-        "primary-fixed": "#ffe8cf",
-        "secondary-fixed-dim": "#ffb46b",
-        "on-error-container": "#ffd7e2",
-        "tertiary-fixed-dim": "#d8b4fe",
         "background": "#050816",
         "error": "#ff7a95",
-        "secondary": "#b8d0ff",
         "surface-bright": "#1d2e4b",
         "on-surface-variant": "#b7c3d9",
         "chaos-gold": "#ffbf4d",
         "intense-red": "#ff6b8b",
         "surface-variant": "#1a2740",
-        "inverse-surface": "#edf3ff",
         "glass-surface": "rgba(8, 16, 31, 0.58)",
         "on-background": "#f5f8ff",
         "electric-purple": "#a855f7"
@@ -67,16 +45,20 @@ export default {
         "DEFAULT": "0.25rem",
         "lg": "0.5rem",
         "xl": "0.75rem",
-        "full": "9999px"
+        "full": "9999px",
+        // Se usaba suelto como rounded-[2rem]; con nombre queda en el sistema.
+        "4xl": "2rem"
       },
       "spacing": {
-        "margin-mobile": "20px",
+        // En rem para que el margen de página crezca con fs-large / fs-xl.
+        "margin-mobile": "1.25rem",
         "stack-md": "24px",
         "margin-desktop": "40px",
         "unit": "4px",
         "gutter": "16px",
         "stack-sm": "8px",
         "stack-lg": "48px",
+        // En px a propósito: el dedo no crece con el tamaño de letra.
         "touch": "52px"
       },
       "minWidth": {
@@ -105,7 +87,10 @@ export default {
         "headline-lg-mobile": ["1.75rem", {"lineHeight": "1.2", "fontWeight": "800"}],
         "body-md": ["1rem", {"lineHeight": "1.5", "fontWeight": "400"}],
         "headline-lg": ["2rem", {"lineHeight": "1.2", "fontWeight": "800"}],
-        "label-caps": ["0.875rem", {"lineHeight": "1.2", "letterSpacing": "0.14em", "fontWeight": "800"}]
+        "label-caps": ["0.875rem", {"lineHeight": "1.2", "letterSpacing": "0.14em", "fontWeight": "800"}],
+        // Suelo legible para etiquetas pequeñas en mayúsculas: las de 0.65rem /
+        // 0.706rem (~11-12px) no se leen a distancia de fiesta.
+        "micro-caps": ["0.8rem", {"lineHeight": "1.1", "letterSpacing": "0.14em", "fontWeight": "700"}]
       }
     },
   },

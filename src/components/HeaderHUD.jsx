@@ -53,7 +53,19 @@ export default function HeaderHUD({ onExit }) {
 
   const ownPlayer = players.find((player) => player.id === guestId);
   const activeCount = players.filter((player) => getPlayerPresence(player, now).status !== 'kicked').length;
-  const myYears = getTimelineProgress(ownPlayer);
+  // Sin jugador propio todavía (la sala aún no sincronizó) se muestra 0:
+  // getTimelineProgress(undefined) cuenta el año base y daría un 1 falso.
+  const myYears = ownPlayer ? getTimelineProgress(ownPlayer) : 0;
+  const goalYears = targetYears || 12;
+  // Mismo orden que el ranking del store (años y, a igualdad, puntos): se
+  // gana por años, así que el puesto tiene que salir de ahí y no de los pts.
+  const ranking = [...players].sort((a, b) => (
+    getTimelineProgress(b) - getTimelineProgress(a) || Number(b.points || 0) - Number(a.points || 0)
+  ));
+  const myRank = ownPlayer ? ranking.findIndex((player) => player.id === ownPlayer.id) + 1 : 0;
+  // El sabotaje se guarda con la ronda en que se lanzó; uno viejo que aún
+  // no se limpió no debe asustar al jugador en la ronda siguiente.
+  const underAttack = Boolean(ownPlayer?.activeAttack && ownPlayer.activeAttack.round === round);
 
   return (
     <div className="fixed inset-x-0 top-0 z-[100] border-b border-white/10 bg-surface/80 shadow-md app-blur-permitido">
@@ -72,7 +84,7 @@ export default function HeaderHUD({ onExit }) {
                 aria-label={role === 'host' ? 'Cancelar partida' : 'Salir de la partida'}
                 className="min-h-touch min-w-touch shrink-0 rounded-xl text-on-surface-variant font-label-caps text-xs flex flex-col items-center justify-center gap-0.5 active:scale-90 transition-transform hover:text-white"
               >
-                <span className="material-symbols-outlined text-xl leading-none">arrow_back</span>
+                <span aria-hidden="true" className="material-symbols-outlined text-xl leading-none">arrow_back</span>
               </button>
             )}
             <span className="hidden shrink-0 border-l border-white/10 pl-2 font-label-caps text-[0.65rem] tracking-widest text-on-surface-variant sm:inline-block">
@@ -80,21 +92,28 @@ export default function HeaderHUD({ onExit }) {
             </span>
           </div>
 
-          {/* Center: round + years, siempre puede achicarse */}
-          <div className="flex min-w-0 items-center justify-center gap-2.5 overflow-hidden">
-            <div className="min-w-0 text-center">
-              <p className="font-label-caps text-xs text-neon-green leading-none">RONDA {round}</p>
-              <p className="truncate font-label-caps text-[0.706rem] text-on-surface-variant leading-none mt-0.5">AÑOS LOCOS</p>
+          {/* Center: estado de la partida (ronda, puesto y años hacia la
+              meta). El nombre del modo no iba aquí: nunca cambia. La meta se
+              ve SIEMPRE, también en la ronda 1, que es cuando el jugador
+              nuevo más necesita saber a qué está jugando. */}
+          <div className="flex min-w-0 flex-col items-center justify-center overflow-hidden text-center">
+            <div className="flex min-w-0 max-w-full items-center justify-center gap-1.5">
+              <p className="truncate font-label-caps text-sm text-neon-green leading-none">RONDA {round}</p>
+              {myRank > 0 && (
+                <span
+                  className={`shrink-0 rounded-full px-1.5 py-0.5 font-label-caps text-sm font-black leading-none tabular-nums ${
+                    myRank === 1 ? 'bg-chaos-gold text-black' : 'border border-white/20 bg-white/10 text-white'
+                  }`}
+                >
+                  <span className="sr-only">Puesto </span>{myRank}º/{players.length}
+                </span>
+              )}
             </div>
-            {myYears > 0 && (
-              <>
-                <span className="h-5 w-px shrink-0 bg-white/15" />
-                <div className="shrink-0 text-center">
-                  <p className="font-stats-xl text-lg font-black text-white leading-none">{myYears}<span className="text-sm text-on-surface-variant font-bold">/{targetYears || 12}</span></p>
-                  <p className="font-label-caps text-[0.706rem] text-neon-green/80 leading-none mt-0.5">AÑOS</p>
-                </div>
-              </>
-            )}
+            <p className="mt-1 max-w-full truncate leading-none">
+              <span className="font-label-caps text-sm text-on-surface-variant">AÑOS </span>
+              <span className="font-stats-xl text-lg font-black text-white tabular-nums">{myYears}</span>
+              <span className="text-sm font-bold text-on-surface-variant tabular-nums">/{goalYears}</span>
+            </p>
           </div>
 
           {/* Right: spotify (host) + players + pts + avatar */}
@@ -110,11 +129,11 @@ export default function HeaderHUD({ onExit }) {
               className="min-h-touch shrink-0 rounded-full border border-white/10 bg-black/20 pl-2 pr-2.5 flex items-center gap-1.5 active:scale-95 transition-transform"
             >
               <span className="h-2 w-2 shrink-0 rounded-full bg-neon-green" />
-              <span className="font-label-caps text-xs text-white">{activeCount}/{players.length}</span>
+              <span className="font-label-caps text-sm text-white">{activeCount}/{players.length}</span>
             </button>
 
             <div className="shrink-0 text-right leading-none">
-              <p className="font-label-caps text-[0.706rem] text-on-surface-variant">PTS</p>
+              <p className="font-label-caps text-sm text-on-surface-variant">PTS</p>
               <p className="mt-0.5 font-label-caps text-base font-black text-neon-green">{ownPlayer?.points ?? 0}</p>
             </div>
 
@@ -122,6 +141,18 @@ export default function HeaderHUD({ onExit }) {
           </div>
         </div>
       </div>
+
+      {/* Aviso persistente de sabotaje: el modal de ataque se cierra, pero
+          el jugador tiene que seguir sabiendo toda la ronda que va tocado.
+          Cuelga bajo el borde de la cabecera, alineado con los puntos, para
+          no robarle ancho a las tres columnas en un móvil de 375px. Lleva
+          texto además del color. */}
+      {underAttack && (
+        <div className="pointer-events-none absolute right-2.5 top-full mt-1 flex items-center gap-1 rounded-full border border-intense-red/60 bg-black/80 px-2 py-0.5 font-label-caps text-sm font-black leading-none text-intense-red shadow-md">
+          <span aria-hidden="true" className="material-symbols-outlined text-base leading-none">bolt</span>
+          SABOTEADO
+        </div>
+      )}
 
       <AnimatePresence>
         {rosterOpen && (

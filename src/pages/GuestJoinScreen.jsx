@@ -302,7 +302,7 @@ export default function GuestJoinScreen() {
     <motion.main className="app-screen safe-bottom-action app-shell relative z-10 overflow-y-auto pt-safe-header text-center">
       <header className="fixed top-0 w-full z-50 bg-glass-surface border-b border-white/10 flex items-center justify-between px-margin-mobile h-16 left-0">
         <button onClick={() => navigate('/role-selection')} className="min-h-touch text-on-surface-variant hover:text-white transition-colors flex items-center gap-2 font-label-caps text-xs tracking-[0.18em]">
-          <span className="material-symbols-outlined text-xl">arrow_back</span> VOLVER
+          <span aria-hidden="true" className="material-symbols-outlined text-xl">arrow_back</span> VOLVER
         </button>
         <HeaderLogo />
         {googleUser ? <ProfileMenu user={googleUser} /> : <FontSizeControl />}
@@ -336,7 +336,7 @@ export default function GuestJoinScreen() {
                 onClick={() => setScannerOpen(true)}
                 className="mt-5 flex min-h-touch w-full items-center justify-center gap-2 rounded-2xl border-2 border-neon-green/45 bg-neon-green/10 px-4 py-3 font-label-caps text-base font-black text-neon-green active:scale-95 transition-transform"
               >
-                <span className="material-symbols-outlined text-2xl">qr_code_scanner</span>
+                <span aria-hidden="true" className="material-symbols-outlined text-2xl">qr_code_scanner</span>
                 {isCheckingPin ? 'COMPROBANDO...' : 'ESCANEAR QR'}
               </button>
 
@@ -414,7 +414,7 @@ export default function GuestJoinScreen() {
                 className="mt-4 flex min-h-touch w-full items-center justify-center gap-2 rounded-2xl bg-neon-green px-4 font-label-caps text-base font-black text-black transition-transform active:scale-[0.98]"
               >
                 ELEGIR PERSONAJE
-                <span className="material-symbols-outlined">arrow_forward</span>
+                <span aria-hidden="true" className="material-symbols-outlined">arrow_forward</span>
               </button>
 
               <section className="mt-6 w-full rounded-2xl border border-white/8 bg-white/[0.03] p-3 text-left">
@@ -465,7 +465,7 @@ export default function GuestJoinScreen() {
                     )}
                   </div>
                   <div className="absolute -bottom-1 -right-1 flex h-9 w-9 items-center justify-center rounded-full bg-neon-green shadow-[0_0_16px_rgba(57,255,20,0.6)]">
-                    <span className="material-symbols-outlined text-black" style={{ fontSize: '20px' }}>check</span>
+                    <span aria-hidden="true" className="material-symbols-outlined text-black" style={{ fontSize: '20px' }}>check</span>
                   </div>
                 </div>
               </div>
@@ -521,7 +521,7 @@ export default function GuestJoinScreen() {
             >
               {pendingJoinStatus === 'denied' ? (
                 <>
-                  <span className="material-symbols-outlined text-intense-red" style={{ fontSize: '3rem' }}>block</span>
+                  <span aria-hidden="true" className="material-symbols-outlined text-intense-red" style={{ fontSize: '3rem' }}>block</span>
                   <h3 className="mt-3 font-headline-lg text-xl font-black text-white">El anfitrión no aceptó tu ingreso</h3>
                   <p className="mt-2 text-sm text-on-surface-variant">La partida ya está en curso y esta vez prefirió no sumarte a mitad de ronda. Puedes intentarlo de nuevo más tarde.</p>
                   <button
@@ -534,7 +534,7 @@ export default function GuestJoinScreen() {
                 </>
               ) : pendingJoinStatus === 'expired' ? (
                 <>
-                  <span className="material-symbols-outlined text-vinyl-orange" style={{ fontSize: '3rem' }}>error</span>
+                  <span aria-hidden="true" className="material-symbols-outlined text-vinyl-orange" style={{ fontSize: '3rem' }}>error</span>
                   <h3 className="mt-3 font-headline-lg text-xl font-black text-white">No pudimos confirmar tu ingreso</h3>
                   <p className="mt-2 text-sm text-on-surface-variant">Puede que la sala haya cerrado. Revisa el PIN y vuelve a intentarlo.</p>
                   <button
@@ -600,7 +600,7 @@ export default function GuestJoinScreen() {
                   <p className="text-xs text-on-surface-variant mt-1">Apunta al QR del anfitrión.</p>
                 </div>
                 <button type="button" onClick={() => setScannerOpen(false)} aria-label="Cerrar escáner" className="min-w-touch min-h-touch rounded-full bg-white/10 text-white flex items-center justify-center">
-                  <span className="material-symbols-outlined text-lg">close</span>
+                  <span aria-hidden="true" className="material-symbols-outlined text-lg">close</span>
                 </button>
               </div>
 

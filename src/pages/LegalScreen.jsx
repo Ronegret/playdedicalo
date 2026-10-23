@@ -48,14 +48,14 @@ export default function LegalScreen() {
   const actual = DOCUMENTOS[documento] ? documento : 'privacidad';
 
   return (
-    <main className="app-screen app-shell relative z-10 overflow-y-auto pt-safe-header pb-16">
-      <header className="fixed left-0 top-0 z-50 flex h-16 w-full items-center justify-between border-b border-white/10 bg-glass-surface px-margin-mobile">
+    <main className="app-screen relative z-10 overflow-y-auto pt-safe-header pb-16">
+      <header className="fixed left-0 top-0 z-50 flex h-16 w-full items-center justify-between border-b border-white/10 bg-background/97 app-blur-permitido px-margin-mobile">
         <button
           type="button"
           onClick={() => navigate(-1)}
           className="flex min-h-touch items-center gap-2 font-label-caps text-xs tracking-[0.18em] text-on-surface-variant transition-colors hover:text-white"
         >
-          <span className="material-symbols-outlined text-xl">arrow_back</span> VOLVER
+          <span aria-hidden="true" className="material-symbols-outlined text-xl">arrow_back</span> VOLVER
         </button>
         <p className="font-label-caps text-xs tracking-[0.18em] text-white">LEGAL</p>
       </header>
@@ -68,10 +68,11 @@ export default function LegalScreen() {
               key={clave}
               type="button"
               onClick={() => navigate(`/legal/${clave}`)}
-              className={`min-h-touch rounded-xl border px-4 font-label-caps text-xs font-bold transition-colors ${
+              aria-current={clave === actual ? 'page' : undefined}
+              className={`min-h-touch rounded-xl border px-4 font-label-caps text-[0.8rem] transition-colors ${
                 clave === actual
-                  ? 'border-neon-green bg-neon-green/15 text-neon-green'
-                  : 'border-white/12 bg-white/5 text-on-surface-variant'
+                  ? 'border-neon-green bg-neon-green/15 font-black text-neon-green'
+                  : 'border-white/12 bg-white/5 font-bold text-on-surface-variant'
               }`}
             >
               {nombre}

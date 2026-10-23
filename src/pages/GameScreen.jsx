@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ATTACK_COST, ATTACK_TYPES, DEDICALO_PLAYLISTS, GAME_MODES, REDEEM_YEAR_COST, getCombinedTimelineYears, getPlayerPresence, getTimelineProgress, normalizeSabotageTypes, normalizeSpotifyPlaylistUrl, useGameStore } from '../store/useGameStore';
@@ -11,8 +11,6 @@ import { crearPreguntaDeCancion } from '../services/preguntas';
 import { alTerminarFragmento, duracionFragmento, desbloquearAudio, getCancionOculta, pararMusica, segundosRestantes, sonarCancionAleatoria } from '../services/musica';
 import { sfx, agacharMusica, recuperarMusica } from '../services/audio';
 import { vibrar } from '../services/haptics';
-
-const EQUALIZER_BARS = [0.35, 0.58, 0.42, 0.71, 0.49, 0.64, 0.39];
 
 // Segundos de cortesia una vez que ha respondido la mayoria (ver
 // softTimerArmed). Suficiente para que un rezagado termine, corto para que
@@ -30,14 +28,14 @@ function VoteStatusStrip({ players, roundAnswers, isPlayerBlockedThisRound, answ
   return (
     <div className={`w-full max-w-sm rounded-xl border px-3 py-2 transition-colors ${corriendo ? 'border-chaos-gold/60 bg-chaos-gold/10' : 'border-white/10 bg-black/25'}`}>
       <div className="flex items-center justify-between gap-2">
-        <p className="font-label-caps text-[0.706rem] tracking-[0.16em] text-on-surface-variant">
+        <p className="font-label-caps text-sm tracking-[0.16em] text-white">
           {corriendo ? 'ÚLTIMOS SEGUNDOS' : 'RESPONDIERON'}
         </p>
         <div className="flex items-center gap-2">
           {corriendo && (
             <span className="font-label-caps text-sm font-black tabular-nums text-chaos-gold">{secondsLeft}s</span>
           )}
-          <p className="font-label-caps text-[0.706rem] font-black text-neon-green">{answerCount}/{expectedVotes}</p>
+          <p className="font-label-caps text-sm font-black text-neon-green">{answerCount}/{expectedVotes}</p>
         </div>
       </div>
       <div className="mt-1.5 flex items-center gap-2 overflow-x-auto no-scrollbar pb-0.5">
@@ -60,11 +58,11 @@ function VoteStatusStrip({ players, roundAnswers, isPlayerBlockedThisRound, answ
               )}
               {blocked ? (
                 <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-vinyl-orange">
-                  <span className="material-symbols-outlined text-black" style={{ fontSize: '10px', lineHeight: 1 }}>block</span>
+                  <span aria-hidden="true" className="material-symbols-outlined text-black" style={{ fontSize: '0.875rem', lineHeight: 1 }}>block</span>
                 </span>
               ) : answered && (
                 <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-neon-green">
-                  <span className="material-symbols-outlined text-black" style={{ fontSize: '10px', lineHeight: 1 }}>check</span>
+                  <span aria-hidden="true" className="material-symbols-outlined text-black" style={{ fontSize: '0.875rem', lineHeight: 1 }}>check</span>
                 </span>
               )}
             </div>
@@ -102,11 +100,11 @@ function RankingPeek({ players, guestId, targetYears = 12 }) {
             <span className={`w-10 h-10 rounded-xl text-base font-black flex items-center justify-center ${myRank === 1 ? 'bg-neon-green text-black shadow-[0_0_16px_rgba(57,255,20,0.4)]' : myRank === 2 ? 'bg-white/20 text-white' : 'bg-white/10 text-on-surface-variant'}`}>
               {myRank || '?'}
             </span>
-            <span className="mt-0.5 font-label-caps text-[0.65rem] tracking-[0.12em] text-on-surface-variant">POS</span>
+            <span className="mt-0.5 font-label-caps text-sm tracking-[0.12em] text-white">POS</span>
           </div>
           {/* Years progress */}
           <div className="min-w-0">
-            <p className="font-label-caps text-[0.706rem] tracking-[0.18em] text-neon-green">TUS AÑOS · META</p>
+            <p className="font-label-caps text-sm tracking-[0.18em] text-neon-green">TUS AÑOS · META</p>
             <div className="mt-0.5 flex items-baseline gap-1">
               <span className="font-stats-xl text-2xl font-black text-white leading-none">{myYears}</span>
               <span className="text-sm text-on-surface-variant font-bold">/{targetYears}</span>
@@ -162,7 +160,7 @@ function RankingPeek({ players, guestId, targetYears = 12 }) {
                     <span className="font-label-caps text-lg font-black uppercase tracking-wide text-white truncate flex-1">{player.name}{isMe ? ' (tú)' : ''}</span>
                     <div className="text-right shrink-0">
                       <p className="text-base font-black text-neon-green leading-none">{progress}/{targetYears}</p>
-                      <p className="mt-0.5 text-[0.706rem] font-bold text-on-surface-variant leading-none">
+                      <p className="mt-0.5 text-sm font-bold text-white leading-none">
                         {missing === 0 ? '¡Meta!' : player === leader ? 'Lidera' : `Faltan ${missing}`}
                       </p>
                     </div>
@@ -263,7 +261,7 @@ function MusicBombFuse({ onDetonate }) {
         className="relative flex h-32 w-32 items-center justify-center rounded-full border-4 border-white/85 shadow-[0_0_60px_rgba(255,60,0,0.8),inset_0_0_28px_rgba(0,0,0,0.9)]"
         style={{ background: 'repeating-radial-gradient(circle, #0a0a0a 0 4px, #1c1c1c 5px 6px, #0a0a0a 7px 10px)' }}
       >
-        <span className="material-symbols-outlined text-white" style={{ fontSize: '3rem' }}>bomb</span>
+        <span aria-hidden="true" className="material-symbols-outlined text-white" style={{ fontSize: '3rem' }}>bomb</span>
         {/* Chispa de la mecha */}
         <motion.span
           animate={{ scale: [1, 1.5, 1], opacity: [0.7, 1, 0.7] }}
@@ -365,10 +363,10 @@ function AttackWarningOverlay({ attack, onClose }) {
               {isImageAvatar(attack.fromAvatar) ? (
                 <img src={attack.fromAvatar} alt={attack.from || 'Rival'} className="h-full w-full rounded-full object-cover" />
               ) : (
-                <span className="material-symbols-outlined text-6xl drop-shadow-[0_0_20px_rgba(255,255,255,0.6)]">{attackCopy.icon}</span>
+                <span aria-hidden="true" className="material-symbols-outlined text-6xl drop-shadow-[0_0_20px_rgba(255,255,255,0.6)]">{attackCopy.icon}</span>
               )}
               <span className="absolute -bottom-2 -right-2 flex h-11 w-11 items-center justify-center rounded-full border-2 border-white/80 bg-[#6b10e8]">
-                <span className="material-symbols-outlined text-2xl text-white">{attackCopy.icon}</span>
+                <span aria-hidden="true" className="material-symbols-outlined text-2xl text-white">{attackCopy.icon}</span>
               </span>
             </motion.div>
           </div>
@@ -438,7 +436,7 @@ function BlockedPlacement({ attackFrom, attackFromAvatar, playerYears = [], wild
         {isImageAvatar(attackFromAvatar) ? (
           <img src={attackFromAvatar} alt={attackFrom || 'Rival'} className="mx-auto h-24 w-24 rounded-full border-2 border-vinyl-orange object-cover shadow-[0_0_20px_rgba(255,122,26,0.45)]" />
         ) : (
-          <span className="material-symbols-outlined text-vinyl-orange" style={{ fontSize: '3rem' }}>block</span>
+          <span aria-hidden="true" className="material-symbols-outlined text-vinyl-orange" style={{ fontSize: '3rem' }}>block</span>
         )}
         <h3 className="mt-2 font-headline-lg text-2xl font-black text-white">BLOQUEADO ESTA RONDA</h3>
         <p className="mt-2 text-base leading-relaxed text-on-surface-variant">
@@ -452,7 +450,7 @@ function BlockedPlacement({ attackFrom, attackFromAvatar, playerYears = [], wild
           ))}
           {wildcards > 0 && (
             <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-chaos-gold/50 bg-chaos-gold/10">
-              <span className="material-symbols-outlined text-chaos-gold text-lg">star</span>
+              <span aria-hidden="true" className="material-symbols-outlined text-chaos-gold text-lg">star</span>
             </span>
           )}
         </div>
@@ -491,19 +489,24 @@ function VinylDisc({ year, wildcard = false, size }) {
       <span className="pointer-events-none absolute rounded-full border border-white/5" style={{ inset: '20%' }} />
       <span className="pointer-events-none absolute rounded-full border border-white/5" style={{ inset: '29%' }} />
       {/* Etiqueta central: donde se lee el año de un vistazo */}
+      {/* 80 % y no 62 %: con el año más grande, en 62 % los cuatro dígitos
+          se salían de la etiqueta. */}
       <span
         className="relative flex items-center justify-center rounded-full"
         style={{
-          width: '62%',
-          height: '62%',
+          width: '80%',
+          height: '80%',
           background: wildcard ? 'rgba(255,191,77,.18)' : 'rgba(168,85,247,.20)',
           border: `1px solid ${color}`
         }}
       >
         {wildcard ? (
-          <span className="material-symbols-outlined text-chaos-gold" style={{ fontSize: `calc(${size} * 0.3)` }}>star</span>
+          <span aria-hidden="true" className="material-symbols-outlined text-chaos-gold" style={{ fontSize: `calc(${size} * 0.3)` }}>star</span>
         ) : (
-          <span className="font-black tabular-nums leading-none text-white" style={{ fontSize: `calc(${size} * 0.235)` }}>
+          // El año es lo que se lee en el riel: crece con el ajuste de letra
+          // (1.15rem), pero acotado entre el 26 % y el 30 % del disco para
+          // que con .fs-xl los cuatro dígitos sigan cabiendo dentro.
+          <span className="font-black tabular-nums leading-none tracking-tighter text-white" style={{ fontSize: `clamp(calc(${size} * 0.26), 1.15rem, calc(${size} * 0.3))` }}>
             {year}
           </span>
         )}
@@ -523,7 +526,14 @@ function VinylDisc({ year, wildcard = false, size }) {
  * sola decisión. Ahora se toca donde va el año y ya está, que es lo que
  * cualquiera intenta hacer la primera vez.
  */
-function VinylGap({ activo, size, alTocar, etiqueta, disabled }) {
+function VinylGap({ activo, size, alTocar, etiqueta, disabled, preview = false }) {
+  // Hueco no centrado: nunca por debajo de 52 px (el mínimo táctil del
+  // proyecto). calc(size * 0.62) daba ~45 px con el disco de 72 px.
+  const lado = activo ? size : `max(calc(${size} * 0.62), 52px)`;
+  // En la vista previa (suena la música) el toque solo centra, no coloca.
+  // Por eso el hueco se ve apagado y sin el "+": si parece un botón listo y
+  // no hace nada, lo primero que se aprende es que "esto está roto".
+  const verde = preview ? 'rgba(57,255,20,.3)' : '#39ff14';
   return (
     <button
       type="button"
@@ -532,19 +542,21 @@ function VinylGap({ activo, size, alTocar, etiqueta, disabled }) {
       aria-label={etiqueta}
       className="flex shrink-0 items-center justify-center rounded-full border-[3px] border-dashed transition-all duration-200 active:scale-95 disabled:active:scale-100"
       style={{
-        width: activo ? size : `calc(${size} * 0.62)`,
-        height: activo ? size : `calc(${size} * 0.62)`,
-        borderColor: activo ? '#39ff14' : 'rgba(57,255,20,.35)',
-        background: activo ? 'rgba(57,255,20,.14)' : 'rgba(57,255,20,.04)',
-        boxShadow: activo ? '0 0 24px rgba(57,255,20,.35)' : 'none'
+        width: lado,
+        height: lado,
+        borderColor: activo ? verde : (preview ? 'rgba(57,255,20,.18)' : 'rgba(57,255,20,.35)'),
+        background: activo && !preview ? 'rgba(57,255,20,.14)' : 'rgba(57,255,20,.04)',
+        boxShadow: activo && !preview ? '0 0 24px rgba(57,255,20,.35)' : 'none'
       }}
     >
-      <span
-        className="material-symbols-outlined text-neon-green transition-transform duration-200"
-        style={{ fontSize: `calc(${size} * ${activo ? 0.34 : 0.24})` }}
-      >
-        add
-      </span>
+      {!preview && (
+        <span aria-hidden="true"
+          className="material-symbols-outlined text-neon-green transition-transform duration-200"
+          style={{ fontSize: `calc(${size} * ${activo ? 0.34 : 0.24})` }}
+        >
+          add
+        </span>
+      )}
     </button>
   );
 }
@@ -680,7 +692,7 @@ function TimelinePlacementQuestion({
             {isImageAvatar(activeAttack.fromAvatar) ? (
               <img src={activeAttack.fromAvatar} alt={activeAttack.from || 'Rival'} className="h-12 w-12 shrink-0 rounded-full border-2 border-error object-cover" />
             ) : (
-              <span className="material-symbols-outlined shrink-0 animate-pulse text-lg text-error">move_down</span>
+              <span aria-hidden="true" className="material-symbols-outlined shrink-0 animate-pulse text-lg text-error">move_down</span>
             )}
             <p className="text-sm font-bold leading-snug text-error">
               <span className="font-black">{activeAttack.from || 'Un rival'}</span> te sabotó: si aciertas, ese año se lo lleva y pierdes uno de los tuyos.
@@ -722,6 +734,7 @@ function TimelinePlacementQuestion({
                     activo={index === focoIndex}
                     size={size}
                     disabled={disabled}
+                    preview={preview}
                     etiqueta={etiquetaHueco(hueco.from, hueco.to)}
                     alTocar={() => tocarHueco(index, hueco)}
                   />
@@ -744,8 +757,10 @@ function TimelinePlacementQuestion({
             que la propia pantalla ya enseña —los huecos punteados se ven— y
             en horizontal cada renglón cuenta, porque el alto se queda en unos
             390 px. En vertical sobra sitio y ayuda a quien juega por primera
-            vez, así que ahí se queda. */}
-        <p className="landscape-oculto mt-2 text-center text-sm leading-relaxed text-on-surface-variant">
+            vez, así que ahí se queda.
+            EXCEPCIÓN: en la vista previa sí se ve siempre. Es la única
+            explicación de por qué tocar un hueco todavía no coloca nada. */}
+        <p className={`${preview ? '' : 'landscape-oculto '}mt-2 text-center text-sm leading-relaxed ${preview ? 'font-bold text-white' : 'text-on-surface-variant'}`}>
           {preview
             ? 'Podrás colocarlo cuando pare la música.'
             : 'Toca el hueco donde crees que va'}
@@ -753,7 +768,7 @@ function TimelinePlacementQuestion({
 
         {wildcards > 0 && !preview && (
           <p className="mt-3 flex items-center gap-1.5 text-sm text-chaos-gold">
-            <span className="material-symbols-outlined text-base">star</span>
+            <span aria-hidden="true" className="material-symbols-outlined text-base">star</span>
             {wildcards === 1 ? '1 canción canjeada con puntos' : `${wildcards} canciones canjeadas con puntos`}
           </p>
         )}
@@ -821,6 +836,7 @@ export default function GameScreen() {
   const [redeemError, setRedeemError] = useState('');
   const [redeemToast, setRedeemToast] = useState(false);
   const rondaYaSonandoRef = useRef('');
+  const reducirMovimiento = useReducedMotion();
   const roleRef = useRef(role);
   useEffect(() => { roleRef.current = role; }, [role]);
 
@@ -893,6 +909,18 @@ export default function GameScreen() {
     const reset = window.setTimeout(() => setAudioListo(false), 0);
     return () => window.clearTimeout(reset);
   }, [phase, round]);
+
+  // Golpe de "arranca la ronda" justo cuando la cuenta 3-2-1 llega a cero
+  // (paso de countdown a listen). Solo en ese paso: si alguien entra a mitad
+  // de la escucha o recarga, no tiene que sonarle un arranque que no vio.
+  const fasePreviaRef = useRef(phase);
+  useEffect(() => {
+    const previa = fasePreviaRef.current;
+    fasePreviaRef.current = phase;
+    if (previa === 'countdown' && phase === 'listen') {
+      sfx.arranque();
+    }
+  }, [phase]);
 
   useEffect(() => {
     // Si hay una tele que puede sonar, la música es suya: el móvil se calla.
@@ -971,6 +999,11 @@ export default function GameScreen() {
   const ownTimelineYears = useMemo(() => getCombinedTimelineYears(ownPlayer), [ownPlayer]);
   const incomingAttack = ownPlayer?.activeAttack?.round === round ? ownPlayer.activeAttack : null;
   const isBlockedThisRound = incomingAttack?.type === 'block_vote';
+  // Panel grande del anfitrión (con REVELAR): solo cuando ya respondió o
+  // cuando no puede responder (bloqueado). Antes el botón ya estaba
+  // desactivado hasta responder, así que ocultarlo no quita ninguna acción:
+  // solo deja una única acción principal en pantalla — tocar el hueco.
+  const hostPanelVisible = hasAnswered || isBlockedThisRound;
   const attackKey = incomingAttack ? `${round}-${incomingAttack.from || 'rival'}` : '';
   const showIncomingAttack = Boolean(incomingAttack && dismissedAttackKey !== attackKey && (phase === 'listen' || phase === 'blackout'));
   const attackTargets = players.filter((player) => player.id !== guestId && getPlayerPresence(player).status === 'online' && !player.activeAttack);
@@ -1039,6 +1072,17 @@ export default function GameScreen() {
     };
   }, [softTimerArmed, round]);
 
+  // Rampa de tensión UNA vez al entrar en los últimos 5 segundos del tiempo
+  // blando. El ref guarda la ronda en que ya sonó: sin él sonaría en cada
+  // refresco del intervalo (cada 250 ms) mientras quedan 5 o menos.
+  const tensionRondaRef = useRef(null);
+  useEffect(() => {
+    if (typeof softSecondsLeft !== 'number' || softSecondsLeft <= 0 || softSecondsLeft > 5) return;
+    if (tensionRondaRef.current === round) return;
+    tensionRondaRef.current = round;
+    sfx.tension();
+  }, [softSecondsLeft, round]);
+
   useEffect(() => {
     if (softSecondsLeft !== 0 || role !== 'host' || phase !== 'blackout') return;
     hostRevealResults().catch((error) => {
@@ -1049,12 +1093,14 @@ export default function GameScreen() {
   const handleAnswer = (isCorrect) => {
     setAnsweredQuestionKey(questionKey);
     guestAnswer(isCorrect);
-    // Patron distinto para acierto y fallo: se juega en sitios con ruido
-    // donde no se oye nada, asi que el movil confirma en la mano.
+    // Al tocar solo se confirma "respuesta fijada", igual para acierto y
+    // fallo. Antes sonaba acierto/fallo aquí mismo y el jugador sabía el
+    // resultado antes del revelado: se comía la tensión de toda la sala. El
+    // sonido de acierto/fallo de verdad vive en la pantalla de resultado.
     // (En iPhone la vibracion no existe; por eso el sonido va en paralelo y
     // no como refuerzo opcional.)
-    vibrar(isCorrect ? 'acierto' : 'fallo');
-    if (isCorrect) sfx.acierto(); else sfx.fallo();
+    vibrar('confirmar');
+    sfx.confirmar();
   };
 
   const handleHostBlackout = useCallback(async () => {
@@ -1168,7 +1214,7 @@ export default function GameScreen() {
             className="fixed top-20 inset-x-0 z-[290] flex justify-center px-5 pointer-events-none"
           >
             <div className="rounded-2xl border border-vinyl-orange/50 bg-vinyl-orange/15 p-3 flex items-center gap-3 max-w-sm w-full">
-              <span className="material-symbols-outlined text-vinyl-orange text-2xl shrink-0">wifi_off</span>
+              <span aria-hidden="true" className="material-symbols-outlined text-vinyl-orange text-2xl shrink-0">wifi_off</span>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-black text-white">{disconnectToast} se desconectó</p>
                 <p className="text-xs text-vinyl-orange/85">Tiene 30 segundos para volver antes de quedar fuera.</p>
@@ -1221,8 +1267,14 @@ export default function GameScreen() {
             exit={{ opacity: 0 }}
             className={`app-shell fase-escucha flex flex-col items-center gap-3 px-1 text-center sm:gap-4 ${role === 'host' ? 'safe-bottom-action' : ''}`}
           >
-            {/* Vinyl listen circle */}
-            <div className="landscape-tight relative w-60 h-60 sm:w-72 sm:h-72 flex items-center justify-center">
+            {/* Disco de escucha, ahora como insignia compacta. Antes medía
+                ~240 px y con el ecualizador debajo empujaba la ruta de años
+                al 40 % inferior de la pantalla — y la ruta es donde se juega.
+                Se queda lo que informa (SONANDO y los segundos, bien
+                legibles) y se va lo decorativo: el ecualizador desaparece y
+                los anillos pulsantes bastan para decir "está sonando".
+                Tamaños en rem: crecen con el ajuste de letra. */}
+            <div className="landscape-tight relative flex h-36 w-36 shrink-0 items-center justify-center">
               {[0, 0.8, 1.6].map((delay) => (
                 <div
                   key={delay}
@@ -1230,33 +1282,24 @@ export default function GameScreen() {
                   style={{ animationDelay: `${delay}s` }}
                 />
               ))}
-              <div className="relative flex h-44 w-44 items-center justify-center rounded-full border-4 border-neon-green bg-black/30 shadow-[0_0_50px_rgba(57,255,20,0.35),inset_0_0_30px_rgba(0,0,0,0.6)] sm:h-64 sm:w-64">
-                <div className="absolute inset-6 rounded-full border border-white/10" />
-                <div className="absolute inset-12 rounded-full border border-white/5" />
-                <div className="relative z-10 text-center">
-                  <p className="font-label-caps text-xs text-electric-purple tracking-widest">{mode.name}</p>
-                  <span className="mt-2 block font-headline-lg-mobile text-2xl font-black tracking-widest text-neon-green drop-shadow-[0_0_18px_rgba(57,255,20,0.6)] sm:text-4xl">
+              <div className="relative flex h-32 w-32 items-center justify-center rounded-full border-4 border-neon-green bg-black/40 shadow-[0_0_30px_rgba(57,255,20,0.35),inset_0_0_20px_rgba(0,0,0,0.6)]">
+                <div className="absolute inset-3 rounded-full border border-white/10" />
+                <div className="relative z-10 px-2 text-center">
+                  <p className="font-label-caps text-xs leading-tight text-electric-purple">{mode.name}</p>
+                  <span className="mt-0.5 block font-headline-lg-mobile text-base font-black leading-tight tracking-wider text-neon-green drop-shadow-[0_0_12px_rgba(57,255,20,0.6)]">
                     {role === 'host' ? 'SONANDO' : 'ESCUCHA'}
                   </span>
-                  <p className="mt-2 font-label-caps text-xs text-white/60 tracking-widest">
-                    {segundosAudio !== null
-                      ? `${segundosAudio}s`
-                      : role === 'host' ? 'PARA CUANDO QUIERAS' : 'EL ANFITRIÓN DECIDE'}
-                  </p>
+                  {segundosAudio !== null ? (
+                    <p className="mt-0.5 font-label-caps text-lg font-black leading-none tabular-nums text-white">
+                      {segundosAudio}s
+                    </p>
+                  ) : (
+                    <p className="mt-0.5 font-label-caps text-xs leading-tight text-white">
+                      {role === 'host' ? 'PARA CUANDO QUIERAS' : 'EL ANFITRIÓN DECIDE'}
+                    </p>
+                  )}
                 </div>
               </div>
-            </div>
-
-            {/* Equalizer */}
-            <div className="landscape-compact flex gap-2 items-end h-10 sm:h-14">
-              {EQUALIZER_BARS.map((duration, index) => (
-                <motion.div
-                  key={`${duration}-${index}`}
-                  animate={{ height: ['20%', '100%', '30%'] }}
-                  transition={{ repeat: Infinity, duration, delay: index * 0.04 }}
-                  className="w-5 bg-neon-green rounded-full shadow-[0_0_14px_rgba(57,255,20,0.4)]"
-                />
-              ))}
             </div>
 
             {role === 'host' ? (
@@ -1267,7 +1310,7 @@ export default function GameScreen() {
                     onClick={reintentarAudio}
                     className="flex min-h-touch items-center gap-2 rounded-xl border-2 border-vinyl-orange bg-vinyl-orange/20 px-5 py-3 text-base font-label-caps font-black text-vinyl-orange shadow-[0_0_20px_rgba(255,122,26,0.25)] transition-all active:scale-95"
                   >
-                    <span className="material-symbols-outlined text-xl">
+                    <span aria-hidden="true" className="material-symbols-outlined text-xl">
                       {audioNecesitaToque ? 'login' : 'refresh'}
                     </span>
                     {/* Ni aquí ni en ninguna pantalla se nombra de dónde
@@ -1302,13 +1345,18 @@ export default function GameScreen() {
                     type="button"
                     onClick={() => { setAttackError(''); setShowAttackModal(true); }}
                     whileTap={{ scale: 0.93 }}
-                    animate={{ boxShadow: ['0 0 0px rgba(255,90,20,0)', '0 0 28px rgba(255,90,20,0.65)', '0 0 0px rgba(255,90,20,0)'] }}
-                    transition={{ repeat: Infinity, duration: 1.7, ease: 'easeInOut' }}
+                    // Brilla unas pocas veces al aparecer (cuando ya te llega
+                    // para sabotear) y luego se queda quieto: un brillo
+                    // infinito competía con la ruta, que es la acción
+                    // principal. Sin animación si el sistema pide menos
+                    // movimiento.
+                    animate={reducirMovimiento ? undefined : { boxShadow: ['0 0 0px rgba(255,90,20,0)', '0 0 28px rgba(255,90,20,0.65)', '0 0 0px rgba(255,90,20,0)'] }}
+                    transition={{ repeat: 2, duration: 1.7, ease: 'easeInOut' }}
                     className="min-h-[3.25rem] rounded-full border-2 border-vinyl-orange bg-gradient-to-r from-vinyl-orange to-intense-red px-6 flex items-center gap-2.5 text-white font-label-caps text-base font-black"
                   >
                     <motion.span
-                      animate={{ rotate: [0, -14, 14, -8, 0] }}
-                      transition={{ repeat: Infinity, duration: 1.6, repeatDelay: 0.5 }}
+                      animate={reducirMovimiento ? undefined : { rotate: [0, -14, 14, -8, 0] }}
+                      transition={{ repeat: 2, duration: 1.6, repeatDelay: 0.5 }}
                       className="material-symbols-outlined text-2xl drop-shadow-[0_0_6px_rgba(255,255,255,0.7)]"
                     >
                       bolt
@@ -1323,7 +1371,7 @@ export default function GameScreen() {
                     disabled={isRedeeming}
                     className="min-h-touch rounded-full border border-chaos-gold/50 bg-chaos-gold/10 px-4 flex items-center gap-2 text-chaos-gold font-label-caps text-sm font-bold active:scale-95 transition-all disabled:opacity-50"
                   >
-                    <span className="material-symbols-outlined text-base">star</span>
+                    <span aria-hidden="true" className="material-symbols-outlined text-base">star</span>
                     {isRedeeming ? 'CANJEANDO...' : `CANJEAR (${REDEEM_YEAR_COST} PTS)`}
                   </button>
                 )}
@@ -1345,7 +1393,7 @@ export default function GameScreen() {
                     : 'border-white/20 bg-white/5 text-on-surface-variant'
                 }`}
               >
-                <span className="material-symbols-outlined text-lg">
+                <span aria-hidden="true" className="material-symbols-outlined text-lg">
                   {audioEnTv ? 'tv' : 'smartphone'}
                 </span>
                 {audioEnTv ? 'SONANDO EN LA TELE' : 'SONANDO EN ESTE MÓVIL'}
@@ -1385,7 +1433,7 @@ export default function GameScreen() {
                   whileTap={{ scale: (isBlackoutPending || !puedeCortar) ? 1 : 0.94, y: 4 }}
                   onClick={handleHostBlackout}
                   disabled={isBlackoutPending || !puedeCortar}
-                  className="w-full h-16 bg-intense-red hover:bg-red-600 text-white font-headline-lg-mobile text-2xl rounded-2xl shadow-[0_10px_0_rgba(90,0,18,0.95),0_0_34px_rgba(255,107,139,0.55)] transition-colors font-black border-2 border-white/15 relative overflow-hidden disabled:opacity-60 disabled:cursor-not-allowed disabled:shadow-[0_6px_0_rgba(90,0,18,0.65),0_0_20px_rgba(255,107,139,0.25)]"
+                  className="w-full h-16 bg-intense-red hover:bg-intense-red/90 text-white font-headline-lg-mobile text-2xl rounded-2xl shadow-[0_10px_0_rgba(90,0,18,0.95),0_0_34px_rgba(255,107,139,0.55)] transition-colors font-black border-2 border-white/15 relative overflow-hidden disabled:opacity-60 disabled:cursor-not-allowed disabled:shadow-[0_6px_0_rgba(90,0,18,0.65),0_0_20px_rgba(255,107,139,0.25)]"
                 >
                   <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
                   <div className="absolute inset-x-0 bottom-0 h-1/2 bg-black/10 pointer-events-none" />
@@ -1394,6 +1442,17 @@ export default function GameScreen() {
               </div>
             )}
           </motion.div>
+        )}
+
+        {/* Si se entra en el apagón antes de que llegue la pregunta (red lenta,
+            reconexión a mitad de ronda), la pantalla quedaba en negro con solo
+            la cabecera: parecía colgada. Un estado de espera explícito. */}
+        {phase === 'blackout' && !currentQuestion && (
+          <div role="status" className="mt-12 flex flex-col items-center gap-3 text-center">
+            <span aria-hidden="true" className="material-symbols-outlined animate-spin text-4xl text-neon-green">progress_activity</span>
+            <p className="font-label-caps text-lg font-black tracking-[0.14em] text-white">PREPARANDO LA PREGUNTA</p>
+            <p className="text-sm text-on-surface-variant">Un segundo, ya casi está.</p>
+          </div>
         )}
 
         {phase === 'blackout' && currentQuestion && (
@@ -1427,16 +1486,19 @@ export default function GameScreen() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}
-                className="mt-3 inline-flex items-center gap-3 rounded-full border border-white/10 bg-black/30 px-4 py-1.5"
+                className="mt-3 inline-flex flex-wrap items-center justify-center gap-x-3 gap-y-1 rounded-full border border-white/10 bg-black/30 px-4 py-1.5"
               >
-                <span className="font-label-caps text-[0.65rem] text-neon-green">+5 ACIERTO</span>
+                {/* text-sm y no 0.65rem: son las reglas que deciden la
+                    jugada, se tienen que leer de un vistazo. flex-wrap por si
+                    con letra grande no caben en una sola fila. */}
+                <span className="font-label-caps text-sm font-bold text-neon-green">+5 ACIERTO</span>
                 <span className="w-px h-3 bg-white/20" />
-                <span className="font-label-caps text-[0.65rem] text-intense-red">-3 FALLO</span>
+                <span className="font-label-caps text-sm font-bold text-intense-red">-3 FALLO</span>
                 <span className="w-px h-3 bg-white/20" />
                 {/* La regla del bonus se ensena aqui, dentro del chip que ya
                     existia — no hace falta un cartel aparte. */}
-                <span className="flex items-center gap-0.5 font-label-caps text-[0.65rem] text-chaos-gold">
-                  <span className="material-symbols-outlined text-sm">bolt</span>+1 AL 1º
+                <span className="flex items-center gap-0.5 font-label-caps text-sm font-bold text-chaos-gold">
+                  <span aria-hidden="true" className="material-symbols-outlined text-sm">bolt</span>+1 AL 1º
                 </span>
               </motion.div>
             </div>
@@ -1453,15 +1515,12 @@ export default function GameScreen() {
                   animate={{ scale: 1, opacity: 1 }}
                   className={`rounded-2xl border p-6 text-center ${role === 'host' ? 'border-electric-purple/40 bg-electric-purple/10' : 'border-neon-green/30 bg-neon-green/10'}`}
                 >
-                  <span className="material-symbols-outlined text-neon-green" style={{ fontSize: '3.5rem' }}>check_circle</span>
+                  <span aria-hidden="true" className="material-symbols-outlined text-neon-green" style={{ fontSize: '3.5rem' }}>check_circle</span>
                   <p className="mt-3 text-white font-bold text-lg">¡Respuesta enviada!</p>
                   <p className="mt-1 text-sm text-on-surface-variant">
                     {role === 'host' ? 'Cuando todos estén listos, revela los resultados.' : 'Esperando al anfitrión...'}
                   </p>
                 </motion.div>
-                <div className="w-full flex flex-col gap-2">
-                  <RankingPeek players={players} guestId={guestId} targetYears={targetYears} />
-                </div>
               </>
             ) : isBlockedThisRound ? (
               <BlockedPlacement
@@ -1506,7 +1565,19 @@ export default function GameScreen() {
               </motion.div>
             )}
 
-            {role !== 'host' && (
+            {/* El ranking también MIENTRAS se decide (antes solo tras
+                responder): saber si vas primero o último cambia cuánto
+                arriesgas. Va debajo de la zona de respuesta, no la empuja. */}
+            <div className="w-full flex flex-col gap-2">
+              <RankingPeek players={players} guestId={guestId} targetYears={targetYears} />
+            </div>
+
+            {/* La tira compacta la ve también el anfitrión mientras aún no
+                ha respondido: es quien revela solo al llegar a cero, así que
+                necesita ver la cuenta atrás. Su panel grande (con REVELAR)
+                aparece cuando ya respondió, para que el botón verde no compita
+                con los huecos que tiene que tocar primero. */}
+            {(role !== 'host' || !hostPanelVisible) && (
               <div className="flex justify-center">
                 <VoteStatusStrip
                   players={players}
@@ -1520,9 +1591,16 @@ export default function GameScreen() {
               </div>
             )}
 
-            {role === 'host' && (
+            {role === 'host' && hostPanelVisible && (
               <div className="mt-4 rounded-2xl border border-white/10 bg-white/5 p-4 text-center">
                 <p className="font-label-caps text-neon-green text-sm">VOTOS RECIBIDOS</p>
+                {/* La tira con la cuenta atrás ya no se ve aquí: el tiempo
+                    blando se enseña dentro del panel. */}
+                {typeof softSecondsLeft === 'number' && (
+                  <p className="mt-1 font-label-caps text-sm font-black tabular-nums text-chaos-gold">
+                    ÚLTIMOS SEGUNDOS · {softSecondsLeft}s
+                  </p>
+                )}
                 <motion.p
                   key={answerCount}
                   initial={{ scale: 0.8 }}
@@ -1563,11 +1641,11 @@ export default function GameScreen() {
                           </motion.div>
                           {blocked ? (
                             <span className="absolute -top-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-vinyl-orange">
-                              <span className="material-symbols-outlined text-black" style={{ fontSize: '14px', lineHeight: 1 }}>block</span>
+                              <span aria-hidden="true" className="material-symbols-outlined text-black" style={{ fontSize: '1rem', lineHeight: 1 }}>block</span>
                             </span>
                           ) : answered && (
                             <span className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-neon-green flex items-center justify-center">
-                              <span className="material-symbols-outlined text-black" style={{ fontSize: '14px', lineHeight: 1 }}>check</span>
+                              <span aria-hidden="true" className="material-symbols-outlined text-black" style={{ fontSize: '1rem', lineHeight: 1 }}>check</span>
                             </span>
                           )}
                           <span className={`max-w-[5.5rem] truncate font-label-caps text-sm font-bold uppercase tracking-wide ${blocked ? 'text-vinyl-orange' : 'text-white/90'}`}>
@@ -1579,15 +1657,17 @@ export default function GameScreen() {
                   </div>
                 )}
 
-                {isBlockedThisRound ? (
+                {isBlockedThisRound && (
                   <p className="mt-2 text-sm text-vinyl-orange">Te sabotearon esta ronda — igual puedes revelar cuando estén los votos.</p>
-                ) : !hasAnswered && (
-                  <p className="mt-2 text-sm text-on-surface-variant">Responde primero. Tu voto también cuenta.</p>
                 )}
                 <button
                   type="button"
                   onClick={async () => {
                     setRevealError('');
+                    // Redoble seco + vibración antes de pasar al resultado:
+                    // reclama la mirada de la sala justo en el momento clave.
+                    sfx.redoble();
+                    vibrar('revelar');
                     try {
                       await hostRevealResults();
                     } catch (error) {
@@ -1619,7 +1699,7 @@ export default function GameScreen() {
             className="fixed top-20 inset-x-0 z-[290] flex justify-center px-5 pointer-events-none"
           >
             <div className="rounded-2xl border border-vinyl-orange/50 bg-vinyl-orange/15 px-4 py-3 flex items-center gap-2 max-w-sm w-full">
-              <span className="material-symbols-outlined text-vinyl-orange text-xl shrink-0">bolt</span>
+              <span aria-hidden="true" className="material-symbols-outlined text-vinyl-orange text-xl shrink-0">bolt</span>
               <p className="text-sm font-black text-white">¡Sabotaje enviado a {attackSentTo}!</p>
             </div>
           </motion.div>
@@ -1636,7 +1716,7 @@ export default function GameScreen() {
             className="fixed top-20 inset-x-0 z-[290] flex justify-center px-5 pointer-events-none"
           >
             <div className="rounded-2xl border border-chaos-gold/50 bg-chaos-gold/15 px-4 py-3 flex items-center gap-2 max-w-sm w-full">
-              <span className="material-symbols-outlined text-chaos-gold text-xl shrink-0">star</span>
+              <span aria-hidden="true" className="material-symbols-outlined text-chaos-gold text-xl shrink-0">star</span>
               <p className="text-sm font-black text-white">¡Canjeaste una canción para tu ruta!</p>
             </div>
           </motion.div>
@@ -1663,7 +1743,7 @@ export default function GameScreen() {
             >
               <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_0%,rgba(168,85,247,0.34),transparent_38%),radial-gradient(circle_at_15%_90%,rgba(255,122,26,0.18),transparent_35%)]" />
               <div className="relative">
-              <span className="material-symbols-outlined text-electric-purple drop-shadow-[0_0_24px_rgba(168,85,247,0.75)]" style={{ fontSize: '3rem' }}>bolt</span>
+              <span aria-hidden="true" className="material-symbols-outlined text-electric-purple drop-shadow-[0_0_24px_rgba(168,85,247,0.75)]" style={{ fontSize: '3rem' }}>bolt</span>
               <h3 className="mt-3 font-headline-lg text-xl font-black text-white">SABOTEAR RIVAL</h3>
               <p className="mt-2 text-sm text-on-surface-variant">
                 Por <span className="text-vinyl-orange font-bold">{ATTACK_COST} pts</span>, eliges cómo saboteas su próxima ronda. Esta vez sí tiene consecuencia real en su ruta de años.
@@ -1684,7 +1764,7 @@ export default function GameScreen() {
                     }`}
                   >
                     <div className="flex items-center gap-4">
-                      <span className={`material-symbols-outlined shrink-0 ${effectiveAttackType === attackType.id ? 'text-neon-green' : 'text-electric-purple'}`} style={{ fontSize: '2.75rem' }}>
+                      <span aria-hidden="true" className={`material-symbols-outlined shrink-0 ${effectiveAttackType === attackType.id ? 'text-neon-green' : 'text-electric-purple'}`} style={{ fontSize: '2.75rem' }}>
                         {attackType.icon}
                       </span>
                       <div className="min-w-0">
@@ -1726,7 +1806,7 @@ export default function GameScreen() {
                       <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-black/25 text-2xl">{target.avatar || '•'}</span>
                     )}
                     <span className="flex-1 truncate font-label-caps text-lg font-black uppercase tracking-wide">{target.name}</span>
-                    <span className="material-symbols-outlined text-vinyl-orange text-lg shrink-0">bolt</span>
+                    <span aria-hidden="true" className="material-symbols-outlined text-vinyl-orange text-lg shrink-0">bolt</span>
                   </button>
                 ))}
               </div>
@@ -1765,7 +1845,7 @@ export default function GameScreen() {
               className="w-full max-w-sm rounded-2xl border border-white/10 bg-surface-container p-6 text-center shadow-[0_0_50px_rgba(0,0,0,0.6)]"
               onClick={(e) => e.stopPropagation()}
             >
-              <span className="material-symbols-outlined text-vinyl-orange" style={{ fontSize: '2.5rem' }}>
+              <span aria-hidden="true" className="material-symbols-outlined text-vinyl-orange" style={{ fontSize: '2.5rem' }}>
                 {role === 'host' ? 'emoji_events' : 'logout'}
               </span>
               <h3 className="mt-3 font-headline-lg text-xl font-black text-white">

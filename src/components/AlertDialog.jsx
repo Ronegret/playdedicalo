@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -36,9 +37,26 @@ export default function AlertDialog({
   title,
   message,
   confirmLabel = 'ENTENDIDO',
-  onClose
+  onClose,
+  // Con `onConfirm` el cartel pasa de "enterarse" a "decidir": aparece un
+  // segundo boton para cancelar y el de confirmar toma el color del tono.
+  // Hace falta para acciones que destruyen algo (cerrar una sala acaba la
+  // partida de todos) donde un solo boton de "ENTENDIDO" no pregunta nada.
+  onConfirm,
+  cancelLabel = 'CANCELAR',
+  destructive = false
 }) {
   const style = TONES[tone] || TONES.error;
+  const esDecision = typeof onConfirm === 'function';
+
+  // Escape cierra. Un cartel modal sin salida por teclado es una trampa de
+  // foco, y aqui ademas la salida segura es siempre "no hagas nada".
+  useEffect(() => {
+    if (!open) return undefined;
+    const alPulsar = (e) => { if (e.key === 'Escape') onClose?.(); };
+    window.addEventListener('keydown', alPulsar);
+    return () => window.removeEventListener('keydown', alPulsar);
+  }, [open, onClose]);
 
   return createPortal(
     <AnimatePresence>
@@ -61,7 +79,7 @@ export default function AlertDialog({
             style={{ boxShadow: style.glow }}
             onClick={(event) => event.stopPropagation()}
           >
-            <span
+            <span aria-hidden="true"
               className="material-symbols-outlined"
               style={{ fontSize: '3.25rem', color: style.color }}
             >
@@ -71,14 +89,30 @@ export default function AlertDialog({
               <h3 className="mt-2 font-headline-lg text-xl font-black leading-tight text-white">{title}</h3>
             )}
             <p className="mt-2 text-base leading-relaxed text-on-surface-variant">{message}</p>
-            <button
-              type="button"
-              onClick={onClose}
-              autoFocus
-              className="mt-6 flex min-h-touch w-full items-center justify-center rounded-2xl bg-white/10 border border-white/15 font-label-caps text-base font-black text-white active:scale-95 transition-transform"
-            >
-              {confirmLabel}
-            </button>
+            <div className={`mt-6 ${esDecision ? 'flex flex-col gap-2' : ''}`}>
+              {esDecision && (
+                <button
+                  type="button"
+                  onClick={onClose}
+                  autoFocus
+                  className="flex min-h-touch w-full items-center justify-center rounded-2xl border border-white/15 bg-white/10 font-label-caps text-base font-black text-white transition-transform active:scale-95"
+                >
+                  {cancelLabel}
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={esDecision ? onConfirm : onClose}
+                autoFocus={!esDecision}
+                className={`flex min-h-touch w-full items-center justify-center rounded-2xl border font-label-caps text-base font-black transition-transform active:scale-95 ${
+                  destructive
+                    ? 'border-transparent bg-intense-red text-black'
+                    : 'border-white/15 bg-white/10 text-white'
+                }`}
+              >
+                {confirmLabel}
+              </button>
+            </div>
           </motion.div>
         </motion.div>
       )}

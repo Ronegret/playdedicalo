@@ -8,6 +8,7 @@ import { useGameStore } from '../store/useGameStore';
 import FontSizeControl from './FontSizeControl';
 import OrientationControl from './OrientationControl';
 import AvatarPicker from './AvatarPicker';
+import AlertDialog from './AlertDialog';
 import { isImageAvatar } from '../data/characterAvatars';
 
 function AvatarBubble({ avatar, fallback = 'person', className = 'h-8 w-8' }) {
@@ -19,7 +20,7 @@ function AvatarBubble({ avatar, fallback = 'person', className = 'h-8 w-8' }) {
       ) : avatar ? (
         <span className="px-1 text-lg font-black leading-none text-white">{avatar}</span>
       ) : (
-        <span className="material-symbols-outlined text-lg text-electric-purple">{fallback}</span>
+        <span aria-hidden="true" className="material-symbols-outlined text-lg text-electric-purple">{fallback}</span>
       )}
     </span>
   );
@@ -30,6 +31,12 @@ export default function ProfileMenu({ user, guestAvatar }) {
   const menuRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [confirmandoSalida, setConfirmandoSalida] = useState(false);
+  // Foco del editor: al abrir se lleva al campo de nombre, al cerrar vuelve
+  // al boton que lo abrio. Sin esto, un usuario de teclado abre el modal y
+  // el foco se queda detras, en la pagina, navegando lo que no se ve.
+  const campoNombreRef = useRef(null);
+  const disparadorRef = useRef(null);
   const [profileName, setProfileName] = useState('');
   const [profileAvatar, setProfileAvatar] = useState('');
   const [profileError, setProfileError] = useState('');
@@ -83,7 +90,37 @@ export default function ProfileMenu({ user, guestAvatar }) {
     }
   };
 
-  const handleLogout = async () => {
+  // El anfitrion no puede cerrar sesion de un toque: al cerrar la sala se
+  // acaba la partida para todos los invitados a la vez. Un boton rojo con
+  // la palabra "sesion" no comunica eso, asi que primero se pregunta.
+  useEffect(() => {
+    if (!isEditing) return undefined;
+    // Se captura el disparador al abrir: en la limpieza, `ref.current` ya
+    // puede apuntar a otro nodo (o a null) y el foco se perderia.
+    const disparador = disparadorRef.current;
+    const t = window.setTimeout(() => campoNombreRef.current?.focus(), 60);
+    const alPulsar = (e) => {
+      if (e.key === 'Escape') { e.preventDefault(); setIsEditing(false); }
+    };
+    window.addEventListener('keydown', alPulsar);
+    return () => {
+      window.clearTimeout(t);
+      window.removeEventListener('keydown', alPulsar);
+      disparador?.focus();
+    };
+  }, [isEditing]);
+
+  const pedirSalida = () => {
+    if (role === 'host') {
+      setIsOpen(false);
+      setConfirmandoSalida(true);
+      return;
+    }
+    salirDeVerdad();
+  };
+
+  const salirDeVerdad = async () => {
+    setConfirmandoSalida(false);
     setIsOpen(false);
     localStorage.removeItem('auth_redirect_intent');
     localStorage.removeItem('auth_redirect_intent_time');
@@ -129,10 +166,14 @@ export default function ProfileMenu({ user, guestAvatar }) {
             });
           }}
           className="min-w-touch min-h-touch rounded-full flex items-center justify-center active:scale-95 transition-transform"
-          aria-label="Menu de perfil"
+          ref={disparadorRef}
+          aria-label="Menú de perfil"
           aria-expanded={isOpen}
+          aria-haspopup="menu"
         >
-          <AvatarBubble avatar={displayAvatar} className="h-14 w-14" />
+          {/* h-12 (51px) y no h-14 (59,5px): min-w/min-h-touch son 52px, asi
+              que con h-14 el circulo se salia de su propia caja tactil. */}
+          <AvatarBubble avatar={displayAvatar} className="h-12 w-12" />
         </button>
 
         <AnimatePresence>
@@ -151,7 +192,7 @@ export default function ProfileMenu({ user, guestAvatar }) {
                   <div className="min-w-0">
                     <p className="truncate text-xl font-black text-white">{displayName}</p>
                     <p className="mt-0.5 truncate font-label-caps text-xs text-on-surface-variant">
-                      {role === 'host' ? 'ANFITRION' : 'INVITADO'}
+                      {role === 'host' ? 'ANFITRIÓN' : 'INVITADO'}
                     </p>
                   </div>
                 </div>
@@ -173,7 +214,7 @@ export default function ProfileMenu({ user, guestAvatar }) {
                     onClick={openEditor}
                     className="flex min-h-touch w-full items-center gap-2 rounded-xl px-3 text-left text-sm font-bold text-white transition-colors hover:bg-white/8 active:bg-white/10"
                   >
-                    <span className="material-symbols-outlined text-[1.2rem] text-neon-green">edit</span>
+                    <span aria-hidden="true" className="material-symbols-outlined text-[1.2rem] text-neon-green">edit</span>
                     Editar perfil
                   </button>
                 ) : (
@@ -183,17 +224,29 @@ export default function ProfileMenu({ user, guestAvatar }) {
                 )}
                 <button
                   type="button"
-                  onClick={handleLogout}
+                  onClick={pedirSalida}
                   className="flex min-h-touch w-full items-center gap-2 rounded-xl px-3 text-left text-sm font-bold text-intense-red transition-colors hover:bg-intense-red/10 active:bg-intense-red/15"
                 >
-                  <span className="material-symbols-outlined text-[1.2rem]">logout</span>
-                  Cerrar sesion
+                  <span aria-hidden="true" className="material-symbols-outlined text-[1.2rem]">logout</span>
+                  {role === 'host' ? 'Cerrar la sala y salir' : role === 'guest' ? 'Salir de la partida' : 'Cerrar sesión'}
                 </button>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
+
+      <AlertDialog
+        open={confirmandoSalida}
+        tone="warning"
+        title="¿Cerrar la sala?"
+        message="Se acabará la partida para todos los jugadores conectados. Esto no se puede deshacer."
+        confirmLabel="SÍ, CERRAR LA SALA"
+        cancelLabel="SEGUIR JUGANDO"
+        destructive
+        onConfirm={salirDeVerdad}
+        onClose={() => setConfirmandoSalida(false)}
+      />
 
       {/* Editor de perfil en pantalla completa, no en el desplegable chico
           de arriba — antes GUARDAR quedaba al fondo de un panel angosto,
@@ -219,6 +272,9 @@ export default function ProfileMenu({ user, guestAvatar }) {
               exit={{ opacity: 0 }}
               className="fixed inset-0 z-[310] flex items-end justify-center bg-black/85 sm:items-center"
               onClick={() => setIsEditing(false)}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="editar-perfil-titulo"
             >
             <motion.div
               initial={{ y: 40, opacity: 0 }}
@@ -230,26 +286,29 @@ export default function ProfileMenu({ user, guestAvatar }) {
             >
               {/* Encabezado — fijo, no scrollea */}
               <div className="flex shrink-0 items-center justify-between border-b border-white/10 px-4 py-3.5">
-                <p className="font-label-caps text-lg font-black tracking-wide text-white">EDITAR PERFIL</p>
+                <h2 id="editar-perfil-titulo" className="font-label-caps text-lg font-black tracking-wide text-white">EDITAR PERFIL</h2>
                 <button
                   type="button"
                   onClick={() => setIsEditing(false)}
                   aria-label="Cerrar"
                   className="flex min-h-touch min-w-touch items-center justify-center rounded-full bg-white/8 text-white active:scale-90"
                 >
-                  <span className="material-symbols-outlined text-xl">close</span>
+                  <span aria-hidden="true" className="material-symbols-outlined text-xl">close</span>
                 </button>
               </div>
 
               {/* Contenido — esto es lo único que scrollea */}
               <div className="flex-1 overflow-y-auto overscroll-contain p-4" style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-y' }}>
-                <label className="font-label-caps text-sm tracking-[0.16em] text-on-surface-variant">
+                <label htmlFor="perfil-nombre" className="font-label-caps text-sm tracking-[0.16em] text-on-surface-variant">
                   Nombre visible
                 </label>
                 <input
+                  id="perfil-nombre"
+                  ref={campoNombreRef}
                   value={profileName}
                   onChange={(event) => setProfileName(event.target.value)}
                   maxLength={18}
+                  aria-describedby={profileError ? 'perfil-error' : undefined}
                   className="mt-1.5 h-14 w-full rounded-xl border border-white/10 bg-black/25 px-3 text-xl font-black text-white outline-none focus:border-neon-green/60"
                 />
 
@@ -258,7 +317,7 @@ export default function ProfileMenu({ user, guestAvatar }) {
                 </label>
                 <AvatarPicker value={profileAvatar} onChange={setProfileAvatar} className="mt-1.5" />
 
-                {profileError && <p className="mt-3 text-sm text-intense-red">{profileError}</p>}
+                {profileError && <p id="perfil-error" role="alert" className="mt-3 text-sm text-intense-red">{profileError}</p>}
               </div>
 
               {/* Pie — fijo, siempre visible, nunca hay que scrollear para

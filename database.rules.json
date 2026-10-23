@@ -6,21 +6,60 @@
     "users": {
       "$uid": {
         ".read": "auth != null && auth.uid === $uid",
-        ".write": "auth != null && auth.uid === $uid"
+        ".write": "auth != null && auth.uid === $uid",
+        ".validate": "newData.hasChildren(['uid'])",
+        "uid":       { ".validate": "newData.val() === $uid" },
+        "email":     { ".validate": "newData.isString() && newData.val().length <= 254" },
+        "name":      { ".validate": "newData.isString() && newData.val().length <= 24" },
+        "avatar":    { ".validate": "newData.isString() && newData.val().length <= 512" },
+        "updatedAt": { ".validate": "newData.isNumber()" },
+        "$otro":     { ".validate": false }
       }
     },
 
     "rooms": {
       "$pin": {
-        ".read": "auth != null && $pin.matches(/^[0-9]{4}$/)",
-        ".write": "auth != null && $pin.matches(/^[0-9]{4}$/)"
+        ".read":  "auth != null && $pin.matches(/^[0-9]{4,6}$/)",
+        ".write": "auth != null && $pin.matches(/^[0-9]{4,6}$/)",
+
+        "phase":          { ".validate": "newData.isString() && newData.val().length <= 24" },
+        "round":          { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 999" },
+        "timelineYears":  { ".validate": "newData.hasChildren() || !newData.exists()" },
+
+        "players": {
+          "$jugador": {
+            ".validate": "newData.hasChildren(['name'])",
+            "name":    { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 24" },
+            "avatar":  { ".validate": "newData.isString() && newData.val().length <= 512" },
+            "points":  { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 99999" },
+            "isHost":  { ".validate": "newData.isBoolean()" }
+          }
+        },
+
+        "roundAnswers": {
+          "$jugador": {
+            ".write": "auth != null && !data.exists()",
+            ".validate": "newData.hasChildren(['round']) && newData.child('round').isNumber()",
+            "playerName": { ".validate": "newData.isString() && newData.val().length <= 24" },
+            "isCorrect":  { ".validate": "newData.isBoolean()" },
+            "at":         { ".validate": "newData.isNumber()" }
+          }
+        },
+
+        "joinRequests": {
+          "$jugador": {
+            ".validate": "!newData.exists() || newData.hasChildren(['name'])",
+            "name": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 24" }
+          }
+        }
       }
     },
 
     "tvLinks": {
       "$codigo": {
-        ".read": "auth != null && $codigo.matches(/^[A-Z0-9]{6}$/)",
-        ".write": "auth != null && $codigo.matches(/^[A-Z0-9]{6}$/)"
+        ".read":  "auth != null && $codigo.matches(/^[A-Z0-9]{6}$/)",
+        ".write": "auth != null && $codigo.matches(/^[A-Z0-9]{6}$/)",
+        "pin": { ".validate": "newData.isString() && newData.val().length <= 6" }
       }
     }
   }

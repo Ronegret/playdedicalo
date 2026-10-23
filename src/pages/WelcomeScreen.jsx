@@ -109,7 +109,7 @@ export default function WelcomeScreen() {
                 style={{ background: 'radial-gradient(circle at 50% 50%, rgba(0,0,0,.78) 0%, rgba(0,0,0,.62) 55%, rgba(0,0,0,.28) 100%)' }}
               >
                 <div className="flex flex-col items-center gap-1">
-                  <span className="material-symbols-outlined text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]" style={{ fontSize: '3rem' }}>play_arrow</span>
+                  <span aria-hidden="true" className="material-symbols-outlined text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]" style={{ fontSize: '3rem' }}>play_arrow</span>
                   <span className="font-label-caps text-[0.65rem] tracking-[0.18em] text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">TOCA PARA SONAR</span>
                 </div>
               </div>
@@ -216,7 +216,7 @@ export default function WelcomeScreen() {
                 key={ruta}
                 type="button"
                 onClick={() => navigate(ruta)}
-                className="py-2 text-[0.7rem] uppercase tracking-[0.14em] text-white/35 underline-offset-4 transition-colors hover:text-white/70 hover:underline"
+                className="py-2 text-[0.8rem] uppercase tracking-[0.14em] text-white/70 underline-offset-4 transition-colors hover:text-white hover:underline"
               >
                 {texto}
               </button>

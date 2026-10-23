@@ -57,7 +57,7 @@ export default function JoinRequestBanner() {
               aria-label={`Rechazar a ${request.name}`}
               className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/8 border border-white/10 text-white active:scale-90 disabled:opacity-50"
             >
-              <span className="material-symbols-outlined text-xl">close</span>
+              <span aria-hidden="true" className="material-symbols-outlined text-xl">close</span>
             </button>
             <button
               type="button"
@@ -73,7 +73,7 @@ export default function JoinRequestBanner() {
               aria-label={`Aceptar a ${request.name}`}
               className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-neon-green text-black active:scale-90 disabled:opacity-50"
             >
-              <span className="material-symbols-outlined text-xl">check</span>
+              <span aria-hidden="true" className="material-symbols-outlined text-xl">check</span>
             </button>
           </div>
         </motion.div>

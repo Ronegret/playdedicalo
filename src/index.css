@@ -15,8 +15,9 @@
    con este ajuste. Lo único atado al viewport es el texto decorativo grande
    (títulos, cifras de podio), que si creciera se saldría de la pantalla.
 ─────────────────────────────────────────────────────────────────────────── */
+/* El mecanismo real es el font-size de la raíz (no hay variable: la antigua
+   --font-scale no la leía nadie y se quitó). */
 :root {
-  --font-scale: 1;
   /* 16px fue "muy pequeño" y 18px quedó "muy grande" — 17px es el punto
      medio que se sostuvo en pruebas. Quien necesite más tiene fs-large y
      fs-xl a un toque. */
@@ -25,13 +26,11 @@
 
 /* Tamaño de fuente grande (accesibilidad) */
 html.fs-large {
-  --font-scale: 1.15;
   font-size: 20px;
 }
 
 /* Tamaño de fuente muy grande */
 html.fs-xl {
-  --font-scale: 1.3;
   font-size: 23px;
 }
 
@@ -161,6 +160,33 @@ html.fs-xl {
      se podían tocar. */
   .top-safe {
     top: calc(1rem + env(safe-area-inset-top, 0px));
+  }
+
+  /* ── Foco de teclado ──────────────────────────────────────────────────
+     ~96 botones no tenían ningún indicador de foco: con teclado, mando o
+     lector de pantalla no se sabía dónde estabas. Este es el suelo común.
+     `:where()` deja la especificidad en cero para que cualquier componente
+     (p. ej. .tv-boton, que tiene el suyo) lo pueda sustituir sin pelear.
+     Ojo: un `outline-none` de Tailwind en el elemento también lo anula. */
+  :where(button, a, [role="button"], [role="tab"], input, select, textarea, summary):focus-visible {
+    outline: 3px solid #39ff14;
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  /* Un botón deshabilitado tiene que decir "ahora no" también al puntero.
+     La opacidad se deja a cada componente, que sabe sobre qué fondo está. */
+  :where(button):disabled {
+    cursor: not-allowed;
+  }
+
+  /* Hay ~53 `active:scale-95` repartidos por las pantallas sin salida para
+     quien pide menos movimiento. Se neutraliza aquí una sola vez en vez de
+     tocar cada botón; la respuesta al toque sigue estando en el color. */
+  @media (prefers-reduced-motion: reduce) {
+    :where(button, [role="button"]):active {
+      transform: none !important;
+    }
   }
 }
 
@@ -454,6 +480,27 @@ html.fs-xl {
      caia siempre por debajo del borde. Es el boton que continua la partida;
      obligar al anfitrion a desplazarse con la mesa esperando es el peor sitio
      donde ponerlo. El hueco lo reserva solo useBarraInferior. */
+  /* RESERVA DEL HUECO EN LOS RESULTADOS, SOLO DE PIE.
+     La barra de acciones es fija y publica su alto en --alto-barra, pero ni la
+     ronda ni el podio lo reservaban: el final de la clasificacion quedaba
+     siempre debajo de SIGUIENTE RONDA y las ondas del podio asomaban entre el
+     texto de JUGAR OTRA VEZ. Solo de pie: girado, la barra es un carril
+     vertical y --alto-barra mide toda la pantalla. */
+  html:not(.play-landscape) .ronda-resultado,
+  html:not(.play-landscape) .podio-final {
+    padding-bottom: calc(1.25rem + var(--alto-barra, 0px) + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* De pie la barra se apoya sobre un fondo propio: el contenido se desplaza
+     por debajo y, sin fondo, se leia a traves de los botones y del texto. */
+  html:not(.play-landscape) .accion-ronda.barra-inferior {
+    background: rgba(5, 8, 22, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1.25rem;
+    padding: 0.5rem;
+    box-shadow: 0 -12px 32px rgba(0, 0, 0, 0.5);
+  }
+
   .accion-ronda.barra-inferior {
     position: fixed;
     inset-inline: 1rem;
@@ -554,6 +601,18 @@ html.fs-xl {
     inset: 0;
     display: flex;
     flex-direction: column;
+
+    /* SUELO TIPOGRAFICO DE LA TELE.
+       Una tele se lee desde el sofa, a tres o cuatro metros, no a un palmo
+       como el movil. La guia de interfaz "10-foot UI" pone el minimo sobre
+       los 2,2vmin (unos 24px a 1080p); por debajo de eso el texto esta ahi
+       pero no se lee desde el sitio donde de verdad se mira.
+       Tres escalones: --tv-xs para etiquetas, --tv-sm para texto normal y
+       --tv-md para lo funcional (botones, codigos, estados). Estan aqui y no
+       repartidos en literales para que subir el suelo sea tocar un numero. */
+    --tv-xs: 2.2vmin;
+    --tv-sm: 2.4vmin;
+    --tv-md: 2.6vmin;
     /* ESCENARIO, no fondo.
        Que una pantalla no se mueva no quiere decir que tenga que parecer
        vieja: lo moderno sale de la profundidad, del color y de la
@@ -605,16 +664,8 @@ html.fs-xl {
      animadas, sin filtros. Así se ve viva sin ir a tirones.
   ─────────────────────────────────────────────────────────────────────── */
 
-  /* Disco girando: la seña de identidad del juego. */
-  .tv-vinilo {
-    animation: tv-girar 3.2s linear infinite;
-    /* Sin `will-change`. Un elemento que YA está animando transform lo
-       promociona el navegador solo; declararlo además obliga a mantener la
-       capa viva para siempre, y en una tele con poca memoria de vídeo son
-       capas que le quitan sitio a las que sí hacen falta. Se dejaba puesto
-       en dieciséis elementos a la vez. */
-    backface-visibility: hidden;
-  }
+  /* Disco girando: la seña de identidad del juego. (La clase .tv-vinilo ya
+     no la usaba nadie y se quitó; el giro lo sigue usando otra pieza.) */
   @keyframes tv-girar { to { transform: rotate(360deg); } }
 
   /* Ondas que salen del disco al ritmo de la música. */
@@ -777,9 +828,6 @@ html.fs-xl {
     55%      { transform: translateX(120%); }
   }
 
-  /* Entrada escalonada de las fichas: se pone en línea el retardo. */
-  .tv-entra-escalonado { animation: tv-entra 460ms cubic-bezier(.2,.9,.3,1.1) both; }
-
   /* ── Modo ligero ──────────────────────────────────────────────────────
      Lo enciende la propia tele cuando se mide y ve que no llega (ver
      services/rendimiento.js). Se apaga TODO lo que se repite sin parar; se
@@ -787,7 +835,6 @@ html.fs-xl {
      La pantalla dice exactamente lo mismo, solo que quieta — que es mucho
      mejor que moverse a trompicones.
   ─────────────────────────────────────────────────────────────────────── */
-  .tv-ligero .tv-vinilo,
   .tv-ligero .tv-onda,
   .tv-ligero .tv-barra,
   .tv-ligero .tv-latido,
@@ -806,8 +853,8 @@ html.fs-xl {
   .tv-ligero .tv-barra { transform: scaleY(.6); }
 
   @media (prefers-reduced-motion: reduce) {
-    .tv-vinilo, .tv-onda, .tv-barra, .tv-latido, .tv-entra, .tv-pop,
-    .tv-sube, .tv-campeon, .tv-halo, .tv-destello, .tv-entra-escalonado {
+    .tv-onda, .tv-barra, .tv-latido, .tv-entra, .tv-pop,
+    .tv-sube, .tv-campeon, .tv-halo, .tv-destello {
       animation: none !important;
     }
   }
@@ -825,7 +872,13 @@ html.fs-xl {
      hook. Antes ese 8.5rem era el único valor, y al subir el tamaño de letra
      la barra crecía por encima y tapaba hasta 72 px de contenido. */
   .safe-bottom-action {
-    padding-bottom: calc(var(--alto-barra, 0px) + env(safe-area-inset-bottom, 0px));
+    /* El 1.25rem base no es decorativo: en las pantallas que llevan esta
+       clase pero NO renderizan barra inferior, --alto-barra vale 0px y, en un
+       Android sin muesca, env(safe-area-inset-bottom) tambien. Sin el, esta
+       regla anulaba el respiro que ya daba .app-screen (va despues y en la
+       misma capa) y el ultimo elemento quedaba pegado al canto de la
+       pantalla. Con barra, el calculo sigue despejandola igual. */
+    padding-bottom: calc(1.25rem + var(--alto-barra, 0px) + env(safe-area-inset-bottom, 0px));
   }
 
   /* ── Tipografia de titular, a prueba de desbordes ──────────────────────
@@ -885,10 +938,6 @@ html.fs-xl {
   .copy-readable {
     font-size: clamp(0.92rem, 3.6vw, 1.05rem);
     line-height: 1.45;
-  }
-
-  .touch-card {
-    min-height: 3.25rem;
   }
 
   .no-scrollbar {
@@ -1010,17 +1059,10 @@ html.fs-xl {
     .app-pulsable:active { transform: none; }
   }
 
-  .vinyl-shadow {
-    box-shadow: 0 0 55px rgba(255, 122, 26, 0.18), 0 0 90px rgba(168, 85, 247, 0.12), inset 0 0 20px rgba(0, 0, 0, 0.82);
-  }
-
   .neon-glow-purple {
     box-shadow: 0 0 30px rgba(168, 85, 247, 0.34);
   }
 
-  .neon-glow-green {
-    box-shadow: 0 0 25px rgba(57, 255, 20, 0.42);
-  }
   
   .text-animated-gradient {
     background: linear-gradient(90deg, #ff7a1a, #a855f7, #ffbf4d, #ff7a1a);
@@ -1066,16 +1108,6 @@ html.fs-xl {
   0%, 100% { transform: translateY(0px); }
   50%       { transform: translateY(-14px); }
 }
-@keyframes float-rotate {
-  0%, 100% { transform: translateY(0px) rotate(-6deg); }
-  50%       { transform: translateY(-12px) rotate(6deg); }
-}
-
-/* ─── Beat / pulse ──────────────────────────────────── */
-@keyframes beat {
-  0%, 100% { transform: scale(1); }
-  50%       { transform: scale(1.06); }
-}
 
 /* ─── Expanding ring (used in listen phase + result) ── */
 @keyframes ring-expand {
@@ -1095,19 +1127,10 @@ html.fs-xl {
   50%       { transform: scaleY(1); }
 }
 
-/* ─── Glow breathe ──────────────────────────────────── */
-@keyframes glow-breathe {
-  0%, 100% { opacity: 0.4; }
-  50%       { opacity: 1; }
-}
-
 /* ─── Utility classes ───────────────────────────────── */
 .float-slow   { animation: float 6s ease-in-out infinite; }
 .float-medium { animation: float 4s ease-in-out infinite; }
-.float-rotate { animation: float-rotate 5s ease-in-out infinite; }
-.beat-anim    { animation: beat 1.4s ease-in-out infinite; }
 .ring-expand-anim { animation: ring-expand 2s ease-out infinite; }
-.glow-breathe { animation: glow-breathe 2.2s ease-in-out infinite; }
 .eq-bar       { animation: eq-bar 1.2s ease-in-out infinite; transform-origin: bottom; }
 
 /* ─── Ranking final — confeti + luces de discoteca ────── */
@@ -1157,10 +1180,7 @@ html.fs-xl {
 ──────────────────────────────────────────────────────────────────────────── */
 .app-ligero .float-slow,
 .app-ligero .float-medium,
-.app-ligero .float-rotate,
-.app-ligero .beat-anim,
 .app-ligero .ring-expand-anim,
-.app-ligero .glow-breathe,
 .app-ligero .eq-bar,
 .app-ligero .vinyl-spin,
 .app-ligero .animated-mesh,
@@ -1194,9 +1214,7 @@ html.fs-xl {
 
 /* Las sombras de neón obligan a recalcular el desenfoque de la sombra en
    cada repintado. Se conserva el color, se quita el halo. */
-.app-ligero .neon-glow-purple,
-.app-ligero .neon-glow-green,
-.app-ligero .vinyl-shadow {
+.app-ligero .neon-glow-purple {
   box-shadow: none !important;
 }
 
