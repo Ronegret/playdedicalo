@@ -469,7 +469,9 @@ export default function LobbyScreen() {
           <div className="h-[1px] flex-grow bg-gradient-to-l from-transparent to-white/10" />
         </div>
 
-        <div className="flex flex-col gap-3">
+        {/* En pantallas anchas, dos columnas: una sola fila larga dejaba
+            media pantalla vacía y obligaba a desplazarse con 6 jugadores. */}
+        <div className="grid gap-3 min-[1100px]:grid-cols-2">
           {players.length === 0 && <p className="text-center text-on-surface-variant text-sm">No hay jugadores aún.</p>}
           {players.map((player, index) => {
             const presence = getPlayerPresence(player, now);

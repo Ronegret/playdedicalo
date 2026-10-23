@@ -16,7 +16,7 @@ export default function WelcomeScreen() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, scale: 0.98 }}
       transition={{ duration: 0.4 }}
-      className="app-screen relative z-10 flex flex-col items-center justify-start overflow-y-auto py-6 sm:justify-center md:px-10 md:py-12 lg:px-20"
+      className="app-screen relative z-10 flex flex-col items-center justify-start overflow-y-auto py-6 md:px-10 md:py-12 lg:px-20"
     >
       {/* Siempre visible desde la primera pantalla — antes el tamaño de
           letra solo se podía cambiar desde el menú de perfil, que no
@@ -29,7 +29,10 @@ export default function WelcomeScreen() {
         <FontSizeControl />
       </div>
 
-      <div className="app-shell-wide flex flex-col items-center gap-4 md:flex-row md:gap-14 lg:gap-20">
+      {/* my-auto y no justify-center en el padre: centra igual cuando cabe,
+          pero si no cabe (móvil girado) empieza arriba en vez de cortar el
+          título por encima del borde, donde ni siquiera se puede desplazar. */}
+      <div className="portada-fila app-shell-wide my-auto flex flex-col items-center gap-4 md:flex-row md:gap-14 lg:gap-20">
 
         {/* Vinyl + EQ */}
         <motion.div
@@ -140,7 +143,7 @@ export default function WelcomeScreen() {
         </motion.div>
 
         {/* Text + CTAs */}
-        <div className="flex flex-col items-center md:items-start gap-3 md:gap-5 text-center md:text-left">
+        <div className="portada-texto flex flex-col items-center md:items-start gap-3 md:gap-5 text-center md:text-left">
 
           <motion.p
             initial={{ opacity: 0, y: -10 }}
@@ -171,7 +174,7 @@ export default function WelcomeScreen() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
-            className="hidden md:flex items-center gap-8"
+            className="portada-stats hidden md:flex items-center gap-8"
           >
             {[
               ['6-20', 'canciones por partida'],

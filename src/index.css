@@ -34,6 +34,23 @@ html.fs-xl {
   font-size: 23px;
 }
 
+/* Pantallas grandes (tablet, ordenador, tele con navegador): la raíz crece
+   con la pantalla. Como casi todo va en rem, texto, espacios y botones
+   crecen juntos y la app deja de verse como un móvil perdido en medio de
+   un monitor. Se exige también ALTURA: un móvil girado es ancho pero bajo
+   y ahí no cabe nada más grande. Los ajustes de letra siguen sumando. */
+@media (min-width: 768px) and (min-height: 700px) {
+  :root { font-size: 19px; }
+  html.fs-large { font-size: 22px; }
+  html.fs-xl { font-size: 25px; }
+}
+
+@media (min-width: 1280px) and (min-height: 800px) {
+  :root { font-size: 21px; }
+  html.fs-large { font-size: 24px; }
+  html.fs-xl { font-size: 27px; }
+}
+
 @layer base {
   html,
   body,
@@ -1113,6 +1130,33 @@ html.fs-xl {
        `overflow-wrap: anywhere` se queda como red de seguridad: solo actúa si
        una palabra de verdad no cabe, en vez de guionar por gusto. */
     overflow-wrap: anywhere;
+  }
+
+  /* Móvil girado: con 390 px de alto el titular a 16vh ocupaba media
+     pantalla y empujaba "ENTRAR A JUGAR" fuera. Aquí manda la altura. */
+  @media (orientation: landscape) and (max-height: 500px) {
+    .heading-impact {
+      font-size: min(2.6rem, 10.5vh);
+    }
+
+    /* La tira de cifras es de escritorio; en un móvil girado se queda con
+       el sitio de "ENTRAR A JUGAR". */
+    .portada-stats {
+      display: none !important;
+    }
+
+    /* Disco a la izquierda y texto a la derecha también por debajo de
+       768 px (iPhone SE girado): apilados no cabía ni el titular. */
+    .portada-fila {
+      flex-direction: row;
+      gap: 1.75rem;
+    }
+
+    .portada-texto {
+      align-items: flex-start;
+      text-align: left;
+      gap: 0.6rem;
+    }
   }
 
   .heading-page {
