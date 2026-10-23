@@ -5,11 +5,11 @@ import { getRedirectResult, onAuthStateChanged, signInWithPopup, signInWithRedir
 import { useGameStore } from '../store/useGameStore';
 import ProfileMenu from '../components/ProfileMenu';
 import FontSizeControl from '../components/FontSizeControl';
-import AvatarPicker from '../components/AvatarPicker';
+import AvatarPicker, { AvatarZoom } from '../components/AvatarPicker';
 import AlertDialog from '../components/AlertDialog';
 import HeaderLogo from '../components/HeaderLogo';
 import { StepActionBar, StepPanel, StepProgress } from '../components/WizardSteps';
-import { findCharacterAvatarByUrl, isImageAvatar } from '../data/characterAvatars';
+import { CHARACTER_AVATARS, findCharacterAvatarByUrl, getCharacterAvatarLargeUrl, isImageAvatar } from '../data/characterAvatars';
 import { escanearQr } from '../services/escanerQr';
 import { auth, authReady, googleProvider } from '../firebase';
 import { sfx } from '../services/audio';
@@ -19,6 +19,15 @@ import { vibrar } from '../services/haptics';
 // momento), después su nombre, después el personaje. Antes todo estaba en
 // una sola pantalla larga con el personaje arriba y el PIN al fondo.
 const GUEST_STEPS = ['PIN de la sala', 'Tu nombre', 'Tu personaje'];
+
+// Un personaje al azar (opcionalmente distinto del actual). Se arranca con
+// uno de verdad y no con un emoji: la mayoría no cambia el que viene puesto,
+// y un 😎 suelto quedaba pobre al lado de los personajes ilustrados.
+function personajeAlAzar(excluirUrl) {
+  const opciones = CHARACTER_AVATARS.filter((p) => getCharacterAvatarLargeUrl(p.slug) !== excluirUrl);
+  const lista = opciones.length ? opciones : CHARACTER_AVATARS;
+  return getCharacterAvatarLargeUrl(lista[Math.floor(Math.random() * lista.length)].slug);
+}
 
 function getPinFromQrValue(value) {
   const text = String(value || '');
@@ -43,7 +52,10 @@ export default function GuestJoinScreen() {
   const canvasRef = useRef(null);
   const [pin, setPin] = useState(() => searchParams.get('pin')?.replace(/\D/g, '').slice(0, 4) || '');
   const [name, setName] = useState('');
-  const [avatar, setAvatar] = useState('😎');
+  // Inicializador perezoso: se sortea una sola vez al montar. Si hay un
+  // perfil guardado (Google), los efectos de abajo lo restauran encima.
+  const [avatar, setAvatar] = useState(() => personajeAlAzar());
+  const [zoomAbierto, setZoomAbierto] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [googleUser, setGoogleUser] = useState(null);
   const [authStatus, setAuthStatus] = useState('idle');
@@ -293,6 +305,14 @@ export default function GuestJoinScreen() {
     }
   };
 
+  const handleSorpresa = () => {
+    vibrar('seleccion'); sfx.toque();
+    hasEditedAvatarRef.current = true;
+    setAvatar((actual) => personajeAlAzar(actual));
+  };
+
+  const personajeActual = findCharacterAvatarByUrl(avatar);
+
   const handleCancelPending = async () => {
     setAwaitingApproval(false);
     await cancelJoinRequest();
@@ -314,7 +334,9 @@ export default function GuestJoinScreen() {
           Centrado cuando cabe, y si un paso crece (el selector de avatar) el
           contenedor sigue desplazándose con normalidad. */}
       <div className="flex min-h-full flex-col items-center justify-center gap-5 pb-6 sm:gap-6">
-        <StepProgress steps={GUEST_STEPS} current={step} onGoTo={setStep} />
+        {/* En el paso del PIN el rótulo "PIN de la sala" repetía el titular
+            justo debajo; ahí sobra. */}
+        <StepProgress steps={GUEST_STEPS} current={step} onGoTo={setStep} showLabel={step !== 0} />
 
         <AnimatePresence mode="wait">
           {/* PASO 1 — PIN primero: es lo que la persona tiene delante (el
@@ -323,10 +345,12 @@ export default function GuestJoinScreen() {
           {step === 0 && (
             <StepPanel stepKey="pin">
               <section className="w-full text-center">
-                <h1 className="heading-page font-headline-lg font-black uppercase text-on-surface">
+                {/* join-titulo / join-sub: en horizontal el CSS los encoge u
+                    oculta para que las casillas del PIN quepan en pantalla. */}
+                <h1 className="join-titulo heading-page font-headline-lg font-black uppercase text-on-surface">
                   Escribe el PIN
                 </h1>
-                <p className="copy-readable mx-auto mt-2 max-w-md text-on-surface-variant">
+                <p className="join-sub copy-readable mx-auto mt-2 max-w-md text-on-surface-variant">
                   Los 4 dígitos que muestra el anfitrión. O escanea su QR.
                 </p>
               </section>
@@ -379,10 +403,10 @@ export default function GuestJoinScreen() {
           {step === 1 && (
             <StepPanel stepKey="name">
               <section className="w-full text-center">
-                <h1 className="heading-page font-headline-lg font-black uppercase text-on-surface">
+                <h1 className="join-titulo heading-page font-headline-lg font-black uppercase text-on-surface">
                   ¿Cómo te llamas?
                 </h1>
-                <p className="copy-readable mx-auto mt-2 max-w-md text-on-surface-variant">
+                <p className="join-sub copy-readable mx-auto mt-2 max-w-md text-on-surface-variant">
                   Así te verán los demás en el ranking. Puedes dejarlo vacío.
                 </p>
               </section>
@@ -447,33 +471,57 @@ export default function GuestJoinScreen() {
           {step === 2 && (
             <StepPanel stepKey="avatar">
               <section className="w-full text-center">
-                <h1 className="heading-page font-headline-lg font-black uppercase text-on-surface">
+                <h1 className="join-titulo heading-page font-headline-lg font-black uppercase text-on-surface">
                   Elige tu personaje
                 </h1>
-                <p className="copy-readable mx-auto mt-2 max-w-md text-on-surface-variant">
-                  Es tu cara en la partida. Toca uno para verlo en grande.
+                <p className="join-sub copy-readable mx-auto mt-2 max-w-md text-on-surface-variant">
+                  Es tu cara en la partida. Toca uno para elegirlo.
                 </p>
               </section>
 
-              <div className="my-5 flex items-center justify-center">
-                <div className="relative">
-                  <div className="flex h-40 w-40 items-center justify-center overflow-hidden rounded-full border-4 border-electric-purple bg-electric-purple/20 text-6xl shadow-[0_0_36px_rgba(168,85,247,0.45)]">
+              {/* La vista previa grande es lo que se toca para verlo en
+                  detalle: la rejilla ya elige con un toque, así que el
+                  "ampliar" vive aquí. Solo se puede si es un personaje (una
+                  foto de Google o un emoji no tienen versión grande). */}
+              <div className="my-5 flex flex-col items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => { if (personajeActual) { vibrar('seleccion'); setZoomAbierto(true); } }}
+                  disabled={!personajeActual}
+                  aria-label={personajeActual ? `Ver a ${personajeActual.name} en grande` : 'Tu avatar'}
+                  className="relative rounded-full transition-transform active:scale-95 disabled:active:scale-100"
+                >
+                  <span className="flex h-40 w-40 items-center justify-center overflow-hidden rounded-full border-4 border-electric-purple bg-electric-purple/20 text-6xl shadow-[0_0_36px_rgba(168,85,247,0.45)]">
                     {isImageAvatar(avatar) ? (
-                      <img src={avatar} alt="Avatar" className="h-full w-full object-cover" />
+                      <img src={avatar} alt="" className="h-full w-full object-cover" />
                     ) : (
-                      avatar || '😎'
+                      avatar || '🎵'
                     )}
-                  </div>
-                  <div className="absolute -bottom-1 -right-1 flex h-9 w-9 items-center justify-center rounded-full bg-neon-green shadow-[0_0_16px_rgba(57,255,20,0.6)]">
-                    <span aria-hidden="true" className="material-symbols-outlined text-black" style={{ fontSize: '20px' }}>check</span>
-                  </div>
-                </div>
+                  </span>
+                  {personajeActual && (
+                    <span aria-hidden="true" className="absolute -bottom-1 -right-1 flex h-10 w-10 items-center justify-center rounded-full border-2 border-black/40 bg-white text-black shadow-[0_4px_14px_rgba(0,0,0,0.45)]">
+                      <span className="material-symbols-outlined" style={{ fontSize: '22px' }}>zoom_in</span>
+                    </span>
+                  )}
+                </button>
+                {personajeActual && (
+                  <p className="text-lg font-black leading-tight text-white">{personajeActual.name}</p>
+                )}
+                <button
+                  type="button"
+                  onClick={handleSorpresa}
+                  className="flex min-h-touch items-center justify-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-5 font-label-caps text-sm font-bold text-white transition-transform active:scale-95"
+                >
+                  <span aria-hidden="true">🎲</span>
+                  Sorpréndeme
+                </button>
               </div>
 
               <AvatarPicker
                 value={avatar}
                 onChange={(nextAvatar) => { hasEditedAvatarRef.current = true; setAvatar(nextAvatar); }}
               />
+              <AvatarZoom entry={zoomAbierto ? personajeActual : null} onClose={() => setZoomAbierto(false)} />
             </StepPanel>
           )}
         </AnimatePresence>
@@ -551,7 +599,7 @@ export default function GuestJoinScreen() {
                     {isImageAvatar(avatar) ? (
                       <img src={avatar} alt="Avatar" className="h-full w-full object-cover" />
                     ) : (
-                      avatar || '😎'
+                      avatar || '🎵'
                     )}
                   </div>
                   <motion.span

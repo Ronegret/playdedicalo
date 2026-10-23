@@ -12,20 +12,21 @@ import { sfx } from '../services/audio';
 import { vibrar } from '../services/haptics';
 
 const CLASSIC_EMOJIS = [
-  '😎', '🕺', '💃', '🎧', '🎤', '🎸', '🥁', '🎹', '🔥', '⚡',
+  '😎', '🎷', '📻', '🎧', '🎤', '🎸', '🥁', '🎹', '🔥', '⚡',
   '🌟', '🚀', '👑', '🪩', '🎵', '🍻', '🥳', '🤘', '🦄', '👻'
 ];
 
 // Selector de avatar tipo app móvil: categorías en pestañas horizontales,
 // grid de miniaturas circulares (WebP livianos), y una pestaña extra
 // "Clásicos" con los emoji de siempre para quien prefiera algo simple.
-// Tocar un personaje abre una vista ampliada (foto grande + nombre bien
-// grande) antes de confirmar — así se ve bien de cerca antes de elegirlo,
-// no solo la miniatura chica del grid.
+// UN toque elige: antes tocar una cara abría una vista ampliada y había que
+// confirmar en un segundo botón — dos pasos para la acción más repetida de
+// la pantalla, y mucha gente cerraba la vista creyendo que ya había elegido.
+// La vista ampliada sigue existiendo (AvatarZoom), pero se abre desde la
+// vista previa grande de quien usa este selector, no desde la rejilla.
 export default function AvatarPicker({ value, onChange, className = '' }) {
   const selectedCharacter = useMemo(() => findCharacterAvatarByUrl(value), [value]);
   const [activeCategory, setActiveCategory] = useState(selectedCharacter?.category || AVATAR_CATEGORIES[0].id);
-  const [previewEntry, setPreviewEntry] = useState(null);
   // ¿Queda algo por debajo del borde? Es lo que enciende el degradado del
   // fondo. Empieza en `true` porque la lista casi siempre desborda, y si no
   // desborda el primer evento de scroll lo corrige al instante.
@@ -52,16 +53,9 @@ export default function AvatarPicker({ value, onChange, className = '' }) {
     ? []
     : CHARACTER_AVATARS.filter((entry) => entry.category === activeCategory);
 
-  const handleOpenPreview = (entry) => {
+  const handlePickCharacter = (entry) => {
     vibrar('seleccion'); sfx.toque();
-    setPreviewEntry(entry);
-  };
-
-  const handleConfirmPreview = () => {
-    if (!previewEntry) return;
-    vibrar('confirmar'); sfx.confirmar();
-    onChange(getCharacterAvatarLargeUrl(previewEntry.slug));
-    setPreviewEntry(null);
+    onChange(getCharacterAvatarLargeUrl(entry.slug));
   };
 
   const handlePickEmoji = (emoji) => {
@@ -101,12 +95,6 @@ export default function AvatarPicker({ value, onChange, className = '' }) {
           Clásicos
         </button>
       </div>
-
-      {!isClassicTab && (
-        <p className="app-etiqueta mb-2 mt-1 text-center text-[0.6rem] text-white/40">
-          Toca una cara para verla en grande
-        </p>
-      )}
 
       {/* ── Rejilla de opciones ────────────────────────────────────────────
           TRES ARREGLOS, y los tres eran quejas reales:
@@ -148,6 +136,7 @@ export default function AvatarPicker({ value, onChange, className = '' }) {
                 type="button"
                 onClick={() => handlePickEmoji(emoji)}
                 aria-label={`Elegir ${emoji} como avatar`}
+                aria-pressed={value === emoji}
                 className={`flex aspect-square items-center justify-center rounded-2xl border text-4xl transition-all active:scale-90 ${
                   value === emoji
                     ? 'border-neon-green bg-neon-green/15 shadow-[0_0_18px_rgba(57,255,20,0.28)] scale-105'
@@ -164,15 +153,18 @@ export default function AvatarPicker({ value, onChange, className = '' }) {
                 <motion.button
                   key={entry.slug}
                   type="button"
-                  onClick={() => handleOpenPreview(entry)}
+                  onClick={() => handlePickCharacter(entry)}
                   whileTap={{ scale: 0.92 }}
-                  aria-label={`Ver a ${entry.name} en grande`}
+                  aria-label={`Elegir a ${entry.name}`}
+                  aria-pressed={isSelected}
                   className="relative flex flex-col items-center gap-1"
                 >
+                  {/* La elegida no se marca solo con color: anillo grueso,
+                      algo más grande y check — se distingue sin ver el verde. */}
                   <span
-                    className={`relative aspect-square w-full overflow-hidden rounded-full border-2 transition-all ${
+                    className={`relative aspect-square w-full overflow-hidden rounded-full border-2 transition-[transform,border-color,box-shadow] duration-150 ${
                       isSelected
-                        ? 'border-neon-green shadow-[0_0_20px_rgba(57,255,20,0.4)]'
+                        ? 'scale-105 border-neon-green ring-2 ring-neon-green/70 ring-offset-2 ring-offset-[#0b1120] shadow-[0_0_20px_rgba(57,255,20,0.4)]'
                         : 'border-white/15'
                     }`}
                   >
@@ -188,14 +180,8 @@ export default function AvatarPicker({ value, onChange, className = '' }) {
                         <span aria-hidden="true" className="material-symbols-outlined text-black" style={{ fontSize: '15px' }}>check</span>
                       </span>
                     )}
-                    {/* La lupa iba a 15 px sobre negro translúcido: nadie la
-                        veía, y era la única pista de que tocar abre la vista
-                        ampliada en vez de elegir directamente. */}
-                    <span className="absolute inset-x-0 bottom-0 flex h-1/3 items-end justify-center bg-gradient-to-t from-black/75 to-transparent pb-0.5 text-white/90">
-                      <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: '17px' }}>zoom_in</span>
-                    </span>
                   </span>
-                  <span className="max-w-full truncate text-xs font-bold leading-tight text-white/75">
+                  <span className={`max-w-full truncate text-xs leading-tight ${isSelected ? 'font-black text-white' : 'font-bold text-white/75'}`}>
                     {entry.name}
                   </span>
                 </motion.button>
@@ -223,8 +209,17 @@ export default function AvatarPicker({ value, onChange, className = '' }) {
           )}
         </AnimatePresence>
       </div>
+    </div>
+  );
+}
 
-      {/* Vista ampliada — foto grande + nombre grande antes de confirmar.
+// Vista ampliada de un personaje ya elegido: solo para verlo de cerca.
+// Como el toque en la rejilla ya elige, aquí no hay nada que confirmar —
+// el botón solo cierra.
+export function AvatarZoom({ entry, onClose }) {
+  return (
+    <>
+      {/* Foto grande + nombre grande.
           En un portal a <body>: este selector puede vivir dentro de un
           contenedor animado (el editor de perfil) o bajo un header con
           backdrop-blur, y cualquier ancestro con transform/backdrop-filter
@@ -233,13 +228,13 @@ export default function AvatarPicker({ value, onChange, className = '' }) {
           de cubrir la pantalla. */}
       {createPortal(
         <AnimatePresence>
-          {previewEntry && (
+          {entry && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               className="fixed inset-0 z-[320] flex items-center justify-center bg-black/85 px-6"
-              onClick={() => setPreviewEntry(null)}
+              onClick={onClose}
             >
             <motion.div
               initial={{ opacity: 0, scale: 0.85, y: 24 }}
@@ -251,7 +246,7 @@ export default function AvatarPicker({ value, onChange, className = '' }) {
             >
               <button
                 type="button"
-                onClick={() => setPreviewEntry(null)}
+                onClick={onClose}
                 aria-label="Cerrar"
                 className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white active:scale-90"
               >
@@ -260,21 +255,21 @@ export default function AvatarPicker({ value, onChange, className = '' }) {
 
               <div className="h-56 w-56 max-w-full overflow-hidden rounded-full border-4 border-neon-green shadow-[0_0_50px_rgba(57,255,20,0.4)]">
                 <img
-                  src={getCharacterAvatarLargeUrl(previewEntry.slug)}
-                  alt={previewEntry.name}
+                  src={getCharacterAvatarLargeUrl(entry.slug)}
+                  alt={entry.name}
                   className="h-full w-full object-cover"
                 />
               </div>
 
-              <p className="text-center text-3xl font-black text-white">{previewEntry.name}</p>
+              <p className="text-center text-3xl font-black text-white">{entry.name}</p>
 
               <button
                 type="button"
-                onClick={handleConfirmPreview}
+                onClick={onClose}
                 className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-neon-green font-label-caps text-base font-black text-black active:scale-95"
               >
                 <span aria-hidden="true" className="material-symbols-outlined text-xl">check_circle</span>
-                {selectedCharacter?.slug === previewEntry.slug ? 'YA ES TU PERSONAJE' : `ELEGIR A ${previewEntry.name.toUpperCase()}`}
+                LISTO
               </button>
             </motion.div>
             </motion.div>
@@ -282,6 +277,6 @@ export default function AvatarPicker({ value, onChange, className = '' }) {
         </AnimatePresence>,
         document.body
       )}
-    </div>
+    </>
   );
 }

@@ -190,6 +190,69 @@ html.fs-xl {
   }
 }
 
+/* ── El botón principal, uno solo ──────────────────────────────────────────
+   Había cuatro tratamientos distintos para "la acción que hace avanzar la
+   partida". Uno solo: verde, grande, con canto que se hunde al pulsar — en
+   una fiesta, con el móvil en una mano, tiene que notarse que se ha tocado.
+   Va en `components` para que cualquier utilidad puntual pueda ajustarlo y
+   para que las reglas del carril girado (más específicas) sigan mandando.
+─────────────────────────────────────────────────────────────────────────── */
+@layer components {
+  .btn-primario {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    min-height: 4rem;
+    padding: 0.5rem 1.25rem;
+    border-radius: 1rem;
+    background: #39ff14;
+    color: #000;
+    font-family: theme('fontFamily.label-caps');
+    font-weight: 900;
+    font-size: 1.125rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    line-height: 1.1;
+    box-shadow: 0 8px 0 rgba(18, 90, 0, 0.9), 0 0 28px rgba(57, 255, 20, 0.3);
+    /* Solo lo que cambia, y rápido: se pulsa decenas de veces por partida. */
+    transition: transform 100ms ease-out, box-shadow 100ms ease-out;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .btn-primario:active {
+    transform: translateY(4px);
+    box-shadow: 0 4px 0 rgba(18, 90, 0, 0.9), 0 0 18px rgba(57, 255, 20, 0.25);
+  }
+
+  .btn-primario:disabled {
+    opacity: 0.5;
+    box-shadow: none;
+    transform: none;
+    cursor: not-allowed;
+  }
+
+  /* PARAR MÚSICA: misma forma, color de alarma. */
+  .btn-primario--peligro {
+    background: #ff6b8b;
+    color: #000;
+    box-shadow: 0 8px 0 rgba(110, 10, 40, 0.9), 0 0 28px rgba(255, 107, 139, 0.35);
+  }
+
+  .btn-primario--peligro:active {
+    box-shadow: 0 4px 0 rgba(110, 10, 40, 0.9);
+  }
+
+  /* El hundimiento es movimiento: quien lo pide reducido se queda con el
+     cambio de sombra, que ya basta como respuesta al toque. */
+  @media (prefers-reduced-motion: reduce) {
+    .btn-primario:active {
+      transform: none;
+    }
+  }
+}
+
 @layer utilities {
   .app-screen {
     min-height: 100dvh;
@@ -323,10 +386,20 @@ html.fs-xl {
     margin-bottom: 0;
   }
 
+  /* La sala (PIN, modo, QR) con ancho FIJO y los jugadores con el resto.
+     Con `flex: 1 1 auto` ambos peleaban por el ancho y la sala quedaba en
+     ~170 px: "PIN / DE / SALA" palabra a palabra y el QR montado sobre el
+     modo. 21rem es lo que necesita el PIN entero en una sola línea. */
   html.play-landscape .sala-lobby > .sala-cuerpo {
-    flex: 1 1 auto;
+    flex: 0 0 21rem;
     min-width: 0;
-    max-width: 34rem;
+    max-width: 21rem;
+  }
+
+  html.play-landscape .sala-lobby > section:last-child {
+    flex: 1 1 0;
+    min-width: 0;
+    margin-top: 0;
   }
 
   /* ── El lobby en una pantalla MUY baja ────────────────────────────────
@@ -334,26 +407,12 @@ html.fs-xl {
      modo, lista, sabotajes y jugadores— sumaba 2.861 px: casi nueve pantallas
      de desplazamiento para una sala de espera.
 
-     A partir de cierto ancho las tarjetas fluyen en DOS columnas. No cambia
-     nada del orden ni del contenido: es el mismo texto repartido, y `columns`
-     lo hace solo sin tocar el HTML. `break-inside: avoid` impide que una
-     tarjeta se parta por la mitad entre columnas, que es lo unico feo que
-     tiene esta tecnica.
+     Aqui se probo `columns: 2` dentro de .sala-cuerpo, pero la sala YA va
+     en fila junto a los jugadores: cada columna quedaba en ~170 px, el PIN
+     se partia palabra a palabra y el boton del QR pisaba la tarjeta de modo.
+     Basta con la fila sala | jugadores de arriba; aqui solo sobra el disco.
   ─────────────────────────────────────────────────────────────────────── */
   @media (orientation: landscape) and (max-height: 460px) {
-    html.play-landscape .sala-lobby > .sala-cuerpo {
-      max-width: none;
-      columns: 2;
-      column-gap: 0.85rem;
-      display: block;
-    }
-
-    html.play-landscape .sala-lobby > .sala-cuerpo > * {
-      break-inside: avoid;
-      -webkit-column-break-inside: avoid;
-      margin-bottom: 0.85rem;
-    }
-
     /* El disco ya no cabe con dignidad en 320 px de alto, y no es informacion:
        es decoracion. El PIN y los jugadores si lo son. */
     html.play-landscape .sala-lobby > .sala-disco {
@@ -422,7 +481,13 @@ html.fs-xl {
     z-index: 60;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    /* Arriba, no centrado: con tres botones el centrado desbordaba por los
+       DOS extremos (arriba tapaba el avatar, abajo cortaba el último). Así
+       sobra solo por abajo, y ahí se puede desplazar. */
+    justify-content: flex-start;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    max-height: 100%;
     gap: 0.5rem;
     width: auto !important;
     max-width: 4rem;
@@ -440,11 +505,29 @@ html.fs-xl {
     width: 3.25rem;          /* por encima de los 44 px minimos para el dedo */
     height: auto;
     min-height: 7rem;
-    max-height: 100%;
     padding-block: 1.1rem;
     padding-inline: 0;
     letter-spacing: 0.12em;
-    flex: 0 1 auto;
+    /* Sin encoger: con flex-shrink el boton se aplastaba por debajo de su
+       texto y se leia "JUGAR OTRA VE". Si algo no cabe, el carril se
+       desplaza; el texto no se corta. */
+    flex: 0 0 auto;
+    /* De lado, un salto de línea es una SEGUNDA columna de texto que no cabe
+       en 3.25rem: "JUGAR OTRA VEZ" se partía y se cortaba. */
+    white-space: nowrap;
+  }
+
+  /* El carril es estrecho: el .btn-primario trae ancho completo y 4rem de
+     alto mínimo pensados para la franja de pie, que aquí no aplican. */
+  html.play-landscape .barra-inferior .btn-primario {
+    width: 3.25rem;
+    min-height: 7rem;
+  }
+
+  /* Acciones secundarias que repiten algo que ya está en otra parte de la
+     pantalla (CERRAR SALA, COMPARTIR): girado no hay sitio y sobran. */
+  html.play-landscape .barra-inferior [data-ocultar-girado] {
+    display: none;
   }
 
   /* La rejilla interna del asistente (ATRAS / SIGUIENTE) se apila. */
@@ -461,6 +544,12 @@ html.fs-xl {
      girado: el boton ya dice lo que hace. */
   html.play-landscape .barra-inferior p {
     display: none;
+  }
+
+  /* ...pero el recuadro que envolvía esa frase seguía ahí, con su borde y
+     vacío (invitado esperando al anfitrión). Sin botón dentro, fuera. */
+  html.play-landscape .barra-inferior > div:not(:has(button)) {
+    display: none !important; /* gana al `display: flex !important` de arriba */
   }
 
   /* Y el contenido deja libre ese carril para que nada quede debajo — pero
@@ -550,7 +639,11 @@ html.fs-xl {
     z-index: 60;
     margin-top: 0;
     width: auto;
-    justify-content: center;
+    /* Igual que el carril general: arriba y desplazable, nunca desbordado
+       por los dos extremos. */
+    justify-content: flex-start;
+    overflow-y: auto;
+    max-height: 100%;
   }
 
   html.play-landscape .accion-ronda > button,
@@ -562,10 +655,10 @@ html.fs-xl {
     min-height: 8rem;
     /* Que quepan los dos botones (seguir y compartir) dentro del carril sin
        empujarse el uno al otro. */
-    max-height: 100%;
-    flex: 0 1 auto;
+    flex: 0 0 auto;
     padding-block: 1.25rem;  /* en vertical, el "alto" del texto */
     letter-spacing: 0.14em;
+    white-space: nowrap;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -587,6 +680,66 @@ html.fs-xl {
 
   html.play-landscape .safe-bottom-action {
     padding-bottom: calc(var(--alto-barra, 0px) + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* ── Fase de respuesta (apagón), girado ──────────────────────────────
+     La cabecera (antetítulo, "¿De qué año es?" y el chip de reglas) se comía
+     el alto y la línea de tiempo —donde se responde— quedaba fuera de la
+     pantalla. El antetítulo repite lo que ya dice la cabecera: fuera. */
+  html.play-landscape .apagon-cabecera {
+    padding-block: 0;
+    gap: 0.25rem;
+  }
+
+  html.play-landscape .apagon-cabecera h2 {
+    font-size: 1.25rem;
+    margin-top: 0;
+    line-height: 1.1;
+  }
+
+  html.play-landscape .apagon-cabecera > p:first-child {
+    display: none;
+  }
+
+  /* De pie pero en pantallas bajas (iPhone SE, 568 px de alto): la misma
+     pelea por el alto. Medido en una partida real con letra XL: a 1,5rem el
+     titulo seguia partiendose en dos lineas en 320 px de ancho y la linea de
+     años quedaba bajo el borde. Aqui la cabecera se reduce a lo esencial: el
+     titulo en una linea y sin la etiqueta "RESPONDE", que no añade nada que
+     el titulo no diga ya. */
+  @media (max-height: 600px) {
+    .apagon-cabecera > p:first-child {
+      display: none;
+    }
+    .apagon-cabecera h2 {
+      margin-top: 0;
+      font-size: min(1.35rem, 7.2vw);
+      line-height: 1.1;
+    }
+    .apagon-cabecera > div,
+    .apagon-cabecera > div span {
+      font-size: 0.8rem;
+    }
+  }
+
+  /* ── Entrar como invitado, girado ────────────────────────────────────
+     El titular grande y el subtítulo empujaban las casillas del PIN fuera
+     de la pantalla, y el PIN es lo único que hay que hacer aquí. */
+  html.play-landscape .join-sub {
+    display: none;
+  }
+
+  html.play-landscape .join-titulo {
+    font-size: 1.5rem;
+    line-height: 1.1;
+    margin-top: 0;
+  }
+
+  /* Bordes del carril de años que se desvanecen: dice "hay más a los lados"
+     sin flechas ni texto. */
+  .rail-desvanecido {
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
   }
 
   /* ── Pantalla de televisión ──────────────────────────────────────────

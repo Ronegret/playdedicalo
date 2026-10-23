@@ -26,7 +26,8 @@ export default function TimelineYears({
   return (
     <div className={`mt-2 flex flex-wrap items-center gap-1.5 ${className}`}>
       <span className="font-label-caps text-sm font-bold tracking-[0.12em] text-on-surface-variant tabular-nums">
-        {label ? 'Ruta ' : ''}
+        {/* Un solo vocabulario en todo el juego: AÑOS (antes "Ruta"). */}
+        {label ? 'Años ' : ''}
         <span className="text-white">{progreso}</span>/{goalYears}
       </span>
       <ul className="contents" aria-label={`Años conseguidos: ${progreso} de ${goalYears}`}>

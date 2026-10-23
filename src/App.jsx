@@ -75,6 +75,32 @@ const VECINAS = {
   '/tv-link': [() => import('./pages/TvScreen')]
 };
 
+/* ── La pantalla de entrada, sin esperar a la sesión ───────────────────────
+   Nada se pinta hasta que Firebase confirma la sesión (sessionChecked), y
+   solo entonces React pedía el trozo de la pantalla que toca: una espera de
+   red DETRÁS de otra. Pidiéndolo aquí, al cargar este archivo, viaja a la vez
+   que la sesión y cuando esta llega el código ya está. El import() de abajo y
+   el de lazy() son el mismo módulo: el navegador lo descarga una sola vez.
+   Si falla no pasa nada: lazyWithReload lo vuelve a pedir y gestiona el error.
+─────────────────────────────────────────────────────────────────────────── */
+const PANTALLA_DE_ENTRADA = {
+  '/': () => import('./pages/WelcomeScreen'),
+  '/how-to-play': () => import('./pages/HowToPlayScreen'),
+  '/legal': () => import('./pages/LegalScreen'),
+  '/role-selection': () => import('./pages/RoleSelectionScreen'),
+  '/host/sync': () => import('./pages/HostSyncScreen'),
+  '/guest/join': () => import('./pages/GuestJoinScreen'),
+  '/lobby': () => import('./pages/LobbyScreen'),
+  '/game': () => import('./pages/GameScreen'),
+  '/game/result': () => import('./pages/ResultScreen'),
+  '/tv': () => import('./pages/TvScreen'),
+  '/tv-link': () => import('./pages/TvLinkScreen')
+};
+{
+  const ruta = window.location.pathname.startsWith('/legal/') ? '/legal' : window.location.pathname;
+  PANTALLA_DE_ENTRADA[ruta]?.().catch(() => {});
+}
+
 const yaPrecargadas = new Set();
 
 function precargarVecinas(ruta) {
@@ -103,7 +129,9 @@ function precargarVecinas(ruta) {
 function PageLoader() {
   return (
     <div className="fixed inset-0 z-[999] flex flex-col items-center justify-center gap-[22px] bg-[#050816] px-6">
-      <img src="/images/app/icon-512.png" alt="" width={124} height={124} className="h-[124px] w-[124px] object-contain" />
+      {/* La misma imagen que la pantalla de arranque de index.html (ver allí
+          por qué es la webp): así ya está en caché y no se descarga dos veces. */}
+      <img src="/images/icon-app.webp" alt="" width={124} height={124} className="h-[124px] w-[124px] object-contain" />
       <div className="h-[3px] w-32 overflow-hidden rounded-[3px] bg-white/10">
         <i className="block h-full w-2/5 rounded-[3px] bg-gradient-to-r from-vinyl-orange to-electric-purple [animation:arranque-vaiven_1.1s_ease-in-out_infinite]" />
       </div>

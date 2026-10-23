@@ -171,9 +171,9 @@ export default function ProfileMenu({ user, guestAvatar }) {
           aria-expanded={isOpen}
           aria-haspopup="menu"
         >
-          {/* h-12 (51px) y no h-14 (59,5px): min-w/min-h-touch son 52px, asi
-              que con h-14 el circulo se salia de su propia caja tactil. */}
-          <AvatarBubble avatar={displayAvatar} className="h-12 w-12" />
+          {/* 48 px fijos (no h-12 en rem): con la letra XL el rem lo inflaba
+              y el circulo se salia de su caja tactil y chocaba con el logo. */}
+          <AvatarBubble avatar={displayAvatar} className="h-[48px] w-[48px]" />
         </button>
 
         <AnimatePresence>

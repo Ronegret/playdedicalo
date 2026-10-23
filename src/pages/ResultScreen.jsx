@@ -21,8 +21,7 @@ const RESULT_STYLES = {
     icon: 'check_circle',
     // Es exactamente lo que se ve en pantalla: antes aquí decía
     // '¡ACERTASTE!' pero el render lo pisaba con 'CORRECTO' (texto muerto).
-    title: 'CORRECTO',
-    copy: 'Sumaste puntos y mantienes el pulso.'
+    title: 'CORRECTO'
   },
   fail: {
     bgColor: '#1a0707',
@@ -32,8 +31,7 @@ const RESULT_STYLES = {
     borderHex: '#ff2d2d',
     text: 'text-intense-red',
     icon: 'cancel',
-    title: 'FALLASTE',
-    copy: 'Pierdes puntos, pero la siguiente ronda puede cambiarlo todo.'
+    title: 'FALLASTE'
   },
   blocked: {
     bgColor: '#1a0f07',
@@ -43,8 +41,7 @@ const RESULT_STYLES = {
     borderHex: '#ff7a1a',
     text: 'text-vinyl-orange',
     icon: 'block',
-    title: 'BLOQUEADO',
-    copy: 'No pudiste responder esta ronda por el sabotaje. La próxima es toda tuya.'
+    title: 'BLOQUEADO'
   }
 };
 
@@ -60,10 +57,32 @@ function PlayerAvatar({ player, className = 'w-10 h-10 text-xl', style }) {
   );
 }
 
+// Puesto por años con empates compartidos: 1 + cuántos tienen ESTRICTAMENTE
+// más años. Es el mismo criterio que la cabecera; desempatar por puntos
+// mandaba al fondo a medio grupo cuando todos iban 1/12.
+function rankByYears(players, player) {
+  const years = getTimelineProgress(player);
+  return 1 + players.filter((other) => getTimelineProgress(other) > years).length;
+}
+
+function isTiedOnYears(players, player) {
+  const years = getTimelineProgress(player);
+  return players.some((other) => other.id !== player.id && getTimelineProgress(other) === years);
+}
+
+// Sello "TÚ": en una lista de 6 avatares cuesta encontrarse a uno mismo.
+function YouBadge() {
+  return (
+    <span className="shrink-0 rounded-full bg-electric-purple px-1.5 py-0.5 font-label-caps text-[0.8rem] font-black leading-none text-white">
+      TÚ
+    </span>
+  );
+}
+
 // startRank: cuando esta lista muestra solo "el resto" (a partir del 4to
 // puesto), el número de cada fila tiene que seguir la numeración real del
 // ranking completo, no reiniciar en 1.
-function RankingList({ players, final = false, showTimeline = false, goalYears = 12, startRank = 0, muted = false }) {
+function RankingList({ players, final = false, showTimeline = false, goalYears = 12, startRank = 0, muted = false, meId = null }) {
   if (!players.length) return null;
   return (
     <div className="flex flex-col gap-2 w-full">
@@ -91,9 +110,10 @@ function RankingList({ players, final = false, showTimeline = false, goalYears =
                 </span>
                 <PlayerAvatar player={player} className="w-20 h-20 text-4xl border-2 border-white/15" />
                 <span className="font-label-caps text-xl font-black uppercase tracking-wide truncate">{player.name}</span>
+                {meId && player.id === meId && <YouBadge />}
               </div>
               <div className="text-right shrink-0">
-                <p className="font-black text-base text-neon-green leading-none">{getTimelineProgress(player)}/{goalYears}</p>
+                <p className="font-black text-base text-neon-green leading-none tabular-nums">{getTimelineProgress(player)}/{goalYears} <span className="text-sm font-bold">años</span></p>
                 <p className="mt-0.5 text-xs text-on-surface-variant leading-none">{player.points} pts</p>
               </div>
             </div>
@@ -127,7 +147,9 @@ function ConfettiField({ count = 30 }) {
   })));
 
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+    // z-0 explícito: el bloque del titular va en z-10, así el confeti cae
+    // POR DETRÁS del nombre del ganador y no lo tapa.
+    <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
       {pieces.map((p) => (
         <span
           key={p.id}
@@ -180,7 +202,7 @@ const PODIUM_STYLE = {
   2: { order: 'order-3', avatarSize: 'min(5.75rem, max(3.2rem, 17.5vw), 23.6vh)', stepHeight: 'h-10', color: '#ff7a1a', label: '3°', ring: '0 0 30px rgba(255,122,26,0.35)' }
 };
 
-function PodiumSlot({ player, rank, goalYears }) {
+function PodiumSlot({ player, rank, goalYears, isMe = false }) {
   const style = PODIUM_STYLE[rank];
   const isChampion = rank === 0;
   return (
@@ -216,6 +238,7 @@ function PodiumSlot({ player, rank, goalYears }) {
       <p className="mt-2 max-w-[7rem] truncate text-center font-label-caps font-black uppercase tracking-wide text-white" style={{ fontSize: isChampion ? '1.2rem' : '1rem' }}>
         {player.name}
       </p>
+      {isMe && <YouBadge />}
       {/* Se gana por años: van en blanco y primero; los puntos, debajo. */}
       <p className="mt-0.5 text-base font-black leading-tight text-white tabular-nums">
         {getTimelineProgress(player)}/{goalYears} <span className="text-sm font-bold text-on-surface-variant">años</span>
@@ -231,11 +254,11 @@ function PodiumSlot({ player, rank, goalYears }) {
   );
 }
 
-function Podium({ podium, goalYears }) {
+function Podium({ podium, goalYears, meId = null }) {
   return (
     <div className="mt-2 flex w-full items-end justify-center gap-2 px-1">
       {podium.map((player, index) => (
-        <PodiumSlot key={player.id} player={player} rank={index} goalYears={goalYears} />
+        <PodiumSlot key={player.id} player={player} rank={index} goalYears={goalYears} isMe={Boolean(meId) && player.id === meId} />
       ))}
     </div>
   );
@@ -274,9 +297,11 @@ export default function ResultScreen() {
   // Acertaste, pero el sabotaje "Robo de año" se llevó el año igual —
   // avisar aparte porque el estilo base sigue siendo "success" (sí sumaste
   // puntos), solo que tu ruta no creció esta vez.
+  // Solo se conserva la frase que da información nueva (el robo): las de
+  // ánimo genéricas eran relleno que empujaba el año revelado fuera de vista.
   const resultCopy = wasYearStolen
     ? `${guestReveal?.stolenBy || 'Un rival'} te robó el año con su sabotaje. Sumaste puntos, pero tu ruta no creció esta vez.`
-    : style.copy;
+    : null;
   // Bonus por contestar primero. La informacion viaja montada en elementos
   // que ya existen (el chip del delta y la linea de copy), no en paneles
   // nuevos: se entera todo el mundo sin meter ruido visual.
@@ -392,6 +417,10 @@ export default function ResultScreen() {
     const ranked = [...players].sort((a, b) => getTimelineProgress(b) - getTimelineProgress(a));
     const podium = ranked.slice(0, 3);
     const rest = ranked.slice(3);
+    // Línea personal: en el podio solo caben tres y el resto tenía que
+    // buscarse en la lista para saber cómo le fue.
+    const myFinalRank = ownPlayer ? rankByYears(players, ownPlayer) : 0;
+    const myFinalTied = ownPlayer ? isTiedOnYears(players, ownPlayer) : false;
 
     return (
       <motion.main
@@ -432,7 +461,7 @@ export default function ResultScreen() {
             className="relative z-10 w-full text-center"
           >
             <p className="font-label-caps text-electric-purple tracking-widest text-xs">
-              META {targetYears} CANCIONES
+              META {goalYears} AÑOS
             </p>
             <h1 className="font-headline-lg text-3xl font-black mt-1 mb-1">¡SE ACABÓ LA FIESTA!</h1>
             {/* El nombre del ganador es lo más grande del podio: es lo que
@@ -445,62 +474,65 @@ export default function ResultScreen() {
                 <p className="mt-1 text-base text-on-surface-variant">se queda con la cabina 🎧</p>
               </>
             )}
+            {myFinalRank > 0 && (
+              <p className="mt-2 font-label-caps text-lg font-black tracking-wide text-white tabular-nums">
+                Tú: {myFinalTied ? '=' : ''}{myFinalRank}º · {myYears}/{goalYears} años
+              </p>
+            )}
 
-            {podium.length > 0 && <Podium podium={podium} goalYears={targetYears} />}
+            {podium.length > 0 && <Podium podium={podium} goalYears={goalYears} meId={guestId} />}
 
             <CelebrationWaves className="mt-6 h-14" />
 
             {rest.length > 0 && (
               <div className="mt-6 w-full text-left">
                 <p className="mb-2 flex items-center gap-1.5 font-label-caps text-sm tracking-[0.18em] text-white/75">
-                  😅 PERDEDORES — próxima vez será
+                  CASI CASI 😅
                 </p>
-                <RankingList players={rest} startRank={3} goalYears={targetYears} muted />
+                <RankingList players={rest} startRank={3} goalYears={goalYears} muted meId={guestId} />
               </div>
             )}
 
+            {/* Barra fina a propósito: una acción principal y dos secundarias
+                en una sola fila, para que el podio se vea sin desplazar. */}
             <div className="accion-ronda barra-inferior mt-6 flex flex-col gap-2">
               {role === 'host' && (
                 <button
+                  type="button"
                   data-accion="principal"
                   onClick={handlePlayAgain}
                   disabled={isRestarting}
-                  className="w-full h-12 rounded-xl bg-neon-green text-black font-label-caps text-sm uppercase font-bold active:scale-95 transition-all disabled:opacity-60 flex items-center justify-center gap-2"
+                  className="btn-primario"
                 >
-                  <span aria-hidden="true" className="material-symbols-outlined text-lg">{isRestarting ? 'autorenew' : 'replay'}</span>
+                  <span aria-hidden="true" className="material-symbols-outlined text-xl">{isRestarting ? 'autorenew' : 'replay'}</span>
                   {isRestarting ? 'PREPARANDO REVANCHA...' : 'JUGAR OTRA VEZ'}
                 </button>
               )}
-              {role === 'host' && (
-                <p className="text-center text-xs text-on-surface-variant">
-                  Mismo PIN, mismo grupo. En el lobby puedes cambiar la playlist y la meta de años.
-                </p>
-              )}
-              <button
-                onClick={handleShare}
-                className="w-full min-h-touch rounded-xl border border-white/15 bg-white/5 text-white font-label-caps text-xs font-bold active:scale-95 transition-all flex items-center justify-center gap-2"
-              >
-                <span aria-hidden="true" className="material-symbols-outlined text-base">share</span>
-                {shareCopied ? 'COPIADO' : 'COMPARTIR RESULTADO'}
-              </button>
-              {/* Secundario a propósito: JUGAR OTRA VEZ es la única acción
-                  principal; cerrar la sala no debe competir con ella. */}
-              {role === 'host' && (
+              <div className="grid grid-cols-2 gap-2">
+                {/* Al girar, el carril lateral solo tiene sitio para un botón
+                    vertical (unos 300 px): el del anfitrión es JUGAR OTRA VEZ,
+                    así que su COMPARTIR se esconde. El invitado no tiene botón
+                    principal y conserva COMPARTIR. */}
                 <button
-                  onClick={handleFinish}
-                  className="w-full h-12 rounded-xl bg-transparent text-white/90 font-label-caps text-sm uppercase font-bold border border-white/25 active:scale-95 transition-all"
+                  type="button"
+                  data-ocultar-girado={role === 'host' ? '' : undefined}
+                  onClick={handleShare}
+                  className="flex min-h-[3rem] min-w-0 items-center justify-center gap-1.5 rounded-xl border border-white/15 bg-surface-container px-2 py-1 text-center font-label-caps text-sm font-bold leading-tight text-white active:scale-95 transition-transform"
                 >
-                  CERRAR SALA
+                  <span aria-hidden="true" className="material-symbols-outlined shrink-0 text-base">share</span>
+                  {shareCopied ? 'COPIADO' : 'COMPARTIR RESULTADO'}
                 </button>
-              )}
-              {role !== 'host' && (
+                {/* Secundario y oculto al girar: arriba a la izquierda ya
+                    está "← CERRAR/SALIR", que hace lo mismo. */}
                 <button
+                  type="button"
+                  data-ocultar-girado
                   onClick={handleFinish}
-                  className="w-full h-12 rounded-xl font-label-caps uppercase text-sm font-bold border border-white/20 bg-white/5 text-white active:scale-95 transition-all"
+                  className="flex min-h-[3rem] min-w-0 items-center justify-center rounded-xl border border-white/15 bg-surface-container px-2 py-1 text-center font-label-caps text-sm font-bold uppercase leading-tight text-white/90 active:scale-95 transition-transform"
                 >
-                  SALIR
+                  {role === 'host' ? 'CERRAR SALA' : 'SALIR'}
                 </button>
-              )}
+              </div>
             </div>
           </motion.div>
         </div>
@@ -585,7 +617,7 @@ export default function ResultScreen() {
           initial={{ y: -18, opacity: 0, scale: 0.96 }}
           animate={{ y: 0, opacity: 1, scale: 1 }}
           transition={{ type: 'spring', stiffness: 150, damping: 18 }}
-          className={`relative overflow-hidden rounded-[2rem] border ${style.border} bg-black/35 px-5 py-7 text-center shadow-[0_20px_80px_rgba(0,0,0,0.45)]`}
+          className={`relative overflow-hidden rounded-[2rem] border ${style.border} bg-black/35 px-5 py-5 text-center shadow-[0_20px_80px_rgba(0,0,0,0.45)]`}
           style={{ boxShadow: `0 18px 80px rgba(0,0,0,0.45), 0 0 70px ${style.glowColor}` }}
         >
           <div
@@ -600,14 +632,14 @@ export default function ResultScreen() {
             transition={isFail
               ? { delay: 0.08, duration: 0.5, ease: 'easeInOut' }
               : { delay: 0.08, type: 'spring', stiffness: 160, damping: 15 }}
-            className="relative mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-[repeating-radial-gradient(circle,#050505_0_4px,#171717_5px_7px,#050505_8px_12px)]"
+            className="relative mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[repeating-radial-gradient(circle,#050505_0_4px,#171717_5px_7px,#050505_8px_12px)]"
             style={{ border: `3px solid ${style.borderHex}`, boxShadow: `0 0 45px ${style.glowColor}` }}
           >
             <motion.span
               animate={{ scale: [1, 1.22, 1] }}
               transition={{ repeat: Infinity, duration: 1.5, ease: 'easeInOut' }}
               className={`material-symbols-outlined ${style.text}`}
-              style={{ fontSize: '3.4rem' }}
+              style={{ fontSize: '2.3rem' }}
             >
               {style.icon}
             </motion.span>
@@ -617,9 +649,9 @@ export default function ResultScreen() {
               <motion.span
                 aria-hidden="true"
                 initial={{ y: -46, opacity: 0, rotate: -20, scale: 0.4 }}
-                animate={{ y: -14, opacity: 1, rotate: -8, scale: 1 }}
+                animate={{ y: -10, opacity: 1, rotate: -8, scale: 1 }}
                 transition={{ delay: 0.5, type: 'spring', stiffness: 220, damping: 12 }}
-                className="absolute left-1/2 top-0 -translate-x-1/2 text-4xl drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)]"
+                className="absolute left-1/2 top-0 -translate-x-1/2 text-2xl drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)]"
               >
                 😎
               </motion.span>
@@ -633,7 +665,7 @@ export default function ResultScreen() {
                   initial={{ opacity: 0, scale: 0.3, y: 6 }}
                   animate={{ opacity: 1, scale: 1, y: 0, rotate: [0, -12, 12, -8, 0] }}
                   transition={{ delay: 0.3, duration: 0.9, repeat: Infinity, repeatDelay: 0.6 }}
-                  className="absolute -right-2 -top-2 text-3xl"
+                  className="absolute -right-2 -top-2 text-2xl"
                 >
                   🤣
                 </motion.span>
@@ -642,7 +674,7 @@ export default function ResultScreen() {
                   initial={{ opacity: 0, scale: 0.3, y: 6 }}
                   animate={{ opacity: 1, scale: 1, y: 0, rotate: [0, 10, -10, 6, 0] }}
                   transition={{ delay: 0.55, duration: 0.9, repeat: Infinity, repeatDelay: 0.6 }}
-                  className="absolute -left-3 bottom-1 text-2xl"
+                  className="absolute -left-3 bottom-0 text-xl"
                 >
                   😂
                 </motion.span>
@@ -650,14 +682,13 @@ export default function ResultScreen() {
             )}
           </motion.div>
 
-          <p className="relative mt-5 font-label-caps text-[0.65rem] tracking-[0.28em] text-white/55">RESULTADO</p>
           <motion.h1
             initial={{ letterSpacing: '0.04em', scale: 0.92 }}
             animate={{ letterSpacing: '0.02em', scale: 1 }}
             transition={{ delay: 0.16, type: 'spring', stiffness: 160, damping: 14 }}
-            className={`relative mx-auto mt-1 max-w-full px-1 font-headline-lg font-black leading-[0.88] ${style.text}`}
+            className={`relative mx-auto mt-3 max-w-full break-words px-1 font-headline-lg font-black leading-[0.88] ${style.text}`}
             style={{
-              fontSize: 'min(5rem, max(1.9rem, 11.5vw), 15.5vh)',
+              fontSize: 'min(5rem, max(1.5rem, 11vw), 15.5vh)',
               letterSpacing: '0.01em',
               textShadow: `0 0 34px ${style.glowColor}`,
               whiteSpace: 'normal'
@@ -666,46 +697,64 @@ export default function ResultScreen() {
             {resultWord}
           </motion.h1>
 
-          {/* Lo grande es la ruta (años n/meta), que es lo que decide la
-              partida. Los puntos siguen a la vista pero en segundo plano:
-              solo son moneda para sabotear o canjear un año. */}
+          {/* EL AÑO va justo después de la palabra de resultado: es lo que
+              todo el mundo espera ver. Antes quedaba al final, en una tarjeta
+              aparte medio tapada por la barra de acciones. */}
+          {currentTrack?.releaseYear && (
+            <motion.p
+              initial={{ y: 14, scale: 0.7, opacity: 0 }}
+              animate={{ y: 0, scale: 1, opacity: 1 }}
+              transition={{ delay: 0.22, type: 'spring', stiffness: 150, damping: 14 }}
+              className="relative mt-4 font-stats-xl font-black leading-none text-white tabular-nums"
+              style={{ fontSize: 'min(5.5rem, 22vw, 14vh)', textShadow: `0 0 30px ${style.glowColor}` }}
+            >
+              <span className="sr-only">La canción es de </span>{currentTrack.releaseYear}
+            </motion.p>
+          )}
+          <div className="relative mx-auto mt-2 flex max-w-full items-center justify-center gap-2.5">
+            {currentTrack?.albumImage && (
+              <img
+                src={currentTrack.albumImage}
+                alt=""
+                className="h-10 w-10 shrink-0 rounded-lg object-cover outline outline-1 -outline-offset-1 outline-white/10"
+              />
+            )}
+            <p className="min-w-0 text-left text-sm leading-snug line-clamp-2 [text-wrap:balance]">
+              <span className="font-bold text-white">{currentTrack?.name || 'Canción de esta ronda'}</span>
+              {currentTrack?.artist && <span className="text-white/65"> · {currentTrack.artist}</span>}
+            </p>
+          </div>
+
+          {/* Debajo, cómo queda TU ruta (es lo que gana la partida) y, en
+              pequeño, los puntos: solo son moneda para sabotear o canjear. */}
           {myYears !== null && (
-            <div className="relative mt-5">
-              <p className="font-label-caps text-sm text-white/75">TU RUTA</p>
-              <motion.p
-                initial={{ y: 12, scale: 0.75, opacity: 0 }}
-                animate={{ y: 0, scale: 1, opacity: 1 }}
-                transition={{ delay: 0.22, type: 'spring', stiffness: 150 }}
-                className="font-stats-xl font-black leading-none text-white tabular-nums"
-                style={{ fontSize: 'min(4.5rem, max(2.4rem, 17vw), 23.0vh)' }}
-                aria-label={`${myYears} de ${goalYears} años`}
-              >
-                {myYears}<span className="text-on-surface-variant" style={{ fontSize: '0.5em' }}>/{goalYears}</span>
-              </motion.p>
-            </div>
+            <p className="relative mt-4 flex items-baseline justify-center gap-1.5 leading-none">
+              <span className="font-label-caps text-sm font-bold tracking-widest text-white/70">AÑOS</span>
+              <span className="font-stats-xl text-3xl font-black text-white tabular-nums">{myYears}</span>
+              <span className="-ml-1 text-base font-bold text-on-surface-variant tabular-nums">/{goalYears}</span>
+            </p>
           )}
 
-          <div className="relative mt-3 flex flex-wrap items-center justify-center gap-2">
-            <p className="font-label-caps text-sm text-white/75">PUNTOS</p>
-            <p className="font-stats-xl text-2xl font-black leading-none text-white tabular-nums">{guestPoints}</p>
+          <div className="relative mt-2.5 flex flex-wrap items-center justify-center gap-2">
+            <p className="text-sm text-white/60 tabular-nums">{guestPoints} pts</p>
             {deltaLabel && (
-              <motion.div
-                initial={{ y: 10, opacity: 0, rotate: 8 }}
-                animate={{ y: 0, opacity: 1, rotate: 0 }}
+              <motion.span
+                initial={{ y: 8, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.35, type: 'spring', stiffness: 140 }}
-                className={`flex items-center gap-1 rounded-xl border border-current/30 bg-black/30 px-2.5 py-1 text-lg font-black leading-none ${deltaColor}`}
+                className={`flex items-center gap-0.5 rounded-full border border-current/30 bg-black/30 px-2 py-0.5 text-sm font-black leading-none tabular-nums ${deltaColor}`}
                 title={iWasFastest ? 'Incluye +1 por responder primero' : undefined}
               >
                 {deltaLabel}
                 {iWasFastest && (
-                  <span aria-hidden="true" className="material-symbols-outlined text-chaos-gold" style={{ fontSize: '1.1rem' }}>bolt</span>
+                  <span aria-hidden="true" className="material-symbols-outlined text-chaos-gold" style={{ fontSize: '1rem' }}>bolt</span>
                 )}
-              </motion.div>
+              </motion.span>
             )}
           </div>
 
-          <div className="relative mt-4 mx-auto max-w-sm">
-            <p className="text-sm leading-relaxed text-white/70">{resultCopy}</p>
+          <div className="relative mt-3 mx-auto max-w-sm empty:hidden">
+            {resultCopy && <p className="text-sm leading-relaxed text-white/70 [text-wrap:pretty]">{resultCopy}</p>}
             {/* Una linea, sin recuadro ni animacion: quien gano el punto lo
                 ve como logro y el resto se entera de quien fue. */}
             {(iWasFastest || speedWinnerName) && (
@@ -715,53 +764,6 @@ export default function ResultScreen() {
                   ? '+1 por responder primero'
                   : `${speedWinnerName} respondió primero (+1)`}
               </p>
-            )}
-          </div>
-        </motion.div>
-        {/* Cancion revelada */}
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.12 }}
-          className="mt-3 flex items-center gap-3 rounded-2xl border border-white/10 bg-black/30 p-4"
-        >
-          <div
-            className="rounded-xl overflow-hidden shrink-0"
-            style={{ width: 72, height: 72, boxShadow: `0 6px 24px ${style.glowColor}` }}
-          >
-            {currentTrack?.albumImage ? (
-              <img src={currentTrack.albumImage} alt={currentTrack?.name || 'Canción'} className="w-full h-full object-cover" />
-            ) : (
-              <div className="w-full h-full bg-black/40 flex items-center justify-center">
-                <span aria-hidden="true" className={`material-symbols-outlined ${style.text}`} style={{ fontSize: '2rem' }}>{style.icon}</span>
-              </div>
-            )}
-          </div>
-          <div className="flex-1 min-w-0 text-left">
-            <p className="font-label-caps text-sm text-white/75 tracking-widest">LA CANCIÓN ERA</p>
-            <p className="mt-1 font-black text-white text-base leading-tight line-clamp-2">
-              {currentTrack?.name || 'Canción de esta ronda'}
-            </p>
-            {currentTrack?.artist && (
-              <p className="text-sm text-white/60 mt-0.5 truncate">{currentTrack.artist}</p>
-            )}
-            {currentTrack?.releaseYear && (
-              <motion.div
-                initial={{ scale: 0.6, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ delay: 0.38, type: 'spring', stiffness: 140 }}
-                className="mt-1 flex items-baseline gap-1.5"
-              >
-                <span className="font-label-caps text-sm text-white/75">AÑO</span>
-                {/* El año revelado es EL dato de la ronda (es lo que se coloca
-                    en la ruta): tamaño de titular, no de dato secundario. */}
-                <span
-                  className={`font-stats-xl font-black leading-none tabular-nums ${style.text}`}
-                  style={{ fontSize: 'min(4rem, max(2.5rem, 13vw), 16vh)' }}
-                >
-                  {currentTrack.releaseYear}
-                </span>
-              </motion.div>
             )}
           </div>
         </motion.div>
@@ -777,7 +779,9 @@ export default function ResultScreen() {
               ASÍ VAN TODOS
             </p>
             <div className="flex flex-col gap-1.5">
-              {sortedPlayers.map((player, index) => (
+              {sortedPlayers.map((player) => {
+                const place = rankByYears(sortedPlayers, player);
+                return (
                 <div
                   key={player.id}
                   className={`flex items-center gap-2.5 rounded-xl px-3 py-2.5 ${
@@ -787,23 +791,24 @@ export default function ResultScreen() {
                   }`}
                 >
                   <span className={`w-8 h-8 rounded-lg text-sm font-black flex items-center justify-center shrink-0 ${
-                    index === 0 ? 'bg-chaos-gold text-black'
-                      : index === 1 ? 'bg-[#e2e8f0] text-black'
-                        : index === 2 ? 'bg-vinyl-orange text-black'
+                    place === 1 ? 'bg-chaos-gold text-black'
+                      : place === 2 ? 'bg-[#e2e8f0] text-black'
+                        : place === 3 ? 'bg-vinyl-orange text-black'
                           : 'bg-white/10 text-white'
                   }`}>
-                    {index + 1}
+                    {place}
                   </span>
                   <PlayerAvatar player={player} className="w-12 h-12 text-2xl border-2 border-white/10" />
                   <span className="font-label-caps text-lg font-black uppercase tracking-wide text-white truncate flex-1">{player.name}</span>
                   <div className="text-right shrink-0">
                     <p className="text-sm font-black text-neon-green">
-                      {getTimelineProgress(player)}/{targetYears} CANCIONES
+                      {getTimelineProgress(player)}/{goalYears} AÑOS
                     </p>
                     <p className="text-xs font-bold text-white/55">{player.points} pts</p>
                   </div>
                 </div>
-              ))}
+                );
+              })}
             </div>
           </motion.div>
         )}
@@ -816,26 +821,25 @@ export default function ResultScreen() {
         >
           {role === 'host' ? (
             <button
+              type="button"
               data-accion="principal"
               onClick={hostNextRound}
-              className="w-full h-14 rounded-2xl bg-neon-green text-black font-label-caps text-sm font-bold active:scale-95 transition-transform shadow-[0_8px_0_rgba(16,85,0,0.95),0_0_28px_rgba(57,255,20,0.3)]"
+              className="btn-primario"
             >
               SIGUIENTE RONDA
             </button>
           ) : (
-            <div className="py-3 rounded-xl border border-white/10 bg-white/5 text-center">
-              <p className="text-sm text-white/55 font-label-caps tracking-widest animate-pulse">
-                ESPERANDO AL ANFITRIÓN...
+            // Texto con un punto que late, no una caja: con borde parecía un
+            // botón desactivado que el invitado intentaba pulsar.
+            <div role="status" className="flex items-center justify-center gap-2 py-2.5">
+              <span aria-hidden="true" className="h-2 w-2 shrink-0 animate-pulse rounded-full bg-neon-green" />
+              <p className="font-label-caps text-sm tracking-widest text-white/70">
+                ESPERANDO AL ANFITRIÓN…
               </p>
             </div>
           )}
-          <button
-            onClick={handleShare}
-            className="w-full h-12 rounded-xl border border-white/12 bg-white/5 text-white font-label-caps text-sm font-bold active:scale-95 transition-all flex items-center justify-center gap-2"
-          >
-            <span aria-hidden="true" className="material-symbols-outlined text-base">share</span>
-            {shareCopied ? 'COPIADO' : 'COMPARTIR'}
-          </button>
+          {/* Compartir vive en el podio final: a mitad de partida solo
+              competía con SIGUIENTE RONDA y tapaba el resultado. */}
         </motion.div>
 
         {showExitConfirm && (

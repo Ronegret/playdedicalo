@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 // sala y unirse). El objetivo es que en todo momento se vea cuántos pasos
 // faltan y en cuál se está — antes ambas pantallas eran un único muro con
 // todo a la vez y no se entendía por dónde empezar.
-export function StepProgress({ steps, current, onGoTo }) {
+export function StepProgress({ steps, current, onGoTo, showLabel = true }) {
   return (
     <div className="w-full">
       {/* pt-[34px] compensa el -mt-[34px] de los botones: sin esto el bloque
@@ -36,9 +36,11 @@ export function StepProgress({ steps, current, onGoTo }) {
               // abajo (-10), donde vive el texto.
               className={`group flex flex-1 items-center min-h-touch -mt-[34px] -mb-[10px] ${canGo ? 'cursor-pointer' : 'cursor-default'}`}
             >
+              {/* Pendientes a /25: a /12 desaparecían sobre el morado y no
+                  se sabía cuántos pasos quedaban. */}
               <span
                 className={`block h-2 w-full rounded-full transition-colors ${
-                  isDone ? 'bg-neon-green' : isCurrent ? 'bg-neon-green/60' : 'bg-white/12'
+                  isDone ? 'bg-neon-green' : isCurrent ? 'bg-neon-green/60' : 'bg-white/25'
                 }`}
               />
             </button>
@@ -49,7 +51,11 @@ export function StepProgress({ steps, current, onGoTo }) {
         <p className="font-label-caps text-xs tracking-[0.18em] text-neon-green">
           PASO {current + 1} DE {steps.length}
         </p>
-        <p className="truncate font-label-caps text-xs text-on-surface-variant">{steps[current]}</p>
+        {/* Se puede ocultar cuando el titular del paso ya dice lo mismo:
+            dos rótulos para una misma idea solo hacen ruido. */}
+        {showLabel && (
+          <p className="truncate font-label-caps text-xs text-on-surface-variant">{steps[current]}</p>
+        )}
       </div>
     </div>
   );

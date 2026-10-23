@@ -57,12 +57,21 @@ export default function HeaderHUD({ onExit }) {
   // getTimelineProgress(undefined) cuenta el año base y daría un 1 falso.
   const myYears = ownPlayer ? getTimelineProgress(ownPlayer) : 0;
   const goalYears = targetYears || 12;
-  // Mismo orden que el ranking del store (años y, a igualdad, puntos): se
-  // gana por años, así que el puesto tiene que salir de ahí y no de los pts.
-  const ranking = [...players].sort((a, b) => (
-    getTimelineProgress(b) - getTimelineProgress(a) || Number(b.points || 0) - Number(a.points || 0)
+  // Puesto = 1 + jugadores con ESTRICTAMENTE más años. Antes se desempataba
+  // por puntos y, al empezar (todos 1/12), medio grupo se veía "4º/4" sin
+  // haber jugado: los empatados comparten puesto y se marca con "=".
+  const myRank = ownPlayer
+    ? 1 + players.filter((player) => getTimelineProgress(player) > myYears).length
+    : 0;
+  const rankTied = Boolean(ownPlayer) && players.some((player) => (
+    player.id !== ownPlayer.id && getTimelineProgress(player) === myYears
   ));
-  const myRank = ownPlayer ? ranking.findIndex((player) => player.id === ownPlayer.id) + 1 : 0;
+  // La píldora de conectados solo se gana el ancho en móviles de 320px
+  // cuando aporta algo: si alguien se está reconectando o se cayó.
+  const someoneAway = players.some((player) => {
+    const status = getPlayerPresence(player, now).status;
+    return status === 'reconnecting' || status === 'offline';
+  });
   // El sabotaje se guarda con la ronda en que se lanzó; uno viejo que aún
   // no se limpió no debe asustar al jugador en la ronda siguiente.
   const underAttack = Boolean(ownPlayer?.activeAttack && ownPlayer.activeAttack.round === round);
@@ -74,7 +83,9 @@ export default function HeaderHUD({ onExit }) {
             entre sí) + una única columna central flexible que se achica o
             trunca si hace falta — evita que dos elementos de ancho fijo
             terminen superpuestos en pantallas angostas. */}
-        <div className="grid min-h-[64px] grid-cols-[auto_1fr_auto] items-center gap-2 px-2.5">
+        {/* Por debajo de 360px se recorta el hueco entre columnas: con la
+            letra XL (raíz 23px) cada píxel va a la columna central. */}
+        <div className="grid min-h-[64px] grid-cols-[auto_1fr_auto] items-center gap-1 px-1.5 min-[360px]:gap-2 min-[360px]:px-2.5">
           {/* Left: back + room */}
           <div className="flex min-w-0 items-center gap-1.5">
             {onExit && (
@@ -92,27 +103,28 @@ export default function HeaderHUD({ onExit }) {
             </span>
           </div>
 
-          {/* Center: estado de la partida (ronda, puesto y años hacia la
-              meta). El nombre del modo no iba aquí: nunca cambia. La meta se
-              ve SIEMPRE, también en la ronda 1, que es cuando el jugador
-              nuevo más necesita saber a qué está jugando. */}
+          {/* Center: estado de la partida. Jerarquía: AÑOS n/meta manda
+              (es lo que gana la partida), el puesto va como sello compacto
+              y la ronda queda de contexto, pequeña. La meta se ve SIEMPRE,
+              también en la ronda 1. Puesto y ronda comparten la fila de
+              arriba porque a 320px con letra XL no caben los tres en una. */}
           <div className="flex min-w-0 flex-col items-center justify-center overflow-hidden text-center">
-            <div className="flex min-w-0 max-w-full items-center justify-center gap-1.5">
-              <p className="truncate font-label-caps text-sm text-neon-green leading-none">RONDA {round}</p>
+            <div className="flex min-w-0 max-w-full items-center justify-center gap-1">
+              <p className="min-w-0 truncate font-label-caps text-[0.8rem] font-bold leading-none text-neon-green">RONDA {round}</p>
               {myRank > 0 && (
                 <span
-                  className={`shrink-0 rounded-full px-1.5 py-0.5 font-label-caps text-sm font-black leading-none tabular-nums ${
+                  className={`shrink-0 rounded-full px-1 py-0.5 font-label-caps text-[0.8rem] font-black leading-none tabular-nums ${
                     myRank === 1 ? 'bg-chaos-gold text-black' : 'border border-white/20 bg-white/10 text-white'
                   }`}
                 >
-                  <span className="sr-only">Puesto </span>{myRank}º/{players.length}
+                  <span className="sr-only">Puesto </span>{rankTied ? '=' : ''}{myRank}º<span className="sr-only">{rankTied ? ', empatado' : ''}</span>
                 </span>
               )}
             </div>
-            <p className="mt-1 max-w-full truncate leading-none">
-              <span className="font-label-caps text-sm text-on-surface-variant">AÑOS </span>
-              <span className="font-stats-xl text-lg font-black text-white tabular-nums">{myYears}</span>
-              <span className="text-sm font-bold text-on-surface-variant tabular-nums">/{goalYears}</span>
+            <p className="mt-1 flex min-w-0 max-w-full items-baseline justify-center gap-1 leading-none">
+              <span className="min-w-0 truncate font-label-caps text-[0.8rem] font-bold text-on-surface-variant">AÑOS</span>
+              <span className="shrink-0 font-stats-xl text-xl font-black leading-none text-white tabular-nums min-[360px]:text-2xl">{myYears}</span>
+              <span className="-ml-1 shrink-0 text-sm font-bold text-on-surface-variant tabular-nums">/{goalYears}</span>
             </p>
           </div>
 
@@ -126,15 +138,31 @@ export default function HeaderHUD({ onExit }) {
               onClick={() => setRosterOpen((prev) => !prev)}
               aria-expanded={rosterOpen}
               aria-label="Ver jugadores conectados"
-              className="min-h-touch shrink-0 rounded-full border border-white/10 bg-black/20 pl-2 pr-2.5 flex items-center gap-1.5 active:scale-95 transition-transform"
+              className={`min-h-touch shrink-0 rounded-full border border-white/10 bg-black/20 pl-2 pr-2.5 items-center gap-1.5 active:scale-95 transition-transform ${
+                someoneAway ? 'flex' : 'hidden min-[360px]:flex'
+              }`}
             >
-              <span className="h-2 w-2 shrink-0 rounded-full bg-neon-green" />
+              <span className={`h-2 w-2 shrink-0 rounded-full ${someoneAway ? 'bg-chaos-gold animate-pulse' : 'bg-neon-green'}`} />
               <span className="font-label-caps text-sm text-white">{activeCount}/{players.length}</span>
             </button>
 
+            {/* Bajo 360px la etiqueta "PTS" se cambia por un icono de dinero: el
+                número se queda, la palabra no cabía. El lector de pantalla
+                siempre oye "puntos". */}
             <div className="shrink-0 text-right leading-none">
-              <p className="font-label-caps text-sm text-on-surface-variant">PTS</p>
-              <p className="mt-0.5 font-label-caps text-base font-black text-neon-green">{ownPlayer?.points ?? 0}</p>
+              <p aria-hidden="true" className="hidden font-label-caps text-sm text-on-surface-variant min-[360px]:block">PTS</p>
+              <p className="flex items-center justify-end gap-0.5 font-label-caps text-base font-black text-neon-green tabular-nums min-[360px]:mt-0.5">
+                {/* El `hidden` va en un envoltorio y no en el icono: la regla global
+                    .material-symbols-outlined fuerza display:inline-block
+                    !important y anulaba el `min-[360px]:hidden`. Y el icono es
+                    `payments` porque ya viaja en la fuente autoalojada: uno nuevo
+                    obliga a regenerarla (npm run iconos && npm run fuentes) o se
+                    ve su nombre escrito en pantalla. */}
+                <span aria-hidden="true" className="flex min-[360px]:hidden">
+                  <span className="material-symbols-outlined text-base leading-none text-chaos-gold">payments</span>
+                </span>
+                <span className="sr-only">Puntos: </span>{ownPlayer?.points ?? 0}
+              </p>
             </div>
 
             <ProfileMenu user={role === 'host' ? auth.currentUser : null} guestAvatar={role === 'guest' ? guestAvatar : null} />

@@ -160,7 +160,9 @@ export default function LobbyScreen() {
       {/* Host vinyl hero */}
       {role === 'host' && (
         <div className="sala-disco z-10 mb-2 flex w-full flex-col items-center gap-1">
-          <div className="relative" style={{ width: 'min(150px, 38vw, 180px)', aspectRatio: '1' }}>
+          {/* Más chico (antes hasta 180 px): es decoración y se comía la
+              mejor parte de la pantalla, encima del PIN que sí hay que ver. */}
+          <div className="relative" style={{ width: 'min(96px, 26vw)', aspectRatio: '1' }}>
             {/* Rings */}
             {[0, 0.9].map((delay) => (
               <div
@@ -202,9 +204,10 @@ export default function LobbyScreen() {
       <section className="sala-cuerpo z-10 flex w-full flex-col gap-3 sm:gap-4">
         <div className="rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-5">
           <div className="flex items-center justify-between gap-4">
+            {/* Sin el "RONDA 1" de encima: antes de jugar no aporta nada y
+                empujaba el PIN hacia abajo. */}
             <div>
-              <p className="font-label-caps text-neon-green text-xs">RONDA {round}</p>
-              <h2 className="font-headline-lg-mobile text-2xl font-bold text-on-surface mt-1">PIN DE SALA</h2>
+              <h2 className="font-headline-lg-mobile text-2xl font-bold text-on-surface">PIN DE SALA</h2>
             </div>
             {/* Era un icono naranja sobre un fondo al 5%: no se leía como
                 botón, y es justo el que abre el código que tienen que
@@ -217,7 +220,7 @@ export default function LobbyScreen() {
               aria-label="Mostrar QR de la sala"
             >
               <span aria-hidden="true" className="material-symbols-outlined text-xl leading-none">qr_code_scanner</span>
-              <span className="app-etiqueta text-micro-caps leading-none">Ver QR</span>
+              <span className="app-etiqueta whitespace-nowrap text-micro-caps leading-none">Ver QR</span>
             </button>
           </div>
 
@@ -270,6 +273,29 @@ export default function LobbyScreen() {
               {linkShared ? 'COPIADO' : 'COMPARTIR'}
             </button>
           </div>
+
+          {/* Quién ya entró, sin bajar hasta la lista: el lobby del anfitrión
+              es largo y la lista completa queda varias pantallas más abajo. */}
+          {role === 'host' && players.length > 0 && (
+            <div className="mt-3 flex items-center gap-3">
+              <ul className="flex min-w-0 -space-x-2" aria-label={`${players.length} jugadores en la sala`}>
+                {players.slice(0, 8).map((player) => (
+                  <li key={player.id} className="shrink-0">
+                    {isImageAvatar(player.avatar) ? (
+                      <img src={player.avatar} alt={player.name} className="h-9 w-9 rounded-full object-cover ring-2 ring-[#1a1030]" />
+                    ) : (
+                      <span title={player.name} className="flex h-9 w-9 items-center justify-center rounded-full bg-white/15 text-lg ring-2 ring-[#1a1030]">
+                        {player.avatar || '•'}
+                      </span>
+                    )}
+                  </li>
+                ))}
+              </ul>
+              {players.length > 8 && (
+                <span className="font-label-caps text-xs text-on-surface-variant tabular-nums">+{players.length - 8}</span>
+              )}
+            </div>
+          )}
         </div>
 
         {role === 'host' && (
@@ -415,13 +441,13 @@ export default function LobbyScreen() {
           <div className="barra-inferior accion-lobby fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-background/97 px-4 pt-3"
                style={{ paddingBottom: 'calc(0.75rem + env(safe-area-inset-bottom, 0px))' }}>
             {/* El botón más importante del lobby era el más plano de la app.
-                Ahora es el objeto más "físico" de la pantalla, como los demás
-                botones principales del juego: se hunde al pulsarlo. Sin
+                Ahora usa `btn-primario`, el mismo estilo que los demás
+                botones principales del juego (se hunde al pulsarlo). Sin
                 app-pulsable: su scale() pelearía con el translate del hundido. */}
             <button
               data-accion="principal"
               onClick={handleHostStartGame}
-              className="mx-auto flex h-16 w-full max-w-lg items-center justify-center gap-2 rounded-2xl bg-neon-green font-label-caps text-label-caps font-black text-black shadow-[0_8px_0_rgba(18,90,0,0.9),0_0_30px_rgba(57,255,20,0.35)] transition-[transform,box-shadow] duration-100 active:translate-y-1 active:shadow-[0_4px_0_rgba(18,90,0,0.9)] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
+              className="btn-primario mx-auto flex w-full max-w-lg items-center justify-center gap-2"
             >
               <span aria-hidden="true" className="material-symbols-outlined">play_arrow</span>
               INICIAR RONDA
@@ -464,17 +490,23 @@ export default function LobbyScreen() {
             >
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3 min-w-0">
-                  <span className="w-6 text-center font-label-caps text-xs text-on-surface-variant">#{index + 1}</span>
+                  {/* #n y puntos solo con la partida ya en marcha: antes de
+                      empezar, un ranking de todos en cero es ruido. */}
+                  {gameLocked && (
+                    <span className="w-6 text-center font-label-caps text-xs text-on-surface-variant">#{index + 1}</span>
+                  )}
+                  {/* w-16 y no 5.5rem: con la letra XL el avatar se comía la
+                      fila y el nombre chocaba con la columna derecha. */}
                   {isImageAvatar(player.avatar) ? (
-                    <img src={player.avatar} alt={player.name} className="w-[5.5rem] h-[5.5rem] rounded-full object-cover border-2 border-electric-purple/60 shadow-[0_0_14px_rgba(168,85,247,0.35)] shrink-0" />
+                    <img src={player.avatar} alt={player.name} className="w-16 h-16 rounded-full object-cover border-2 border-electric-purple/60 shadow-[0_0_14px_rgba(168,85,247,0.35)] shrink-0" />
                   ) : (
-                    <div className="w-[5.5rem] h-[5.5rem] rounded-full flex items-center justify-center text-4xl bg-white/10 border border-white/10 shrink-0">
+                    <div className="w-16 h-16 rounded-full flex items-center justify-center text-4xl bg-white/10 border border-white/10 shrink-0">
                       {player.avatar || '•'}
                     </div>
                   )}
                   <div className="min-w-0">
                     <span className="block truncate font-label-caps text-xl font-black uppercase tracking-wide text-white">{player.name}</span>
-                    <span className={`mt-0.5 block font-label-caps text-micro-caps ${
+                    <span className={`mt-0.5 block truncate font-label-caps text-micro-caps ${
                       presence.status === 'online'
                         ? 'text-neon-green'
                         : presence.status === 'reconnecting'
@@ -489,14 +521,16 @@ export default function LobbyScreen() {
                     </span>
                   </div>
                 </div>
-                <div className="text-right shrink-0">
-                  <p className="font-black text-neon-green drop-shadow-[0_0_8px_rgba(57,255,20,0.4)] leading-none">
-                    {getTimelineProgress(player)}<span className="text-xs text-on-surface-variant">/{targetYears}</span>
-                  </p>
-                  <p className="mt-1 text-micro-caps text-on-surface-variant leading-none">{player.points} pts</p>
-                </div>
+                {gameLocked && (
+                  <div className="text-right shrink-0 pl-2">
+                    <p className="font-black text-neon-green drop-shadow-[0_0_8px_rgba(57,255,20,0.4)] leading-none">
+                      {getTimelineProgress(player)}<span className="text-xs text-on-surface-variant">/{targetYears}</span>
+                    </p>
+                    <p className="mt-1 text-micro-caps text-on-surface-variant leading-none">{player.points} pts</p>
+                  </div>
+                )}
               </div>
-              <TimelineYears years={getCombinedTimelineYears(player)} wildcards={Number(player.wildcards || 0)} goalYears={targetYears} glow className="pl-0 sm:pl-9" />
+              <TimelineYears years={getCombinedTimelineYears(player)} wildcards={Number(player.wildcards || 0)} goalYears={targetYears} glow className={gameLocked ? 'pl-0 sm:pl-9' : 'pl-0'} />
             </motion.div>
           );})}
         </div>

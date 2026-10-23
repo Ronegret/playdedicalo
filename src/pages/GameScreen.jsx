@@ -1,7 +1,7 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ATTACK_COST, ATTACK_TYPES, DEDICALO_PLAYLISTS, GAME_MODES, REDEEM_YEAR_COST, getCombinedTimelineYears, getPlayerPresence, getTimelineProgress, normalizeSabotageTypes, normalizeSpotifyPlaylistUrl, useGameStore } from '../store/useGameStore';
+import { ATTACK_COST, ATTACK_TYPES, DEDICALO_PLAYLISTS, REDEEM_YEAR_COST, getCombinedTimelineYears, getPlayerPresence, getTimelineProgress, normalizeSabotageTypes, normalizeSpotifyPlaylistUrl, useGameStore } from '../store/useGameStore';
 import { isImageAvatar } from '../data/characterAvatars';
 import HeaderHUD from '../components/HeaderHUD';
 import RotatePrompt from '../components/RotatePrompt';
@@ -16,6 +16,10 @@ import { vibrar } from '../services/haptics';
 // softTimerArmed). Suficiente para que un rezagado termine, corto para que
 // la partida no se pare.
 const SOFT_TIMER_SECONDS = 10;
+
+// Estado "ya suena" del anfitrión. Constante para poder no mostrarlo: la
+// barra inferior ya dice lo mismo.
+const MENSAJE_SONANDO = 'Música sonando. Para cuando quieras.';
 
 // Fila compacta de "quién respondió / está bloqueado" durante la ronda,
 // para TODOS los jugadores (antes solo lo veía el anfitrión). A propósito
@@ -73,109 +77,9 @@ function VoteStatusStrip({ players, roundAnswers, isPlayerBlockedThisRound, answ
   );
 }
 
-function RankingPeek({ players, guestId, targetYears = 12 }) {
-  const [rankOpen, setRankOpen] = useState(false);
-  if (!players.length) return null;
-  // Gana quien más canciones lleva hacia la meta — los puntos son aparte
-  // (sirven para sabotear o canjear), así que el ranking ordena y muestra
-  // progreso real, no puntos.
-  const sorted = [...players].sort((a, b) => getTimelineProgress(b) - getTimelineProgress(a));
-  const myRank = sorted.findIndex((p) => p.id === guestId) + 1;
-  const leader = sorted[0];
-  const ownPlayer = sorted.find((p) => p.id === guestId);
-  const myYears = getTimelineProgress(ownPlayer);
-
-  return (
-    <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-black/35 text-left overflow-hidden shadow-[0_18px_40px_rgba(0,0,0,0.28)]">
-      {/* Always-visible strip: position + years */}
-      <button
-        type="button"
-        onClick={() => setRankOpen((prev) => !prev)}
-        className="w-full px-4 py-3 flex items-center justify-between gap-3"
-        aria-expanded={rankOpen}
-      >
-        <div className="flex items-center gap-3 min-w-0">
-          {/* Position badge */}
-          <div className="flex flex-col items-center shrink-0">
-            <span className={`w-10 h-10 rounded-xl text-base font-black flex items-center justify-center ${myRank === 1 ? 'bg-neon-green text-black shadow-[0_0_16px_rgba(57,255,20,0.4)]' : myRank === 2 ? 'bg-white/20 text-white' : 'bg-white/10 text-on-surface-variant'}`}>
-              {myRank || '?'}
-            </span>
-            <span className="mt-0.5 font-label-caps text-sm tracking-[0.12em] text-white">POS</span>
-          </div>
-          {/* Years progress */}
-          <div className="min-w-0">
-            <p className="font-label-caps text-sm tracking-[0.18em] text-neon-green">TUS AÑOS · META</p>
-            <div className="mt-0.5 flex items-baseline gap-1">
-              <span className="font-stats-xl text-2xl font-black text-white leading-none">{myYears}</span>
-              <span className="text-sm text-on-surface-variant font-bold">/{targetYears}</span>
-            </div>
-            {/* Mini progress bar */}
-            <div className="mt-1 h-1.5 w-28 overflow-hidden rounded-full bg-white/10">
-              <div
-                className="h-full rounded-full bg-gradient-to-r from-neon-green to-electric-purple transition-all duration-500"
-                style={{ width: `${Math.min(100, (myYears / targetYears) * 100)}%` }}
-              />
-            </div>
-          </div>
-        </div>
-        <div className="flex items-center gap-2 shrink-0">
-          <span className="font-label-caps text-xs text-on-surface-variant hidden sm:inline">RANKING</span>
-          <motion.span
-            animate={{ rotate: rankOpen ? 180 : 0 }}
-            transition={{ duration: 0.22 }}
-            className="material-symbols-outlined text-neon-green text-2xl"
-          >
-            expand_more
-          </motion.span>
-        </div>
-      </button>
-
-      <AnimatePresence initial={false}>
-        {rankOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.24, ease: 'easeInOut' }}
-            className="overflow-hidden"
-          >
-            <div className="border-t border-white/8 px-3 pb-3 pt-2 flex flex-col gap-2">
-              {sorted.map((player, index) => {
-                const progress = getTimelineProgress(player);
-                const missing = Math.max(0, targetYears - progress);
-                const isMe = player.id === guestId;
-                return (
-                  <div
-                    key={player.id}
-                    className={`flex items-center gap-2.5 rounded-xl px-3 py-2.5 ${isMe ? 'bg-neon-green/12 border border-neon-green/30' : 'bg-white/5'}`}
-                  >
-                    <span className={`w-8 h-8 rounded-lg text-sm font-black flex items-center justify-center shrink-0 ${index === 0 ? 'bg-neon-green text-black' : index === 1 ? 'bg-white/25 text-white' : 'bg-white/10 text-white'}`}>
-                      {index + 1}
-                    </span>
-                    {isImageAvatar(player.avatar) ? (
-                      <img src={player.avatar} alt={player.name} className="w-14 h-14 rounded-full object-cover shrink-0" />
-                    ) : (
-                      <span className="w-14 h-14 rounded-full bg-black/20 flex items-center justify-center text-2xl shrink-0">{player.avatar || '•'}</span>
-                    )}
-                    <span className="font-label-caps text-lg font-black uppercase tracking-wide text-white truncate flex-1">{player.name}{isMe ? ' (tú)' : ''}</span>
-                    <div className="text-right shrink-0">
-                      <p className="text-base font-black text-neon-green leading-none">{progress}/{targetYears}</p>
-                      <p className="mt-0.5 text-sm font-bold text-white leading-none">
-                        {missing === 0 ? '¡Meta!' : player === leader ? 'Lidera' : `Faltan ${missing}`}
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
-
-
+// RankingPeek (tarjeta de posición y AÑOS n/meta) se fue: la cabecera ya
+// enseña siempre el puesto y los años, y repetirlo empujaba la ruta hacia
+// abajo justo en las fases en que hay que mirarla.
 
 function getAttackCopy(attack) {
   const fallback = ATTACK_TYPES[attack?.type] || ATTACK_TYPES.block_vote;
@@ -539,7 +443,10 @@ function VinylGap({ activo, size, alTocar, etiqueta, disabled, preview = false }
       type="button"
       onClick={alTocar}
       disabled={disabled}
-      aria-label={etiqueta}
+      // Con el lector de pantalla también hace falta saber qué hará el toque:
+      // el hueco elegido coloca, cualquier otro solo se elige.
+      aria-label={activo && !preview ? `Colocar aquí: ${etiqueta}` : `Elegir: ${etiqueta}`}
+      aria-pressed={activo}
       className="flex shrink-0 items-center justify-center rounded-full border-[3px] border-dashed transition-all duration-200 active:scale-95 disabled:active:scale-100"
       style={{
         width: lado,
@@ -571,7 +478,7 @@ function etiquetaHueco(from, to) {
 // antes de que corten la música (sin poder confirmar todavía).
 function TimelinePlacementQuestion({
   question, playerYears = [], wildcards = 0, disabled, onPick,
-  activeAttack, targetYears = 12, preview = false, layout = 'vertical'
+  activeAttack, preview = false, layout = 'vertical'
 }) {
   const years = useMemo(() => (playerYears.length ? playerYears : [2000]), [playerYears]);
   const isStealThreat = activeAttack?.type === 'year_steal';
@@ -603,11 +510,45 @@ function TimelinePlacementQuestion({
   // referencia visual y se queda compacto; lo que sí crece con la letra es
   // lo que hay que leer y pulsar de verdad: la etiqueta del hueco elegido y
   // el botón de confirmar, ambos en rem.
-  const size = apaisado ? '94px' : '72px';
+  // Con pocos años (≤4) sobra sitio: discos de 88 px, que se leen y se
+  // aciertan mejor. En apaisado se queda el tamaño de siempre.
+  // Con pocos años el disco crece a 88px, pero acotado al ancho: en un
+  // iPhone SE (320px) a 88px no cabían los dos huecos y la línea pasaba a
+  // modo desplazable centrada en "Después de…", con el hueco "Antes de…"
+  // fuera de pantalla. min(88px, 24vw) da ~77px ahí y cabe todo a la vista.
+  const size = apaisado ? '94px' : (years.length <= 4 ? 'min(88px, 24vw)' : '72px');
 
   // Cuándo fue el último desplazamiento del riel, para no confundir el dedo
   // que frena el carrusel con un dedo que elige.
   const ultimoScrollRef = useRef(0);
+
+  // ¿Cabe la ruta entera sin desplazar? Con pocos años el riel con 50 % de
+  // relleno a cada lado y centrado en el medio dejaba el hueco "Antes de X"
+  // fuera de la pantalla (en un SE, entero): una opción que existía y no se
+  // veía. Si cabe, se pinta sin relleno y centrada, todo a la vista. Se mide
+  // y no se cuenta: con 3 huecos cabe en un móvil ancho pero no en un SE.
+  // El ancho natural (del primer al último elemento) no depende del modo,
+  // así que no hay ida y vuelta entre los dos.
+  const pistaRef = useRef(null);
+  const [cabeTodo, setCabeTodo] = useState(false);
+  useLayoutEffect(() => {
+    const rail = railRef.current;
+    const pista = pistaRef.current;
+    if (!rail || !pista || typeof ResizeObserver === 'undefined') return undefined;
+    // ResizeObserver entrega la primera medida antes de pintar: sin parpadeo
+    // del modo desplazable al modo "todo a la vista".
+    const observador = new ResizeObserver(() => {
+      const hijos = pista.children;
+      if (!hijos.length) return;
+      const primero = hijos[0];
+      const ultimo = hijos[hijos.length - 1];
+      const ancho = ultimo.offsetLeft + ultimo.offsetWidth - primero.offsetLeft;
+      // 8 px de margen: un disco rozando el borde ya parece cortado.
+      setCabeTodo(ancho <= rail.clientWidth - 8);
+    });
+    observador.observe(rail);
+    return () => observador.disconnect();
+  }, [huecos.length, wildcards, size]);
 
   const recalcularFoco = useCallback(() => {
     const rail = railRef.current;
@@ -644,15 +585,18 @@ function TimelinePlacementQuestion({
 
   // Arranca centrado en mitad de la ruta y no en el extremo izquierdo: se
   // recorre la mitad para llegar a cualquier hueco.
+  // Si cabe todo no se centra nada: forzar el desplazamiento era justo lo
+  // que escondía el primer hueco.
   useEffect(() => {
     const rail = railRef.current;
     if (!rail) return undefined;
     const centrar = window.setTimeout(() => {
+      if (cabeTodo) { rail.scrollLeft = 0; return; }
       const medio = gapRefs.current[Math.floor(huecos.length / 2)];
       if (medio) rail.scrollLeft = medio.offsetLeft + medio.offsetWidth / 2 - rail.clientWidth / 2;
     }, 0);
     return () => window.clearTimeout(centrar);
-  }, [huecos.length, layout]);
+  }, [huecos.length, layout, cabeTodo]);
 
   const irA = useCallback((index) => {
     const rail = railRef.current;
@@ -667,19 +611,27 @@ function TimelinePlacementQuestion({
    * Mientras suena la música todavía no se puede colocar, así que el toque
    * solo centra el hueco: sirve para ir mirando dónde encajaría.
    *
-   * Ya con la música parada, un toque COLOCA. La única guarda es invisible:
-   * se ignoran los toques que llegan justo después de deslizar. Al parar un
-   * carrusel con el dedo, ese contacto lo registra el navegador como un clic
-   * en lo que hubiera debajo, y aquí colocar donde no era cuesta puntos.
+   * Ya con la música parada, solo COLOCA el toque sobre el hueco ELEGIDO
+   * (el centrado, el que se ve grande y con su etiqueta debajo). Tocar
+   * cualquier otro solo lo elige: se centra (o, si la ruta cabe entera y no
+   * hay nada que desplazar, se marca) y su etiqueta aparece abajo; un segundo
+   * toque coloca. Así nadie coloca en un hueco cuya etiqueta no ha visto:
+   * antes un toque en el borde colocaba al instante donde no se miraba, y
+   * fallar cuesta puntos. Es la misma regla con o sin desplazamiento, para
+   * que no haya dos maneras de jugar.
+   *
+   * Se mantiene la guarda invisible: se ignoran los toques que llegan justo
+   * después de deslizar. Al parar un carrusel con el dedo, ese contacto lo
+   * registra el navegador como un clic en lo que hubiera debajo.
    */
   const tocarHueco = useCallback((index, hueco) => {
-    if (performance.now() - ultimoScrollRef.current < 320) {
-      irA(index);
+    const recienDeslizado = performance.now() - ultimoScrollRef.current < 320;
+    if (recienDeslizado || preview || disabled || index !== focoIndex) {
+      if (cabeTodo) setFocoIndex(index); else irA(index);
       return;
     }
-    if (preview || disabled) { irA(index); return; }
     onPick({ isCorrect: hueco.slot === correctSlot, timelineSlot: hueco.slot });
-  }, [preview, disabled, onPick, correctSlot, irA]);
+  }, [preview, disabled, onPick, correctSlot, irA, focoIndex, cabeTodo]);
 
   const huecoActivo = huecos[focoIndex] || huecos[0];
   const etiqueta = huecoActivo ? etiquetaHueco(huecoActivo.from, huecoActivo.to) : '';
@@ -700,29 +652,36 @@ function TimelinePlacementQuestion({
           </div>
         )}
 
-        <div className="flex items-center justify-between gap-3">
-          <div>
-            <p className="font-label-caps text-sm tracking-[0.16em] text-neon-green">TU RUTA DE AÑOS</p>
+        {/* text-left explícito: el contenedor de la fase centra el texto y
+            la etiqueta salía sangrada respecto a la línea de debajo. Sin el
+            chip n/meta: la cabecera ya enseña AÑOS n/meta siempre. */}
+        <div className="flex items-center gap-3">
+          <div className="min-w-0 text-left">
+            <p className="font-label-caps text-sm tracking-[0.16em] text-neon-green">TUS AÑOS</p>
             <p className="mt-1 text-base font-bold text-white">
-              {preview ? 'Ve buscando dónde encaja' : 'Toca dónde va'}
+              {preview ? 'Ve buscando dónde encaja' : 'Elige el hueco y tócalo otra vez'}
             </p>
           </div>
-          <span className="shrink-0 rounded-full border border-white/10 bg-black/25 px-3 py-1.5 text-sm font-label-caps text-on-surface-variant">
-            {Math.min(years.length + wildcards, targetYears)}/{targetYears}
-          </span>
         </div>
 
         {/* Riel de discos. snap-mandatory sobre los huecos: al soltar el dedo
             siempre queda uno centrado, nunca a medias. */}
+        {/* Si la ruta cabe entera: sin relleno, centrada y sin imán (no hay
+            nada que desplazar). Si no: relleno del 50 % para poder centrar
+            cualquier hueco, y bordes desvanecidos (rail-desvanecido) que
+            dicen "hay más por los lados". */}
         <div
           ref={railRef}
-          className="no-scrollbar relative mt-4 overflow-x-auto overflow-y-hidden"
-          style={{ scrollSnapType: 'x mandatory' }}
+          className={`no-scrollbar relative mt-4 overflow-x-auto overflow-y-hidden${cabeTodo ? '' : ' rail-desvanecido'}`}
+          style={{ scrollSnapType: cabeTodo ? 'none' : 'x mandatory' }}
         >
           <div className="pointer-events-none absolute left-0 right-0 top-1/2 h-px bg-gradient-to-r from-transparent via-white/12 to-transparent" />
           <div
+            ref={pistaRef}
             className="relative flex min-w-max items-center gap-2 py-2"
-            style={{ paddingLeft: '50%', paddingRight: '50%' }}
+            style={cabeTodo
+              ? { justifyContent: 'center' }
+              : { paddingLeft: '50%', paddingRight: '50%' }}
           >
             {huecos.map((hueco, index) => (
               <div key={hueco.slot} className="flex items-center gap-2">
@@ -751,7 +710,7 @@ function TimelinePlacementQuestion({
         {/* Solo la etiqueta del hueco centrado: dice dónde caería sin tener
             que interpretar la fila de discos. Las flechas se fueron con el
             botón de confirmar — sobran cuando se toca directamente. */}
-        <p className="mt-3 text-center text-base font-black leading-tight text-white">{etiqueta}</p>
+        <p aria-live="polite" className="mt-3 text-center text-base font-black leading-tight text-white">{etiqueta}</p>
 
         {/* En apaisado esta frase se oculta (landscape-oculto): explica algo
             que la propia pantalla ya enseña —los huecos punteados se ven— y
@@ -763,7 +722,7 @@ function TimelinePlacementQuestion({
         <p className={`${preview ? '' : 'landscape-oculto '}mt-2 text-center text-sm leading-relaxed ${preview ? 'font-bold text-white' : 'text-on-surface-variant'}`}>
           {preview
             ? 'Podrás colocarlo cuando pare la música.'
-            : 'Toca el hueco donde crees que va'}
+            : 'El hueco grande es el elegido: tócalo para colocar'}
         </p>
 
         {wildcards > 0 && !preview && (
@@ -943,7 +902,7 @@ export default function GameScreen() {
       .then((cancion) => {
         publicarCancionDeRonda(cancion, duracionFragmento());
         if (!cancelled) {
-          setMensajeAudio('Música sonando. Para cuando quieras.');
+          setMensajeAudio(MENSAJE_SONANDO);
           setErrorAudio(false);
           setAudioPlaying(true);
           setAudioListo(true);
@@ -991,7 +950,6 @@ export default function GameScreen() {
   // corta a nadie de golpe: avisa a todos por igual.
   const votesForSoftTimer = Math.max(2, Math.ceil(expectedVotes * 0.75));
   const softTimerArmed = phase === 'blackout' && expectedVotes > 3 && answerCount >= votesForSoftTimer && answerCount < expectedVotes;
-  const mode = GAME_MODES[gameMode] || GAME_MODES.timeline;
   const activePlaylist = DEDICALO_PLAYLISTS.find((playlist) => (
     normalizeSpotifyPlaylistUrl(playlist.url) === normalizeSpotifyPlaylistUrl(spotifyPlaylistUrl)
   ));
@@ -1173,7 +1131,7 @@ export default function GameScreen() {
       .then(() => sonarCancionAleatoria(spotifyPlaylistUrl))
       .then((cancion) => {
         publicarCancionDeRonda(cancion, duracionFragmento());
-        setMensajeAudio('Música sonando. Para cuando quieras.');
+        setMensajeAudio(MENSAJE_SONANDO);
         setErrorAudio(false);
         setAudioPlaying(true);
         setAudioListo(true);
@@ -1188,7 +1146,7 @@ export default function GameScreen() {
 
 
   return (
-    <div className={`app-screen relative z-10 flex flex-col items-center overflow-y-auto pt-safe-header transition-colors duration-500 ${phase === 'blackout' ? 'bg-black' : 'bg-transparent'}`}>
+    <div className={`app-screen safe-bottom-action relative z-10 flex flex-col items-center overflow-y-auto pt-safe-header transition-colors duration-500 ${phase === 'blackout' ? 'bg-black' : 'bg-transparent'}`}>
 
       <HeaderHUD onExit={() => setShowExitConfirm(true)} />
       <RotatePrompt />
@@ -1285,7 +1243,6 @@ export default function GameScreen() {
               <div className="relative flex h-32 w-32 items-center justify-center rounded-full border-4 border-neon-green bg-black/40 shadow-[0_0_30px_rgba(57,255,20,0.35),inset_0_0_20px_rgba(0,0,0,0.6)]">
                 <div className="absolute inset-3 rounded-full border border-white/10" />
                 <div className="relative z-10 px-2 text-center">
-                  <p className="font-label-caps text-xs leading-tight text-electric-purple">{mode.name}</p>
                   <span className="mt-0.5 block font-headline-lg-mobile text-base font-black leading-tight tracking-wider text-neon-green drop-shadow-[0_0_12px_rgba(57,255,20,0.6)]">
                     {role === 'host' ? 'SONANDO' : 'ESCUCHA'}
                   </span>
@@ -1294,7 +1251,7 @@ export default function GameScreen() {
                       {segundosAudio}s
                     </p>
                   ) : (
-                    <p className="mt-0.5 font-label-caps text-xs leading-tight text-white">
+                    <p className="mt-0.5 font-label-caps text-sm leading-tight text-white">
                       {role === 'host' ? 'PARA CUANDO QUIERAS' : 'EL ANFITRIÓN DECIDE'}
                     </p>
                   )}
@@ -1304,7 +1261,13 @@ export default function GameScreen() {
 
             {role === 'host' ? (
               <div className="flex flex-col items-center gap-2 text-center">
-                <p className="max-w-xs text-sm text-on-surface-variant">{mensajeAudio || 'Preparando la música...'}</p>
+                {/* Con la música ya sonando no se dice nada aquí: la barra de
+                    abajo ya pide parar ("Para cuando lo veas claro"), y dos
+                    frases para un solo botón sobraban. Solo se habla si hay
+                    algo que contar: preparando, reintentando o un fallo. */}
+                {mensajeAudio !== MENSAJE_SONANDO && (
+                  <p className="max-w-xs text-sm text-on-surface-variant">{mensajeAudio || 'Preparando la música...'}</p>
+                )}
                 {errorAudio && (
                   <button
                     onClick={reintentarAudio}
@@ -1321,9 +1284,16 @@ export default function GameScreen() {
                 )}
               </div>
             ) : (
-              <p className="max-w-xs text-sm text-on-surface-variant text-center">
-                {`${activePlaylist?.name || 'Playlist'} en marcha. Escucha con atención: nadie ve la canción.`}
-              </p>
+              // Primero lo que hay que hacer; la lista es contexto y va como
+              // etiqueta pequeña debajo.
+              <div className="flex flex-col items-center gap-1.5 text-center">
+                <p className="text-base font-bold text-white">🎧 ¡Escucha! ¿De qué año es?</p>
+                {activePlaylist?.name && (
+                  <span className="max-w-xs truncate rounded-full border border-white/10 bg-black/25 px-3 py-0.5 text-xs text-on-surface-variant">
+                    {activePlaylist.name}
+                  </span>
+                )}
+              </div>
             )}
 
             {gameMode === 'timeline' && !isBlockedThisRound && (
@@ -1336,15 +1306,13 @@ export default function GameScreen() {
               />
             )}
 
-            <RankingPeek players={players} guestId={guestId} targetYears={targetYears} />
-
             {(canAttack || canRedeem) && (
               <div className="flex flex-wrap items-center justify-center gap-3">
                 {canAttack && (
                   <motion.button
                     type="button"
                     onClick={() => { setAttackError(''); setShowAttackModal(true); }}
-                    whileTap={{ scale: 0.93 }}
+                    whileTap={{ scale: 0.96 }}
                     // Brilla unas pocas veces al aparecer (cuando ya te llega
                     // para sabotear) y luego se queda quieto: un brillo
                     // infinito competía con la ruta, que es la acción
@@ -1352,12 +1320,16 @@ export default function GameScreen() {
                     // movimiento.
                     animate={reducirMovimiento ? undefined : { boxShadow: ['0 0 0px rgba(255,90,20,0)', '0 0 28px rgba(255,90,20,0.65)', '0 0 0px rgba(255,90,20,0)'] }}
                     transition={{ repeat: 2, duration: 1.7, ease: 'easeInOut' }}
-                    className="min-h-[3.25rem] rounded-full border-2 border-vinyl-orange bg-gradient-to-r from-vinyl-orange to-intense-red px-6 flex items-center gap-2.5 text-white font-label-caps text-base font-black"
+                    // Contorno y no relleno: es una acción disponible pero
+                    // secundaria. Relleno naranja competía con la ruta; gris
+                    // parecía desactivado.
+                    className="min-h-touch rounded-full border-2 border-vinyl-orange bg-transparent px-6 flex items-center gap-2.5 text-vinyl-orange font-label-caps text-base font-black"
                   >
                     <motion.span
                       animate={reducirMovimiento ? undefined : { rotate: [0, -14, 14, -8, 0] }}
                       transition={{ repeat: 2, duration: 1.6, repeatDelay: 0.5 }}
-                      className="material-symbols-outlined text-2xl drop-shadow-[0_0_6px_rgba(255,255,255,0.7)]"
+                      aria-hidden="true"
+                      className="material-symbols-outlined text-2xl"
                     >
                       bolt
                     </motion.span>
@@ -1427,31 +1399,38 @@ export default function GameScreen() {
                   }}
                 />
                 <p className="text-center text-sm text-on-surface-variant">Para cuando lo veas claro 👇</p>
-                <motion.button
+                {/* btn-primario--peligro: la pulsación (hundirse) la da la
+                    clase y respeta "reducir movimiento"; por eso ya no lleva
+                    whileTap/whileHover, que pisaban ese transform. Texto
+                    negro: blanco sobre #ff6b8b daba 2.7:1, negro 7.7:1. Sin
+                    la franja oscura de abajo, que cortaba las letras. Nunca
+                    en dos líneas: el tamaño se ajusta al ancho. */}
+                <button
+                  type="button"
                   data-accion="principal"
-                  whileHover={{ y: -2 }}
-                  whileTap={{ scale: (isBlackoutPending || !puedeCortar) ? 1 : 0.94, y: 4 }}
                   onClick={handleHostBlackout}
                   disabled={isBlackoutPending || !puedeCortar}
-                  className="w-full h-16 bg-intense-red hover:bg-intense-red/90 text-white font-headline-lg-mobile text-2xl rounded-2xl shadow-[0_10px_0_rgba(90,0,18,0.95),0_0_34px_rgba(255,107,139,0.55)] transition-colors font-black border-2 border-white/15 relative overflow-hidden disabled:opacity-60 disabled:cursor-not-allowed disabled:shadow-[0_6px_0_rgba(90,0,18,0.65),0_0_20px_rgba(255,107,139,0.25)]"
+                  className="btn-primario btn-primario--peligro relative w-full overflow-hidden whitespace-nowrap text-[clamp(1.1rem,6.5vw,1.6rem)] text-black"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
-                  <div className="absolute inset-x-0 bottom-0 h-1/2 bg-black/10 pointer-events-none" />
-                  {isBlackoutPending ? 'PARANDO...' : !puedeCortar ? 'CARGANDO...' : 'PARAR MÚSICA'}
-                </motion.button>
+                  <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/10 to-transparent" />
+                  <span className="relative">{isBlackoutPending ? 'PARANDO...' : !puedeCortar ? 'CARGANDO...' : 'PARAR MÚSICA'}</span>
+                </button>
               </div>
             )}
           </motion.div>
         )}
 
-        {/* Si se entra en el apagón antes de que llegue la pregunta (red lenta,
-            reconexión a mitad de ronda), la pantalla quedaba en negro con solo
-            la cabecera: parecía colgada. Un estado de espera explícito. */}
+        {/* Red de seguridad, no una pantalla del flujo normal: el anfitrión
+            pasa al apagón y publica la canción a la vez, así que en una partida
+            normal esto no se ve. Solo aparece si los datos de la ronda llegan
+            tarde (red lenta, reconexión a mitad de ronda); antes en ese caso la
+            pantalla se quedaba en negro y parecía colgada. El texto habla el
+            idioma del juego —música parada, tu ruta— y no de "preguntas". */}
         {phase === 'blackout' && !currentQuestion && (
           <div role="status" className="mt-12 flex flex-col items-center gap-3 text-center">
             <span aria-hidden="true" className="material-symbols-outlined animate-spin text-4xl text-neon-green">progress_activity</span>
-            <p className="font-label-caps text-lg font-black tracking-[0.14em] text-white">PREPARANDO LA PREGUNTA</p>
-            <p className="text-sm text-on-surface-variant">Un segundo, ya casi está.</p>
+            <p className="font-label-caps text-xl font-black tracking-[0.14em] text-white">¡MÚSICA PARADA!</p>
+            <p className="text-base text-on-surface-variant">Cargando tu ruta de años para que coloques la canción…</p>
           </div>
         )}
 
@@ -1460,9 +1439,9 @@ export default function GameScreen() {
             key="blackout"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="app-shell flex flex-col gap-4 px-1 py-6 sm:py-12"
+            className="app-shell flex flex-col gap-4 px-1 py-3 sm:py-12"
           >
-            <div className="text-center">
+            <div className="apagon-cabecera text-center">
               <motion.p
                 initial={{ opacity: 0, y: -8 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -1482,25 +1461,32 @@ export default function GameScreen() {
               >
                 {currentQuestion.text}
               </motion.h2>
+              {/* Las reglas solo en la primera ronda: después ya se saben y
+                  el chip solo empujaba la ruta hacia abajo. Fuera en apaisado
+                  (landscape-oculto), donde el alto no da para él. */}
+              {round === 1 && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}
-                className="mt-3 inline-flex flex-wrap items-center justify-center gap-x-3 gap-y-1 rounded-full border border-white/10 bg-black/30 px-4 py-1.5"
+                className="landscape-oculto mt-3 inline-flex flex-wrap items-center justify-center gap-x-3 gap-y-1 rounded-full border border-white/10 bg-black/30 px-4 py-1.5"
               >
                 {/* text-sm y no 0.65rem: son las reglas que deciden la
                     jugada, se tienen que leer de un vistazo. flex-wrap por si
                     con letra grande no caben en una sola fila. */}
                 <span className="font-label-caps text-sm font-bold text-neon-green">+5 ACIERTO</span>
-                <span className="w-px h-3 bg-white/20" />
+                {/* Separadores solo si cabe en una fila: en un SE el chip se
+                    parte y una rayita suelta al principio de línea despista. */}
+                <span aria-hidden="true" className="hidden w-px h-3 bg-white/20 min-[360px]:block" />
                 <span className="font-label-caps text-sm font-bold text-intense-red">-3 FALLO</span>
-                <span className="w-px h-3 bg-white/20" />
+                <span aria-hidden="true" className="hidden w-px h-3 bg-white/20 min-[360px]:block" />
                 {/* La regla del bonus se ensena aqui, dentro del chip que ya
                     existia — no hace falta un cartel aparte. */}
                 <span className="flex items-center gap-0.5 font-label-caps text-sm font-bold text-chaos-gold">
-                  <span aria-hidden="true" className="material-symbols-outlined text-sm">bolt</span>+1 AL 1º
+                  <span aria-hidden="true" className="material-symbols-outlined text-sm">bolt</span>+1 AL MÁS RÁPIDO
                 </span>
               </motion.div>
+              )}
             </div>
 
             {/* Zona de respuesta PRIMERO: es lo que hay que hacer en esta
@@ -1564,13 +1550,6 @@ export default function GameScreen() {
                 ))}
               </motion.div>
             )}
-
-            {/* El ranking también MIENTRAS se decide (antes solo tras
-                responder): saber si vas primero o último cambia cuánto
-                arriesgas. Va debajo de la zona de respuesta, no la empuja. */}
-            <div className="w-full flex flex-col gap-2">
-              <RankingPeek players={players} guestId={guestId} targetYears={targetYears} />
-            </div>
 
             {/* La tira compacta la ve también el anfitrión mientras aún no
                 ha respondido: es quien revela solo al llegar a cero, así que

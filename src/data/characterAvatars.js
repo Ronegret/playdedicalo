@@ -1,4 +1,4 @@
-// Catálogo de los 73 personajes ilustrados (public/images/PERSONAJES) ya
+// Catálogo de los personajes ilustrados (public/images/PERSONAJES) ya
 // procesados y optimizados por scripts/process-avatars.mjs en
 // public/images/avatars/{slug}.webp (grande, para verse bien en juego) y
 // public/images/avatars/thumb/{slug}.webp (miniatura, para el selector).
@@ -15,11 +15,9 @@ export const AVATAR_CATEGORIES = [
   { id: 'especiales', label: 'Especiales', icon: 'auto_awesome' },
   { id: 'animales', label: 'Animales', icon: 'pets' },
   { id: 'comida', label: 'Comida y bebida', icon: 'restaurant' },
-  { id: 'futbol', label: 'Equipos', icon: 'sports_soccer' },
-  { id: 'paises', label: 'Países y cultura', icon: 'public' }
 ];
 
-export const CHARACTER_AVATARS = [
+const TODOS_LOS_PERSONAJES = [
   { slug: 'athletic-bilbao', name: 'Athletic Bilbao', category: 'futbol' },
   { slug: 'aguacate', name: 'Aguacate', category: 'comida' },
   { slug: 'alemana', name: 'Alemana', category: 'paises' },
@@ -51,7 +49,7 @@ export const CHARACTER_AVATARS = [
   { slug: 'espanola', name: 'Española', category: 'paises' },
   { slug: 'espanolete', name: 'Españolete', category: 'paises' },
   { slug: 'fantasma', name: 'Fantasma', category: 'especiales' },
-  { slug: 'flamenco', name: 'Flamenco', category: 'paises' },
+  { slug: 'flamenco', name: 'Flamenco', category: 'animales' },
   { slug: 'frances', name: 'Francés', category: 'paises' },
   { slug: 'frankfurt', name: 'Frankfurt', category: 'comida' },
   { slug: 'gallo', name: 'Gallo', category: 'animales' },
@@ -125,6 +123,25 @@ export const CHARACTER_AVATARS = [
   { slug: 'noa', name: 'Noa', category: 'especiales' },
   { slug: 'don-dj', name: 'Don DJ', category: 'especiales' }
 ];
+
+// SOLO PERSONAJES QUE NO SON PERSONAS.
+// Por decisión del dueño del juego se retiran del selector todos los
+// personajes humanos: los retratos con nombre propio, las caricaturas por
+// país y los jugadores de cada equipo. Se quitan del CATÁLOGO, no del disco:
+// las imágenes siguen existiendo, así que quien ya tenía uno guardado lo ve
+// bien (no sale una imagen rota), pero ya nadie puede elegirlo.
+const HUMANOS = new Set([
+  'alberto', 'alex', 'alfonso', 'angeles', 'armando', 'carol', 'dani', 'don-dj',
+  'erick', 'frank', 'isa', 'juanpi', 'lucia', 'luisi', 'matias', 'miguel',
+  'noa', 'noe', 'noe-2', 'nora', 'pau', 'rodri', 'rodri-2', 'roger',
+  'rosa', 'teresa', 'toni', 'yone', 'einstein', 'alemana', 'andaluza', 'argentino',
+  'catalan', 'checa', 'chilena', 'chileno', 'huaso', 'colombia', 'espanol', 'espanola',
+  'espanolete', 'frances', 'italiano', 'marruecos', 'mexico', 'peru', 'rusa', 'uk',
+  'usa', 'usam', 'vasca', 'athletic-bilbao', 'atletico-madrid', 'barcelona', 'betis', 'inter-miami',
+  'psg', 'real-madrid', 'sevilla'
+]);
+
+export const CHARACTER_AVATARS = TODOS_LOS_PERSONAJES.filter((p) => !HUMANOS.has(p.slug));
 
 const AVATAR_BY_SLUG = new Map(CHARACTER_AVATARS.map((entry) => [entry.slug, entry]));
 

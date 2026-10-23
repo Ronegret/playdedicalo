@@ -4,10 +4,12 @@
 // tratamiento de "etiqueta de vinilo" que ya se usa en el resto de la app
 // — bastante más grande y con un halo naranja suave para que se despegue
 // del fondo.
+// Medida en px y no en rem: con la letra XL el rem crecía el logo a ~69 px
+// y chocaba con los botones del header, que no crecen igual.
 export default function HeaderLogo({ className = '' }) {
   return (
     <span
-      className={`flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-white p-1.5 shadow-[0_0_0_2px_rgba(255,122,26,0.35),0_0_18px_rgba(255,122,26,0.35)] ${className}`}
+      className={`flex h-[48px] w-[48px] shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-white p-1.5 shadow-[0_0_0_2px_rgba(255,122,26,0.35),0_0_18px_rgba(255,122,26,0.35)] ${className}`}
       aria-hidden="false"
     >
       <img
